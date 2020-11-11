@@ -1,0 +1,61 @@
+{
+  "name": "fletex_app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start:web:dev": "webpack serve --progress --color --mode development --config ./webpack.config.js",
+    "start:android": "react-native run-android",
+    "start:ios": "react-native run-ios",
+    "start": "react-native start",
+    "postinstall": "npx pod-install ios",
+    "lint": "eslint .",
+    "build:web": "react-scripts build",
+    "cleanAndroid": "cd android && rm -rf app/build && ./gradlew clean && cd ..",
+    "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors"
+  },
+  "dependencies": {
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/native": "^5.8.9",
+    "@react-navigation/stack": "^5.12.6",
+    "react": "16.13.1",
+    "react-dom": "^17.0.1",
+    "react-native": "0.63.3",
+    "react-native-gesture-handler": "^1.8.0",
+    "react-native-reanimated": "^1.13.1",
+    "react-native-safe-area-context": "^3.1.8",
+    "react-native-screens": "^2.14.0",
+    "react-native-web": "^0.14.7",
+    "react-scripts": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/runtime": "7.12.5",
+    "@react-native-community/eslint-config": "1.1.0",
+    "babel-loader": "8.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-react-native-web": "^0.14.8",
+    "html-webpack-plugin": "^4.5.0",
+    "metro-react-native-babel-preset": "0.59.0",
+    "react-test-renderer": "16.13.1",
+    "url-loader": "^4.1.1",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "jest": {
+    "preset": "react-native-web"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

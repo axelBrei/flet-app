@@ -2,8 +2,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname, './');
 
@@ -25,14 +24,9 @@ const babelLoaderConfiguration = {
     options: {
       cacheDirectory: true,
       // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
-      presets: [
-          'module:metro-react-native-babel-preset',
-          "@babel/preset-env"
-      ],
+      presets: ['module:metro-react-native-babel-preset', '@babel/preset-env'],
       // Re-write paths to import only the modules needed by the app
-      plugins: [
-          'react-native-web'
-      ],
+      plugins: ['react-native-web'],
     },
   },
 };
@@ -48,7 +42,6 @@ const imageLoaderConfiguration = {
   },
 };
 
-
 // Try the environment variable, otherwise use root
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
@@ -57,7 +50,7 @@ module.exports = {
   devServer: {
     port: 3000,
     hot: true,
-    contentBase: path.resolve('dist')
+    contentBase: path.resolve('dist'),
   },
   entry: [
     // load any web API polyfills
@@ -69,29 +62,28 @@ module.exports = {
   // configures where the build ends up
   output: {
     filename: 'bundle.web.js',
-    path: path.resolve(appDirectory, 'dist')
+    path: path.resolve(appDirectory, 'dist'),
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
     }),
     new HtmlWebPackPlugin({
-      template:"public/index.html",
-      filename:"./index.html",
-    })
+      template: 'public/index.html',
+      filename: './index.html',
+    }),
   ],
   module: {
-    rules: [
-        babelLoaderConfiguration,
-      imageLoaderConfiguration
-    ],
+    rules: [babelLoaderConfiguration, imageLoaderConfiguration],
   },
 
   resolve: {
     // This will only alias the exact import "react-native"
     alias: {
-      'components': path.resolve("./src/components"),
-      'constants':path.resolve("./src/constants"),
+      'styled-components': 'styled-components/native',
+      components: path.resolve('./src/components'),
+      constants: path.resolve('./src/constants'),
+      helpers: path.resolve('./src/helpers'),
       'react-native$': 'react-native-web',
     },
     // If you're working on a multi-platform React Native app, web-specific

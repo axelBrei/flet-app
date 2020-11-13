@@ -1,29 +1,29 @@
 import React from 'react';
-import {View, StyleSheet, Platform, TouchableOpacity, Text} from 'react-native';
-import { routes } from 'constants/config/routes';
+import {TouchableOpacity, Text} from 'react-native';
+import {routes} from 'constants/config/routes';
 import {Screen} from 'components/ui/Screen';
+import {scaleDpTheme} from 'helpers/responsiveHelper';
+import styled from 'styled-components';
+import InputField from 'components/ui/InputField/index';
 
 export default ({navigation}) => {
+  return (
+    <Screen>
+      <InputField label="Prueba" />
+      <InputField label="Prueba" />
+      <Button onPress={() => navigation.navigate(routes.profileScreen)}>
+        <Text>Hola</Text>
+      </Button>
+    </Screen>
+  );
+};
 
-    return (
-        <Screen>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate(routes.profileScreen)}>
-                <Text>Hola</Text>
-            </TouchableOpacity>
-        </Screen>
-    )
-}
-
-const styles = StyleSheet.create({
-    button: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 20,
-        width: 350,
-        borderRadius: 10,
-        height: 40,
-        backgroundColor: '#d22b40'
-    }
-});
+const Button = styled(TouchableOpacity)`
+  background-color: ${(props) => props.theme.colors.primaryColor};
+  margin: 20px;
+  width: ${scaleDpTheme(250)};
+  height: ${scaleDpTheme(35)};
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+`;

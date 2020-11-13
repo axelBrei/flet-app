@@ -27,10 +27,7 @@ export const AnimatedBorder = ({focused}) => {
     <Animated.View
       style={{
         backgroundColor: interpolateAnimation,
-        height: Platform.select({
-          native: borderHeight,
-          web: scaleDp(focused ? 1.5 : 1),
-        }),
+        height: scaleDp(1),
       }}
     />
   );

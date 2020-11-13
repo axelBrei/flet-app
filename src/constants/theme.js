@@ -5,5 +5,6 @@ export const theme = {
   accentColor: 'rgb(50,27,118)',
   fontColor: 'rgb(40,40,40)',
   disabled: 'rgba(61,61,61,0.8)',
-  backgroundColor: '#efefef',
+  backgroundColor: 'rgb(239,239,239)',
+  white: 'rgb(255,255,255)',
 };

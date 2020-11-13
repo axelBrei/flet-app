@@ -1,13 +1,11 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {Animated, Platform, TextInput, View} from 'react-native';
-import {AppText} from 'components/ui/AppText';
+import React, {useState, useCallback, useRef} from 'react';
+import {Platform, TextInput, View} from 'react-native';
 import styled from 'styled-components';
 import {AnimatedBorder} from 'components/ui/InputField/AnimatedBorder';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {theme} from 'constants/theme';
 import {AnimatedLabel} from 'components/ui/InputField/AnimatedLabel';
 
-export default ({label, ...props}) => {
+const InputFiled = ({label, ...props}) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
 
@@ -24,7 +22,7 @@ export default ({label, ...props}) => {
   return (
     <Container onFocus={onFocus} onBlur={onBlur}>
       <AnimatedLabel
-        focused={isFocused}
+        focused={isFocused || props.value}
         label={label}
         onPress={isFocused ? onBlur : onFocus}
       />
@@ -32,6 +30,13 @@ export default ({label, ...props}) => {
       <AnimatedBorder focused={isFocused} />
     </Container>
   );
+};
+export default (props) => {
+  if (!props.onTextChange) {
+    const [val, setVal] = useState('');
+    return <InputFiled {...props} value={val} onChangeText={setVal} />;
+  }
+  return <InputFiled {...props} />;
 };
 
 const Container = styled(View)`
@@ -49,7 +54,4 @@ const Input = styled(TextInput)`
     native: scaleDp(25),
     web: scaleDp(20),
   })};
-`;
-const BottomBorderAnimated = styled(Animated.View)`
-  height: 1px;
 `;

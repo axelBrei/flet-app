@@ -13,11 +13,13 @@ const appDirectory = path.resolve(__dirname, './');
 // `node_module`.
 const babelLoaderConfiguration = {
   test: /\.(js)$/,
+  exclude: /node_modules/,
   // Add every directory that needs to be compiled by Babel during the build.
   include: [
     path.resolve(appDirectory, 'index.web.js'),
     path.resolve(appDirectory, 'src'),
     path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
+    path.resolve(appDirectory, 'node_modules/react-native-vector-icons'),
   ],
   use: {
     loader: 'babel-loader',
@@ -40,6 +42,12 @@ const imageLoaderConfiguration = {
       name: '[name].[ext]',
     },
   },
+};
+
+const vectorIconsConfiguration = {
+  test: /\.ttf$/,
+  loader: 'url-loader', // or directly file-loader
+  include: path.resolve(__dirname, 'node_modules/react-native-vector-icons'),
 };
 
 // Try the environment variable, otherwise use root
@@ -74,13 +82,18 @@ module.exports = {
     }),
   ],
   module: {
-    rules: [babelLoaderConfiguration, imageLoaderConfiguration],
+    rules: [
+      babelLoaderConfiguration,
+      imageLoaderConfiguration,
+      vectorIconsConfiguration,
+    ],
   },
 
   resolve: {
     // This will only alias the exact import "react-native"
     alias: {
       'styled-components': 'styled-components/native',
+      'react-native-vector-icons': 'react-native-vector-icons/dist',
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
       helpers: path.resolve('./src/helpers'),

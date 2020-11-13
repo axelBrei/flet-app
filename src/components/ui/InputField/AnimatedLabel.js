@@ -2,6 +2,7 @@ import React, {useRef, useEffect} from 'react';
 import {AppText} from 'components/ui/AppText';
 import {Animated, Platform} from 'react-native';
 import {scaleDp} from 'helpers/responsiveHelper';
+import {theme} from 'constants/theme';
 
 const AnimatedText = Animated.createAnimatedComponent(AppText);
 export const AnimatedLabel = ({label, focused, style, ...props}) => {
@@ -14,7 +15,7 @@ export const AnimatedLabel = ({label, focused, style, ...props}) => {
         duration: 200,
         toValue: {
           x: scaleDp(focused ? 0 : 2),
-          y: scaleDp(focused ? 0 : Platform.OS === 'web' ? 18 : 23),
+          y: scaleDp(focused ? 5 : Platform.OS === 'web' ? 18 : 23),
         },
         useNativeDriver: Platform.OS !== 'web',
       }),
@@ -34,6 +35,7 @@ export const AnimatedLabel = ({label, focused, style, ...props}) => {
       style={[
         style,
         {
+          color: focused ? theme.accentColor : theme.disabled,
           transform: [{translateX: position.x}, {translateY: position.y}],
         },
       ]}>

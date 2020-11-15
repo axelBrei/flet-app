@@ -53,5 +53,5 @@ const Input = styled(TextInput)`
   height: ${Platform.select({
     native: scaleDp(25),
     web: scaleDp(20),
-  })};
+  })}px;
 `;

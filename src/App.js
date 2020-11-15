@@ -8,13 +8,15 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
 
 const App = () => {
-  const {rem} = useWindowDimension();
+  const {rem, width, height} = useWindowDimension();
   return (
     <NavigationContainer linking={linkingConfig}>
       <ThemeProvider
         theme={{
           colors: theme,
           scale: (size) => size * rem,
+          screenWidth: width,
+          screenHeight: height,
         }}>
         <MainNavigator />
       </ThemeProvider>

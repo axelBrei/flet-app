@@ -13,13 +13,17 @@ const appDirectory = path.resolve(__dirname, './');
 // `node_module`.
 const babelLoaderConfiguration = {
   test: /\.(js)$/,
-  exclude: /node_modules/,
+  exclude: /node_modules[/\\](?!react-native-swipe-gestures|react-native-gesture-handler|react-native-calendars)/,
   // Add every directory that needs to be compiled by Babel during the build.
   include: [
     path.resolve(appDirectory, 'index.web.js'),
     path.resolve(appDirectory, 'src'),
     path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
     path.resolve(appDirectory, 'node_modules/react-native-vector-icons'),
+    path.resolve(appDirectory, 'node_modules', 'react-native-gesture-handler'),
+    path.resolve(appDirectory, 'node_modules/react-native-calendars'),
+    path.resolve(appDirectory, 'node_modules/react-native-modalize'),
+    path.resolve(appDirectory, 'node_modules/react-native-swipe-gestures'),
   ],
   use: {
     loader: 'babel-loader',
@@ -28,7 +32,11 @@ const babelLoaderConfiguration = {
       // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
       presets: ['module:metro-react-native-babel-preset', '@babel/preset-env'],
       // Re-write paths to import only the modules needed by the app
-      plugins: ['react-native-web'],
+      plugins: [
+        'react-native-web',
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-syntax-dynamic-import',
+      ],
     },
   },
 };
@@ -93,15 +101,23 @@ module.exports = {
     // This will only alias the exact import "react-native"
     alias: {
       'styled-components': 'styled-components/native',
+      'react-native-modal': path.resolve(
+        './src/components/ui/Modal/index.web.js',
+      ),
       'react-native-vector-icons': 'react-native-vector-icons/dist',
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
       helpers: path.resolve('./src/helpers'),
       'react-native$': 'react-native-web',
+      // 'react-native-gesture-handler': 'react-native-gesture-handler/web',
     },
     // If you're working on a multi-platform React Native app, web-specific
     // module implementations should be written in files using the extension
     // `.web.js`.
     extensions: ['.web.js', '.js'],
+  },
+  // external are files/modules to exlude from bundle
+  externals: {
+    modal: 'react-native-modal',
   },
 };

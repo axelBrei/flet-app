@@ -46,7 +46,7 @@ const calculateREMforDevice = ({width, height}) => {
  */
 const calculateREMforWeb = ({width, height}) => {
   const PhM = 460;
-  const screenWidth = 1200;
+  const screenWidth = 1100;
   const MSW = 400;
   const MSV = 1;
   const MTV = 0.7;
@@ -60,8 +60,10 @@ const calculateREMforWeb = ({width, height}) => {
   return remValue;
 };
 
-export const calcRem =
-  Platform.OS === 'web' ? calculateREMforWeb : calculateREMforDevice;
+export const calcRem = (dim) =>
+  Platform.OS === 'web' && dim.width >= 450
+    ? calculateREMforWeb(dim)
+    : calculateREMforDevice(dim);
 
 export const scaleDp = (dp) => {
   const dim = Dimensions.get('window');

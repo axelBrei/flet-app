@@ -7,4 +7,5 @@ export const theme = {
   disabled: 'rgba(61,61,61,0.8)',
   backgroundColor: 'rgb(239,239,239)',
   white: 'rgb(255,255,255)',
+  backdropColor: 'rgba(0,0,0,0.7)',
 };

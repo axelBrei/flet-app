@@ -1,6 +1,13 @@
 import React from 'react';
-import {Platform, View, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import styled from 'styled-components';
+import {theme} from 'constants/theme';
 
 export const Screen = ({children, removeeTWF}) => {
   const ViewComponent = React.useMemo(() => {
@@ -16,14 +23,17 @@ export const Screen = ({children, removeeTWF}) => {
   }, [removeeTWF]);
 
   return (
-    <ViewComponent accessible={false} onPress={Keyboard.dismiss}>
-      <View
-        style={{
-          alignItems: 'center',
-        }}>
-        {children}
-      </View>
-    </ViewComponent>
+    <>
+      <StatusBar backgroundColor={theme.primaryLightColor} />
+      <ViewComponent accessible={false} onPress={Keyboard.dismiss}>
+        <View
+          style={{
+            alignItems: 'center',
+          }}>
+          {children}
+        </View>
+      </ViewComponent>
+    </>
   );
 };
 

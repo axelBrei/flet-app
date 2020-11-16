@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import {TouchableOpacity, StatusBar, Text} from 'react-native';
 import {Screen} from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import {RadioGroup} from 'components/ui/RadioGroup';

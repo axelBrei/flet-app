@@ -5,8 +5,22 @@ import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 
 const AnimatedText = Animated.createAnimatedComponent(AppText);
-export const AnimatedLabel = ({label, focused, style, ...props}) => {
-  const position = useRef(new Animated.ValueXY()).current;
+export const AnimatedLabel = ({
+  label,
+  focused,
+  xTranslation,
+  yTranslation,
+  initialY,
+  initialX,
+  style,
+  ...props
+}) => {
+  const position = useRef(
+    new Animated.ValueXY({
+      x: initialX,
+      y: initialY,
+    }),
+  ).current;
   const fontSize = useRef(new Animated.Value(10)).current;
 
   useEffect(() => {
@@ -14,8 +28,8 @@ export const AnimatedLabel = ({label, focused, style, ...props}) => {
       Animated.timing(position, {
         duration: 200,
         toValue: {
-          x: scaleDp(focused ? 0 : 2),
-          y: scaleDp(focused ? 5 : Platform.OS === 'web' ? 18 : 23),
+          x: scaleDp(focused ? initialX : xTranslation),
+          y: scaleDp(focused ? initialY : yTranslation),
         },
         useNativeDriver: Platform.OS !== 'web',
       }),
@@ -25,7 +39,7 @@ export const AnimatedLabel = ({label, focused, style, ...props}) => {
         useNativeDriver: Platform.OS !== 'web',
       }),
     ]).start();
-  }, [focused]);
+  }, [yTranslation, xTranslation, focused, initialY, initialX]);
 
   return (
     <AnimatedText
@@ -42,4 +56,11 @@ export const AnimatedLabel = ({label, focused, style, ...props}) => {
       {label}
     </AnimatedText>
   );
+};
+
+AnimatedLabel.defaultProps = {
+  xTranslation: 2,
+  yTranslation: Platform.OS === 'web' ? 18 : 23,
+  initialY: 5,
+  initialX: 0,
 };

@@ -5,4 +5,5 @@ import {scaleDpTheme} from 'helpers/responsiveHelper';
 
 export const AppText = styled(Text)`
   font-size: ${(props) => scaleDpTheme(props.fontSize || 14)(props)};
+  color: ${(props) => props.color || props.theme.colors.fontColor};
 `;

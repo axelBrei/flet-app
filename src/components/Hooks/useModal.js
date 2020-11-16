@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {Modalize} from 'react-native-modalize';
+import {Modal} from 'components/ui/Modal/index';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {Calendar as WixCalendar} from 'react-native-calendars';
 import {theme} from 'constants/theme';
@@ -7,44 +7,32 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const useModal = (Content, config) => {
   const [isVisible, setIsVisible] = useState(false);
-  const modalRef = useRef(null);
 
-  const toggleModal = useCallback(() => {
-    if (isVisible) modalRef.current?.close();
-    else modalRef.current?.open();
-    setIsVisible(!isVisible);
-  }, [setIsVisible, isVisible, modalRef]);
+  const toggleModal = useCallback(() => setIsVisible(!isVisible), [
+    setIsVisible,
+    isVisible,
+  ]);
+  const closeModal = useCallback(() => setIsVisible(false), [setIsVisible]);
+  const openModal = useCallback(() => setIsVisible(true), [setIsVisible]);
 
-  const renderModal = useCallback(
-    ({height = scaleDp(400)}) => {
-      const {height: screenHeight} = useWindowDimension();
-      return (
-        <Modalize
-          onClosed={modalRef.current?.close}
-          ref={modalRef}
-          modalHeight={height}
-          rootStyle={{
-            zIndex: 200,
-            // height: screenHeight,
-            // height,
-          }}
-          modalStyle={{
-            // height: height,
-            zIndex: 201,
-          }}
-          contentStyle={{
-            zIndex: 201,
-            height: screenHeight,
-          }}>
-          <Content isModalVisible={isVisible} toggleModal={toggleModal} />
-        </Modalize>
-      );
-    },
-    [modalRef, Content],
-  );
+  const renderModal = useCallback(() => {
+    return (
+      <Modal isVisible={isVisible} onBackdropPress={closeModal}>
+        <Content
+          isModalVisible={isVisible}
+          toggleModal={toggleModal}
+          closeModal={closeModal}
+          openModal={openModal}
+        />
+      </Modal>
+    );
+  }, [openModal, closeModal, toggleModal, isVisible]);
 
   return {
     Modal: renderModal,
+    isModalVisible: isVisible,
     toggle: toggleModal,
+    open: openModal,
+    close: closeModal,
   };
 };

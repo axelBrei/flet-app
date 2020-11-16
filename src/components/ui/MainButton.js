@@ -15,18 +15,20 @@ export const MainButton = ({
   ...props
 }) => {
   const buttonColors = useMemo(() => {
-    if (inverted)
+    if (inverted) {
       return {
         color: theme.primaryColor,
         backgroundColor: theme.backgroundColor,
         borderWidth: scaleDp(1),
         borderColor: theme.primaryColor,
       };
-    if (alternative)
+    }
+    if (alternative) {
       return {
         color: theme.white,
         backgroundColor: theme.primaryDarkColor,
       };
+    }
   }, [inverted, alternative]);
 
   return (
@@ -77,7 +79,7 @@ const Button = styled(TouchableOpacity)`
     props.backgroundColor || props.theme.colors.primaryColor};
   border-color: ${(props) =>
     props.borderColor || props.theme.colors.primaryColor};
-  border-width: ${(props) => (!!props.borderColor ? 1 : 0)}px;
+  border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
   margin: 20px;
   width: ${scaleDpTheme(250)};
   min-width: ${scaleDpTheme(170)};
@@ -85,4 +87,5 @@ const Button = styled(TouchableOpacity)`
   padding: ${scaleDpTheme(5)};
   padding-top: ${scaleDpTheme(Platform.OS === 'web' ? 7 : 10)};
   padding-bottom: ${scaleDpTheme(Platform.OS === 'web' ? 7 : 10)};
+  z-index: 0;
 `;

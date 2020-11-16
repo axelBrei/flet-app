@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import styled from 'styled-components';
 import {useHeaderHeight} from '@react-navigation/stack';
 
-export const Modal = ({isVisible, onBackdropPress}) => {
+export const Modal = ({isVisible, onBackdropPress, children}) => {
   const headerHeight = useHeaderHeight();
   const containerRef = useRef(null);
 
@@ -18,9 +18,7 @@ export const Modal = ({isVisible, onBackdropPress}) => {
         isVisible={isVisible}
         ref={containerRef}
         headerHeight={headerHeight}>
-        <ModalContent>
-          <p>Hola</p>
-        </ModalContent>
+        <ModalContent>{children}</ModalContent>
       </Container>
     </>
   );
@@ -28,17 +26,21 @@ export const Modal = ({isVisible, onBackdropPress}) => {
 
 const Container = styled(View)`
   position: fixed;
+  z-index: 99;
   top: ${(props) => (props.isVisible ? '50%' : props.theme.scale(400))};
+  left: 0;
+  right: 0;
   bottom: 50%;
   align-items: center;
   justify-content: center;
   visibility: ${(props) => (props.isVisible ? 'visible' : 'hidden')};
-  transition: top 150ms linear, visibility 150ms linear;
+  transition: top 150ms linear, visibility 250ms linear;
 `;
 
 const Backdrop = styled(View)`
   position: fixed;
   top: ${(props) => props.headerHeight};
+  z-index: 90;
   left: 0;
   right: 0;
   bottom: 0;
@@ -49,11 +51,11 @@ const Backdrop = styled(View)`
 `;
 
 const ModalContent = styled(View)`
-  display: flex;
-  z-index: 10;
+  align-self: center;
+  z-index: 100;
   border-radius: 8px;
   min-width: ${(props) => props.theme.scale(250)}px;
   min-height: ${(props) => props.theme.scale(250)}px;
   padding: ${(props) => props.theme.scale(5)}px;
-  background-color: ${(props) => props.theme.colors.backgroundColor};
+  background-color: ${(props) => props.theme.colors.white};
 `;

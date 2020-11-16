@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import 'dayjs/locale/es';
 
 dayjs.extend(customParseFormat);
+dayjs.locale('es');
 
 const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
 

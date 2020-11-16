@@ -12,7 +12,7 @@ export const Modal = ({children, ...props}) => {
       useNativeDriver
       deviceHeight={height}
       deviceWidth={width}
-      swipeDirection={['down']}
+      propagateSwipe
       avoidKeyboard>
       <Content>{children}</Content>
     </ModalLib>
@@ -20,10 +20,10 @@ export const Modal = ({children, ...props}) => {
 };
 
 const Content = styled(View)`
-  display: flex;
   z-index: 10;
+  justify-content: center;
   border-radius: 8px;
   min-height: ${(props) => props.theme.scale(250)}px;
   padding: ${(props) => props.theme.scale(5)}px;
-  background-color: ${(props) => props.theme.colors.backgroundColor};
+  background-color: ${(props) => props.theme.colors.white};
 `;

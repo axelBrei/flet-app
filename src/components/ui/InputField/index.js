@@ -3,7 +3,7 @@ import {Platform, TextInput, View} from 'react-native';
 import styled from 'styled-components';
 import {AnimatedBorder} from 'components/ui/InputField/AnimatedBorder';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {AnimatedLabel} from 'components/ui/InputField/AnimatedLabel';
+import {AnimatedLabel} from 'components/ui/AnimatedLabel';
 
 const InputFiled = ({label, ...props}) => {
   const [isFocused, setIsFocused] = useState(false);

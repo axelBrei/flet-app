@@ -67,6 +67,7 @@ module.exports = {
     port: 3000,
     hot: true,
     contentBase: path.resolve('dist'),
+    historyApiFallback: true,
   },
   entry: [
     // load any web API polyfills
@@ -79,6 +80,7 @@ module.exports = {
   output: {
     filename: 'bundle.web.js',
     path: path.resolve(appDirectory, 'dist'),
+    publicPath: '/',
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -86,7 +88,7 @@ module.exports = {
     }),
     new HtmlWebPackPlugin({
       template: 'public/index.html',
-      filename: './index.html',
+      // filename: './index.html',
     }),
   ],
   module: {

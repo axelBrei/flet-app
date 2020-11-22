@@ -12,6 +12,7 @@ export const AnimatedLabel = ({
   yTranslation,
   initialY,
   initialX,
+  error,
   style,
   ...props
 }) => {
@@ -21,7 +22,7 @@ export const AnimatedLabel = ({
       y: initialY,
     }),
   ).current;
-  const fontSize = useRef(new Animated.Value(10)).current;
+  const fontSize = useRef(new Animated.Value(12)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -35,7 +36,7 @@ export const AnimatedLabel = ({
       }),
       Animated.timing(fontSize, {
         duration: 200,
-        toValue: focused ? 8 : 10,
+        toValue: focused ? 10 : 12,
         useNativeDriver: Platform.OS !== 'web',
       }),
     ]).start();
@@ -49,7 +50,11 @@ export const AnimatedLabel = ({
       style={[
         style,
         {
-          color: focused ? theme.accentColor : theme.disabled,
+          color: error
+            ? theme.error
+            : focused
+            ? theme.accentColor
+            : theme.disabled,
           transform: [{translateX: position.x}, {translateY: position.y}],
         },
       ]}>

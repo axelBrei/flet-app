@@ -1,4 +1,7 @@
 export const routes = {
-    homeScreen: 'Home',
-    profileScreen: 'Profile'
-}
+  homeScreen: 'inicio',
+  registerStack: 'registerStack',
+  registerPersonalDataScreen: 'registro-personal',
+  registerAccountDataScreen: 'registro-cuenta',
+  profileScreen: 'perfil',
+};

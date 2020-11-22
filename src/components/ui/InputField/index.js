@@ -4,52 +4,59 @@ import styled from 'styled-components';
 import {AnimatedBorder} from 'components/ui/InputField/AnimatedBorder';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {AnimatedLabel} from 'components/ui/AnimatedLabel';
+import {AnimatedError} from 'components/ui/AnimatedError';
 
-const InputFiled = ({label, ...props}) => {
+const InputFiled = ({label, error, onFocus, onBlur, ...props}) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
 
-  const onFocus = useCallback(() => {
+  const _onFocus = useCallback(() => {
     setIsFocused(true);
     inputRef.current?.focus();
-  }, [setIsFocused, inputRef]);
+    typeof onFocus === 'function' && onFocus();
+  }, [onFocus, setIsFocused, inputRef]);
 
-  const onBlur = useCallback(() => {
+  const _onBlur = useCallback(() => {
     setIsFocused(false);
     inputRef.current?.blur();
-  }, [setIsFocused, inputRef]);
+    typeof onBlur === 'function' && onBlur();
+  }, [onFocus, setIsFocused, inputRef]);
 
   return (
-    <Container onFocus={onFocus} onBlur={onBlur}>
+    <Container onFocus={_onFocus} onBlur={_onBlur}>
       <AnimatedLabel
+        error={!!error}
         focused={isFocused || props.value}
         label={label}
-        onPress={isFocused ? onBlur : onFocus}
+        onPress={isFocused ? _onBlur : _onFocus}
       />
-      <Input ref={inputRef} onBlur={onBlur} onFocus={onFocus} {...props} />
-      <AnimatedBorder focused={isFocused} />
+      <Input ref={inputRef} onBlur={_onBlur} onFocus={_onFocus} {...props} />
+      <AnimatedBorder focused={isFocused} error={error} />
+      <AnimatedError error={error} />
     </Container>
   );
 };
 export default (props) => {
-  if (!props.onTextChange) {
-    const [val, setVal] = useState('');
-    return <InputFiled {...props} value={val} onChangeText={setVal} />;
-  }
   return <InputFiled {...props} />;
 };
 
 const Container = styled(View)`
-  margin-top: ${scaleDpTheme(10)};
-  margin-bottom: ${scaleDpTheme(10)};
+  margin-top: ${scaleDpTheme(5)};
 `;
 
 const Input = styled(TextInput)`
   color: ${(props) => props.theme.colors.fontColor};
   min-width: ${scaleDpTheme(150)};
+  width: 100%;
   padding: 0;
   padding-left: ${scaleDpTheme(5)};
   color: black;
+  font-size: ${scaleDp(
+    Platform.select({
+      native: 12,
+      web: 10,
+    }),
+  )}px;
   height: ${Platform.select({
     native: scaleDp(25),
     web: scaleDp(20),

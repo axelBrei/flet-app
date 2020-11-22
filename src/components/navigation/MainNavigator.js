@@ -1,15 +1,31 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from 'components/navigation/HomeScreen';
-import ProfileScreen from 'components/navigation/ProfileScreen';
+import {Platform} from 'react-native';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
+import HomeScreen from 'components/navigation/HomeScreen';
+import {RegisterStack} from 'components/navigation/RegisterStack';
 
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
   return (
-    <Navigator>
-      <Screen name={routes.homeScreen} component={HomeScreen} />
-      <Screen name={routes.profileScreen} component={ProfileScreen} />
+    <Navigator
+      initialRouteName={routes.homeScreen}
+      screenOptions={{
+        title: '',
+        animationEnabled: true,
+      }}>
+      <Screen
+        name={routes.homeScreen}
+        component={HomeScreen}
+        options={{
+          headerShown: Platform.OS === 'web',
+        }}
+      />
+      <Screen
+        name={routes.registerStack}
+        component={RegisterStack}
+        options={{headerShown: false}}
+      />
     </Navigator>
   );
 };

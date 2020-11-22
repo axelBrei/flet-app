@@ -6,19 +6,20 @@ import {AppText} from 'components/ui/AppText';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {Icon} from 'components/ui/Icon';
 
-export const MainButton = ({
+const MainButtonAux = ({
   label,
   icon,
   onPress,
   inverted,
   alternative,
+  fontSize,
   ...props
 }) => {
   const buttonColors = useMemo(() => {
     if (inverted) {
       return {
         color: theme.primaryColor,
-        backgroundColor: theme.backgroundColor,
+        backgroundColor: theme.white,
         borderWidth: scaleDp(1),
         borderColor: theme.primaryColor,
       };
@@ -38,24 +39,30 @@ export const MainButton = ({
       borderColor={buttonColors?.borderColor}
       style={props.style}>
       <Container>
-        <Text color={buttonColors?.color}>{label}</Text>
-        <FloatingIcon
-          color={buttonColors?.color ?? theme.white}
-          name={icon}
-          size={Platform.OS === 'web' ? 30 : 25}
-        />
+        <Text fontSize={fontSize} color={buttonColors?.color}>
+          {label}
+        </Text>
+        {!!icon && (
+          <FloatingIcon
+            color={buttonColors?.color ?? theme.white}
+            name={icon}
+            size={Platform.OS === 'web' ? 30 : 25}
+          />
+        )}
       </Container>
     </Button>
   );
 };
 
-MainButton.defaultProps = {
+MainButtonAux.defaultProps = {
   label: '',
+  fontSize: Platform.OS === 'web' ? 12 : 16,
   icon: '',
   onPress: () => {},
   inverted: false,
   alternative: false,
 };
+export const MainButton = MainButtonAux;
 
 const Container = styled(View)`
   flex-direction: row;
@@ -64,7 +71,6 @@ const Container = styled(View)`
 `;
 
 const Text = styled(AppText)`
-  flex: 1;
   text-align: center;
   color: ${(props) => props.color || props.theme.colors.white};
 `;
@@ -80,12 +86,10 @@ const Button = styled(TouchableOpacity)`
   border-color: ${(props) =>
     props.borderColor || props.theme.colors.primaryColor};
   border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
-  margin: 20px;
+  margin: ${(props) => props.theme.scale(5)}px;
   width: ${scaleDpTheme(250)};
-  min-width: ${scaleDpTheme(170)};
   border-radius: 10px;
-  padding: ${scaleDpTheme(5)};
-  padding-top: ${scaleDpTheme(Platform.OS === 'web' ? 7 : 10)};
-  padding-bottom: ${scaleDpTheme(Platform.OS === 'web' ? 7 : 10)};
+  align-items: center;
+  justify-content: center;
   z-index: 0;
 `;

@@ -8,8 +8,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
+import {scaleDp} from 'helpers/responsiveHelper';
 
-export const Screen = ({children, removeeTWF}) => {
+export const Screen = ({children, removeeTWF, classname, style}) => {
   const ViewComponent = React.useMemo(() => {
     return styled(
       Platform.OS === 'android' && !removeeTWF
@@ -24,12 +25,19 @@ export const Screen = ({children, removeeTWF}) => {
 
   return (
     <>
-      <StatusBar backgroundColor={theme.primaryLightColor} />
-      <ViewComponent accessible={false} onPress={Keyboard.dismiss}>
+      <StatusBar backgroundColor={theme.primaryDarkColor} />
+      <ViewComponent
+        accessible={false}
+        onPress={Keyboard.dismiss}
+        style={{flex: 1, paddingTop: scaleDp(5)}}>
         <View
-          style={{
-            alignItems: 'center',
-          }}>
+          classname={classname}
+          style={[
+            {
+              alignItems: 'center',
+            },
+            style,
+          ]}>
           {children}
         </View>
       </ViewComponent>

@@ -3,7 +3,7 @@ import {Animated, Platform} from 'react-native';
 import {theme} from 'constants/theme';
 import {scaleDp} from 'helpers/responsiveHelper';
 
-export const AnimatedBorder = ({focused}) => {
+export const AnimatedBorder = ({focused, error}) => {
   const borderHeight = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export const AnimatedBorder = ({focused}) => {
   return (
     <Animated.View
       style={{
-        backgroundColor: interpolateAnimation,
-        height: scaleDp(1),
+        backgroundColor: error ? theme.error : interpolateAnimation,
+        height: 2,
       }}
     />
   );

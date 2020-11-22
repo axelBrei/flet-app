@@ -110,6 +110,7 @@ module.exports = {
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
       helpers: path.resolve('./src/helpers'),
+      'redux-store': path.resolve('./src/redux-store'),
       'react-native$': 'react-native-web',
       // 'react-native-gesture-handler': 'react-native-gesture-handler/web',
     },

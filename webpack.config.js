@@ -5,6 +5,14 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname, './');
+const aliasPathJoin = (moduleFolders) =>
+  path.join(
+    process.cwd(),
+    '..',
+    '..',
+    'node_modules',
+    path.join(...moduleFolders),
+  );
 
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
@@ -43,7 +51,7 @@ const babelLoaderConfiguration = {
 
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
-  test: /\.(gif|jpe?g|png|svg)$/,
+  test: /\.(gif|jpe?g|png)$/,
   use: {
     loader: 'url-loader',
     options: {
@@ -96,6 +104,10 @@ module.exports = {
       babelLoaderConfiguration,
       imageLoaderConfiguration,
       vectorIconsConfiguration,
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
     ],
   },
 
@@ -110,14 +122,21 @@ module.exports = {
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
       helpers: path.resolve('./src/helpers'),
+      resources: path.resolve('./src/resources'),
       'redux-store': path.resolve('./src/redux-store'),
       'react-native$': 'react-native-web',
-      // 'react-native-gesture-handler': 'react-native-gesture-handler/web',
+      './ReactNativeSVG': aliasPathJoin([
+        'react-native-svg',
+        'lib',
+        'module',
+        'ReactNativeSVG.web.js',
+      ]),
+      'react-native-svg': 'react-native-svg-web',
     },
     // If you're working on a multi-platform React Native app, web-specific
     // module implementations should be written in files using the extension
     // `.web.js`.
-    extensions: ['.web.js', '.js'],
+    extensions: ['.web.js', '.js', '.svg'],
   },
   // external are files/modules to exlude from bundle
   externals: {

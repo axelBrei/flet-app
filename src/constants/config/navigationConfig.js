@@ -12,6 +12,9 @@ export const navigationConfig = {
     web: {
       display: 'none',
     },
+    native: {
+      color: theme.white,
+    },
   }),
   headerLeft: (props) => <CustomHeaderBackButton {...props} />,
   title: '',

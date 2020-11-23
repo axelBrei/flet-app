@@ -7,7 +7,8 @@ import {ThemeProvider} from 'styled-components';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
 import {Provider} from 'react-redux';
-import store from 'redux-store/index';
+import {PersistGate} from 'redux-persist/integration/react';
+import store, {persistor} from 'redux-store/index';
 
 const App = () => {
   const {rem, width, height} = useWindowDimension();
@@ -19,17 +20,19 @@ const App = () => {
   });
   return (
     <Provider store={store}>
-      <NavigationContainer linking={linkingConfig}>
-        <ThemeProvider
-          theme={{
-            colors: theme,
-            scale: (size) => size * rem,
-            screenWidth: width,
-            screenHeight: height,
-          }}>
-          <MainNavigator />
-        </ThemeProvider>
-      </NavigationContainer>
+      <PersistGate persistor={persistor} loading={null}>
+        <NavigationContainer linking={linkingConfig}>
+          <ThemeProvider
+            theme={{
+              colors: theme,
+              scale: (size) => size * rem,
+              screenWidth: width,
+              screenHeight: height,
+            }}>
+            <MainNavigator />
+          </ThemeProvider>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 };

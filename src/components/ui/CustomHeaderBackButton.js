@@ -15,6 +15,7 @@ export const CustomHeaderBackButton = (props) => (
       marginLeft: scaleDp(10),
     }}>
     <Icon
+      color={theme.white}
       size={scaleDp(Platform.OS === 'web' ? 16 : 20)}
       name={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left'}
     />

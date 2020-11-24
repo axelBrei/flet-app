@@ -41,7 +41,7 @@ const App = () => {
     [dispatch],
   );
 
-  if (!isReady || Platform.OS !== 'web') {
+  if (Platform.OS === 'web' && !isReady) {
     return null;
   }
 

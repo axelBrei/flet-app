@@ -6,6 +6,7 @@ import HomeScreen from 'components/navigation/HomeScreen';
 import {RegisterStack} from 'components/navigation/RegisterStack';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import LoginScreen from 'components/navigation/LoginScreen';
+import {navigationConfig} from 'constants/config/navigationConfig';
 
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
@@ -14,6 +15,7 @@ export default () => {
     <Navigator
       initialRouteName={routes.homeScreen}
       screenOptions={{
+        ...navigationConfig,
         title: '',
         animationEnabled: true,
       }}>
@@ -24,7 +26,13 @@ export default () => {
           headerShown: Platform.OS === 'web' && width >= 450,
         }}
       />
-      <Screen name={routes.loginScreen} component={LoginScreen} />
+      <Screen
+        name={routes.loginScreen}
+        component={LoginScreen}
+        options={{
+          title: 'Ingreso',
+        }}
+      />
       <Screen
         name={routes.registerStack}
         component={RegisterStack}

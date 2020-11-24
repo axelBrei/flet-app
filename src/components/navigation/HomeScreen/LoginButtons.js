@@ -12,10 +12,7 @@ export const LoginButtons = ({orientation}) => {
     navigation.navigate(routes.registerStack, {
       screen: routes.registerPersonalDataScreen,
     });
-  const navigateToLogin = () =>
-    navigation.navigate(routes.registerStack, {
-      screen: routes.loginScreen,
-    });
+  const navigateToLogin = () => navigation.navigate(routes.loginScreen);
 
   return (
     <View style={[{flexDirection: orientation}, styles.container]}>

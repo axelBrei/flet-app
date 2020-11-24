@@ -88,6 +88,7 @@ const Button = styled(TouchableOpacity)`
   border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
   margin: ${(props) => props.theme.scale(5)}px;
   width: ${scaleDpTheme(250)};
+  min-height: ${scaleDpTheme(30)};
   border-radius: 10px;
   align-items: center;
   justify-content: center;

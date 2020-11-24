@@ -14,7 +14,7 @@ export const LoginButtons = ({orientation}) => {
     });
   const navigateToLogin = () =>
     navigation.navigate(routes.registerStack, {
-      screen: routes.registerPersonalDataScreen,
+      screen: routes.loginScreen,
     });
 
   return (

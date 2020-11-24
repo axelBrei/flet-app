@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Platform} from 'react-native';
 import {Screen} from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import {RadioGroup} from 'components/ui/RadioGroup';
@@ -36,7 +36,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: theme.white,
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...Platform.select({
+      web: {overflowX: 'hidden'},
+    }),
   },
   buttonsContainer: {
     flex: 1,

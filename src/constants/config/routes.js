@@ -1,6 +1,6 @@
 export const routes = {
   homeScreen: 'inicio',
-  registerStack: 'registerStack',
+  registerStack: 'registro',
   registerPersonalDataScreen: 'registro-personal',
   registerAccountDataScreen: 'registro-cuenta',
   profileScreen: 'perfil',

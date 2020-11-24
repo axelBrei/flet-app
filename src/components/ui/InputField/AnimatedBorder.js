@@ -10,7 +10,6 @@ export const AnimatedBorder = ({focused, error}) => {
     Animated.timing(borderHeight, {
       duration: 150,
       toValue: focused ? 1.5 : 1,
-      useNativeDriver: Platform.OS === 'ios',
     }).start();
   }, [focused]);
 

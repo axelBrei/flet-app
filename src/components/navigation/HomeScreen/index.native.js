@@ -7,6 +7,7 @@ import {LoginButtons} from 'components/navigation/HomeScreen/LoginButtons';
 import {AppText} from 'components/ui/AppText';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
+import Directions from 'resources/assets/directions.svg';
 
 export default ({navigation}) => {
   return (
@@ -19,6 +20,7 @@ export default ({navigation}) => {
         <AppText italic fontSize={20} color={theme.white}>
           Gestioná tus envios, gestioná tu vida
         </AppText>
+        <Directions width={scaleDp(250)} />
       </View>
       <View style={styles.buttonsContainer}>
         <LoginButtons orientation="column" />
@@ -33,8 +35,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme.white,
-    paddingVertical: scaleDp(5),
     alignItems: 'center',
+    overflowX: 'hidden',
   },
   buttonsContainer: {
     flex: 1,

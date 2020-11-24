@@ -52,20 +52,36 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = fletex_app/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = fletex_app/main.m; sourceTree = "<group>"; };
 		1AEDE2EE3B30AFB67A91EBEC /* libPods-fletex_app-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fletex_app-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		288197A071B94851AF969647 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* fletex_app-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fletex_app-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* fletex_app-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "fletex_app-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		363583AF8897463A8C3335B2 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		39F0C0CE76F849368FFF1E6E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		3B6CE1572B71BE8F0620535A /* Pods-fletex_app-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-fletex_app-tvOSTests/Pods-fletex_app-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		512EDA00C7BC47D69FD7AE3C /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		5B93E885D2D943D98D9D7553 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		5FD93903C095150A397B421D /* libPods-fletex_app-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fletex_app-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D3E5B0060424084892FD78E /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = fletex_app/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		84A07A6560564A57885DB511 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		88117C9B1C738463C2C1E72D /* Pods-fletex_app-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-fletex_app-tvOS/Pods-fletex_app-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		88F92C5E083C13A899509B4C /* Pods-fletex_app-fletex_appTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-fletex_appTests.debug.xcconfig"; path = "Target Support Files/Pods-fletex_app-fletex_appTests/Pods-fletex_app-fletex_appTests.debug.xcconfig"; sourceTree = "<group>"; };
+		96F53255909343D0A628904A /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		9DB3AB6DAA2AA79D6A129FED /* libPods-fletex_app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fletex_app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD2E84657BAE44F18759A1EC /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		B48512930BF042DE8D3D17B8 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		B7FF8676500B4EBB8BFA9CD5 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		BA657E6908B55839F8593C19 /* libPods-fletex_app-fletex_appTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fletex_app-fletex_appTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18FFC04B4D5D40796060092 /* Pods-fletex_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app.release.xcconfig"; path = "Target Support Files/Pods-fletex_app/Pods-fletex_app.release.xcconfig"; sourceTree = "<group>"; };
+		C276221C1B5C40AB8BED076E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		DBF5B5DA0AB932145F02626F /* Pods-fletex_app-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-fletex_app-tvOSTests/Pods-fletex_app-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		DFE50BAE3A384A72AB2E3B76 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		ED40C213F5DE7C39B8685EB9 /* Pods-fletex_app-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-tvOS.release.xcconfig"; path = "Target Support Files/Pods-fletex_app-tvOS/Pods-fletex_app-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		F6E5B82B3C494101A4C13C18 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		FAB4D571E9174D70B0BACC50 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		FB4B3EED843F4A91A17DFB15 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		FDB2D05D87224EF84877D4D0 /* Pods-fletex_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app.debug.xcconfig"; path = "Target Support Files/Pods-fletex_app/Pods-fletex_app.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +165,29 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		736A53A5241A4948985A1C2B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7D3E5B0060424084892FD78E /* AntDesign.ttf */,
+				AD2E84657BAE44F18759A1EC /* Entypo.ttf */,
+				B7FF8676500B4EBB8BFA9CD5 /* EvilIcons.ttf */,
+				363583AF8897463A8C3335B2 /* Feather.ttf */,
+				DFE50BAE3A384A72AB2E3B76 /* FontAwesome.ttf */,
+				39F0C0CE76F849368FFF1E6E /* FontAwesome5_Brands.ttf */,
+				512EDA00C7BC47D69FD7AE3C /* FontAwesome5_Regular.ttf */,
+				5B93E885D2D943D98D9D7553 /* FontAwesome5_Solid.ttf */,
+				84A07A6560564A57885DB511 /* Fontisto.ttf */,
+				C276221C1B5C40AB8BED076E /* Foundation.ttf */,
+				FAB4D571E9174D70B0BACC50 /* Ionicons.ttf */,
+				B48512930BF042DE8D3D17B8 /* MaterialCommunityIcons.ttf */,
+				F6E5B82B3C494101A4C13C18 /* MaterialIcons.ttf */,
+				288197A071B94851AF969647 /* Octicons.ttf */,
+				FB4B3EED843F4A91A17DFB15 /* SimpleLineIcons.ttf */,
+				96F53255909343D0A628904A /* Zocial.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +204,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E9CB5C493268652FC97D85E9 /* Pods */,
+				736A53A5241A4948985A1C2B /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -194,7 +234,6 @@
 				3B6CE1572B71BE8F0620535A /* Pods-fletex_app-tvOSTests.debug.xcconfig */,
 				DBF5B5DA0AB932145F02626F /* Pods-fletex_app-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

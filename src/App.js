@@ -13,11 +13,6 @@ import store, {persistor} from 'redux-store/index';
 const App = () => {
   const {rem, width, height} = useWindowDimension();
 
-  useEffect(() => {
-    if (Platform.OS === 'web') {
-      window.location.addListener;
-    }
-  });
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>

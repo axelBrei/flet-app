@@ -25,5 +25,8 @@ export const useWindowDimension = () => {
     }
   }, []);
 
-  return currentDimension;
+  return {
+    ...currentDimension,
+    isMobile: Platform.OS !== 'web' || currentDimension.width <= 800,
+  };
 };

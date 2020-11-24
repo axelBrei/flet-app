@@ -8,14 +8,14 @@ export const navigationConfig = {
   headerStyle: {
     backgroundColor: theme.primaryLightColor,
   },
-  headerTitleStyle: Platform.select({
+  ...Platform.select({
     web: {
-      display: 'none',
+      headerTitleStyle: {display: 'none'},
+      headerLeft: (props) => <CustomHeaderBackButton {...props} />,
+      title: '',
     },
     native: {
-      color: theme.white,
+      headerTintColor: theme.white,
     },
   }),
-  headerLeft: (props) => <CustomHeaderBackButton {...props} />,
-  title: '',
 };

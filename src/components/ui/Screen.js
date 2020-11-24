@@ -17,9 +17,9 @@ export const Screen = ({children, removeeTWF, classname, style}) => {
         ? TouchableWithoutFeedback
         : View,
     )`
+      background-color: ${(props) => props.theme.colors.backgroundColor};
       height: 100%;
       width: 100%;
-      background-color: ${(props) => props.theme.colors.backgroundColor};
     `;
   }, [removeeTWF]);
 
@@ -29,7 +29,7 @@ export const Screen = ({children, removeeTWF, classname, style}) => {
       <ViewComponent
         accessible={false}
         onPress={Keyboard.dismiss}
-        style={{flex: 1, paddingTop: scaleDp(5)}}>
+        style={{paddingTop: scaleDp(5)}}>
         <View
           classname={classname}
           style={[

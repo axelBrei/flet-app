@@ -64,14 +64,14 @@ export const LoginScreen = () => {
 export default LoginScreen;
 
 const ScreenComponent = styled(Screen)`
-  flex: 1;
   padding: ${scaleDpTheme(15)};
   align-items: center;
 `;
 
 const Title = styled(AppText)`
-  margin-bottom: 35%;
-  margin-top: 40%;
+  margin-bottom: 55%;
+  margin-top: 20%;
+  z-index: 2;
   font-size: ${scaleDpTheme(30)};
-  color: white;
+  color: ${theme.white};
 `;

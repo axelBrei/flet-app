@@ -18,7 +18,6 @@ export default () => {
 };
 
 const Screen = styled(ScreenComponent)`
-  flex: 1;
   align-items: center;
   padding-left: ${scaleDpTheme(15)};
   padding-right: ${scaleDpTheme(15)};

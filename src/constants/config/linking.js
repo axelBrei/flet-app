@@ -6,8 +6,16 @@ export const linkingConfig = {
   prefixes: ['http://127.0.0.1:3000', 'http://localhost:3000'],
   config: {
     screens: {
-      [routes.homeScreen]: routes.homeScreen,
-      [routes.registerPersonalDataScreen]: routes.registerPersonalDataScreen,
+      ...Object.entries(routes).reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr[0]]: curr[1],
+        }),
+        {},
+      ),
+      // [routes.homeScreen]: routes.homeScreen,
+      // [routes.loginScreen]: routes.loginScreen,
+      // [routes.registerPersonalDataScreen]: routes.registerPersonalDataScreen,
     },
   },
 };

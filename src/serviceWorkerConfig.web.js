@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {Text} from 'react-native';
 import ReactDOM from 'react-dom';
 
 const ServiceWorkerUpdateButton = () => {
@@ -22,7 +23,7 @@ export default ServiceWorkerUpdateButton;
  * Styles
  */
 
-const Button = styled.a`
+const Button = styled(Text)`
   position: absolute;
   bottom: 5vh;
   right: 2vw;
@@ -71,7 +72,7 @@ export const register = () => {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker
-        .register('service-worker.web.js')
+        .register('service-worker.js')
         .then((registration) => {
           registration.onupdatefound = () => {
             const installingWorker = registration.installing;

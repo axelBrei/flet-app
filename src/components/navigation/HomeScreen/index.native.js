@@ -7,8 +7,8 @@ import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import Directions from 'resources/assets/directions.svg';
 import {routes} from 'constants/config/routes';
-import {useNavigation} from '@react-navigation/native';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
+import {useNavigation} from 'components/Hooks/useNavigation';
 
 export default () => {
   const navigation = useNavigation();

@@ -4,7 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const {GenerateSW} = require('workbox-webpack-plugin');
+const {GenerateSW, InjectManifest} = require('workbox-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname, './');
 const aliasPathJoin = (moduleFolders) =>
@@ -100,16 +100,20 @@ module.exports = {
       template: 'public/index.html',
       // filename: './index.html',
     }),
-    new GenerateSW({
-      // these options encourage the ServiceWorkers to get in there fast
-      // and not allow any straggling "old" SWs to hang around
-      clientsClaim: true,
-      skipWaiting: true,
+    new InjectManifest({
+      swSrc: path.resolve(appDirectory, './src/serviceWorkerWorkbox.web.js'),
+      swDest: 'service-worker.js',
     }),
+    // new GenerateSW({
+    //   // these options encourage the ServiceWorkers to get in there fast
+    //   // and not allow any straggling "old" SWs to hang around
+    //   clientsClaim: true,
+    //   skipWaiting: true,
+    // }),
     new CopyWebpackPlugin({
       patterns: [
         // {from: 'public/images', to: 'images'},
-        {from: 'public/manifest.json', to: 'build/manifest.json'},
+        {from: 'public/manifest.json', to: 'manifest'},
       ],
     }),
   ],

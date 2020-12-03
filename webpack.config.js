@@ -103,6 +103,7 @@ module.exports = {
     new InjectManifest({
       swSrc: path.resolve(appDirectory, './src/serviceWorkerWorkbox.web.js'),
       swDest: 'service-worker.js',
+      maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
     }),
     // new GenerateSW({
     //   // these options encourage the ServiceWorkers to get in there fast
@@ -113,7 +114,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         // {from: 'public/images', to: 'images'},
-        {from: 'public/manifest.json', to: 'manifest'},
+        {from: path.resolve(appDirectory, './public')},
       ],
     }),
   ],

@@ -7,6 +7,7 @@ import {RegisterStack} from 'components/navigation/RegisterStack';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import LoginScreen from 'components/navigation/LoginScreen';
 import {navigationConfig} from 'constants/config/navigationConfig';
+import {theme} from 'constants/theme';
 
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
@@ -18,19 +19,23 @@ export default () => {
         ...navigationConfig,
         title: '',
         animationEnabled: true,
+        headerShown: width <= 800,
       }}>
       <Screen
         name={routes.homeScreen}
         component={HomeScreen}
         options={{
-          headerShown: Platform.OS === 'web' && width >= 450,
+          headerStyle: {
+            backgroundColor: theme.white,
+          },
+          headerShown: Platform.OS === 'web' && width >= 800,
         }}
       />
       <Screen
         name={routes.loginScreen}
         component={LoginScreen}
         options={{
-          title: 'Ingreso',
+          headerTransparent: true,
         }}
       />
       <Screen

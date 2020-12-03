@@ -1,12 +1,13 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {View} from 'react-native';
 import PropTypes from 'prop-types';
 
 export const Container = styled(View)`
-  height: 100%;
   flex-direction: ${(props) => props.direction};
   align-items: ${(props) => props.alignItems};
   justify-content: ${(props) => props.justifyContent};
+
+  ${(props) => props.flex && 'flex: 1;'}
 `;
 
 Container.defaultProps = {

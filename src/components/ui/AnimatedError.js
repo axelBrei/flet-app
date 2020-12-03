@@ -15,8 +15,11 @@ export const AnimatedError = ({error}) => {
   return (
     <Animated.Text
       style={{
-        height: scaleDp(12),
+        width: '100%',
+        height: scaleDp(16),
         color: theme.error,
+        marginLeft: scaleDp(15),
+        marginTop: scaleDp(4),
         fontSize: errorHeight,
       }}>
       {error}

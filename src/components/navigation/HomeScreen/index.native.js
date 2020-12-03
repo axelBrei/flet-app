@@ -1,15 +1,21 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View, StyleSheet, Platform} from 'react-native';
 import {Screen} from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
-import {RadioGroup} from 'components/ui/RadioGroup';
-import {LoginButtons} from 'components/navigation/HomeScreen/LoginButtons';
 import {AppText} from 'components/ui/AppText';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import Directions from 'resources/assets/directions.svg';
+import {routes} from 'constants/config/routes';
+import {useNavigation} from '@react-navigation/native';
 
-export default ({navigation}) => {
+export default () => {
+  const navigation = useNavigation();
+  const navigateToRegister = () =>
+    navigation.navigate(routes.registerStack, {
+      screen: routes.registerPersonalDataScreen,
+    });
+  const navigateToLogin = () => navigation.navigate(routes.loginScreen);
   return (
     <Screen style={styles.screen}>
       <View style={styles.floatingBall} />
@@ -23,7 +29,17 @@ export default ({navigation}) => {
         <Directions width={scaleDp(250)} />
       </View>
       <View style={styles.buttonsContainer}>
-        <LoginButtons orientation="column" />
+        <MainButton
+          inverted
+          style={styles.button}
+          label="Iniciar sesion"
+          onPress={navigateToLogin}
+        />
+        <MainButton
+          style={styles.button}
+          label="Registrarme"
+          onPress={navigateToRegister}
+        />
       </View>
     </Screen>
   );
@@ -56,5 +72,9 @@ const styles = StyleSheet.create({
     minHeight: scaleDp(600),
     minWidth: scaleDp(600),
     borderRadius: scaleDp(300),
+  },
+  button: {
+    width: scaleDp(270),
+    height: scaleDp(45),
   },
 });

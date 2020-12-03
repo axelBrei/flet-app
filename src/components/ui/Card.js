@@ -2,12 +2,25 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 import {View, Platform} from 'react-native';
 
-export const Card = ({children, onlyWeb, onlyMobile}) => {
+export const Card = ({
+  children,
+  onlyWeb,
+  onlyMobile,
+  backgroundColor,
+  ...props
+}) => {
   const visible =
     (Platform.OS === 'web' && onlyWeb) ||
     (['android', 'ios'].includes(Platform.OS) && onlyMobile);
 
-  return <CardComponent visible={visible}>{children}</CardComponent>;
+  return (
+    <CardComponent
+      backgroundColor={backgroundColor}
+      visible={visible}
+      {...props}>
+      {children}
+    </CardComponent>
+  );
 };
 Card.defaultProps = {
   onlyWeb: true,
@@ -19,7 +32,8 @@ const CardComponent = styled(View)`
   ${(props) =>
     props.visible &&
     css`
-      background-color: ${(props) => props.theme.colors.white};
+      background-color: ${(props) =>
+        props.backgroundColor || props.theme.colors.white};
       box-shadow: 1px 1px 8px ${(props) => props.theme.colors.backdropColor};
       border-radius: 7px;
     `}

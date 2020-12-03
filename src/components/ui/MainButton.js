@@ -18,10 +18,10 @@ const MainButtonAux = ({
   const buttonColors = useMemo(() => {
     if (inverted) {
       return {
-        color: theme.primaryColor,
+        color: theme.accentColor,
         backgroundColor: theme.white,
         borderWidth: scaleDp(1),
-        borderColor: theme.primaryColor,
+        borderColor: theme.accentColor,
       };
     }
     if (alternative) {
@@ -35,9 +35,11 @@ const MainButtonAux = ({
   return (
     <Button
       onPress={onPress}
+      classname={props.classname}
       backgroundColor={buttonColors?.backgroundColor}
       borderColor={buttonColors?.borderColor}
-      style={props.style}>
+      style={props.style}
+      {...props}>
       <Container>
         <Text fontSize={fontSize} color={buttonColors?.color}>
           {label}
@@ -87,8 +89,8 @@ const Button = styled(TouchableOpacity)`
     props.borderColor || props.theme.colors.primaryColor};
   border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
   margin: ${(props) => props.theme.scale(5)}px;
-  width: ${scaleDpTheme(250)};
-  min-height: ${scaleDpTheme(30)};
+  width: ${scaleDpTheme(200)};
+  height: ${(props) => scaleDp(props.height || 40)}px;
   border-radius: 10px;
   align-items: center;
   justify-content: center;

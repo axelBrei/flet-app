@@ -61,9 +61,7 @@ const calculateREMforWeb = ({width, height}) => {
 };
 
 export const calcRem = (dim) =>
-  Platform.OS === 'web' && dim.width >= 450
-    ? calculateREMforWeb(dim)
-    : calculateREMforDevice(dim);
+  dim.width >= 450 ? calculateREMforWeb(dim) : calculateREMforDevice(dim);
 
 export const scaleDp = (dp) => {
   const dim = Dimensions.get('window');

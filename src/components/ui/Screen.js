@@ -36,6 +36,11 @@ export const Screen = ({children, removeeTWF, classname, style}) => {
             {
               alignItems: 'center',
             },
+            Platform.select({
+              web: {
+                overflowX: 'hidden',
+              },
+            }),
             style,
           ]}>
           {children}

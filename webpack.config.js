@@ -106,10 +106,12 @@ module.exports = {
       clientsClaim: true,
       skipWaiting: true,
     }),
-    new CopyWebpackPlugin([
-      {from: 'public/images', to: 'build/images'},
-      {from: 'public/manifest', to: 'build/manifest'},
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        // {from: 'public/images', to: 'images'},
+        {from: 'public/manifest.json', to: 'build/manifest.json'},
+      ],
+    }),
   ],
   module: {
     rules: [

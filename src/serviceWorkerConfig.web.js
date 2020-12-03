@@ -15,17 +15,19 @@ export const displayUpdateNotification = () => {
   );
 };
 
-serviceWorker.register({
-  onUpdate: (registration) => {
-    const waitingServiceWorker = registration.waiting;
+export const register = () => {
+  serviceWorker.register({
+    onUpdate: (registration) => {
+      const waitingServiceWorker = registration.waiting;
 
-    if (waitingServiceWorker) {
-      waitingServiceWorker.addEventListener('statechange', (event) => {
-        if (event.target.state === 'activated') {
-          displayUpdateNotification();
-        }
-      });
-      waitingServiceWorker.postMessage({type: 'SKIP_WAITING'});
-    }
-  },
-});
+      if (waitingServiceWorker) {
+        waitingServiceWorker.addEventListener('statechange', (event) => {
+          if (event.target.state === 'activated') {
+            displayUpdateNotification();
+          }
+        });
+        waitingServiceWorker.postMessage({type: 'SKIP_WAITING'});
+      }
+    },
+  });
+};

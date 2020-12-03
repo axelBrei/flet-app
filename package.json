@@ -9,7 +9,7 @@
     "start": "react-native start",
     "postinstall": "npx pod-install ios",
     "lint": "eslint .",
-    "build:web": "react-scripts build",
+    "build:web:prod": "webpack --mode production",
     "cleanAndroid": "cd android && rm -rf app/build && ./gradlew clean && cd ..",
     "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors"
   },

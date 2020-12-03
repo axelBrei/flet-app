@@ -74,7 +74,7 @@ module.exports = {
   devServer: {
     port: 3000,
     hot: true,
-    contentBase: path.resolve('dist'),
+    contentBase: path.resolve('build'),
     historyApiFallback: true,
   },
   entry: [
@@ -87,7 +87,7 @@ module.exports = {
   // configures where the build ends up
   output: {
     filename: 'bundle.web.js',
-    path: path.resolve(appDirectory, 'dist'),
+    path: path.resolve(appDirectory, 'build'),
     publicPath: '/',
   },
   plugins: [

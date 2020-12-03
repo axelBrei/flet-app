@@ -53,7 +53,6 @@ const Container = styled(View)`
   align-items: center;
   padding-left: ${scaleDpTheme(10)};
   flex-direction: row;
-  margin-top: ${scaleDpTheme(5)};
   background-color: white;
   border-color: ${(props) => (props.error ? theme.error : 'transparent')};
   border-width: ${(props) => (props.error ? 1 : 0)}px;

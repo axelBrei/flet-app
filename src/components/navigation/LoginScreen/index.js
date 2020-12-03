@@ -13,6 +13,7 @@ import {
 } from 'components/navigation/LoginScreen/loginFormikConfig';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {TextLink} from 'components/ui/TextLink';
+import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 
 export const LoginScreen = () => {
   const onPressForgetPassword = () => {};
@@ -31,7 +32,7 @@ export const LoginScreen = () => {
   } = useFormikCustom(loginFormikConfig(onSubmit));
   return (
     <ScreenComponent>
-      <FloatingBall />
+      <FloatingBackgroundOval />
       <Title bold>Iniciar sesion</Title>
       <InputField
         icon="account-outline"
@@ -73,13 +74,4 @@ const Title = styled(AppText)`
   margin-top: 40%;
   font-size: ${scaleDpTheme(30)};
   color: white;
-`;
-
-const FloatingBall = styled(View)`
-  position: absolute;
-  top: ${scaleDpTheme(-350)};
-  background-color: ${theme.primaryLightColor};
-  min-height: ${scaleDpTheme(600)};
-  min-width: ${scaleDpTheme(600)};
-  border-radius: ${scaleDpTheme(600)};
 `;

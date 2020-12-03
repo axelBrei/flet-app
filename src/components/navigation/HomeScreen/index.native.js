@@ -8,6 +8,7 @@ import {theme} from 'constants/theme';
 import Directions from 'resources/assets/directions.svg';
 import {routes} from 'constants/config/routes';
 import {useNavigation} from '@react-navigation/native';
+import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 
 export default () => {
   const navigation = useNavigation();
@@ -18,7 +19,7 @@ export default () => {
   const navigateToLogin = () => navigation.navigate(routes.loginScreen);
   return (
     <Screen style={styles.screen}>
-      <View style={styles.floatingBall} />
+      <FloatingBackgroundOval />
       <View style={styles.textContainer}>
         <AppText bold fontSize={30} color={theme.white}>
           Bienvenido a FletApp
@@ -64,14 +65,6 @@ const styles = StyleSheet.create({
   textContainer: {
     marginTop: scaleDp(90),
     alignItems: 'center',
-  },
-  floatingBall: {
-    position: 'absolute',
-    top: scaleDp(-350),
-    backgroundColor: theme.primaryLightColor,
-    minHeight: scaleDp(600),
-    minWidth: scaleDp(600),
-    borderRadius: scaleDp(300),
   },
   button: {
     width: scaleDp(270),

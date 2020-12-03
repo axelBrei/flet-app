@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Screen as ScreenComponent} from 'components/ui/Screen';
 import {View, Platform} from 'react-native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {RegisterForm} from 'components/navigation/RegisterPersonalDataScreen/RegisterForm';
 import MyAppSvg from 'resources/assets/my_app.svg';
@@ -12,26 +12,19 @@ import MobileScreen from 'components/navigation/RegisterPersonalDataScreen/index
 const RegisterScreen = () => {
   return (
     <Screen>
-      <Container
-        justifyContent="space-between"
-        alignItems="flex-start"
-        style={{flex: 1, width: '100%'}}>
-        <Container direction="column">
-          <AppText bold fontSize={20}>
-            Bienvenido!
-          </AppText>
-          <AppText fontSize={16}>Gracias por formar parte de Flepi</AppText>
-          <MyAppSvg
-            style={{
-              height: scaleDp(300),
-              width: scaleDp(300),
-            }}
-          />
-        </Container>
-        <Container direction="column">
-          <AppText italic>Ingresá tus datos para obtener tu cuenta</AppText>
+      <AppText bold fontSize={20} textAlign="center">
+        ¡Hola! Gracias por querer formar parte
+      </AppText>
+      <Container direction="row">
+        <MyAppSvg
+          style={{
+            height: scaleDp(250),
+            width: scaleDp(300),
+          }}
+        />
+        <FormContainer>
           <RegisterForm />
-        </Container>
+        </FormContainer>
       </Container>
     </Screen>
   );
@@ -42,10 +35,9 @@ export default WithMobileSupport(RegisterScreen, MobileScreen);
 const Screen = styled(ScreenComponent)`
   flex: 1;
   width: 100%;
+  flex-direction: column;
   align-items: center;
-  padding-left: 10%;
-  padding-right: 10%;
-  justify-content: center;
+  padding-top: ${scaleDpTheme(30)};
 `;
 
 const Container = styled(View)`
@@ -53,4 +45,13 @@ const Container = styled(View)`
   justify-content: ${(props) => props.justifyContent || 'flex-start'};
   align-items: ${(props) => props.alignItems || 'flex-start'};
   padding: ${scaleDpTheme(10)};
+`;
+
+const FormContainer = styled(View)`
+  flex-direction: column;
+  flex: 1;
+  width: 40%;
+  min-width: ${scaleDpTheme(200)};
+  margin-left: ${scaleDpTheme(15)};
+  padding-top: ${scaleDpTheme(10)};
 `;

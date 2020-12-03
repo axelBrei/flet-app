@@ -8,7 +8,7 @@ import {scaleDp} from 'helpers/responsiveHelper';
 
 export const Checkbox = ({text, onPress, isChecked}) => {
   return (
-    <Container onPress={onPress}>
+    <Container onPress={() => onPress(!isChecked)}>
       <Icon
         size={scaleDp(Platform.OS === 'web' ? 12 : 18)}
         name={isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'}

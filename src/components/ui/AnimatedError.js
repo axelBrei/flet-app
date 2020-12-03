@@ -8,7 +8,14 @@ export const AnimatedError = ({error}) => {
 
   useEffect(() => {
     Animated.spring(errorHeight, {
-      toValue: scaleDp(error ? 10 : 0),
+      toValue: scaleDp(
+        error
+          ? Platform.select({
+              web: 8,
+              native: 10,
+            })
+          : 0,
+      ),
     }).start();
   }, [errorHeight, error]);
 
@@ -16,10 +23,10 @@ export const AnimatedError = ({error}) => {
     <Animated.Text
       style={{
         width: '100%',
-        height: scaleDp(16),
+        height: scaleDp(15),
         color: theme.error,
-        marginLeft: scaleDp(15),
-        marginTop: scaleDp(4),
+        marginLeft: scaleDp(Platform.OS === 'web' ? 5 : 15),
+        marginTop: scaleDp(2),
         fontSize: errorHeight,
       }}>
       {error}

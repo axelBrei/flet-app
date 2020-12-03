@@ -11,11 +11,22 @@ import {Card} from 'components/ui/Card';
 import {theme} from 'constants/theme';
 import styled from 'styled-components';
 import InputFiled from 'components/ui/InputField';
+import {routes} from 'constants/config/routes';
 
 const HomeScreen = ({navigation, route}) => {
   useLayoutEffect(() => {
+    const navigateToRegister = () =>
+      navigation.navigate(routes.registerStack, {
+        screen: routes.registerPersonalDataScreen,
+      });
     navigation.setOptions({
-      headerRight: () => <MainButton label="Registrarme" height={30} />,
+      headerRight: () => (
+        <MainButton
+          label="Registrarme"
+          height={30}
+          onPress={navigateToRegister}
+        />
+      ),
     });
   }, [navigation]);
 

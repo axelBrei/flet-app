@@ -2,6 +2,7 @@ import React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './src/App';
 import {name as appName} from './package.json';
+import 'serviceWorkerConfig.web';
 
 // Generate required css
 import iconFont from './node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf';

@@ -11,7 +11,10 @@ import {routes} from 'constants/config/routes';
 import {saveRegisterData} from 'redux-store/slices/registerSlice';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {useNavigation} from '@react-navigation/native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
+import {Checkbox} from 'components/ui/Checkbox';
+import {scaleDpTheme} from 'helpers/responsiveHelper';
+import {Platform} from 'react-native-web';
 
 export const RegisterForm = () => {
   const navigation = useNavigation();
@@ -39,9 +42,10 @@ export const RegisterForm = () => {
     _setFieldTouched,
   } = useFormikCustom(personalDataFormikConfig(onSubmit));
   return (
-    <View>
+    <>
       <InputField
         label="Nombre"
+        icon="account-outline"
         value={values[FIELDS.NAME]}
         onChangeText={_setFieldValue(FIELDS.NAME)}
         onBlur={_setFieldTouched(FIELDS.NAME)}
@@ -49,6 +53,7 @@ export const RegisterForm = () => {
       />
       <InputField
         label="Apellido"
+        icon="lock-outline"
         value={values[FIELDS.LAST_NAME]}
         onChangeText={_setFieldValue(FIELDS.LAST_NAME)}
         onBlur={_setFieldTouched(FIELDS.LAST_NAME)}
@@ -56,6 +61,7 @@ export const RegisterForm = () => {
       />
       <InputField
         label="Teléfono"
+        icon="phone-outline"
         value={values[FIELDS.PHONE]}
         onChangeText={_setFieldValue(FIELDS.PHONE)}
         onBlur={_setFieldTouched(FIELDS.PHONE)}
@@ -63,17 +69,24 @@ export const RegisterForm = () => {
       />
       <InputField
         label="Email"
+        icon="email-outline"
         value={values[FIELDS.MAIL]}
         onChangeText={_setFieldValue(FIELDS.MAIL)}
         onBlur={_setFieldTouched(FIELDS.MAIL)}
         error={touched[FIELDS.MAIL] && errors[FIELDS.MAIL]}
       />
+      <Checkbox
+        text="Quiero ser un conductor"
+        isChecked={values[FIELDS.DRIVER]}
+        onPress={_setFieldValue(FIELDS.DRIVER)}
+      />
       <Button label="Siguiente" onPress={handleSubmit} />
-    </View>
+    </>
   );
 };
 
 const Button = styled(MainButton)`
   height: ${(props) => props.theme.scale(40)};
-  margin-top: ${(props) => props.theme.scale(40)};
+  width: 90%;
+  margin-top: ${(props) => props.theme.scale(20)};
 `;

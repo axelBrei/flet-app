@@ -6,6 +6,7 @@ export const REGISTER_PERSONAL_DATA_FIELDS = {
   LAST_NAME: 'lastName',
   PHONE: 'phone',
   MAIL: 'mail',
+  DRIVER: 'driver',
 };
 
 const FIELDS = REGISTER_PERSONAL_DATA_FIELDS;
@@ -14,12 +15,14 @@ const initialValues = {
   [FIELDS.LAST_NAME]: '',
   [FIELDS.PHONE]: '',
   [FIELDS.MAIL]: '',
+  [FIELDS.DRIVER]: false,
 };
 const initialTouched = {
   [FIELDS.NAME]: false,
   [FIELDS.LAST_NAME]: false,
   [FIELDS.PHONE]: false,
   [FIELDS.MAIL]: false,
+  [FIELDS.DRIVER]: false,
 };
 
 const {
@@ -48,6 +51,7 @@ const validationSchema = yup.object().shape({
     .min(8, minimumFieldLength)
     .email(emailRequired)
     .required(requiredField),
+  [FIELDS.DRIVER]: yup.bool(),
 });
 
 export const personalDataFormikConfig = (onSubmit) => ({

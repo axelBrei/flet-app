@@ -4,16 +4,14 @@ import styled from 'styled-components';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {RegisterForm} from 'components/navigation/RegisterPersonalDataScreen/RegisterForm';
 import {AppText} from 'components/ui/AppText';
+import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
+import {theme} from 'constants/theme';
 
 export default () => {
   return (
     <Screen>
-      <AppText bold fontSize={20}>
-        Bienvenido!
-      </AppText>
-      <AppText fontSize={16} italic style={{paddingBottom: scaleDp(20)}}>
-        Ingresá tus datos para obtener tu cuenta
-      </AppText>
+      <FloatingBackgroundOval />
+      <Title bold>{'¡Hola!\nGracias por querer\nformar parte'}</Title>
       <RegisterForm />
     </Screen>
   );
@@ -22,5 +20,15 @@ export default () => {
 const Screen = styled(ScreenComponent)`
   flex: 1;
   align-items: center;
-  padding-top: ${scaleDpTheme(10)};
+  padding-left: ${scaleDpTheme(15)};
+  padding-right: ${scaleDpTheme(15)};
+`;
+
+const Title = styled(AppText)`
+  margin-top: 20%;
+  z-index: 2;
+  font-size: ${scaleDpTheme(30)};
+  text-align: center;
+  color: ${theme.white};
+  margin-bottom: ${scaleDpTheme(100)};
 `;

@@ -28,5 +28,5 @@ AppRegistry.runApplication(appName, {
   rootTag: document.getElementById('react-root'),
 });
 
-// WPA
+// PWA
 register();

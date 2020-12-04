@@ -2,7 +2,7 @@ import React from 'react';
 import {Screen as ScreenComponent} from 'components/ui/Screen';
 import styled from 'styled-components';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {RegisterForm} from 'components/navigation/RegisterPersonalDataScreen/RegisterForm';
+import {RegisterForm} from 'components/navigation/RegisterScreen/RegisterForm';
 import {AppText} from 'components/ui/AppText';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {theme} from 'constants/theme';
@@ -29,5 +29,5 @@ const Title = styled(AppText)`
   font-size: ${scaleDpTheme(30)};
   text-align: center;
   color: ${theme.white};
-  margin-bottom: ${scaleDpTheme(100)};
+  margin-bottom: ${scaleDpTheme(80)};
 `;

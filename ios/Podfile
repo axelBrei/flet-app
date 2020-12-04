@@ -8,6 +8,17 @@ target 'fletex_app' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  # PERMISSIONS PODS
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "../node_modules/react-native-permissions/ios/Camera"
+  pod 'Permission-LocationWhenInUse', :path => "../node_modules/react-native-permissions/ios/LocationWhenInUse"
+  pod 'Permission-LocationAlways', :path => "../node_modules/react-native-permissions/ios/LocationAlways"
+  pod 'Permission-PhotoLibrary', :path => "../node_modules/react-native-permissions/ios/PhotoLibrary"
+  pod 'Permission-MediaLibrary', :path => "../node_modules/react-native-permissions/ios/MediaLibrary"
+  pod 'Permission-Microphone', :path => "../node_modules/react-native-permissions/ios/Microphone"
+  # END PERMISSIONS PODS
+
+  
   target 'fletex_appTests' do
     inherit! :complete
     # Pods for testing

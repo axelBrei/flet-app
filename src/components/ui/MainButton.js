@@ -19,7 +19,7 @@ const MainButtonAux = ({
     if (inverted) {
       return {
         color: theme.accentColor,
-        backgroundColor: theme.white,
+        backgroundColor: 'transparent',
         borderWidth: scaleDp(1),
         borderColor: theme.accentColor,
       };

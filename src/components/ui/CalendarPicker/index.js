@@ -1,24 +1,24 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import styled from 'styled-components';
-import {View, TouchableOpacity} from 'react-native';
+import {View, Pressable} from 'react-native';
 import {Modal} from 'components/ui/Modal/index';
 import {AppText} from 'components/ui/AppText';
-import {Icon} from 'components/ui/Icon';
-import dayjs from 'dayjs';
 import {formatDate} from 'helpers/dateHelper';
-import {scaleDp} from 'helpers/responsiveHelper';
 import {useModal} from 'components/Hooks/useModal';
 import {Calendar} from 'components/ui/Calendar';
-import {theme} from 'constants/theme';
-import {AnimatedLabel} from 'components/ui/AnimatedLabel';
+import InputField from 'components/ui/InputField';
 
 export default ({
   label,
-  initialDate = null,
+  value = null,
   onSelectDay = () => {},
   calendarOptions,
+  error,
 }) => {
-  const [currentDate, setCurrentDate] = useState(initialDate);
+  const [currentDate, setCurrentDate] = useState(value);
+  useEffect(() => {
+    setCurrentDate(value);
+  }, [value]);
 
   const onDayPress = useCallback(
     (toggleModal) => (date) => {
@@ -40,60 +40,36 @@ export default ({
   );
 
   const {Modal, toggle, isModalVisible} = useModal(renderCalendar);
+
+  const onFocusInput = useCallback(() => {}, [toggle]);
+
   return (
     <>
-      <Container>
-        <AnimatedLabel
-          label="Selecciona una fecha"
-          focused={currentDate || isModalVisible}
-          xTranslation={18}
-          yTranslation={17}
-          initialY={2}
+      <InputContainer onPress={toggle} activeOpacity={0.5}>
+        <InputField
+          onFocus={onFocusInput}
+          focusable={false}
+          editable={false}
+          pointerEvents="none"
+          label={label || 'Selecciona una fecha'}
+          icon="calendar"
+          value={formatDate(currentDate)}
+          error={error}
         />
-        <InputContainer onPress={toggle}>
-          <Icon size={scaleDp(16)} name="calendar" color={theme.primaryColor} />
-          {/*<Text*/}
-          {/*  fontSize={10}*/}
-          {/*  color={currentDate ? theme.fontColor : theme.disabled}>*/}
-          {/*  {currentDate*/}
-          {/*    ? formatDate(currentDate, 'DD/MM/YYYY')*/}
-          {/*    : 'Elegí una fecha'}*/}
-          {/*</Text>*/}
-          {currentDate && (
-            <ClearIcon
-              name="close-circle"
-              onPress={() => setCurrentDate(null)}
-            />
-          )}
-        </InputContainer>
-      </Container>
+      </InputContainer>
       <Modal />
     </>
   );
 };
-const Container = styled(View)`
-  align-items: flex-start;
-`;
 
-const InputContainer = styled(TouchableOpacity)`
+const InputContainer = styled(Pressable)`
   flex-direction: row;
+  width: 100%;
   min-width: ${(props) => props.theme.scale(150)}px;
-  align-items: center;
-  border-bottom-width: 1px;
   padding-bottom: ${(props) => props.theme.scale(2)}px;
   padding-top: ${(props) => props.theme.scale(3)}px;
 `;
 
-const Text = styled(AppText)`
-  margin-left: ${(props) => props.theme.scale(5)}px;
-`;
-
 const ModalContainer = styled(View)`
   background-color: ${(props) => props.theme.colors.white};
-`;
-
-const ClearIcon = styled(Icon)`
-  color: ${(props) => props.theme.colors.primaryLightColor};
-  flex: 1;
-  text-align: right;
 `;

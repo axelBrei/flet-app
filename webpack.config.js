@@ -71,101 +71,104 @@ const vectorIconsConfiguration = {
 // Try the environment variable, otherwise use root
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
-module.exports = {
-  devtool: 'inline-source-map',
-  devServer: {
-    port: 3000,
-    hot: true,
-    contentBase: path.resolve('build'),
-    historyApiFallback: true,
-  },
-  entry: [
-    // load any web API polyfills
-    // path.resolve(appDirectory, 'polyfills-web.js'),
-    // your web-specific entry file
-    path.resolve(appDirectory, 'index.web.js'),
-  ],
+module.exports = (env) =>
+  console.log('env', env) || {
+    devtool: 'inline-source-map',
+    devServer: {
+      port: 3000,
+      hot: true,
+      contentBase: path.resolve('build'),
+      historyApiFallback: true,
+    },
+    entry: [
+      // load any web API polyfills
+      // path.resolve(appDirectory, 'polyfills-web.js'),
+      // your web-specific entry file
+      path.resolve(appDirectory, 'index.web.js'),
+    ],
 
-  // configures where the build ends up
-  output: {
-    filename: 'bundle.web.js',
-    path: path.resolve(appDirectory, 'build'),
-    publicPath: '/',
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
-    }),
-    new HtmlWebPackPlugin({
-      template: 'public/index.html',
-      // filename: './index.html',
-    }),
-    new InjectManifest({
-      swSrc: path.resolve(appDirectory, './src/serviceWorkerWorkbox.web.js'),
-      swDest: 'service-worker.js',
-      maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
-    }),
-    // new GenerateSW({
-    //   // these options encourage the ServiceWorkers to get in there fast
-    //   // and not allow any straggling "old" SWs to hang around
-    //   clientsClaim: true,
-    //   skipWaiting: true,
-    // }),
-    new CopyWebpackPlugin({
-      patterns: [
-        // {from: 'public/images', to: 'images'},
-        {from: path.resolve(appDirectory, './public')},
-      ],
-    }),
-  ],
-  module: {
-    rules: [
-      babelLoaderConfiguration,
-      imageLoaderConfiguration,
-      vectorIconsConfiguration,
-      {
-        test: /\.svg$/,
-        use: {
-          loader: '@svgr/webpack',
-          options: {
-            svgoConfig: {
-              plugins: [{removeViewBox: false}],
+    // configures where the build ends up
+    output: {
+      filename: 'bundle.web.js',
+      path: path.resolve(appDirectory, 'build'),
+      publicPath: '/',
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
+      }),
+      new HtmlWebPackPlugin({
+        template: 'public/index.html',
+        // filename: './index.html',
+      }),
+      // PRODUCTION ONLY PLUGINS
+      ...(!env.dev
+        ? [
+            new CopyWebpackPlugin({
+              patterns: [
+                // {from: 'public/images', to: 'images'},
+                {from: path.resolve(appDirectory, './public')},
+              ],
+            }),
+            new InjectManifest({
+              swSrc: path.resolve(
+                appDirectory,
+                './src/serviceWorkerWorkbox.web.js',
+              ),
+              swDest: 'service-worker.js',
+              maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
+            }),
+          ]
+        : []),
+    ],
+    module: {
+      rules: [
+        babelLoaderConfiguration,
+        imageLoaderConfiguration,
+        vectorIconsConfiguration,
+        {
+          test: /\.svg$/,
+          use: {
+            loader: '@svgr/webpack',
+            options: {
+              svgoConfig: {
+                plugins: [{removeViewBox: false}],
+              },
             },
           },
         },
-      },
-    ],
-  },
-
-  resolve: {
-    // This will only alias the exact import "react-native"
-    alias: {
-      'styled-components': 'styled-components/native',
-      'react-native-modal': path.resolve(
-        './src/components/ui/Modal/index.web.js',
-      ),
-      'react-native-vector-icons': 'react-native-vector-icons/dist',
-      components: path.resolve('./src/components'),
-      constants: path.resolve('./src/constants'),
-      helpers: path.resolve('./src/helpers'),
-      resources: path.resolve('./src/resources'),
-      'redux-store': path.resolve('./src/redux-store'),
-      'react-native$': 'react-native-web',
-      './ReactNativeSVG': aliasPathJoin([
-        'react-native-svg',
-        'lib',
-        'module',
-        'ReactNativeSVG.web.js',
-      ]),
-      'react-native-svg': 'react-native-svg-web',
+      ],
     },
-    // If you're working on a multi-platform React Native app, web-specific
-    // module implementations should be written in files using the extension
-    // `.web.js`.
-    extensions: ['.web.js', '.js', '.svg'],
-  },
-  // external are files/modules to exlude from bundle
-  externals: {
-    modal: 'react-native-modal',
-  },
-};
+
+    resolve: {
+      // This will only alias the exact import "react-native"
+      alias: {
+        'styled-components': 'styled-components/native',
+        'react-native-modal': path.resolve(
+          './src/components/ui/Modal/index.web.js',
+        ),
+        'react-native-vector-icons': 'react-native-vector-icons/dist',
+        components: path.resolve('./src/components'),
+        constants: path.resolve('./src/constants'),
+        helpers: path.resolve('./src/helpers'),
+        resources: path.resolve('./src/resources'),
+        'redux-store': path.resolve('./src/redux-store'),
+        'react-native$': 'react-native-web',
+        './ReactNativeSVG': aliasPathJoin([
+          'react-native-svg',
+          'lib',
+          'module',
+          'ReactNativeSVG.web.js',
+        ]),
+        'react-native-svg': 'react-native-svg-web',
+      },
+      // If you're working on a multi-platform React Native app, web-specific
+      // module implementations should be written in files using the extension
+      // `.web.js`.
+      extensions: ['.web.js', '.js', '.svg'],
+    },
+    // external are files/modules to exlude from bundle
+    externals: {
+      modal: 'react-native-modal',
+    },
+  };

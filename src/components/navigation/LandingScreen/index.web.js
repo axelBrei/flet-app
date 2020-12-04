@@ -3,22 +3,24 @@ import {Screen} from 'components/ui/Screen';
 import {Container} from 'components/ui/Container';
 import DirectionsIcon from 'resources/assets/directions.svg';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
-import MobileHomeScreen from 'components/navigation/HomeScreen/index.native';
+import MobileHomeScreen from 'components/navigation/LandingScreen/index.native';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
 import {Card} from 'components/ui/Card';
 import {theme} from 'constants/theme';
 import styled from 'styled-components';
-import InputFiled from 'components/ui/InputField';
+import InputField from 'components/ui/InputField';
 import {routes} from 'constants/config/routes';
+import {useFormikCustom} from 'components/Hooks/useFormikCustom';
+import {
+  loginFormikConfig,
+  LOGIN_FIELDS as FIELDS,
+} from 'components/navigation/LoginScreen/loginFormikConfig';
 
 const HomeScreen = ({navigation, route}) => {
   useLayoutEffect(() => {
-    const navigateToRegister = () =>
-      navigation.navigate(routes.registerStack, {
-        screen: routes.registerPersonalDataScreen,
-      });
+    const navigateToRegister = () => navigation.navigate(routes.registerStack);
     navigation.setOptions({
       headerRight: () => (
         <MainButton
@@ -30,6 +32,18 @@ const HomeScreen = ({navigation, route}) => {
     });
   }, [navigation]);
 
+  const onSubmitLogin = () => {};
+
+  const {
+    values,
+    _setFieldTouched,
+    _setFieldValue,
+    touched,
+    submitCount,
+    errors,
+    handleSubmit,
+  } = useFormikCustom(loginFormikConfig(onSubmitLogin));
+
   return (
     <ScreenComponent>
       <Card style={{flex: 1}}>
@@ -40,13 +54,35 @@ const HomeScreen = ({navigation, route}) => {
           <DirectionsIcon height={scaleDp(250)} width={scaleDp(250)} />
         </Container>
       </Card>
-      <LoginContainer direction="column">
+      <LoginContainer dir="column">
         <AppText width="100%" alternative>
           Iniciar sesión
         </AppText>
-        <InputFiled icon="account-outline" label="Mail" />
-        <InputFiled icon="lock-outline" label="Contraseña" />
-        <Button label="Ingresar" inverted />
+        <InputField
+          value={values[FIELDS.USERNAME]}
+          onChangeText={_setFieldValue(FIELDS.USERNAME)}
+          onBlur={_setFieldTouched(FIELDS.USERNAME)}
+          error={
+            submitCount > 0 &&
+            touched[FIELDS.USERNAME] &&
+            errors[FIELDS.USERNAME]
+          }
+          icon="account-outline"
+          label="Mail"
+        />
+        <InputField
+          value={values[FIELDS.PASSWORD]}
+          onChangeText={_setFieldValue(FIELDS.PASSWORD)}
+          onBlur={_setFieldTouched(FIELDS.PASSWORD)}
+          error={
+            submitCount > 0 &&
+            touched[FIELDS.PASSWORD] &&
+            errors[FIELDS.PASSWORD]
+          }
+          icon="lock-outline"
+          label="Contraseña"
+        />
+        <Button label="Ingresar" inverted onPress={handleSubmit} />
         <AppText alternative fontSize={10} onPress={() => {}}>
           ¿Olvidaste tu contraseña?
         </AppText>

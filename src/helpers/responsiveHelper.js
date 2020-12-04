@@ -15,8 +15,11 @@ import {Dimensions, Platform} from 'react-native';
  * @returns {number} - REM unit for this device
  */
 const calculateREMforDevice = ({width, height}) => {
-  const PhM = 330;
-  const TaWidth = 800;
+  const PhM = Platform.select({
+    ios: 330,
+    android: 380,
+  });
+  const TaWidth = 775;
   const MSW = 450;
   const MSV = 1;
   const MTV = 0.7;

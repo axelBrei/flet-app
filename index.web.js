@@ -29,4 +29,6 @@ AppRegistry.runApplication(appName, {
 });
 
 // PWA
-register();
+if (process.env.NODE_ENV !== 'development') {
+  register();
+}

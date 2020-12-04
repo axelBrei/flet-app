@@ -1,6 +1,6 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {Platform, Linking} from 'react-native';
-import {NavigationContainer, useLinking} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from 'components/navigation/MainNavigator';
 import {linkingConfig} from 'constants/config/linking';
 import {ThemeProvider} from 'styled-components';
@@ -9,20 +9,16 @@ import {theme} from 'constants/theme';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistor} from 'redux-store/index';
-import {
-  selectSavedNavigationState,
-  changeNavigationState,
-} from 'redux-store/slices/navigationSlice';
+import {changeNavigationState} from 'redux-store/slices/navigationSlice';
 
 const App = () => {
   const dispatch = store.dispatch;
-  const {rem, width, height} = useWindowDimension();
+  const {rem, width, height, isMobile} = useWindowDimension();
   const [initialState, setInitialState] = useState();
   const [isReady, setIsReady] = useState(false);
 
   const restoreState = useCallback(async () => {
     const initialURL = await Linking.getInitialURL();
-    console.log('initialURL', initialURL, process.env.NODE_ENV);
     if (initialURL === null || process.env.NODE_ENV === 'development') {
       const state = store.getState().navigation?.state || undefined;
       if (state !== undefined) {
@@ -30,7 +26,7 @@ const App = () => {
       }
     }
     setIsReady(true);
-  }, [store, setInitialState]);
+  }, [setInitialState]);
 
   useEffect(() => {
     Platform.OS === 'web' && restoreState();
@@ -49,12 +45,13 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
         <NavigationContainer
-          linking={linkingConfig}
           {...Platform.select({
             web: {
+              linking: linkingConfig,
               initialState: initialState,
               onStateChange,
             },
+            native: {},
           })}>
           <ThemeProvider
             theme={{
@@ -62,6 +59,7 @@ const App = () => {
               scale: (size) => size * rem,
               screenWidth: width,
               screenHeight: height,
+              isMobile,
             }}>
             <MainNavigator />
           </ThemeProvider>

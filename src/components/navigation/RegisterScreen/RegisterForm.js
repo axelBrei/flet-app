@@ -3,7 +3,7 @@ import InputField from 'components/ui/InputField';
 import {
   personalDataFormikConfig,
   REGISTER_PERSONAL_DATA_FIELDS as FIELDS,
-} from 'components/navigation/RegisterPersonalDataScreen/formikConfig';
+} from 'components/navigation/RegisterScreen/formikConfig';
 import {MainButton} from 'components/ui/MainButton';
 import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
@@ -22,7 +22,11 @@ export const RegisterForm = () => {
 
   const onSubmit = useCallback(
     (values) => {
-      navigation.navigate(routes.registerAccountDataScreen);
+      if (values[FIELDS.DRIVER]) {
+        navigation.navigate(routes.registerDriverDataScreen);
+        return;
+      }
+      // navigation.navigate(routes.registerAccountDataScreen);
       dispatch(
         saveRegisterData({
           step: 'personal',

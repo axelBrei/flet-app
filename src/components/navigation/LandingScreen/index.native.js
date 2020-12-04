@@ -12,11 +12,14 @@ import {useNavigation} from 'components/Hooks/useNavigation';
 
 export default () => {
   const navigation = useNavigation();
-  const navigateToRegister = () =>
-    navigation.navigate(routes.registerStack, {
-      screen: routes.registerPersonalDataScreen,
-    });
-  const navigateToLogin = () => navigation.navigate(routes.loginScreen);
+  const navigateToRegister = useCallback(
+    () => navigation.navigate(routes.registerStack),
+    [navigation],
+  );
+  const navigateToLogin = useCallback(
+    () => navigation.navigate(routes.loginScreen),
+    [navigation],
+  );
   return (
     <Screen style={styles.screen}>
       <FloatingBackgroundOval />
@@ -58,12 +61,14 @@ const styles = StyleSheet.create({
     }),
   },
   buttonsContainer: {
-    flex: 1,
+    ...Platform.select({
+      native: {flex: 1},
+    }),
     justifyContent: 'flex-end',
-    paddingBottom: scaleDp(100),
+    marginBottom: scaleDp(20),
   },
   textContainer: {
-    marginTop: scaleDp(90),
+    marginTop: '30%',
     alignItems: 'center',
   },
   button: {

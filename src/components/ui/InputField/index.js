@@ -1,32 +1,44 @@
-import React, {useState, useCallback, useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {Platform, TextInput, View} from 'react-native';
 import styled from 'styled-components';
-import {AnimatedBorder} from 'components/ui/InputField/AnimatedBorder';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {AnimatedLabel} from 'components/ui/AnimatedLabel';
 import {AnimatedError} from 'components/ui/AnimatedError';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
 
-const InputFiled = ({label, error, onFocus, onBlur, icon, ...props}) => {
-  const [isFocused, setIsFocused] = useState(false);
+const InputField = ({
+  label,
+  error,
+  onFocus,
+  onBlur,
+  icon,
+  clearable,
+  ...props
+}) => {
   const inputRef = useRef(null);
 
   const _onFocus = useCallback(() => {
-    setIsFocused(true);
     inputRef.current?.focus();
     typeof onFocus === 'function' && onFocus();
-  }, [onFocus, setIsFocused, inputRef]);
+  }, [onFocus, inputRef]);
 
   const _onBlur = useCallback(() => {
-    setIsFocused(false);
     inputRef.current?.blur();
     typeof onBlur === 'function' && onBlur();
-  }, [onFocus, setIsFocused, inputRef]);
+  }, [onFocus, inputRef]);
+
+  const onClear = useCallback(() => {
+    props.onChangeText('');
+  }, [props]);
 
   return (
-    <>
-      <Container onFocus={_onFocus} onBlur={_onBlur} error={error}>
+    <ComponentContainer>
+      <Container
+        classname={props.classname}
+        onFocus={_onFocus}
+        onBlur={_onBlur}
+        error={error}
+        style={props.containerStyle}>
         {!!icon && (
           <Icon
             name={icon}
@@ -41,21 +53,28 @@ const InputFiled = ({label, error, onFocus, onBlur, icon, ...props}) => {
           {...props}
           placeholder={label}
         />
+        {clearable && <ClearIcon name="close-circle" onPress={onClear} />}
       </Container>
       <AnimatedError error={error} />
-    </>
+    </ComponentContainer>
   );
 };
-export default InputFiled;
+export default InputField;
+
+const ComponentContainer = styled(View)`
+  width: 100%;
+`;
 
 const Container = styled(View)`
-  width: 100%;
   align-items: center;
+  margin: 0;
+  padding: 0;
   padding-left: ${scaleDpTheme(10)};
+  padding-right: ${scaleDpTheme(10)};
   flex-direction: row;
   background-color: white;
   border-color: ${(props) => (props.error ? theme.error : 'transparent')};
-  border-width: ${(props) => (props.error ? 1 : 0)}px;
+  border-width: 1px;
   border-radius: 12px;
   box-shadow: 0.5px 1px 2px ${theme.disabled};
   elevation: 3;
@@ -74,4 +93,10 @@ const Input = styled(TextInput)`
   padding-top: ${scaleDpTheme(15)};
   padding-bottom: ${scaleDpTheme(15)};
   padding-left: ${scaleDpTheme(10)};
+`;
+
+const ClearIcon = styled(Icon)`
+  color: ${(props) => props.theme.colors.primaryLightColor};
+  flex: 1;
+  text-align: right;
 `;

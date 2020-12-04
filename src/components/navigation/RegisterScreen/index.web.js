@@ -3,11 +3,11 @@ import {Screen as ScreenComponent} from 'components/ui/Screen';
 import {View, Platform} from 'react-native';
 import styled, {css} from 'styled-components';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {RegisterForm} from 'components/navigation/RegisterPersonalDataScreen/RegisterForm';
+import {RegisterForm} from 'components/navigation/RegisterScreen/RegisterForm';
 import MyAppSvg from 'resources/assets/my_app.svg';
 import {AppText} from 'components/ui/AppText';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
-import MobileScreen from 'components/navigation/RegisterPersonalDataScreen/index.native';
+import MobileScreen from 'components/navigation/RegisterScreen/index.native';
 
 const RegisterScreen = () => {
   return (
@@ -15,7 +15,7 @@ const RegisterScreen = () => {
       <AppText bold fontSize={20} textAlign="center">
         ¡Hola! Gracias por querer formar parte
       </AppText>
-      <Container direction="row">
+      <Container dir="row">
         <MyAppSvg
           style={{
             height: scaleDp(250),

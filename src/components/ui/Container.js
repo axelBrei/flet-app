@@ -3,17 +3,18 @@ import {View} from 'react-native';
 import PropTypes from 'prop-types';
 
 export const Container = styled(View)`
-  flex-direction: ${(props) => props.direction};
+  flex-direction: ${(props) => props.dir};
   align-items: ${(props) => props.alignItems};
   justify-content: ${(props) => props.justifyContent};
-
+  width: ${(props) => props.width};
   ${(props) => props.flex && 'flex: 1;'}
 `;
 
 Container.defaultProps = {
-  direction: 'column',
+  dir: 'column',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
+  width: 'auto',
 };
 Container.propTypes = {
   alignItems: PropTypes.string,

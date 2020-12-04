@@ -2,6 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos poder acceder al microfono para poder escuchar el audio de los reclamos</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicacion para poder mostrar tu punto de partida en el mapa</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicacion para poder trackear un envio</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicacion para poder mostrar tu punto de partida en el mapa</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos usar tu camara para poder verificar tu identidad</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

@@ -1,15 +1,14 @@
-import {useNavigation as navigation, useLinkTo} from '@react-navigation/native';
+import {useNavigation as useNav, useLinkTo} from '@react-navigation/native';
 import {Platform} from 'react-native';
 
 export const useNavigation = () => {
-  const nav = navigation();
+  const nav = useNav();
   const link = useLinkTo();
 
-  const navigate = (route, params) =>
-    Platform.select({
-      web: link(route),
-      native: nav.navigate(route, params),
-    });
+  const navigate = Platform.select({
+    web: (route, params) => link(route),
+    native: nav.navigate,
+  });
 
   return {
     ...nav,

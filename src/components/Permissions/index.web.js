@@ -1,10 +1,14 @@
 import {permissionStatus} from 'components/Permissions/permissionStatus';
 import {PERMISSIONS} from 'components/Permissions/permissions';
 
-const checkPermissions = async (permission) => {
+const checkPermissions = async (permissions = []) => {
   if ('permissions' in navigator) {
-    const result = await navigator.permissions.query({name: permission});
-    return [permissionStatus.GRANTED, permissionStatus.PROMPT].includes(result);
+    const res = permissions.map(async (p) => {
+      return await navigator.permissions.query({name: p});
+    });
+    return res.every((i) =>
+      [permissionStatus.GRANTED, permissionStatus.PROMPT].includes(i),
+    );
   }
 };
 

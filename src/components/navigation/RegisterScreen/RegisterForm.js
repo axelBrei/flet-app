@@ -10,7 +10,7 @@ import {useDispatch} from 'react-redux';
 import {routes} from 'constants/config/routes';
 import {saveRegisterData} from 'redux-store/slices/registerSlice';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation} from 'components/Hooks/useNavigation';
 import styled, {css} from 'styled-components';
 import {Checkbox} from 'components/ui/Checkbox';
 import {scaleDpTheme} from 'helpers/responsiveHelper';

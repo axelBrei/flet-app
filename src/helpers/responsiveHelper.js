@@ -68,7 +68,7 @@ export const calcRem = (dim) =>
 
 export const scaleDp = (dp) => {
   const dim = Dimensions.get('window');
-  return dp * calcRem(dim);
+  return dp * (calcRem(dim) || 1);
 };
 
 export const scaleDpTheme = (size) => (props) => `${props.theme.scale(size)}px`;

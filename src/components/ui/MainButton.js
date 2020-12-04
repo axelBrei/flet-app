@@ -88,7 +88,7 @@ const Button = styled(TouchableOpacity)`
   border-color: ${(props) =>
     props.borderColor || props.theme.colors.primaryColor};
   border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
-  margin: ${(props) => props.theme.scale(5)}px;
+  margin: ${(props) => scaleDp(5)}px;
   width: ${scaleDpTheme(200)};
   height: ${(props) => scaleDp(props.height || 40)}px;
   border-radius: 10px;

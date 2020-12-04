@@ -15,5 +15,5 @@ export const FloatingBackgroundOval = styled(View)`
 `;
 
 FloatingBackgroundOval.defaultProps = {
-  visible: Platform.OS !== 'web',
+  visible: true,
 };

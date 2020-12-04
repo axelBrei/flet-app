@@ -6,7 +6,7 @@ export const Container = styled(View)`
   flex-direction: ${(props) => props.dir};
   align-items: ${(props) => props.alignItems};
   justify-content: ${(props) => props.justifyContent};
-  width: ${(props) => props.width};
+  width: ${(props) => props.width || 'auto'};
   ${(props) => props.flex && 'flex: 1;'}
 `;
 

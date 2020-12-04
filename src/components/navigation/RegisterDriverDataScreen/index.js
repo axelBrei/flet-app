@@ -98,6 +98,5 @@ const FormContainer = styled(Container)`
   align-items: center;
   align-self: center;
   padding-top: ${(props) => scaleDp(props.theme.isMobile ? 80 : 10)}px;
-  width: 45%;
-  ${Platform.OS !== 'web' && 'width: 100%;'}
+  width: ${Platform.OS !== 'web' ? '100%' : '45%'};
 `;

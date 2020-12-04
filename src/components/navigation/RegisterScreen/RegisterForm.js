@@ -26,7 +26,6 @@ export const RegisterForm = () => {
         navigation.navigate(routes.registerDriverDataScreen);
         return;
       }
-      // navigation.navigate(routes.registerAccountDataScreen);
       dispatch(
         saveRegisterData({
           step: 'personal',
@@ -90,7 +89,7 @@ export const RegisterForm = () => {
 };
 
 const Button = styled(MainButton)`
-  height: ${(props) => props.theme.scale(40)};
+  height: ${(props) => props.theme.scale(40)}px;
   width: 90%;
-  margin-top: ${(props) => props.theme.scale(20)};
+  margin-top: ${(props) => props.theme.scale(20)}px;
 `;

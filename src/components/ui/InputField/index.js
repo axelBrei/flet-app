@@ -67,8 +67,6 @@ const ComponentContainer = styled(View)`
 
 const Container = styled(View)`
   align-items: center;
-  margin: 0;
-  padding: 0;
   padding-left: ${scaleDpTheme(10)};
   padding-right: ${scaleDpTheme(10)};
   flex-direction: row;

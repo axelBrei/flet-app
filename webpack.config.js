@@ -102,7 +102,7 @@ module.exports = (env) =>
         // filename: './index.html',
       }),
       // PRODUCTION ONLY PLUGINS
-      ...(!env.dev
+      ...(env && !env.dev
         ? [
             new CopyWebpackPlugin({
               patterns: [

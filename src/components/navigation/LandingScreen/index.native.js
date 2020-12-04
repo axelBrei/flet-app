@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     marginBottom: scaleDp(20),
   },
   textContainer: {
-    marginTop: '30%',
+    marginTop: scaleDp(90),
     alignItems: 'center',
   },
   button: {

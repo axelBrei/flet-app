@@ -9,8 +9,16 @@ import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {Container} from 'components/ui/Container';
 import {theme} from 'constants/theme';
 import PermissionManager from 'components/Permissions/index';
+import {AnimatedError} from 'components/ui/AnimatedError';
 
-const SelectImage = ({label, maxFiles, acceptTypes, value, onSelectImage}) => {
+const SelectImage = ({
+  label,
+  maxFiles,
+  error,
+  acceptTypes,
+  value,
+  onSelectImage,
+}) => {
   const inputRef = React.useRef(null);
 
   useEffect(() => {
@@ -37,45 +45,52 @@ const SelectImage = ({label, maxFiles, acceptTypes, value, onSelectImage}) => {
     onSelectImage(null);
   }, [onSelectImage]);
   return (
-    <ComponentContainer dir="row">
-      <RoundedIconContainer>
-        {value ? (
-          <SelectedImage source={{uri: value.path}} />
-        ) : (
-          <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
-        )}
-      </RoundedIconContainer>
-      <Container dir="column" alignItems="center">
-        <AppText bold width="100%">
-          {label}
-        </AppText>
-        <input
-          ref={inputRef}
-          id="file-uploader"
-          name="file-uploader"
-          type="file"
-          style={{
-            opacity: 0,
-            height: 1,
-            width: 1,
-            pointerEvents: 'none',
-            position: 'absolute',
-          }}
-          onChange={fileOnChange}
-          accept={acceptTypes}
-          capture="user"
-        />
-        {value ? (
-          <CancelButton onPress={cleanImage} alternative label="Borrar foto" />
-        ) : (
-          <Button
-            onPress={() => inputRef.current?.click()}
-            htmlFor="file-uploader"
-            label="subir foto"
-            inverted
+    <ComponentContainer>
+      <Container dir="row">
+        <RoundedIconContainer>
+          {value ? (
+            <SelectedImage source={{uri: value.path}} />
+          ) : (
+            <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
+          )}
+        </RoundedIconContainer>
+        <Container dir="column" alignItems="center">
+          <AppText bold width="100%">
+            {label}
+          </AppText>
+          <input
+            ref={inputRef}
+            id="file-uploader"
+            name="file-uploader"
+            type="file"
+            style={{
+              opacity: 0,
+              height: 1,
+              width: 1,
+              pointerEvents: 'none',
+              position: 'absolute',
+            }}
+            onChange={fileOnChange}
+            accept={acceptTypes}
+            capture="user"
           />
-        )}
+          {value ? (
+            <CancelButton
+              onPress={cleanImage}
+              alternative
+              label="Borrar foto"
+            />
+          ) : (
+            <Button
+              onPress={() => inputRef.current?.click()}
+              htmlFor="file-uploader"
+              label="subir foto"
+              inverted
+            />
+          )}
+        </Container>
       </Container>
+      <AnimatedError error={error} />
     </ComponentContainer>
   );
 };

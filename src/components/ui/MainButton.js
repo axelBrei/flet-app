@@ -74,7 +74,7 @@ const Container = styled(View)`
 
 const Text = styled(AppText)`
   text-align: center;
-  color: ${(props) => props.color || props.theme.colors.white};
+  color: ${(props) => props.color || props.theme.colors.fontColor};
 `;
 
 const FloatingIcon = styled(Icon)`

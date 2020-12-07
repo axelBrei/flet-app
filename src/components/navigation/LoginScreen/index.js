@@ -73,5 +73,5 @@ const Title = styled(AppText)`
   margin-top: 20%;
   z-index: 2;
   font-size: ${scaleDpTheme(30)};
-  color: ${theme.white};
+  color: ${theme.fontColor};
 `;

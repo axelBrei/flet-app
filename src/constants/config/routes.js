@@ -5,6 +5,7 @@ const _routes = {
   registerStack: 'registro',
   registerScreen: 'normal',
   registerDriverDataScreen: 'driver1',
+  registerDriverVehiculeScreen: 'driver2',
   profileScreen: 'perfil',
 };
 
@@ -18,4 +19,3 @@ export const routes = Platform.select({
     {},
   ),
 });
-console.log(routes);

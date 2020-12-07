@@ -5,27 +5,26 @@ import {
   REGISTER_PERSONAL_DATA_FIELDS as FIELDS,
 } from 'components/navigation/RegisterScreen/formikConfig';
 import {MainButton} from 'components/ui/MainButton';
-import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {routes} from 'constants/config/routes';
 import {saveRegisterData} from 'redux-store/slices/registerSlice';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
-import {useNavigation} from 'components/Hooks/useNavigation';
+import {useRoute} from '@react-navigation/native';
 import styled, {css} from 'styled-components';
-import {Checkbox} from 'components/ui/Checkbox';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
-import {Platform} from 'react-native-web';
 
-export const RegisterForm = () => {
-  const navigation = useNavigation();
+export const RegisterForm = ({navigation}) => {
+  const route = useRoute();
   const dispatch = useDispatch();
+  const isDriverRegistrations = route.params?.driver;
 
-  const onSubmit = useCallback(
+  const _onSubmit = useCallback(
     (values) => {
-      if (values[FIELDS.DRIVER]) {
-        navigation.navigate(routes.registerDriverDataScreen);
-        return;
-      }
+      navigation.navigate(
+        isDriverRegistrations
+          ? routes.registerDriverDataScreen
+          : // TODO: replace landing screen for home screen
+            routes.landingScreen,
+      );
       dispatch(
         saveRegisterData({
           step: 'personal',
@@ -33,7 +32,7 @@ export const RegisterForm = () => {
         }),
       );
     },
-    [dispatch, navigation],
+    [isDriverRegistrations, dispatch, navigation],
   );
 
   const {
@@ -43,7 +42,7 @@ export const RegisterForm = () => {
     handleSubmit,
     _setFieldValue,
     _setFieldTouched,
-  } = useFormikCustom(personalDataFormikConfig(onSubmit));
+  } = useFormikCustom(personalDataFormikConfig(_onSubmit));
   return (
     <>
       <InputField
@@ -56,7 +55,7 @@ export const RegisterForm = () => {
       />
       <InputField
         label="Apellido"
-        icon="lock-outline"
+        icon="account-outline"
         value={values[FIELDS.LAST_NAME]}
         onChangeText={_setFieldValue(FIELDS.LAST_NAME)}
         onBlur={_setFieldTouched(FIELDS.LAST_NAME)}
@@ -78,11 +77,19 @@ export const RegisterForm = () => {
         onBlur={_setFieldTouched(FIELDS.MAIL)}
         error={touched[FIELDS.MAIL] && errors[FIELDS.MAIL]}
       />
-      <Checkbox
-        text="Quiero ser un conductor"
-        isChecked={values[FIELDS.DRIVER]}
-        onPress={_setFieldValue(FIELDS.DRIVER)}
+      <InputField
+        label="Contraseña"
+        icon="lock-outline"
+        value={values[FIELDS.PASSWORD]}
+        onChangeText={_setFieldValue(FIELDS.PASSWORD)}
+        onBlur={_setFieldTouched(FIELDS.PASSWORD)}
+        error={touched[FIELDS.PASSWORD] && errors[FIELDS.PASSWORD]}
       />
+      {/*<Checkbox*/}
+      {/*  text="Quiero ser un conductor"*/}
+      {/*  isChecked={values[FIELDS.DRIVER]}*/}
+      {/*  onPress={_setFieldValue(FIELDS.DRIVER)}*/}
+      {/*/>*/}
       <Button label="Siguiente" onPress={handleSubmit} />
     </>
   );

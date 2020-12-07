@@ -5,12 +5,19 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import {scaleDp} from 'helpers/responsiveHelper';
 
-export const Screen = ({children, removeeTWF, classname, style}) => {
+export const Screen = ({
+  children,
+  scrollable,
+  removeeTWF,
+  classname,
+  style,
+}) => {
   const ViewComponent = React.useMemo(() => {
     return styled(
       Platform.OS === 'android' && !removeeTWF
@@ -23,14 +30,16 @@ export const Screen = ({children, removeeTWF, classname, style}) => {
     `;
   }, [removeeTWF]);
 
+  const ScrollableLayer = scrollable ? ScrollView : View;
+
   return (
     <>
       <StatusBar backgroundColor={theme.primaryDarkColor} />
-      <ViewComponent accessible={false} onPress={Keyboard.dismiss}>
-        <View
+      <ViewComponent accessible={!scrollable} onPress={Keyboard.dismiss}>
+        <ScrollableLayer
           classname={classname}
           style={[
-            {
+            !scrollable && {
               alignItems: 'center',
             },
             Platform.select({
@@ -41,7 +50,7 @@ export const Screen = ({children, removeeTWF, classname, style}) => {
             style,
           ]}>
           {children}
-        </View>
+        </ScrollableLayer>
       </ViewComponent>
     </>
   );

@@ -9,9 +9,9 @@ import Directions from 'resources/assets/directions.svg';
 import {routes} from 'constants/config/routes';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useNavigation} from 'components/Hooks/useNavigation';
+import {TextLink} from 'components/ui/TextLink';
 
 export default ({navigation}) => {
-  // const navigation = useNavigation();
   const navigateToRegister = useCallback(
     () => navigation.navigate(routes.registerStack),
     [navigation],
@@ -20,14 +20,18 @@ export default ({navigation}) => {
     () => navigation.navigate(routes.loginScreen),
     [navigation],
   );
+
+  const onNavigateToDriverRegister = useCallback(() => {
+    navigation.navigate(routes.registerStack, {driver: true});
+  }, [navigation]);
   return (
     <Screen style={styles.screen}>
       <FloatingBackgroundOval />
       <View style={styles.textContainer}>
-        <AppText bold fontSize={30} color={theme.white}>
+        <AppText bold fontSize={30} color={theme.fontColor}>
           Bienvenido a FletApp
         </AppText>
-        <AppText italic fontSize={20} color={theme.white}>
+        <AppText italic fontSize={20} color={theme.fontColor}>
           Gestioná tus envios, gestioná tu vida
         </AppText>
         <Directions width={scaleDp(250)} />
@@ -44,6 +48,13 @@ export default ({navigation}) => {
           label="Registrarme"
           onPress={navigateToRegister}
         />
+        <TextLink
+          onPress={onNavigateToDriverRegister}
+          style={styles.driverLink}
+          alignText="center"
+          width="100%">
+          Quiero ser conductor
+        </TextLink>
       </View>
     </Screen>
   );
@@ -64,6 +75,7 @@ const styles = StyleSheet.create({
       native: {flex: 1},
     }),
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginBottom: scaleDp(20),
   },
   textContainer: {
@@ -73,5 +85,8 @@ const styles = StyleSheet.create({
   button: {
     width: scaleDp(270),
     height: scaleDp(45),
+  },
+  driverLink: {
+    marginTop: scaleDp(10),
   },
 });

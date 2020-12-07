@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
@@ -17,10 +17,16 @@ import {Platform} from 'react-native';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
+import {routes} from 'constants/config/routes';
 
-export default () => {
+export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
-  const onSubmit = () => {};
+
+  const onSubmit = useCallback(() => {
+    navigation.navigate(routes.registerDriverVehiculeScreen);
+    // TODO: load values to redux
+  }, [navigation]);
+
   const {
     values,
     errors,
@@ -88,7 +94,7 @@ export default () => {
 };
 
 const ScreenContainer = styled(Screen)`
-  padding-top: ${(props) => (props.theme.isMobile ? '30%' : '3%')};
+  padding-top: ${(props) => scaleDpTheme(props.theme.isMobile ? 90 : 10)};
   padding-left: ${scaleDpTheme(10)};
   padding-right: ${scaleDpTheme(10)};
 `;

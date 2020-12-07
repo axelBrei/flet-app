@@ -9,7 +9,7 @@ import {AppText} from 'components/ui/AppText';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
 import MobileScreen from 'components/navigation/RegisterScreen/index.native';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}) => {
   return (
     <Screen>
       <AppText bold fontSize={20} textAlign="center">
@@ -23,7 +23,7 @@ const RegisterScreen = () => {
           }}
         />
         <FormContainer>
-          <RegisterForm />
+          <RegisterForm navigation={navigation} />
         </FormContainer>
       </Container>
     </Screen>

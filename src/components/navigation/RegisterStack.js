@@ -7,14 +7,14 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 import RegisterScreen from 'components/navigation/RegisterScreen';
 import RegisterDriverDataScreen from 'components/navigation/RegisterDriverDataScreen';
+import RegisterDriverVehiculeDataScreen from 'components/navigation/RegisterDriverVehiculeDataScreen';
 
 const {Navigator, Screen} = createStackNavigator();
-export const RegisterStack = () => {
+export const RegisterStack = ({route}) => {
   const {isMobile} = useWindowDimension();
   return (
     <Navigator
-      // initialRouteName={routes.registerPersonalDataScreen}
-      initialRouteName={routes.registerDriverDataScreen}
+      initialRouteName={routes.registerPersonalDataScreen}
       screenOptions={{
         ...navigationConfig,
         animationEnabled: true,
@@ -24,6 +24,7 @@ export const RegisterStack = () => {
       <Screen
         name={routes.registerScreen}
         component={RegisterScreen}
+        initialParams={route.params}
         options={{
           headerTransparent: isMobile,
         }}
@@ -31,8 +32,16 @@ export const RegisterStack = () => {
       <Screen
         name={routes.registerDriverDataScreen}
         component={RegisterDriverDataScreen}
+        initialParams={route.params}
         options={{
           headerTransparent: isMobile,
+        }}
+      />
+      <Screen
+        name={routes.registerDriverVehiculeScreen}
+        component={RegisterDriverVehiculeDataScreen}
+        options={{
+          headerTransparent: false,
         }}
       />
     </Navigator>

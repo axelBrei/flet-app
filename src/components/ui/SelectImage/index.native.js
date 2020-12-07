@@ -10,6 +10,7 @@ import {IconButton} from 'components/ui/IconButton';
 import {AppText} from 'components/ui/AppText';
 import ImagePicker from 'react-native-image-crop-picker';
 import PermissionManager from 'components/Permissions/index';
+import {AnimatedError} from 'components/ui/AnimatedError';
 
 const defaultProps = {
   cropperToolbarTitle: 'Editá la foto',
@@ -25,6 +26,7 @@ const defaultProps = {
 const SelectImage = ({
   label,
   maxFiles,
+  error,
   acceptTypes,
   value,
   onSelectImage,
@@ -69,35 +71,38 @@ const SelectImage = ({
   }, [onSelectImage]);
 
   return (
-    <ComponentContainer dir="row">
-      <RoundedIconContainer>
-        {value ? (
-          <SelectedImage source={{uri: value.path}} />
-        ) : (
-          <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
-        )}
-      </RoundedIconContainer>
-      <Container>
-        <AppText fontSize={18}>{label}</AppText>
-        {value ? (
-          <CancelButton onPress={cleanImage} inverted label="Borrar foto" />
-        ) : (
-          <Container dir="row" width="80%" justifyContent="center">
-            <OptionButton
-              alternative
-              icon="image-outline"
-              size={25}
-              onPress={onPressGalery}
-            />
-            <OptionButton
-              inverted
-              icon="camera-outline"
-              size={25}
-              onPress={onPressCamera}
-            />
-          </Container>
-        )}
+    <ComponentContainer>
+      <Container dir="row">
+        <RoundedIconContainer>
+          {value ? (
+            <SelectedImage source={{uri: value.path}} />
+          ) : (
+            <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
+          )}
+        </RoundedIconContainer>
+        <Container>
+          <AppText fontSize={14}>{label}</AppText>
+          {value ? (
+            <CancelButton onPress={cleanImage} inverted label="Borrar foto" />
+          ) : (
+            <Container dir="row" width="80%" justifyContent="center">
+              <OptionButton
+                alternative
+                icon="image-outline"
+                size={25}
+                onPress={onPressGalery}
+              />
+              <OptionButton
+                inverted
+                icon="camera-outline"
+                size={25}
+                onPress={onPressCamera}
+              />
+            </Container>
+          )}
+        </Container>
       </Container>
+      <AnimatedError error={error} />
     </ComponentContainer>
   );
 };
@@ -108,10 +113,8 @@ SelectImage.defaultProps = {
 
 export default SelectImage;
 const ComponentContainer = styled(Container)`
-  margin-top: ${scaleDpTheme(5)};
-  margin-bottom: ${scaleDpTheme(25)};
-  align-items: center;
-  justify-content: center;
+  margin-top: ${scaleDpTheme(10)};
+  margin-bottom: ${scaleDpTheme(10)};
 `;
 
 const SelectedImage = styled(Image)`

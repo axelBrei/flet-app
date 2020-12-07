@@ -17,17 +17,31 @@ import {
   loginFormikConfig,
   LOGIN_FIELDS as FIELDS,
 } from 'components/navigation/LoginScreen/loginFormikConfig';
+import {TextLink} from 'components/ui/TextLink';
 
 const HomeScreen = ({navigation, route}) => {
   useLayoutEffect(() => {
     const navigateToRegister = () => navigation.navigate(routes.registerStack);
+    const navigateToRegisterDriver = () =>
+      navigation.navigate(routes.registerStack, {
+        driver: true,
+      });
     navigation.setOptions({
       headerRight: () => (
-        <MainButton
-          label="Registrarme"
-          height={30}
-          onPress={navigateToRegister}
-        />
+        <Container
+          dir="row"
+          alignItems="center"
+          width={`${scaleDp(330)}px`}
+          justifyContent="space-between">
+          <TextLink fontSize={12} onPress={navigateToRegisterDriver}>
+            Quiero ser conductor
+          </TextLink>
+          <MainButton
+            label="Registrarme"
+            height={30}
+            onPress={navigateToRegister}
+          />
+        </Container>
       ),
     });
   }, [navigation]);

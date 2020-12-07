@@ -26,10 +26,7 @@ export const Screen = ({children, removeeTWF, classname, style}) => {
   return (
     <>
       <StatusBar backgroundColor={theme.primaryDarkColor} />
-      <ViewComponent
-        accessible={false}
-        onPress={Keyboard.dismiss}
-        style={{paddingTop: scaleDp(5)}}>
+      <ViewComponent accessible={false} onPress={Keyboard.dismiss}>
         <View
           classname={classname}
           style={[

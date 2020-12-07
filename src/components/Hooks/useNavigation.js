@@ -6,7 +6,10 @@ export const useNavigation = () => {
   const link = useLinkTo();
 
   const navigate = Platform.select({
-    web: (route, params) => link(route),
+    web: (route, params) => {
+      console.log(route, nav.dangerouslyGetState());
+      link(route);
+    },
     native: nav.navigate,
   });
 

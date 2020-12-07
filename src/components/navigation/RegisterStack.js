@@ -13,7 +13,8 @@ export const RegisterStack = () => {
   const {isMobile} = useWindowDimension();
   return (
     <Navigator
-      initialRouteName={routes.registerPersonalDataScreen}
+      // initialRouteName={routes.registerPersonalDataScreen}
+      initialRouteName={routes.registerDriverDataScreen}
       screenOptions={{
         ...navigationConfig,
         animationEnabled: true,

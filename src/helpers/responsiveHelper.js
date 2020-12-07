@@ -18,6 +18,7 @@ const calculateREMforDevice = ({width, height}) => {
   const PhM = Platform.select({
     ios: 330,
     android: 380,
+    web: 330,
   });
   const TaWidth = 775;
   const MSW = 450;
@@ -64,7 +65,7 @@ const calculateREMforWeb = ({width, height}) => {
 };
 
 export const calcRem = (dim) =>
-  dim.width >= 450 ? calculateREMforWeb(dim) : calculateREMforDevice(dim);
+  dim.width >= 750 ? calculateREMforWeb(dim) : calculateREMforDevice(dim);
 
 export const scaleDp = (dp) => {
   const dim = Dimensions.get('window');

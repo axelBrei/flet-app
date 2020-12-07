@@ -10,8 +10,8 @@ import {routes} from 'constants/config/routes';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useNavigation} from 'components/Hooks/useNavigation';
 
-export default () => {
-  const navigation = useNavigation();
+export default ({navigation}) => {
+  // const navigation = useNavigation();
   const navigateToRegister = useCallback(
     () => navigation.navigate(routes.registerStack),
     [navigation],
@@ -52,7 +52,6 @@ export default () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme.white,
     alignItems: 'center',

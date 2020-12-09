@@ -12,6 +12,7 @@ export const FloatingBackgroundOval = styled(View)`
   border-radius: ${scaleDpTheme(250)};
   z-index: 0;
   ${(props) => !props.visible && 'display: none'};
+  align-self: center;
 `;
 
 FloatingBackgroundOval.defaultProps = {

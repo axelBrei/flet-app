@@ -46,7 +46,7 @@ const SelectImage = ({
   }, [onSelectImage]);
   return (
     <ComponentContainer>
-      <Container dir="row">
+      <Container dir="row" alignItems="center">
         <RoundedIconContainer>
           {value ? (
             <SelectedImage source={{uri: value.path}} />
@@ -54,8 +54,8 @@ const SelectImage = ({
             <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
           )}
         </RoundedIconContainer>
-        <Container dir="column" alignItems="center">
-          <AppText bold width="100%">
+        <Container width="100%">
+          <AppText bold width="100%" textAlign="left">
             {label}
           </AppText>
           <input
@@ -112,7 +112,7 @@ const ComponentContainer = styled(Container)`
 
 const Button = styled(MainButton)`
   height: ${scaleDpTheme(20)};
-  width: 50%;
+  width: ${scaleDpTheme(100)};
   margin-left: 0;
 `;
 
@@ -123,7 +123,8 @@ const SelectedImage = styled(Image)`
 
 const CancelButton = styled(MainButton)`
   height: ${scaleDpTheme(20)};
-  width: 50%;
+  width: ${scaleDpTheme(100)};
+  margin-left: 0;
 `;
 
 const RoundedIconContainer = styled(View)`

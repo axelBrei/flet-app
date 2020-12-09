@@ -6,6 +6,7 @@ const _routes = {
   registerScreen: 'normal',
   registerDriverDataScreen: 'driver1',
   registerDriverVehiculeScreen: 'driver2',
+  registerDriverLegalsScreen: 'driver3',
   profileScreen: 'perfil',
 };
 

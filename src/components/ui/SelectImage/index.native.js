@@ -72,7 +72,7 @@ const SelectImage = ({
 
   return (
     <ComponentContainer>
-      <Container dir="row">
+      <Container dir="row" alignItems="center">
         <RoundedIconContainer>
           {value ? (
             <SelectedImage source={{uri: value.path}} />
@@ -115,6 +115,7 @@ export default SelectImage;
 const ComponentContainer = styled(Container)`
   margin-top: ${scaleDpTheme(10)};
   margin-bottom: ${scaleDpTheme(10)};
+  justify-content: center;
 `;
 
 const SelectedImage = styled(Image)`

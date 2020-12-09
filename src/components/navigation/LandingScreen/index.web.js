@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useCallback, useLayoutEffect} from 'react';
 import {Screen} from 'components/ui/Screen';
 import {Container} from 'components/ui/Container';
 import DirectionsIcon from 'resources/assets/directions.svg';
@@ -46,7 +46,7 @@ const HomeScreen = ({navigation, route}) => {
     });
   }, [navigation]);
 
-  const onSubmitLogin = () => {};
+  const onSubmitLogin = useCallback(() => {}, []);
 
   const {
     values,

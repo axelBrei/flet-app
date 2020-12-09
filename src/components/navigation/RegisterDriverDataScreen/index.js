@@ -44,71 +44,76 @@ export default ({navigation}) => {
   } = useFormikCustom(registerDriverDataFormikConfig(onSubmit));
 
   return (
-    <ScreenContainer>
+    <Screen scrollable={isMobile}>
       <FloatingBackgroundOval visible={isMobile} />
-      <AppText
-        bold
-        fontSize={25}
-        textAlign="center"
-        color={isMobile ? theme.white : theme.fontColor}>
-        Necesitamos algunos datos tuyos
-      </AppText>
-      <FormContainer>
-        <InputField
-          value={values[FIELDS.DOCUMENT]}
-          onChangeText={_setFieldValue(FIELDS.DOCUMENT)}
-          onBlur={_setFieldTouched(FIELDS.DOCUMENT)}
-          error={
-            submitCount > 0 &&
-            touched[FIELDS.DOCUMENT] &&
-            errors[FIELDS.DOCUMENT]
-          }
-          label="Documento"
-          icon="card-account-details-outline"
-        />
-        <CalendarPicker
-          value={values[FIELDS.BIRTH_DATE]}
-          onSelectDay={_setFieldValue(FIELDS.BIRTH_DATE)}
-          error={
-            submitCount > 0 &&
-            touched[FIELDS.BIRTH_DATE] &&
-            errors[FIELDS.BIRTH_DATE]
-          }
-          label="Fecha de nacimiento"
-        />
-        <InputField
-          value={values[FIELDS.CBU]}
-          onChangeText={_setFieldValue(FIELDS.CBU)}
-          onBlur={_setFieldTouched(FIELDS.CBU)}
-          error={submitCount > 0 && touched[FIELDS.CBU] && errors[FIELDS.CBU]}
-          label="CBU"
-          icon="credit-card-outline"
-        />
-        <SelectImage
-          label="Necesitamos una foto tuya"
-          value={values[FIELDS.PROFILE_IMAGE]}
-          onSelectImage={_setFieldValue(FIELDS.PROFILE_IMAGE)}
-        />
-        <MainButton
-          label="Continuar"
-          onPress={handleSubmit}
-          style={{width: '85%'}}
-        />
-      </FormContainer>
-    </ScreenContainer>
+      <ScreenContainer>
+        <Title bold fontSize={25}>
+          Necesitamos algunos datos tuyos
+        </Title>
+        <Container
+          alignItems="center"
+          width="100%"
+          style={[
+            !isMobile && {
+              maxWidth: scaleDp(300),
+              alignSelf: 'center',
+              justifyContent: 'center',
+            },
+          ]}>
+          <InputField
+            value={values[FIELDS.DOCUMENT]}
+            onChangeText={_setFieldValue(FIELDS.DOCUMENT)}
+            onBlur={_setFieldTouched(FIELDS.DOCUMENT)}
+            error={touched[FIELDS.DOCUMENT] && errors[FIELDS.DOCUMENT]}
+            label="Documento"
+            icon="card-account-details-outline"
+            keyboardType="numeric"
+          />
+          <CalendarPicker
+            value={values[FIELDS.BIRTH_DATE]}
+            onSelectDay={_setFieldValue(FIELDS.BIRTH_DATE)}
+            error={touched[FIELDS.BIRTH_DATE] && errors[FIELDS.BIRTH_DATE]}
+            label="Fecha de nacimiento"
+          />
+          <InputField
+            value={values[FIELDS.CBU]}
+            onChangeText={_setFieldValue(FIELDS.CBU)}
+            onBlur={_setFieldTouched(FIELDS.CBU)}
+            error={touched[FIELDS.CBU] && errors[FIELDS.CBU]}
+            label="CBU"
+            icon="credit-card-outline"
+            keyboardType="numeric"
+          />
+          <SelectImage
+            label="Necesitamos una foto tuya"
+            value={values[FIELDS.PROFILE_IMAGE]}
+            onSelectImage={_setFieldValue(FIELDS.PROFILE_IMAGE)}
+            error={
+              touched[FIELDS.PROFILE_IMAGE] && errors[FIELDS.PROFILE_IMAGE]
+            }
+          />
+          <MainButton
+            label="Continuar"
+            onPress={handleSubmit}
+            style={{
+              width: scaleDp(250),
+            }}
+          />
+        </Container>
+      </ScreenContainer>
+    </Screen>
   );
 };
 
-const ScreenContainer = styled(Screen)`
-  padding-top: ${(props) => scaleDpTheme(props.theme.isMobile ? 90 : 10)};
-  padding-left: ${scaleDpTheme(10)};
-  padding-right: ${scaleDpTheme(10)};
+const ScreenContainer = styled(Container)`
+  padding-left: ${scaleDpTheme(15)};
+  padding-right: ${scaleDpTheme(15)};
+  align-self: center;
+  align-items: center;
 `;
 
-const FormContainer = styled(Container)`
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  padding-top: ${(props) => scaleDp(props.theme.isMobile ? 80 : 10)}px;
-  width: ${Platform.OS !== 'web' ? '100%' : '45%'};
+const Title = styled(AppText)`
+  padding-top: ${(props) => scaleDp(props.theme.isMobile ? 85 : 10)}px;
+  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 85 : 10)}px;
+  text-align: center;
 `;

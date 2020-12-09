@@ -28,7 +28,6 @@ const SelectImage = ({
   const fileOnChange = useCallback(
     (event) => {
       const image = event.target.files[0];
-      console.log(image);
       onSelectImage({
         ...image,
         name: image.name,

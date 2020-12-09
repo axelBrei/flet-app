@@ -64,6 +64,7 @@ export const RegisterForm = ({navigation}) => {
       <InputField
         label="Teléfono"
         icon="phone-outline"
+        keyboardType="phone-pad"
         value={values[FIELDS.PHONE]}
         onChangeText={_setFieldValue(FIELDS.PHONE)}
         onBlur={_setFieldTouched(FIELDS.PHONE)}
@@ -72,6 +73,7 @@ export const RegisterForm = ({navigation}) => {
       <InputField
         label="Email"
         icon="email-outline"
+        keyboardType="email-address"
         value={values[FIELDS.MAIL]}
         onChangeText={_setFieldValue(FIELDS.MAIL)}
         onBlur={_setFieldTouched(FIELDS.MAIL)}
@@ -80,16 +82,12 @@ export const RegisterForm = ({navigation}) => {
       <InputField
         label="Contraseña"
         icon="lock-outline"
+        secureTextEntry
         value={values[FIELDS.PASSWORD]}
         onChangeText={_setFieldValue(FIELDS.PASSWORD)}
         onBlur={_setFieldTouched(FIELDS.PASSWORD)}
         error={touched[FIELDS.PASSWORD] && errors[FIELDS.PASSWORD]}
       />
-      {/*<Checkbox*/}
-      {/*  text="Quiero ser un conductor"*/}
-      {/*  isChecked={values[FIELDS.DRIVER]}*/}
-      {/*  onPress={_setFieldValue(FIELDS.DRIVER)}*/}
-      {/*/>*/}
       <Button label="Siguiente" onPress={handleSubmit} />
     </>
   );

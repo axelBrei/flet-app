@@ -14,10 +14,12 @@ import SelectImage from 'components/ui/SelectImage/index';
 import {MainButton} from 'components/ui/MainButton';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
-import {Platform} from 'react-native';
+import {Dimensions} from 'react-native';
 import {routes} from 'constants/config/routes';
 import {updateVehiculeData} from 'redux-store/slices/registerSlice';
 import {useDispatch} from 'react-redux';
+
+const {width: SCREEN_WIDTH} = Dimensions.get('screen');
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -43,12 +45,14 @@ export default ({navigation}) => {
   return (
     <Screen scrollable={isMobile}>
       <FloatingBackgroundOval visible={isMobile} />
+
       <ScreenContainer>
         <Title bold fontSize={25}>
           Necesitamos algunos datos del vehículo
         </Title>
         <Container
           alignItems="center"
+          width="100%"
           style={[
             !isMobile && {
               maxWidth: scaleDp(300),
@@ -75,6 +79,7 @@ export default ({navigation}) => {
           <InputField
             label="Año del vehículo"
             icon="calendar"
+            keyboardType="numeric"
             value={values[FIELDS.YEAR]}
             onFocus={_setFieldTouched(FIELDS.YEAR)}
             onChangeText={_setFieldValue(FIELDS.YEAR)}
@@ -114,14 +119,15 @@ export default ({navigation}) => {
 };
 
 const ScreenContainer = styled(Container)`
-  padding-left: ${scaleDpTheme(25)};
-  padding-right: ${scaleDpTheme(25)};
+  padding-left: ${scaleDpTheme(15)};
+  padding-right: ${scaleDpTheme(15)};
   align-self: center;
-  align-content: center;
+  align-items: center;
 `;
 
 const Title = styled(AppText)`
-  padding-top: ${scaleDpTheme(Platform.OS === 'web' ? 10 : 85)};
-  padding-bottom: ${scaleDpTheme(Platform.OS === 'web' ? 10 : 80)};
+  padding-top: ${(props) => scaleDp(props.theme.isMobile ? 85 : 10)}px;
+  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 85 : 10)}px;
   text-align: center;
+  width: 100%;
 `;

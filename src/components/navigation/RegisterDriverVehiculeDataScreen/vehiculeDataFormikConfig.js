@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import {strings} from 'constants/strings';
+import dayjs from 'dayjs';
 
 const {
   requiredField,
@@ -35,7 +36,21 @@ const validationSchema = yup.object({
     })
     .required(requiredField),
   [FIELDS.MODEL]: yup.string().required(requiredField),
-  [FIELDS.YEAR]: yup.string().length(4, specifycLength).required(requiredField),
+  [FIELDS.YEAR]: yup
+    .string()
+    .length(4, specifycLength)
+    .test('text-number', onlyNumbers, (value) => /[0-9]*/.test(value))
+    .test(
+      'check-min-year',
+      'El año debe ser mayor a 2009',
+      (val) => parseInt(val) >= 2009,
+    )
+    .test(
+      'check-max-year',
+      `El año debe ser menor a ${dayjs().year()}`,
+      (val) => parseInt(val) <= dayjs().year(),
+    )
+    .required(requiredField),
   [FIELDS.COLOR]: yup.string().required(requiredField),
   [FIELDS.LICENSE_FRONT]: yup.object().nullable().required(requiredField),
   [FIELDS.LICENSE_BACK]: yup.object().nullable().required(requiredField),

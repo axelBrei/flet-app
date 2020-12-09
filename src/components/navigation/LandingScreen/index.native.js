@@ -10,8 +10,10 @@ import {routes} from 'constants/config/routes';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useNavigation} from 'components/Hooks/useNavigation';
 import {TextLink} from 'components/ui/TextLink';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export default ({navigation}) => {
+  const {height} = useWindowDimension();
   const navigateToRegister = useCallback(
     () => navigation.navigate(routes.registerStack),
     [navigation],
@@ -34,8 +36,8 @@ export default ({navigation}) => {
         <AppText italic fontSize={20} color={theme.fontColor}>
           Gestioná tus envios, gestioná tu vida
         </AppText>
-        <Directions width={scaleDp(250)} />
       </View>
+      <Directions width={scaleDp(250)} height={height * 0.4} />
       <View style={styles.buttonsContainer}>
         <MainButton
           inverted
@@ -50,9 +52,7 @@ export default ({navigation}) => {
         />
         <TextLink
           onPress={onNavigateToDriverRegister}
-          style={styles.driverLink}
-          alignText="center"
-          width="100%">
+          style={styles.driverLink}>
           Quiero ser conductor
         </TextLink>
       </View>
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   textContainer: {
     marginTop: scaleDp(90),
     alignItems: 'center',
+    flex: 1,
   },
   button: {
     width: scaleDp(270),
@@ -88,5 +89,7 @@ const styles = StyleSheet.create({
   },
   driverLink: {
     marginTop: scaleDp(10),
+    width: '100%',
+    textAlign: 'center',
   },
 });

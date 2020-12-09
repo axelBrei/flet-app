@@ -1,9 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {initialValues as commonInitialValues} from 'components/navigation/RegisterScreen/formikConfig';
+import {initialValues as driverDataInitialValues} from 'components/navigation/RegisterDriverDataScreen/registerDriverDataFormikConfig';
+import {initialValues as vehiculeDataInitialValues} from 'components/navigation/RegisterDriverVehiculeDataScreen/vehiculeDataFormikConfig';
+import {initialValues as legalDataInitialValues} from 'components/navigation/RegisterDriverLegalDataScreen/legalDriverDataFormikConfig';
 
 const initialState = {
   data: {
-    personal: {},
-    account: {},
+    common: commonInitialValues,
+    driverData: driverDataInitialValues,
+    vehiculeData: vehiculeDataInitialValues,
+    legalData: legalDataInitialValues,
   },
   loading: {
     data: false,
@@ -17,8 +23,17 @@ const slice = createSlice({
   name: 'register',
   initialState,
   reducers: {
-    saveRegisterData: (state, {payload: {step, values}}) => {
-      state.data[step] = values;
+    updateRegisterData: (state, action) => {
+      state.data.common = action.payload;
+    },
+    updateDriverData: (state, action) => {
+      state.data.driverData = action.payload;
+    },
+    updateVehiculeData: (state, action) => {
+      state.data.vehiculeData = action.payload;
+    },
+    updateLegalData: (state, action) => {
+      state.data.legalData = action.payload;
     },
     requestRegister: (state) => {
       state.loading.data = true;
@@ -38,8 +53,23 @@ const slice = createSlice({
 export default slice.reducer;
 
 export const {
-  saveRegisterData,
+  updateDriverData,
+  updateLegalData,
+  updateRegisterData,
+  updateVehiculeData,
   requestRegister,
   receiveRegisterSuccess,
   receiveRegisterFail,
 } = slice.actions;
+
+/**
+ * @THUNK
+ */
+
+export const registerUser = () => async (dispatch) => {};
+
+export const registerDriver = (legalData) => async (dispatch) => {};
+
+/**
+ * @SELECTORS
+ */

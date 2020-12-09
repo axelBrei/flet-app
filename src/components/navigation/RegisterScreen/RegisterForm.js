@@ -7,7 +7,7 @@ import {
 import {MainButton} from 'components/ui/MainButton';
 import {useDispatch} from 'react-redux';
 import {routes} from 'constants/config/routes';
-import {saveRegisterData} from 'redux-store/slices/registerSlice';
+import {updateRegisterData} from 'redux-store/slices/registerSlice';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {useRoute} from '@react-navigation/native';
 import styled, {css} from 'styled-components';
@@ -19,17 +19,14 @@ export const RegisterForm = ({navigation}) => {
 
   const _onSubmit = useCallback(
     (values) => {
+      if (isDriverRegistrations) {
+        dispatch(updateRegisterData(values));
+      }
       navigation.navigate(
         isDriverRegistrations
           ? routes.registerDriverDataScreen
           : // TODO: replace landing screen for home screen
             routes.landingScreen,
-      );
-      dispatch(
-        saveRegisterData({
-          step: 'personal',
-          values,
-        }),
       );
     },
     [isDriverRegistrations, dispatch, navigation],

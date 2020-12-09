@@ -17,7 +17,7 @@ export const FIELDS = {
   LICENSE_BACK: 'licenseBack',
 };
 
-const initialValues = {
+export const initialValues = {
   [FIELDS.PLATE]: '',
   [FIELDS.MODEL]: '',
   [FIELDS.YEAR]: '',

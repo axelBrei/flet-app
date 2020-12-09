@@ -18,14 +18,20 @@ import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
 import {routes} from 'constants/config/routes';
+import {updateDriverData} from 'redux-store/slices/registerSlice';
+import {useDispatch} from 'react-redux';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
+  const dispatch = useDispatch();
 
-  const onSubmit = useCallback(() => {
-    navigation.navigate(routes.registerDriverVehiculeScreen);
-    // TODO: load values to redux
-  }, [navigation]);
+  const onSubmit = useCallback(
+    (values) => {
+      navigation.navigate(routes.registerDriverVehiculeScreen);
+      dispatch(updateDriverData(values));
+    },
+    [dispatch, navigation],
+  );
 
   const {
     values,

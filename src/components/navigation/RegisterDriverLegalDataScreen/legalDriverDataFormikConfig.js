@@ -11,7 +11,7 @@ export const FIELDS = {
   ADDRESS_VALIDATION: 'addressValidation',
 };
 
-const initialValues = {
+export const initialValues = {
   [FIELDS.DOCUMENT_FRONT]: null,
   [FIELDS.DOCUMENT_BACK]: null,
   [FIELDS.INSURANCE]: null,

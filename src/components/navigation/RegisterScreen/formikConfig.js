@@ -10,7 +10,7 @@ export const REGISTER_PERSONAL_DATA_FIELDS = {
 };
 
 const FIELDS = REGISTER_PERSONAL_DATA_FIELDS;
-const initialValues = {
+export const initialValues = {
   [FIELDS.NAME]: '',
   [FIELDS.LAST_NAME]: '',
   [FIELDS.PHONE]: '',

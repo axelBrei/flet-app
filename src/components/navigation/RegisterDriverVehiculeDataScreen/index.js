@@ -16,13 +16,20 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {Platform} from 'react-native';
 import {routes} from 'constants/config/routes';
+import {updateVehiculeData} from 'redux-store/slices/registerSlice';
+import {useDispatch} from 'react-redux';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
-  const onSubmit = useCallback(() => {
-    // TODO: save data on redux and navigate to next screen
-    navigation.navigate(routes.registerDriverLegalsScreen);
-  }, [navigation]);
+  const dispatch = useDispatch();
+
+  const onSubmit = useCallback(
+    (values) => {
+      dispatch(updateVehiculeData(values));
+      navigation.navigate(routes.registerDriverLegalsScreen);
+    },
+    [navigation, dispatch],
+  );
 
   const {
     values,

@@ -8,7 +8,7 @@ export const FIELDS = {
   PROFILE_IMAGE: 'profileImage',
 };
 
-const initialValues = {
+export const initialValues = {
   [FIELDS.DOCUMENT]: '',
   [FIELDS.BIRTH_DATE]: null,
   [FIELDS.CBU]: '',

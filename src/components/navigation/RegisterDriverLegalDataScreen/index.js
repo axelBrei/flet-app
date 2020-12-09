@@ -16,13 +16,20 @@ import {MainButton} from 'components/ui/MainButton';
 import {Platform} from 'react-native';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {routes} from 'constants/config/routes';
+import {registerDriver} from 'redux-store/slices/registerSlice';
+import {useDispatch} from 'react-redux';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
+  const dispatch = useDispatch();
 
-  const onSubmit = useCallback(() => {
-    // TODO: update redux, send registration to backend and navigate to landing
-  }, [navigation]);
+  const onSubmit = useCallback(
+    (values) => {
+      dispatch(registerDriver(values));
+      navigation.navigate(routes.landingScreen);
+    },
+    [navigation, dispatch],
+  );
 
   const {
     values,

@@ -66,7 +66,7 @@ export const {
  * @THUNK
  */
 
-export const registerUser = () => async (dispatch) => {};
+export const registerUser = (userData) => async (dispatch) => {};
 
 export const registerDriver = (legalData) => async (dispatch) => {};
 

@@ -26,6 +26,7 @@ export default ({navigation}) => {
   const onSubmit = useCallback(
     (values) => {
       dispatch(registerDriver(values));
+      // TODO: replace landing screen for home screen
       navigation.navigate(routes.landingScreen);
     },
     [navigation, dispatch],

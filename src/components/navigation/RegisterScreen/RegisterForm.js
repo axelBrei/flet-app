@@ -7,7 +7,10 @@ import {
 import {MainButton} from 'components/ui/MainButton';
 import {useDispatch} from 'react-redux';
 import {routes} from 'constants/config/routes';
-import {updateRegisterData} from 'redux-store/slices/registerSlice';
+import {
+  updateRegisterData,
+  registerUser,
+} from 'redux-store/slices/registerSlice';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {useRoute} from '@react-navigation/native';
 import styled, {css} from 'styled-components';
@@ -19,9 +22,9 @@ export const RegisterForm = ({navigation}) => {
 
   const _onSubmit = useCallback(
     (values) => {
-      if (isDriverRegistrations) {
-        dispatch(updateRegisterData(values));
-      }
+      dispatch(
+        (isDriverRegistrations ? updateRegisterData : registerUser)(values),
+      );
       navigation.navigate(
         isDriverRegistrations
           ? routes.registerDriverDataScreen

@@ -47,7 +47,6 @@ export default ({navigation}) => {
           {'Ahora tenemos que verificar\nque puedas manejar'}
         </Title>
         <Container
-          // alignItems={isMobile ? 'center' : 'flex-start'}
           style={
             !isMobile && {
               maxWidth: scaleDp(350),

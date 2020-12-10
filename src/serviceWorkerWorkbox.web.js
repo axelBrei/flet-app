@@ -1,7 +1,9 @@
 import {createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
 import {registerRoute, NavigationRoute} from 'workbox-routing';
 import {skipWaiting, clientsClaim} from 'workbox-core';
-skipWaiting();
+import {name as appName} from '../package.json';
+
+// skipWaiting();
 clientsClaim();
 
 const precacheManifest = [].concat(self.__WB_MANIFEST || []);
@@ -12,3 +14,9 @@ const navigationRoute = new NavigationRoute(handler, {
   denylist: [/^\/_/, /\/[^/?]+\.[^/]+$/],
 });
 registerRoute(navigationRoute);
+
+self.addEventListener('message', function (event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});

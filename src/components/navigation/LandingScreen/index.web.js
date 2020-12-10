@@ -63,7 +63,7 @@ const HomeScreen = ({navigation, route}) => {
       <Card style={{flex: 1}}>
         <Container alignItems="center" justifyContent="center">
           <AppText bold italic fontSize={22} width="100%">
-            Gestioná tus envios, gestioná tu vida
+            Gestioná tus envios, gestioná tu vidaa
           </AppText>
           <DirectionsIcon height={scaleDp(250)} width={scaleDp(250)} />
         </Container>

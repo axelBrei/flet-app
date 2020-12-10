@@ -1,108 +1,75 @@
 import React from 'react';
-import styled from 'styled-components';
-import {Text} from 'react-native';
 import ReactDOM from 'react-dom';
 
-const ServiceWorkerUpdateButton = () => {
+const ServiceWorkerUpdateButton = ({serviceWorker}) => {
   const onClick = (e) => {
+    serviceWorker.postMessage({action: 'skipWaiting'});
     e.preventDefault();
     window.location.reload();
   };
   return (
-    <Button href="#" onClick={onClick}>
-      Hay una actualización disponible.
-      <br />
-      Haga click aquí para actualizar
-    </Button>
+    <div className="update-notification">
+      <p onClick={onClick}>
+        Hay una actualización disponible.
+        <br />
+        Haga <a>click aquí</a> para actualizar
+      </p>
+    </div>
   );
 };
 
 export default ServiceWorkerUpdateButton;
 
-/**
- * Styles
- */
-
-const Button = styled(Text)`
-  position: absolute;
-  bottom: 5vh;
-  right: 2vw;
-  padding: 20px;
-  background: #001689;
-  color: white;
-  cursor: pointer;
-  text-align: center;
-  font-size: 14px;
-  box-shadow: 0 0px 16px 0px rgba(0, 0, 0, 0.6);
-  text-decoration: none;
-  line-height: 1.5em;
-  @media (max-width: 800px) {
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    box-shadow: none;
-  }
-`;
-
-export const displayUpdateNotification = () => {
-  const link = document.createElement('a');
+export const displayUpdateNotification = (serviceWorker) => {
+  const link = document.createElement('div');
   link.setAttribute('id', 'update-notification');
-  link.setAttribute('href', '#');
-  document.querySelector('body').appendChild(link);
+  const body = document.getElementById('react-root'); //document.querySelector('body').appendChild(link);
+  body.appendChild(link);
   ReactDOM.render(
-    <ServiceWorkerUpdateButton />,
+    <ServiceWorkerUpdateButton serviceWorker={serviceWorker} />,
     document.getElementById('update-notification'),
   );
 };
 
-const onUpdate = (registration) => {
-  const waitingServiceWorker = registration.waiting;
-
-  if (waitingServiceWorker) {
-    waitingServiceWorker.addEventListener('statechange', (event) => {
-      if (event.target.state === 'activated') {
-        displayUpdateNotification();
-      }
-    });
-    waitingServiceWorker.postMessage({type: 'SKIP_WAITING'});
-  }
-};
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === '[::1]' ||
+    // 127.0.0.0/8 are considered localhost for IPv4.
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
+    ),
+);
 
 export const register = () => {
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then((registration) => {
-          registration.onupdatefound = () => {
-            const installingWorker = registration.installing;
-            if (installingWorker == null) {
-              return;
-            }
-            installingWorker.onstatechange = () => {
-              if (installingWorker.state === 'installed') {
-                if (navigator.serviceWorker.controller) {
-                  // At this point, the updated precached content has been fetched,
-                  // but the previous service worker will still serve the older
-                  // content until all client tabs are closed.
-                  console.log(
-                    'New content is available and will be used when all ' +
-                      'tabs for this page are closed. See http://bit.ly/CRA-PWA.',
-                  );
-                  onUpdate(registration);
-                } else {
-                  // At this point, everything has been precached.
-                  // It's the perfect time to display a
-                  // "Content is cached for offline use." message.
-                  console.log('Content is cached for offline use.');
-                }
-              }
-            };
-          };
-        })
-        .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError);
-        });
+    window.addEventListener('load', async () => {
+      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      // if (!isLocalhost) {
+      registerValidSW();
+      // }
     });
+  }
+};
+
+const registerValidSW = async () => {
+  try {
+    const registration = await navigator.serviceWorker.register(
+      '/service-worker.js',
+    );
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed') {
+          console.log(
+            'New content is available and will be used when all ' +
+              'tabs for this page are closed. See http://bit.ly/CRA-PWA.',
+          );
+          displayUpdateNotification(newWorker);
+        }
+      });
+    });
+  } catch (registrationError) {
+    console.log('SW registration failed: ', registrationError);
   }
 };

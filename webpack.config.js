@@ -74,7 +74,6 @@ const ASSET_PATH = process.env.ASSET_PATH || '/';
 module.exports = (env) => ({
   devtool: 'inline-source-map',
   devServer: {
-    //host: '192.168.0.3', //your ip address
     port: 3000,
     hot: true,
     disableHostCheck: true,

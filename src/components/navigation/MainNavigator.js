@@ -15,8 +15,7 @@ export default () => {
   const {width} = useWindowDimension();
   return (
     <Navigator
-      // initialRouteName={routes.homeScreen}
-      initialRouteName={routes.loggedStack}
+      initialRouteName={routes.homeScreen}
       screenOptions={{
         ...navigationConfig,
         title: '',

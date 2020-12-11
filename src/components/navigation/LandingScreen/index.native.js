@@ -37,7 +37,7 @@ export default ({navigation}) => {
           Gestioná tus envios, gestioná tu vida
         </AppText>
       </View>
-      <Directions width={scaleDp(250)} height={height * 0.4} />
+      <Directions width={scaleDp(250)} height={height * 0.5} />
       <View style={styles.buttonsContainer}>
         <MainButton
           inverted
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     }),
   },
   buttonsContainer: {
+    backgroundColor: theme.white,
     ...Platform.select({
       native: {flex: 1},
     }),

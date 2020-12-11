@@ -41,6 +41,12 @@
       color: #000;
     }
     @media (max-width: 800px) {
+      html {
+        overflow-x: hidden;
+        overscroll-behavior-y: none;
+        overscroll-behavior-x: none;
+        -webkit-overflow-scrolling: touch;
+      }
       #update-notification {
           bottom: 20px;
           right: 0;

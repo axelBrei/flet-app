@@ -47,6 +47,7 @@ const InputField = ({
           />
         )}
         <Input
+          autoCompleteType={props.autoCompleteType}
           ref={inputRef}
           onBlur={_onBlur}
           onFocus={_onFocus}
@@ -58,6 +59,10 @@ const InputField = ({
       <AnimatedError error={error} />
     </ComponentContainer>
   );
+};
+
+InputField.defaultProps = {
+  autoCompleteType: 'off',
 };
 export default InputField;
 

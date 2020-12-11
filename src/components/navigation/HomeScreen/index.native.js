@@ -8,7 +8,7 @@ import {OrderForm} from 'components/navigation/HomeScreen/OrderForm';
 export default () => {
   const {height} = useWindowDimension();
   return (
-    <Screen style={{flex: 1, maxHeight: height, overflow: 'hidden'}}>
+    <Screen style={{flex: 1, maxHeight: height, width: '100%'}}>
       <DrawableBottomView>
         <OrderForm />
       </DrawableBottomView>

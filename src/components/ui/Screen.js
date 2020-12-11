@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
-import {scaleDp} from 'helpers/responsiveHelper';
+import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const Screen = ({
@@ -34,27 +34,18 @@ export const Screen = ({
 
   const ScrollableLayer = scrollable ? ScrollView : View;
 
-  const preventDefault = useCallback((e) => {
-    e.preventDefault();
-  }, []);
-
-  const disableScroll = useCallback(() => {
-    document.body.addEventListener('touchmove', preventDefault, {
-      passive: false,
-    });
-  }, [preventDefault, document]);
-
-  const enableScroll = useCallback(() => {
-    document.body.removeEventListener('touchmove', preventDefault);
-  }, [preventDefault, document]);
-
   useEffect(() => {
-    if (!scrollable) {
-      disableScroll();
-    } else {
-      enableScroll();
-    }
-  }, [disableScroll, enableScroll, scrollable]);
+    Platform.select({
+      web: () => {
+        const body = document.body;
+        if (!scrollable) {
+          disableBodyScroll(body);
+        } else {
+          enableBodyScroll(body);
+        }
+      },
+    })();
+  }, [scrollable]);
 
   return (
     <>

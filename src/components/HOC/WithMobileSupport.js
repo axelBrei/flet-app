@@ -1,10 +1,14 @@
 import React from 'react';
-import {Platform, Dimensions} from 'react-native';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+
+const Content = ({Web, Mobile, ...rest}) => {
+  const {isMobile} = useWindowDimension();
+  if (isMobile) {
+    return <Mobile {...rest} />;
+  }
+  return <Web {...rest} />;
+};
 
 export const WithMobileSupport = (WebComponent, MobileComponent) => {
-  const {width} = Dimensions.get('window');
-  if (Platform.OS === 'web' && width <= 800) {
-    return MobileComponent;
-  }
-  return WebComponent;
+  return (p) => <Content {...p} Web={WebComponent} Mobile={MobileComponent} />;
 };

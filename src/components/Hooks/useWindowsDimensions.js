@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useMemo, useCallback} from 'react';
 import {Dimensions, Platform} from 'react-native';
 import {calcRem} from 'helpers/responsiveHelper';
 
@@ -9,24 +9,42 @@ export const useWindowDimension = () => {
     ...dimensions,
   });
 
-  useEffect(() => {
-    if (Platform.OS === 'web') {
-      const handleChange = (window) => {
-        const {innerWidth: width, innerHeight: height} = window.target;
-        setCurrentDimension({
-          rem: calcRem({height, width}),
-          height,
-          width,
-        });
-      };
+  const isPWA = useMemo(
+    () =>
+      Platform.select({
+        native: () => false,
+        web: () =>
+          navigator.standalone ||
+          window.matchMedia('(display-mode: standalone)').matches,
+      })(),
+    [],
+  );
 
-      window.addEventListener('resize', handleChange);
-      return window.removeEventListener('resize', handleChange);
-    }
-  }, []);
+  const isMobile = useMemo(
+    () => Platform.OS !== 'web' || currentDimension.width <= 800,
+    [currentDimension],
+  );
+
+  const handleChange = useCallback(
+    ({window}) => {
+      const {width, height} = window;
+      setCurrentDimension({
+        rem: calcRem({height, width}),
+        height,
+        width,
+      });
+    },
+    [setCurrentDimension],
+  );
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', (e) => handleChange(e));
+    return Dimensions.removeEventListener('change', handleChange);
+  }, [handleChange]);
 
   return {
     ...currentDimension,
-    isMobile: Platform.OS !== 'web' || currentDimension.width <= 800,
+    isMobile,
+    isPWA,
   };
 };

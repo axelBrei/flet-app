@@ -36,6 +36,7 @@ export const Screen = ({
 
   useEffect(() => {
     Platform.select({
+      native: () => {},
       web: () => {
         const body = document.body;
         if (!scrollable) {

@@ -8,13 +8,15 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import LoginScreen from 'components/navigation/LoginScreen';
 import {navigationConfig} from 'constants/config/navigationConfig';
 import {theme} from 'constants/theme';
+import LoggedInStack from 'components/navigation/LoggedInStack';
 
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
   const {width} = useWindowDimension();
   return (
     <Navigator
-      initialRouteName={routes.homeScreen}
+      // initialRouteName={routes.homeScreen}
+      initialRouteName={routes.loggedStack}
       screenOptions={{
         ...navigationConfig,
         title: '',
@@ -41,6 +43,11 @@ export default () => {
       <Screen
         name={routes.registerStack}
         component={RegisterStack}
+        options={{headerShown: false}}
+      />
+      <Screen
+        name={routes.loggedStack}
+        component={LoggedInStack}
         options={{headerShown: false}}
       />
     </Navigator>

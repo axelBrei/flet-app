@@ -14,11 +14,12 @@ import {
 import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {TextLink} from 'components/ui/TextLink';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
+import {routes} from 'constants/config/routes';
 
-export const LoginScreen = () => {
+export const LoginScreen = ({navigation}) => {
   const onPressForgetPassword = () => {};
   const onSubmit = (values) => {
-    console.log(values);
+    navigation.navigate(routes.loggedStack);
   };
 
   const {

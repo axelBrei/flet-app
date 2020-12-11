@@ -8,6 +8,8 @@ const _routes = {
   registerDriverVehiculeScreen: 'driver2',
   registerDriverLegalsScreen: 'driver3',
   profileScreen: 'perfil',
+  loggedStack: 'private',
+  homeScreen: 'home',
 };
 
 export const routes = Platform.select({

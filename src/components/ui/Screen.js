@@ -10,6 +10,7 @@ import {
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import {scaleDp} from 'helpers/responsiveHelper';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const Screen = ({
   children,
@@ -18,6 +19,7 @@ export const Screen = ({
   classname,
   style,
 }) => {
+  const {isMobile} = useWindowDimension();
   const ViewComponent = React.useMemo(() => {
     return styled(
       Platform.OS === 'android' && !removeeTWF
@@ -41,6 +43,9 @@ export const Screen = ({
           style={[
             !scrollable && {
               alignItems: 'center',
+            },
+            isMobile && {
+              flex: 1,
             },
             Platform.select({
               web: {

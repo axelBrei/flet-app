@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import {Animated, PanResponder, Platform, Dimensions, View} from 'react-native';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
-
-const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('screen');
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const DrawableBottomView = ({
   children,
   initialHiddenContentPercentage,
 }) => {
+  const {width, height: screenHeight} = useWindowDimension();
   const pan = useRef(new Animated.ValueXY()).current;
   const contentRef = useRef(null);
 
@@ -43,12 +43,12 @@ export const DrawableBottomView = ({
         }
         contentRef.current.measureInWindow((x, y, width, height) => {
           let toValue = null;
-          if (SCREEN_HEIGHT - y - height < 20 || move > height / 4) {
+          if (screenHeight - y - height < 20 || move > height / 4) {
             toValue = {
               x: 0,
               y: height * initialHiddenContentPercentage,
             };
-          } else if (SCREEN_HEIGHT - y > height || move > -height / 4) {
+          } else if (screenHeight - y > height || move > -height / 4) {
             toValue = {
               x: 0,
               y: 0,
@@ -74,7 +74,7 @@ export const DrawableBottomView = ({
         style={[
           Platform.OS === 'web' && {overflow: 'hidden'},
           {
-            width: SCREEN_WIDTH,
+            width,
             alignItems: 'center',
             position: 'absolute',
             bottom: 0,

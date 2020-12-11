@@ -7,9 +7,11 @@ const _routes = {
   registerDriverDataScreen: 'driver1',
   registerDriverVehiculeScreen: 'driver2',
   registerDriverLegalsScreen: 'driver3',
-  profileScreen: 'perfil',
   loggedStack: 'private',
   homeScreen: 'home',
+  lastShippmentsScreen: 'ultimos-pedidos',
+  profileScreen: 'perfil',
+  plannedShippments: 'planeados',
 };
 
 export const routes = Platform.select({

@@ -1,9 +1,12 @@
 import React from 'react';
 import {Text} from 'react-native';
-import styled from 'styled-components';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
+import styled, {css} from 'styled-components';
+import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import PropTypes from 'prop-types';
 import {theme} from 'constants/theme';
+import {Dimensions, Platform} from 'react-native';
+
+const {width} = Dimensions.get('screen');
 
 export const AppText = styled(Text)`
   font-size: ${(props) => scaleDpTheme(props.fontSize)};
@@ -13,6 +16,12 @@ export const AppText = styled(Text)`
   font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
   width: ${(props) => props.width};
   text-align: ${(props) => props.textAlign};
+  ${Platform.OS === 'web' &&
+  width < 800 &&
+  css`
+    min-font-size: 17px;
+    font-size: max(${(props) => scaleDp(props.fontSize) + 'px'}, 20px);
+  `}
 `;
 
 AppText.propTypes = {

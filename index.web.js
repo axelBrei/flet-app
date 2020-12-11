@@ -28,6 +28,30 @@ AppRegistry.runApplication(appName, {
   rootTag: document.getElementById('react-root'),
 });
 
+const disableIosTextFieldZoom = () => {
+  const el = document.querySelector('meta[name=viewport]');
+
+  if (el !== null) {
+    let content = el.getAttribute('content');
+    let re = /maximum\-scale=[0-9\.]+/g;
+
+    if (re.test(content)) {
+      content = content.replace(re, 'maximum-scale=1.0');
+    } else {
+      content = [content, 'maximum-scale=1.0'].join(', ');
+    }
+
+    el.setAttribute('content', content);
+  }
+};
+
+const checkIsIOS = () =>
+  /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+if (checkIsIOS()) {
+  disableIosTextFieldZoom();
+}
+
 // PWA
 if (process.env.NODE_ENV !== 'development') {
   register();

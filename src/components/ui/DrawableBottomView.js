@@ -1,12 +1,15 @@
 import React, {useRef, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {Animated, PanResponder, Platform, Dimensions, View} from 'react-native';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('screen');
 
-export const DrawableBottomView = ({children}) => {
+export const DrawableBottomView = ({
+  children,
+  initialHiddenContentPercentage,
+}) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const contentRef = useRef(null);
 
@@ -14,10 +17,10 @@ export const DrawableBottomView = ({children}) => {
     contentRef.current.measureInWindow((x, y, width, height) => {
       pan.setValue({
         x: 0,
-        y: height / 2,
+        y: height * initialHiddenContentPercentage,
       });
     });
-  }, [contentRef, pan]);
+  }, [initialHiddenContentPercentage, contentRef, pan]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -35,12 +38,15 @@ export const DrawableBottomView = ({children}) => {
       }),
       onPanResponderRelease: (event, gesture) => {
         const move = gesture.dy;
+        if (Math.abs(move) < 20) {
+          return;
+        }
         contentRef.current.measureInWindow((x, y, width, height) => {
           let toValue = null;
-          if (SCREEN_HEIGHT - y - height * 0.35 < 0 || move > height / 4) {
+          if (SCREEN_HEIGHT - y - height < 20 || move > height / 4) {
             toValue = {
               x: 0,
-              y: height / 2,
+              y: height * initialHiddenContentPercentage,
             };
           } else if (SCREEN_HEIGHT - y > height || move > -height / 4) {
             toValue = {
@@ -62,6 +68,7 @@ export const DrawableBottomView = ({children}) => {
 
   return (
     <>
+      <SafeZone />
       <Animated.View
         useNativeDriver={false}
         style={[
@@ -75,6 +82,7 @@ export const DrawableBottomView = ({children}) => {
             right: 0,
             backgroundColor: theme.backgroundColor,
             transform: [{translateY: pan.y}],
+            zIndex: 20,
           },
         ]}
         {...panResponder.panHandlers}>
@@ -83,9 +91,12 @@ export const DrawableBottomView = ({children}) => {
           {children}
         </DrawableContainer>
       </Animated.View>
-      <SafeZone />
     </>
   );
+};
+
+DrawableBottomView.defaultProps = {
+  initialHiddenContentPercentage: 0.55,
 };
 
 const DrawableContainer = styled(View)`
@@ -97,6 +108,7 @@ const DrawableContainer = styled(View)`
   background-color: ${theme.white};
   box-shadow: 0.5px -1px 3px ${theme.disabled};
   elevation: 3;
+  z-index: 10;
 `;
 
 const DrawerLine = styled(View)`
@@ -108,4 +120,12 @@ const DrawerLine = styled(View)`
   margin-bottom: ${scaleDpTheme(10)};
 `;
 
-const SafeZone = styled(View)``;
+const SafeZone = styled(View)`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  background-color: ${theme.white};
+  height: 50px;
+`;

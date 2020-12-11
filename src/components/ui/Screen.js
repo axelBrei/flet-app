@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {
   Platform,
   StatusBar,
@@ -34,6 +34,28 @@ export const Screen = ({
 
   const ScrollableLayer = scrollable ? ScrollView : View;
 
+  const preventDefault = useCallback((e) => {
+    e.preventDefault();
+  }, []);
+
+  const disableScroll = useCallback(() => {
+    document.body.addEventListener('touchmove', preventDefault, {
+      passive: false,
+    });
+  }, [preventDefault, document]);
+
+  const enableScroll = useCallback(() => {
+    document.body.removeEventListener('touchmove', preventDefault);
+  }, [preventDefault, document]);
+
+  useEffect(() => {
+    if (!scrollable) {
+      disableScroll();
+    } else {
+      enableScroll();
+    }
+  }, [disableScroll, enableScroll, scrollable]);
+
   return (
     <>
       <StatusBar backgroundColor={theme.primaryDarkColor} />
@@ -43,6 +65,8 @@ export const Screen = ({
           style={[
             !scrollable && {
               alignItems: 'center',
+              overflow: 'hidden',
+              overscrollBehavior: 'none',
             },
             isMobile && {
               flex: 1,

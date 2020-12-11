@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {
   Platform,
   StatusBar,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
-import {scaleDp} from 'helpers/responsiveHelper';
+import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const Screen = ({
@@ -34,6 +34,19 @@ export const Screen = ({
 
   const ScrollableLayer = scrollable ? ScrollView : View;
 
+  useEffect(() => {
+    Platform.select({
+      web: () => {
+        const body = document.body;
+        if (!scrollable) {
+          disableBodyScroll(body);
+        } else {
+          enableBodyScroll(body);
+        }
+      },
+    })();
+  }, [scrollable]);
+
   return (
     <>
       <StatusBar backgroundColor={theme.primaryDarkColor} />
@@ -43,6 +56,8 @@ export const Screen = ({
           style={[
             !scrollable && {
               alignItems: 'center',
+              overflow: 'hidden',
+              overscrollBehavior: 'none',
             },
             isMobile && {
               flex: 1,

@@ -37,7 +37,11 @@ export default ({navigation}) => {
           Gestioná tus envios, gestioná tu vida
         </AppText>
       </View>
-      <Directions width={scaleDp(250)} height={height * 0.5} />
+      <Directions
+        width={scaleDp(250)}
+        height={height * 0.5}
+        style={{zIndex: 1}}
+      />
       <View style={styles.buttonsContainer}>
         <MainButton
           inverted

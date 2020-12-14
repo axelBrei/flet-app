@@ -1,7 +1,7 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useCallback, useState} from 'react';
 import styled from 'styled-components';
 import {Animated, PanResponder, Platform, Dimensions, View} from 'react-native';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
@@ -10,82 +10,88 @@ export const DrawableBottomView = ({
   initialHiddenContentPercentage,
 }) => {
   const {width, height: screenHeight} = useWindowDimension();
+  let componentHeight = useRef(0).current;
   const pan = useRef(new Animated.ValueXY()).current;
   const contentRef = useRef(null);
 
-  useEffect(() => {
-    contentRef.current.measureInWindow((x, y, width, height) => {
-      pan.setValue({
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponderCapture: (e, {dy}) => {
+      // This will make it so the gesture is ignored if it's only short (like a tap).
+      return Math.abs(dy) > 10;
+    },
+    onPanResponderGrant: () => {
+      pan.setOffset({
         x: 0,
-        y: height * initialHiddenContentPercentage,
+        y: pan.y._value,
       });
-    });
-  }, [initialHiddenContentPercentage, contentRef, pan]);
+    },
+    onPanResponderMove: (event, gesture) => {
+      const {pageY} = event.nativeEvent;
+      const gap = screenHeight - pageY;
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onStartShouldSetResponder: () => true,
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        pan.setOffset({
-          x: pan.x._value,
-          y: pan.y._value,
-        });
+      if (
+        gesture.dy > 0 &&
+        gap < componentHeight * initialHiddenContentPercentage
+      ) {
+        return;
+      }
+      if (gesture.dy < 0 && gap > componentHeight) {
+        return;
+      }
+      return Animated.event([null, {dy: pan.y, dx: 0}], {
+        useNativeDriver: Platform.OS !== 'web',
+      })(event, gesture);
+    },
+    onPanResponderRelease: (event, {dy}) => {
+      pan.flattenOffset();
+      if (Math.abs(dy) < 20) {
+        return;
+      }
+      const gap = dy > 0 ? initialHiddenContentPercentage : 1;
+      Animated.timing(pan, {
+        toValue: {
+          x: 0,
+          y: screenHeight - componentHeight * gap,
+        },
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    },
+  });
+  const measureView = useCallback(
+    ({
+      nativeEvent: {
+        layout: {height},
       },
-      onPanResponderMove: Animated.event([null, {dy: pan.y}], {
-        useNativeDriver: Platform.OS === 'web',
-      }),
-      onPanResponderRelease: (event, gesture) => {
-        const move = gesture.dy;
-        if (Math.abs(move) < 20) {
-          return;
-        }
-        contentRef.current.measureInWindow((x, y, width, height) => {
-          let toValue = null;
-          if (screenHeight - y - height < 20 || move > height / 4) {
-            toValue = {
-              x: 0,
-              y: height * initialHiddenContentPercentage,
-            };
-          } else if (screenHeight - y > height || move > -height / 4) {
-            toValue = {
-              x: 0,
-              y: 0,
-            };
-          }
-          toValue &&
-            Animated.timing(pan, {
-              toValue,
-              duration: 100,
-              useNativeDriver: true,
-            }).start();
+    }) => {
+      if (componentHeight === 0) {
+        componentHeight = height;
+        pan.setValue({
+          x: 0,
+          y: screenHeight - height * initialHiddenContentPercentage,
         });
-        pan.flattenOffset();
-      },
-    }),
-  ).current;
+      }
+    },
+    [componentHeight, pan, initialHiddenContentPercentage],
+  );
 
   return (
     <>
       <SafeZone />
       <Animated.View
-        useNativeDriver={false}
+        onLayout={measureView}
+        {...panResponder.panHandlers}
         style={[
           Platform.OS === 'web' && {overflow: 'hidden'},
           {
             width,
             alignItems: 'center',
             position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
             backgroundColor: theme.backgroundColor,
-            transform: [{translateY: pan.y}],
+            transform: pan.getTranslateTransform(),
             zIndex: 20,
           },
-        ]}
-        {...panResponder.panHandlers}>
+        ]}>
         <DrawableContainer ref={contentRef}>
           <DrawerLine />
           {children}
@@ -96,7 +102,7 @@ export const DrawableBottomView = ({
 };
 
 DrawableBottomView.defaultProps = {
-  initialHiddenContentPercentage: 0.55,
+  initialHiddenContentPercentage: 0.3,
 };
 
 const DrawableContainer = styled(View)`
@@ -115,7 +121,7 @@ const DrawerLine = styled(View)`
   align-self: center;
   width: ${scaleDpTheme(30)};
   height: 4px;
-  border-radius: ${scaleDpTheme(20)};
+  border-radius: ${scaleDpTheme(1000)};
   background-color: ${theme.disabled};
   margin-bottom: ${scaleDpTheme(10)};
 `;

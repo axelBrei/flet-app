@@ -6,6 +6,16 @@
  */
 const {getDefaultConfig} = require('metro-config');
 
+const blacklist = require('metro-config/src/defaults/blacklist');
+const path = require('path');
+
+const ignoreTopLevelFolders = [
+  'react-native-web',
+  'react-native-svg-web',
+  'react-dom',
+  'body-scroll-lock',
+].map((f) => new RegExp(`${path.resolve(f)}/.*`));
+
 module.exports = (async () => {
   const {
     resolver: {sourceExts, assetExts},
@@ -23,6 +33,7 @@ module.exports = (async () => {
     resolver: {
       assetExts: assetExts.filter((ext) => ext !== 'svg'),
       sourceExts: [...sourceExts, 'svg'],
+      blacklistRE: blacklist(ignoreTopLevelFolders),
     },
   };
 })();

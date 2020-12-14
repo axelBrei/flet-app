@@ -18,7 +18,9 @@ const calculateREMforDevice = ({width, height}) => {
   const PhM = Platform.select({
     ios: 330,
     android: 380,
-    web: 330,
+    web: /ipad|iphone|ipod/i.test(navigator.userAgent.toLowerCase())
+      ? 330
+      : 380,
   });
   const TaWidth = 775;
   const MSW = 450;

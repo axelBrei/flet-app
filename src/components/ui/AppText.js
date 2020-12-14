@@ -39,4 +39,5 @@ AppText.defaultProps = {
   italic: false,
   width: 'auto',
   textAlign: 'left',
+  selectable: Platform.OS !== 'web' || width <= 800,
 };

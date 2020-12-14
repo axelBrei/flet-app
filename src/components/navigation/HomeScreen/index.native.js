@@ -1,4 +1,5 @@
 import React, {useRef} from 'react';
+import {KeyboardAvoidingView} from 'react-native';
 import {Screen} from 'components/ui/Screen';
 import {FloatingHamburguerButton} from 'components/ui/FloatingHamburgerButton';
 import {DrawableBottomView} from 'components/ui/DrawableBottomView';

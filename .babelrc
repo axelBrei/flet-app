@@ -4,10 +4,10 @@
     ["module-resolver", {
       "root": ["./src"],
       "extensions": [
-        ".js",
+        ".native.js",
         ".android.js",
         ".ios.js",
-        ".native.js"
+        ".js"
       ],
       "alias": {
         "styled-components": "styled-components/native"

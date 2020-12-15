@@ -7,6 +7,7 @@ import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import {Container} from 'components/ui/Container';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {AnimatedError} from 'components/ui/AnimatedError';
 
 export const Slider = ({
   label,
@@ -15,7 +16,9 @@ export const Slider = ({
   minValue,
   maxValue,
   showValue,
+  valueSign,
   stepsEnabled,
+  error,
   options,
 }) => {
   const {width} = useWindowDimension();
@@ -35,82 +38,87 @@ export const Slider = ({
     }
   }, [value, _value, setValue]);
 
-  const _onValueChange = useCallback(
-    (v) => {
-      onValueChange(v);
-      setValue(v);
-    },
-    [setValue, onValueChange],
-  );
-
   const onSlidingComplete = useCallback(
     (v) => {
       setFocused(false);
       if (stepsEnabled) {
         setValue(Math.round(v));
       }
+      onValueChange(Math.round(v));
     },
-    [setFocused, _value, stepsEnabled],
+    [setFocused, _value, stepsEnabled, onValueChange],
   );
 
   const renderCurrentValue = useCallback(
     () =>
       showValue &&
       focused && (
-        <AboveThumbComponent>${Math.round(_value)}</AboveThumbComponent>
+        <AboveThumbComponent>
+          {valueSign}
+          {Math.round(_value)}
+        </AboveThumbComponent>
       ),
     [showValue, focused, _value],
   );
 
   const trackMarks = useMemo(
     () =>
-      options.length > 0
-        ? options.map((o, idx, arr) => idx)
-        : [minValue, maxValue],
+      options.length > 0 ? options.map((_, idx) => idx) : [minValue, maxValue],
     [options, minValue, maxValue],
   );
 
   const renderTrackMarcks = useCallback(
-    (i) =>
-      console.log('index', i) || (
-        <TrackContainer>
-          <OptionText
-            textAlign={
-              i === trackMarks.length - 1 || i === 0 ? 'left' : 'center'
-            }
-            left={i === trackMarks.length - 1 ? -80 : i === 0 ? 2 : null}>
-            {options[i]?.label ?? (i === 0 ? minValue : maxValue)}
-          </OptionText>
-          <TrackMark />
-        </TrackContainer>
-      ),
-    [options, minValue, maxValue],
+    (i) => (
+      <TrackContainer hidden={options.length === 0}>
+        <OptionText
+          hidden={options.length === 0}
+          textAlign={i === options.length - 1 || i === 0 ? 'left' : 'center'}
+          left={i === options.length - 1 ? -80 : i === 0 ? 2 : 0}>
+          {options[i]?.label}
+        </OptionText>
+        <TrackMark selected={options.length !== 0 && i <= _value} />
+      </TrackContainer>
+    ),
+    [options, _value],
   );
 
   return (
-    <ComponentContainer>
+    <>
       <Label>{label}</Label>
-      <RNSlider
-        value={_value}
-        onValueChange={_onValueChange}
-        maximumValue={values.maxValue}
-        minimumValue={values.minValue}
-        trackMarks={trackMarks}
-        animateTransitions
-        animationType="timing"
-        onSlidingStart={() => setFocused(true)}
-        onSlidingComplete={onSlidingComplete}
-        renderAboveThumbComponent={renderCurrentValue}
-        renderTrackMarkComponent={renderTrackMarcks}
-        containerStyle={{
-          marginTop: scaleDp(10),
-          marginBottom: scaleDpTheme(showValue ? 5 : 5),
-          // marginHorizontal: scaleDp(15),
-        }}
-        thumbTintColor={theme.primaryDarkColor}
-        minimumTrackTintColor={theme.primaryDarkColor}
-      />
-    </ComponentContainer>
+      <ComponentContainer>
+        <RNSlider
+          value={_value}
+          onValueChange={setValue}
+          maximumValue={values.maxValue}
+          minimumValue={values.minValue}
+          trackMarks={trackMarks}
+          animateTransitions
+          animationType="timing"
+          onSlidingStart={() => setFocused(true)}
+          onSlidingComplete={onSlidingComplete}
+          renderAboveThumbComponent={renderCurrentValue}
+          renderTrackMarkComponent={renderTrackMarcks}
+          containerStyle={{
+            zIndex: 1,
+            height: scaleDp(15),
+            marginTop: scaleDp(options.length > 0 ? 15 : 5),
+          }}
+          thumbTintColor={theme.primaryDarkColor}
+          minimumTrackTintColor={theme.primaryDarkColor}
+        />
+        {options.length === 0 && (
+          <Container width="100%" dir="row" justifyContent="space-between">
+            <AppText fontSize={10} color={theme.disabled}>
+              {`Min\n${valueSign}${minValue}`}
+            </AppText>
+            <AppText textAlign="right" fontSize={10} color={theme.disabled}>
+              {`Máx\n${valueSign}${maxValue}`}
+            </AppText>
+          </Container>
+        )}
+        <AnimatedError error={error} />
+      </ComponentContainer>
+    </>
   );
 };
 
@@ -118,53 +126,63 @@ Slider.defaultProps = {
   values: null,
   minValue: 0,
   maxValue: 100,
+  valueSign: '',
   stepsEnabled: false,
   options: [],
   onValueChange: () => {},
+  error: null,
 };
 
 const ComponentContainer = styled(View)`
-  width: 100%;
+  width: 95%;
+  align-self: center;
   align-items: stretch;
   justify-content: center;
-  margin-bottom: ${scaleDpTheme(20)};
+  margin-bottom: ${scaleDpTheme(5)};
 `;
 
 const Label = styled(AppText)`
-  font-size: ${scaleDpTheme(16)};
+  width: 98%;
+  text-align: left;
+  font-size: ${scaleDpTheme(13)};
   padding-top: ${scaleDpTheme(5)};
   padding-bottom: ${scaleDpTheme(5)};
 `;
 
 const TrackContainer = styled(Container)`
-  bottom: ${scaleDpTheme(10)};
+  bottom: ${(props) => scaleDpTheme(props.hidden ? 1.4 : 7.9)};
 `;
 
 const OptionText = styled(AppText)`
+  color: ${theme.disabled};
   padding-bottom: 0;
   position: relative;
   left: ${(props) => props.left || -40}%;
-
+  display: ${(props) => (props.hidden ? 'none' : 'unset')};
   max-width: ${scaleDpTheme(85)};
-  font-size: ${scaleDpTheme(14)};
+  font-size: ${scaleDpTheme(11)};
   width: ${(props) => (props.width ? `${props.width}px` : 'auto')};
 `;
 
 const TrackMark = styled(View)`
-  width: ${scaleDpTheme(2)};
+  width: ${scaleDpTheme(1)};
   height: ${scaleDpTheme(10)};
   border-radius: ${scaleDpTheme(7)};
-  background-color: ${theme.disabled};
+  background-color: ${(props) =>
+    props.selected ? theme.primaryDarkColor : '#b3b3b3'};
   margin-left: ${scaleDpTheme(5)};
+  margin-top: 4px;
+  z-index: 0;
 `;
 
 const AboveThumbComponent = styled(AppText)`
   position: relative;
+  left: -40%;
+  bottom: ${scaleDpTheme(-7)};
+  font-size: ${scaleDpTheme(10)};
   color: ${theme.disabled};
-  bottom: ${scaleDpTheme(-60)};
   text-align: center;
   width: ${scaleDpTheme(70)};
-  left: -40%;
   background-color: white;
   box-shadow: 0.5px -1px 3px ${theme.disabled};
   elevation: 3grad;

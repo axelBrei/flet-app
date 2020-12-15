@@ -5,6 +5,7 @@ import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {AnimatedError} from 'components/ui/AnimatedError';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
+import PropTypes from 'prop-types';
 
 const InputField = ({
   label,
@@ -63,6 +64,9 @@ const InputField = ({
 
 InputField.defaultProps = {
   autoCompleteType: 'off',
+};
+InputField.propTypes = {
+  onChangeText: PropTypes.func.isRequired,
 };
 export default InputField;
 

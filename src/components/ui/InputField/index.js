@@ -1,6 +1,6 @@
 import React, {useCallback, useRef} from 'react';
 import {Platform, TextInput, View} from 'react-native';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {AnimatedError} from 'components/ui/AnimatedError';
 import {theme} from 'constants/theme';
@@ -84,14 +84,13 @@ const Container = styled(View)`
   border-width: 1px;
   border-radius: 12px;
   box-shadow: 0.5px 1px 2px ${theme.disabled};
-  elevation: 3;
+  elevation: 3deg;
 `;
 
 const Input = styled(TextInput)`
   color: ${(props) => props.theme.colors.fontColor};
   min-width: ${scaleDpTheme(150)};
   width: 100%;
-  color: black;
   font-size: ${scaleDp(
     Platform.select({
       native: 12,
@@ -100,6 +99,16 @@ const Input = styled(TextInput)`
   padding-top: ${scaleDpTheme(15)};
   padding-bottom: ${scaleDpTheme(15)};
   padding-left: ${scaleDpTheme(10)};
+  @media(min-width: 800px) {
+    ${
+      Platform.OS === 'web' &&
+      css`
+        min-font-size: 17px;
+        font-size: max(${(props) => scaleDp(props.fontSize) + 'px'}, 20px);
+      `
+    }}
+    
+  }
 `;
 
 const ClearIcon = styled(Icon)`

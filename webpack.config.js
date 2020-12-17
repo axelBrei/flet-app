@@ -75,6 +75,9 @@ module.exports = (env) => ({
   devtool: 'inline-source-map',
   devServer: {
     port: 3000,
+    ...(env.dev && {
+      host: '0.0.0.0',
+    }),
     hot: true,
     disableHostCheck: true,
     contentBase: path.resolve('build'),

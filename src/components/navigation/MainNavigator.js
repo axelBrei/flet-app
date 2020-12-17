@@ -47,7 +47,7 @@ export default () => {
       <Screen
         name={routes.loggedStack}
         component={LoggedInStack}
-        options={{headerShown: false}}
+        options={{headerShown: false, gestureEnabled: false}}
       />
     </Navigator>
   );

@@ -14,6 +14,16 @@ const ignoreTopLevelFolders = [
   'react-native-svg-web',
   'react-dom',
   'body-scroll-lock',
+  'webpack',
+  'webpack-cli',
+  'webpack-dev-server',
+  'workbox-precaching',
+  'workbox-routing',
+  'workbox-webpack-plugin',
+  'babel-plugin-react-native-web',
+  'copy-webpack-plugin',
+  'html-webpack-plugin',
+  '@svgr/webpack',
 ].map((f) => new RegExp(`${path.resolve(f)}/.*`));
 
 module.exports = (async () => {

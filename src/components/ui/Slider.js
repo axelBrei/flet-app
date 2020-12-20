@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useMemo, useEffect} from 'react';
-import {View} from 'react-native';
+import {View, Platform} from 'react-native';
 import {Slider as RNSlider} from '@miblanchard/react-native-slider';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
@@ -33,10 +33,10 @@ export const Slider = ({
   );
 
   useEffect(() => {
-    if (value && value !== _value) {
+    if (value) {
       setValue(value);
     }
-  }, [value, _value, setValue]);
+  }, [value, setValue]);
 
   const onSlidingComplete = useCallback(
     (v) => {
@@ -46,7 +46,7 @@ export const Slider = ({
       }
       onValueChange(Math.round(v));
     },
-    [setFocused, _value, stepsEnabled, onValueChange],
+    [setFocused, stepsEnabled, onValueChange],
   );
 
   const renderCurrentValue = useCallback(
@@ -92,7 +92,7 @@ export const Slider = ({
           maximumValue={values.maxValue}
           minimumValue={values.minValue}
           trackMarks={trackMarks}
-          animateTransitions
+          animateTransitions={stepsEnabled}
           animationType="timing"
           onSlidingStart={() => setFocused(true)}
           onSlidingComplete={onSlidingComplete}
@@ -158,10 +158,10 @@ const OptionText = styled(AppText)`
   padding-bottom: 0;
   position: relative;
   left: ${(props) => props.left || -40}%;
-  display: ${(props) => (props.hidden ? 'none' : 'unset')};
+  display: ${(props) =>
+    props.hidden ? 'none' : Platform.select({web: 'unset', native: 'flex'})};
   max-width: ${scaleDpTheme(85)};
   font-size: ${scaleDpTheme(11)};
-  width: ${(props) => (props.width ? `${props.width}px` : 'auto')};
 `;
 
 const TrackMark = styled(View)`
@@ -184,8 +184,8 @@ const AboveThumbComponent = styled(AppText)`
   text-align: center;
   width: ${scaleDpTheme(70)};
   background-color: white;
-  box-shadow: 0.5px -1px 3px ${theme.disabled};
-  elevation: 3grad;
+  box-shadow: 0px 3px 6px ${theme.shadowColor};
+  elevation: 3;
   padding: ${scaleDpTheme(5)};
   border-radius: ${scaleDpTheme(8)};
 `;

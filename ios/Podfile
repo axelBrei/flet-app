@@ -19,6 +19,8 @@ target 'fletex_app' do
   # END PERMISSIONS PODS
 
   
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
   target 'fletex_appTests' do
     inherit! :complete
     # Pods for testing

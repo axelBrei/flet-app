@@ -8,5 +8,6 @@ export const theme = {
   backgroundColor: 'rgb(246,246,246)',
   white: 'rgb(255,255,255)',
   backdropColor: 'rgba(0,0,0,0.7)',
+  shadowColor: 'rgba(0,0,0,0.16)',
   error: 'rgb(213,16,16)',
 };

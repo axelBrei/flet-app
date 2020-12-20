@@ -16,12 +16,6 @@ export const AppText = styled(Text)`
   font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
   width: ${(props) => props.width};
   text-align: ${(props) => props.textAlign};
-  ${Platform.OS === 'web' &&
-  width < 800 &&
-  css`
-    min-font-size: 17px;
-    font-size: max(${(props) => scaleDp(props.fontSize) + 'px'}, 20px);
-  `}
 `;
 
 AppText.propTypes = {
@@ -31,6 +25,7 @@ AppText.propTypes = {
   italic: PropTypes.bool,
   alternative: PropTypes.bool,
 };
+
 AppText.defaultProps = {
   alternative: false,
   fontColor: theme.fontColor,
@@ -39,5 +34,5 @@ AppText.defaultProps = {
   italic: false,
   width: 'auto',
   textAlign: 'left',
-  selectable: Platform.OS !== 'web' || width <= 800,
+  selectable: Platform.OS === 'web' && width <= 800,
 };

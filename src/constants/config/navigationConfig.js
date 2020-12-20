@@ -1,12 +1,18 @@
 import React from 'react';
-import {Platform} from 'react-native';
+import {Platform, Dimensions} from 'react-native';
 import {theme} from 'constants/theme';
 import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
+import {TransitionPresets} from '@react-navigation/stack';
 
-export const navigationConfig = {
+const {width} = Dimensions.get('screen');
+const isMobile = width <= 800 || Platform.OS !== 'web';
+export const navigationConfig = (props) => ({
   headerBackTitleVisible: false,
+  animationEnabled: true,
+  ...(isMobile && TransitionPresets.SlideFromRightIOS),
   headerStyle: {
     backgroundColor: theme.primaryLightColor,
+    ...props.headerStyle,
   },
   ...Platform.select({
     web: {
@@ -18,4 +24,5 @@ export const navigationConfig = {
       headerTintColor: theme.white,
     },
   }),
-};
+  ...props,
+});

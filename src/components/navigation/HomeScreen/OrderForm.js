@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import styled from 'styled-components';
 import InputField from 'components/ui/InputField';
 import {MainButton} from 'components/ui/MainButton';
@@ -11,6 +11,10 @@ import {
   formikConfig,
   FIELDS,
 } from 'components/navigation/HomeScreen/orderFormikConfig';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from 'constants/config/routes';
+import {useDispatch} from 'react-redux';
+import {updateShipmentDecription} from 'redux-store/slices/shipmentSlice';
 
 const options = [
   {label: 'Chico'},
@@ -18,8 +22,19 @@ const options = [
   {label: 'Grande'},
   {label: 'Muy grande'},
 ];
-export const OrderForm = () => {
-  const onSubmit = () => {};
+export const OrderForm = ({isOpen, open}) => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const onSubmit = useCallback(
+    (values) => {
+      values.size = options[values.size];
+      dispatch(updateShipmentDecription(values));
+      navigation.navigate(routes.newShipmentDetailScreen);
+    },
+    [navigation, dispatch],
+  );
+
   const {
     values,
     errors,
@@ -35,7 +50,10 @@ export const OrderForm = () => {
       <InputField
         label="¿De donde salimos?"
         icon="notification-clear-all"
-        onFocus={_setFieldTouched(FIELDS.START_POINT)}
+        onFocus={() => {
+          _setFieldTouched(FIELDS.START_POINT)();
+          open();
+        }}
         onChangeText={_setFieldValue(FIELDS.START_POINT)}
         value={values[FIELDS.START_POINT]}
         error={touched[FIELDS.START_POINT] && errors[FIELDS.START_POINT]}
@@ -80,8 +98,9 @@ export const OrderForm = () => {
 };
 
 const FormContainer = styled(Container)`
-  padding: ${scaleDpTheme(15)} 0;
   align-items: center;
+  min-height: ${(props) => props.theme.screenHeight * 0.7}px;
+  padding-bottom: ${scaleDpTheme(10)};
 `;
 
 const Title = styled(AppText)`
@@ -92,6 +111,7 @@ const Title = styled(AppText)`
 `;
 
 const ContinueButton = styled(MainButton)`
-  margin: ${scaleDpTheme(25)} 0;
+  margin-top: ${scaleDpTheme(20)};
   width: ${scaleDpTheme(250)};
+  min-height: ${scaleDpTheme(30)};
 `;

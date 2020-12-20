@@ -6,7 +6,7 @@ const {requiredField, minimumFieldLength} = strings.validations;
 export const FIELDS = {
   START_POINT: 'startPoint',
   END_POINT: 'endPoint',
-  DESC: 'descriptiom',
+  DESC: 'description',
   VALUE: 'value',
   SIZE: 'size',
 };

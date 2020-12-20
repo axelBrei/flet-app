@@ -108,15 +108,10 @@ export const Slider = ({
         />
         {options.length === 0 && (
           <Container width="100%" dir="row" justifyContent="space-between">
-            <AppText
-              fontSize={Platform.select({web: 10, native: 6})}
-              color={theme.disabled}>
+            <AppText fontSize={10} color={theme.disabled}>
               {`Min\n${valueSign}${minValue}`}
             </AppText>
-            <AppText
-              textAlign="right"
-              fontSize={Platform.select({web: 10, native: 6})}
-              color={theme.disabled}>
+            <AppText textAlign="right" fontSize={10} color={theme.disabled}>
               {`Máx\n${valueSign}${maxValue}`}
             </AppText>
           </Container>
@@ -163,10 +158,10 @@ const OptionText = styled(AppText)`
   padding-bottom: 0;
   position: relative;
   left: ${(props) => props.left || -40}%;
-  display: ${(props) => (props.hidden ? 'none' : 'unset')};
+  display: ${(props) =>
+    props.hidden ? 'none' : Platform.select({web: 'unset', native: 'flex'})};
   max-width: ${scaleDpTheme(85)};
   font-size: ${scaleDpTheme(11)};
-  width: ${(props) => (props.width ? `${props.width}px` : 'auto')};
 `;
 
 const TrackMark = styled(View)`
@@ -189,8 +184,8 @@ const AboveThumbComponent = styled(AppText)`
   text-align: center;
   width: ${scaleDpTheme(70)};
   background-color: white;
-  box-shadow: 0.5px -1px 3px ${theme.disabled};
-  elevation: 3grad;
+  box-shadow: 0px 3px 6px ${theme.shadowColor};
+  elevation: 3;
   padding: ${scaleDpTheme(5)};
   border-radius: ${scaleDpTheme(8)};
 `;

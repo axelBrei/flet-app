@@ -34,7 +34,7 @@ const CardComponent = styled(View)`
     css`
       background-color: ${(props) =>
         props.backgroundColor || props.theme.colors.white};
-      box-shadow: 1px 1px 8px ${(props) => props.theme.colors.backdropColor};
+      box-shadow: 0px 3px 6px ${(props) => props.theme.colors.shadowColor};
       border-radius: 7px;
     `}
 `;

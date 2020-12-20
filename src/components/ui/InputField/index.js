@@ -33,7 +33,7 @@ const InputField = ({
   }, [props]);
 
   return (
-    <ComponentContainer>
+    <ComponentContainer style={props.style}>
       <Container
         classname={props.classname}
         onFocus={_onFocus}
@@ -83,32 +83,25 @@ const Container = styled(View)`
   border-color: ${(props) => (props.error ? theme.error : 'transparent')};
   border-width: 1px;
   border-radius: 12px;
-  box-shadow: 0.5px 1px 2px ${theme.disabled};
-  elevation: 3deg;
+  box-shadow: 0px 3px 6px ${theme.shadowColor};
+  elevation: 3;
 `;
 
 const Input = styled(TextInput)`
   color: ${(props) => props.theme.colors.fontColor};
   min-width: ${scaleDpTheme(150)};
   width: 100%;
-  font-size: ${scaleDp(
-    Platform.select({
-      native: 12,
-    }),
-  )}px;
+  font-size: ${scaleDpTheme(12)};
   padding-top: ${scaleDpTheme(15)};
   padding-bottom: ${scaleDpTheme(15)};
   padding-left: ${scaleDpTheme(10)};
-  @media(min-width: 800px) {
-    ${
-      Platform.OS === 'web' &&
-      css`
-        min-font-size: 17px;
-        font-size: max(${(props) => scaleDp(props.fontSize) + 'px'}, 20px);
-      `
-    }}
-    
-  }
+  ${(props) =>
+    props.theme.screenWidth < 800 &&
+    Platform.OS === 'web' &&
+    css`
+      min-font-size: 17px;
+      font-size: max(${(props) => scaleDp(props.fontSize) + 'px'}, 20px);
+    `}
 `;
 
 const ClearIcon = styled(Icon)`

@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {useIsFocused, useRoute} from '@react-navigation/native';
 
 export const Screen = ({
   children,
@@ -19,7 +20,9 @@ export const Screen = ({
   classname,
   style,
 }) => {
+  const route = useRoute();
   const {isMobile} = useWindowDimension();
+  const isFocused = useIsFocused();
   const ViewComponent = React.useMemo(() => {
     return styled(
       Platform.OS === 'android' && !removeeTWF
@@ -39,20 +42,21 @@ export const Screen = ({
       native: () => {},
       web: () => {
         const body = document.body;
-        if (!scrollable) {
+        if (isMobile && isFocused && !scrollable) {
           disableBodyScroll(body);
         } else {
           enableBodyScroll(body);
         }
       },
     })();
-  }, [scrollable]);
+  }, [route, isMobile, isFocused, scrollable]);
 
   return (
     <>
       <StatusBar backgroundColor={theme.primaryDarkColor} />
       <ViewComponent accessible={!scrollable} onPress={Keyboard.dismiss}>
         <ScrollableLayer
+          showsVerticalScrollIndicator={false}
           classname={classname}
           style={[
             !scrollable && {
@@ -79,4 +83,5 @@ export const Screen = ({
 
 Screen.defaultProps = {
   removeTWF: false,
+  scrollable: false,
 };

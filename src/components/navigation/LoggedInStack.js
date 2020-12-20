@@ -2,11 +2,13 @@ import React from 'react';
 import {routes} from 'constants/config/routes';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-
-import HomeScreen from 'components/navigation/HomeScreen';
 import {NavigationDrawer} from 'components/ui/NavigationDrawer';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
+import HomeScreen from 'components/navigation/HomeScreen';
+import OrderShippmentDetailsScreen from 'components/navigation/NewShipmentDetailsScreen';
+import {TransitionPresets} from '@react-navigation/stack';
+import ShipmentStack from 'components/navigation/ShipmentStack';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
@@ -27,10 +29,11 @@ export default () => {
       }}
       screenOptions={{
         headerShown: false,
+        ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
       <Screen
-        name={routes.homeScreen}
-        component={HomeScreen}
+        name={routes.shipmentStack}
+        component={ShipmentStack}
         options={{
           title: 'Realizar un envío',
         }}

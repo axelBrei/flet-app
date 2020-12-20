@@ -25,5 +25,5 @@ const ContainerButton = styled(TouchableOpacity)`
   padding: ${scaleDpTheme(8)};
   border-radius: ${scaleDpTheme(20)};
   background-color: ${theme.white};
-  box-shadow: 0.5px 1px 2px ${theme.disabled};
+  box-shadow: 0px 3px 6px ${theme.shadowColor};
 `;

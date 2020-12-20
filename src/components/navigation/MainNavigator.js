@@ -16,12 +16,10 @@ export default () => {
   return (
     <Navigator
       initialRouteName={routes.homeScreen}
-      screenOptions={{
-        ...navigationConfig,
+      screenOptions={navigationConfig({
         title: '',
-        animationEnabled: true,
         headerShown: width <= 800,
-      }}>
+      })}>
       <Screen
         name={routes.landingScreen}
         component={LandingScreen}

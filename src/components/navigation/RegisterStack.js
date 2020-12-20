@@ -16,13 +16,10 @@ export const RegisterStack = ({route}) => {
   return (
     <Navigator
       initialRouteName={routes.registerPersonalDataScreen}
-      screenOptions={{
-        ...navigationConfig,
-        animationEnabled: true,
+      screenOptions={navigationConfig({
         title: '',
-        ...TransitionPresets.SlideFromRightIOS,
         headerTransparent: isMobile,
-      }}>
+      })}>
       <Screen
         name={routes.registerScreen}
         component={RegisterScreen}

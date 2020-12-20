@@ -9,9 +9,9 @@ import {OrderForm} from 'components/navigation/HomeScreen/OrderForm';
 export default () => {
   const {height} = useWindowDimension();
   return (
-    <Screen style={{flex: 1, maxHeight: height, width: '100%'}}>
+    <Screen style={{flex: 1, height, width: '100%'}}>
       <DrawableBottomView>
-        <OrderForm />
+        {({isOpen, open, close}) => <OrderForm open={open} isOpen={isOpen} />}
       </DrawableBottomView>
       <FloatingHamburguerButton />
     </Screen>

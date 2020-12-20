@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* fletex_appTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* fletex_appTests.m */; };
+		0430180225900A7000431FF6 /* libreact-native-maps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0430180125900A7000431FF6 /* libreact-native-maps.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -50,6 +51,7 @@
 		0409F2C5257AC1FB00142E47 /* libPermission-MediaLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPermission-MediaLibrary.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0409F2C6257AC1FB00142E47 /* libPermission-Microphone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPermission-Microphone.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0409F2C7257AC1FB00142E47 /* libPermission-PhotoLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPermission-PhotoLibrary.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0430180125900A7000431FF6 /* libreact-native-maps.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-maps.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E19A197D236421691C495B0 /* Pods-fletex_app-fletex_appTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-fletex_appTests.release.xcconfig"; path = "Target Support Files/Pods-fletex_app-fletex_appTests/Pods-fletex_app-fletex_appTests.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* fletex_app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fletex_app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = fletex_app/AppDelegate.h; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AAD243B82DBAC231CAEB503 /* libPods-fletex_app.a in Frameworks */,
+				0430180225900A7000431FF6 /* libreact-native-maps.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +164,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0430180125900A7000431FF6 /* libreact-native-maps.a */,
 				0409F2C2257AC1FB00142E47 /* libPermission-Camera.a */,
 				0409F2C3257AC1FB00142E47 /* libPermission-LocationAlways.a */,
 				0409F2C4257AC1FB00142E47 /* libPermission-LocationWhenInUse.a */,
@@ -493,6 +497,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-fletex_app/Pods-fletex_app-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -515,6 +520,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -547,6 +553,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-fletex_app-fletex_appTests/Pods-fletex_app-fletex_appTests-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -569,6 +576,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",

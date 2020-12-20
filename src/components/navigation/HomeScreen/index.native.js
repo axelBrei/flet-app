@@ -5,11 +5,13 @@ import {FloatingHamburguerButton} from 'components/ui/FloatingHamburgerButton';
 import {DrawableBottomView} from 'components/ui/DrawableBottomView';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {OrderForm} from 'components/navigation/HomeScreen/OrderForm';
+import Map from 'components/ui/Map/index';
 
 export default () => {
-  const {height} = useWindowDimension();
+  const {height, width} = useWindowDimension();
   return (
-    <Screen style={{flex: 1, height, width: '100%'}}>
+    <Screen style={{height, width}}>
+      <Map style={{width, height}} />
       <DrawableBottomView>
         {({isOpen, open, close}) => <OrderForm open={open} isOpen={isOpen} />}
       </DrawableBottomView>

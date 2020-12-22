@@ -51,6 +51,10 @@ const babelLoaderConfiguration = {
   },
 };
 
+const dotenv = require('dotenv').config({
+  path: path.join(__dirname, '.env'),
+});
+
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
   test: /\.(gif|jpe?g|png)$/,
@@ -97,6 +101,9 @@ module.exports = (env) => ({
     publicPath: '/',
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.parsed),
+    }),
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
     }),
@@ -153,6 +160,7 @@ module.exports = (env) => ({
       'react-native-vector-icons': 'react-native-vector-icons/dist',
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
+      services: path.resolve('./src/services'),
       helpers: path.resolve('./src/helpers'),
       resources: path.resolve('./src/resources'),
       'redux-store': path.resolve('./src/redux-store'),
@@ -164,6 +172,9 @@ module.exports = (env) => ({
         'ReactNativeSVG.web.js',
       ]),
       'react-native-svg': 'react-native-svg-web',
+      'react-native-config': path.resolve(
+        './src/constants/config/Config.web.js',
+      ),
     },
     // If you're working on a multi-platform React Native app, web-specific
     // module implementations should be written in files using the extension

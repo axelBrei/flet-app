@@ -20,5 +20,6 @@ export const usePermission = (permissions = []) => {
   return {
     loading: loadingPermission,
     status,
+    check: () => checkPermissions(permissions),
   };
 };

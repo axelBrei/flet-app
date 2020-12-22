@@ -52,7 +52,7 @@ export const DraggableContainer = ({
       componentHeight -
       initialHiddenContentPercentage * screenHeight
     );
-    if (Platform.OS === 'android') toVal -= componentHeight * 0.12;
+    if (Platform.OS !== 'web') toVal -= componentHeight * 0.12;
     animateDrawerTo(toVal);
     setIsOpen(true);
   }, [

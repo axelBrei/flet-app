@@ -24,13 +24,19 @@
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustPan"
+        android:screenOrientation="portrait">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+        <!-- GOOGLE MAPS  -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/REACT_APP_GMAPS_API_KEY"/>
+        <!-- END GOOGLE MAPS  -->
     </application>
 
 </manifest>

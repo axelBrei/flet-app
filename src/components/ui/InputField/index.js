@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react';
-import {Platform, TextInput, View} from 'react-native';
+import {Platform, TextInput, View, ActivityIndicator} from 'react-native';
 import styled, {css} from 'styled-components';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {AnimatedError} from 'components/ui/AnimatedError';
@@ -13,7 +13,9 @@ const InputField = ({
   onFocus,
   onBlur,
   icon,
+  loading,
   clearable,
+  onLayout,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -33,7 +35,7 @@ const InputField = ({
   }, [props]);
 
   return (
-    <ComponentContainer style={props.style}>
+    <ComponentContainer style={props.style} onLayout={onLayout}>
       <Container
         classname={props.classname}
         onFocus={_onFocus}
@@ -55,6 +57,7 @@ const InputField = ({
           {...props}
           placeholder={label}
         />
+        <Loader size={20} animating={loading} color={theme.primaryColor} />
         {clearable && <ClearIcon name="close-circle" onPress={onClear} />}
       </Container>
       <AnimatedError error={error} />
@@ -64,6 +67,7 @@ const InputField = ({
 
 InputField.defaultProps = {
   autoCompleteType: 'off',
+  loading: false,
 };
 InputField.propTypes = {
   onChangeText: PropTypes.func.isRequired,
@@ -71,7 +75,9 @@ InputField.propTypes = {
 export default InputField;
 
 const ComponentContainer = styled(View)`
+  display: flex;
   width: 100%;
+  z-index: 0;
 `;
 
 const Container = styled(View)`
@@ -85,16 +91,18 @@ const Container = styled(View)`
   border-radius: 12px;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
   elevation: 3;
+  overflow: hidden;
 `;
 
 const Input = styled(TextInput)`
+  flex: 1;
   color: ${(props) => props.theme.colors.fontColor};
   min-width: ${scaleDpTheme(150)};
-  width: 100%;
   font-size: ${scaleDpTheme(12)};
   padding-top: ${scaleDpTheme(15)};
   padding-bottom: ${scaleDpTheme(15)};
   padding-left: ${scaleDpTheme(10)};
+  overflow: hidden;
   ${(props) =>
     props.theme.screenWidth < 800 &&
     Platform.OS === 'web' &&
@@ -108,4 +116,8 @@ const ClearIcon = styled(Icon)`
   color: ${(props) => props.theme.colors.primaryLightColor};
   flex: 1;
   text-align: right;
+`;
+
+const Loader = styled(ActivityIndicator)`
+  width: ${scaleDpTheme(15)};
 `;

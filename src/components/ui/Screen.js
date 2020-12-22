@@ -6,6 +6,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  KeyboardAvoidingView,
+  SafeAreaView,
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
@@ -18,6 +20,7 @@ export const Screen = ({
   scrollable,
   removeeTWF,
   classname,
+  enableAvoidKeyboard,
   style,
 }) => {
   const route = useRoute();
@@ -36,47 +39,68 @@ export const Screen = ({
   }, [removeeTWF]);
 
   const ScrollableLayer = scrollable ? ScrollView : View;
+  const NativeSafeAreaView =
+    Platform.OS === 'web' ? React.Fragment : SafeAreaView;
 
   useEffect(() => {
-    Platform.select({
-      native: () => {},
-      web: () => {
-        const body = document.body;
-        if (isMobile && isFocused && !scrollable) {
-          disableBodyScroll(body);
-        } else {
-          enableBodyScroll(body);
-        }
-      },
-    })();
+    if (isFocused && !scrollable) {
+      Platform.select({
+        native: () => {},
+        web: () => {
+          const body = document.body;
+          if (isMobile) {
+            disableBodyScroll(body);
+          } else {
+            enableBodyScroll(body);
+          }
+        },
+      })();
+    }
   }, [route, isMobile, isFocused, scrollable]);
 
   return (
     <>
       <StatusBar backgroundColor={theme.primaryDarkColor} />
-      <ViewComponent accessible={!scrollable} onPress={Keyboard.dismiss}>
-        <ScrollableLayer
-          showsVerticalScrollIndicator={false}
-          classname={classname}
-          style={[
-            !scrollable && {
-              alignItems: 'center',
-              overflow: 'hidden',
-              overscrollBehavior: 'none',
-            },
-            isMobile && {
-              flex: 1,
-            },
-            Platform.select({
-              web: {
-                overflowX: 'hidden',
-              },
-            }),
-            style,
-          ]}>
-          {children}
-        </ScrollableLayer>
-      </ViewComponent>
+      <NativeSafeAreaView
+        {...(Platform.OS !== 'web' && {
+          style: {
+            height: '100%',
+            width: '100%',
+            backgroundColor: theme.backgroundColor,
+          },
+        })}>
+        <KeyboardAvoidingView
+          behavior="height"
+          enabled={enableAvoidKeyboard}
+          style={{
+            height: '100%',
+            width: '100%',
+          }}>
+          <ViewComponent accessible={!scrollable} onPress={Keyboard.dismiss}>
+            <ScrollableLayer
+              showsVerticalScrollIndicator={false}
+              classname={classname}
+              style={[
+                !scrollable && {
+                  alignItems: 'center',
+                  overflow: 'hidden',
+                  overscrollBehavior: 'none',
+                },
+                isMobile && {
+                  flex: 1,
+                },
+                Platform.select({
+                  web: {
+                    overflowX: 'hidden',
+                  },
+                }),
+                style,
+              ]}>
+              {children}
+            </ScrollableLayer>
+          </ViewComponent>
+        </KeyboardAvoidingView>
+      </NativeSafeAreaView>
     </>
   );
 };
@@ -84,4 +108,5 @@ export const Screen = ({
 Screen.defaultProps = {
   removeTWF: false,
   scrollable: false,
+  enableAvoidKeyboard: true,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Platform} from 'react-native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
@@ -11,6 +11,7 @@ import RegisterDriverVehiculeDataScreen from 'components/navigation/RegisterDriv
 import RegisterDriverLegalDataScreen from 'components/navigation/RegisterDriverLegalDataScreen';
 
 const {Navigator, Screen} = createStackNavigator();
+
 export const RegisterStack = ({route}) => {
   const {isMobile} = useWindowDimension();
   return (

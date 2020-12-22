@@ -28,7 +28,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'shippment',
+  name: 'shipment',
   initialState,
   reducers: {
     updateShipmentDecription: (state, action) => {

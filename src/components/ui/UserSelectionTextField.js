@@ -12,11 +12,13 @@ export const UserSelectionTextField = ({label, value, icon}) => {
     <RowContainer>
       <Icon size={scaleDp(25)} color={theme.primaryColor} name={icon} />
       <Divider />
-      <Container>
+      <Container flex>
         <AppText fontSize={12} color={theme.disabled}>
           {label}
         </AppText>
-        <AppText>{value}</AppText>
+        <AppText ellipsizeMode="tail" numberOfLines={1}>
+          {value}
+        </AppText>
       </Container>
     </RowContainer>
   );

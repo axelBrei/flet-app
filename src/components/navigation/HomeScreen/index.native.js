@@ -11,7 +11,6 @@ export default () => {
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
 
-  console.log(startPoint, endPoint);
   return (
     <Screen style={{height, width}} enableAvoidKeyboard={false}>
       <Map

@@ -1,5 +1,6 @@
 import React, {
   useRef,
+  useEffect,
   useMemo,
   useImperativeHandle,
   useCallback,
@@ -13,15 +14,17 @@ import {
   Platform,
   View,
 } from 'react-native';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDpTheme, scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {useIsFocused} from '@react-navigation/native';
 
 export const DraggableContainer = ({
   children,
   initialHiddenContentPercentage,
   externalRef,
 }) => {
+  const isFocused = useIsFocused();
   const {width, height: screenHeight} = useWindowDimension();
   const [isOpen, setIsOpen] = useState(false);
   const [componentHeight, setComponentHeight] = useState(0);
@@ -29,39 +32,52 @@ export const DraggableContainer = ({
   const contentRef = useRef(null);
 
   const animateDrawerTo = useCallback(
-    (yValue) => {
+    (yValue, callback = () => {}) => {
       Animated.timing(pan, {
         toValue: {
           x: 0,
-          y: yValue,
+          y: yValue ?? scaleDp(250),
         },
         duration: 150,
         useNativeDriver: true,
-      }).start(() => Platform.OS === 'web' && pan.flattenOffset());
+      }).start(() => {
+        Platform.OS === 'web' && pan.flattenOffset();
+        callback();
+      });
     },
     [pan],
   );
 
-  const close = useCallback(() => {
-    animateDrawerTo(0);
-    setIsOpen(false);
-  }, [animateDrawerTo, setIsOpen]);
+  const close = useCallback(
+    (callback = () => {}) => {
+      animateDrawerTo(0, () => {
+        setIsOpen(false);
+        callback();
+      });
+    },
+    [animateDrawerTo, setIsOpen],
+  );
 
-  const open = useCallback(() => {
-    let toVal = -(
-      componentHeight -
-      initialHiddenContentPercentage * screenHeight
-    );
-    if (Platform.OS !== 'web') toVal -= componentHeight * 0.12;
-    animateDrawerTo(toVal);
-    setIsOpen(true);
-  }, [
-    animateDrawerTo,
-    initialHiddenContentPercentage,
-    screenHeight,
-    componentHeight,
-    setIsOpen,
-  ]);
+  const open = useCallback(
+    (callback = () => {}) => {
+      let toVal = -(
+        componentHeight -
+        initialHiddenContentPercentage * screenHeight
+      );
+      if (Platform.OS !== 'web') toVal -= componentHeight * 0.12;
+      animateDrawerTo(toVal, () => {
+        setIsOpen(true);
+        callback();
+      });
+    },
+    [
+      animateDrawerTo,
+      initialHiddenContentPercentage,
+      screenHeight,
+      componentHeight,
+      setIsOpen,
+    ],
+  );
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -70,7 +86,7 @@ export const DraggableContainer = ({
       return Math.abs(dy) > 20;
     },
     onPanResponderGrant: () => {
-      pan.setOffset(pan.__getValue());
+      pan.setOffset(pan?.__getValue());
     },
     onPanResponderMove: (event, gesture) => {
       const {pageY} = event.nativeEvent;
@@ -85,7 +101,7 @@ export const DraggableContainer = ({
         return null;
       }
 
-      return Animated.event([null, {dy: pan.y, dx: pan.x}], {
+      return Animated.event([null, {dy: pan.y}], {
         useNativeDriver: false,
       })(event, gesture);
     },
@@ -130,27 +146,28 @@ export const DraggableContainer = ({
         style={[
           Platform.OS === 'web' && {overflow: 'hidden'},
           {
-            width,
+            width: width ?? '100%',
             alignItems: 'center',
             position: 'absolute',
             bottom: -(componentHeight * (1 - initialHiddenContentPercentage)),
             backgroundColor: theme.backgroundColor,
+            zIndex: 20,
             transform: [
               {
                 translateY: pan.y.interpolate({
                   inputRange: [0, screenHeight],
-                  outputRange: [0, topOutputRange],
+                  outputRange: [0, topOutputRange ?? screenHeight],
                 }),
               },
+              {translateX: 0},
             ],
-            zIndex: 20,
           },
         ]}>
         <DrawableContainer
           ref={contentRef}
           onLayout={measureView}
           activeOpacity={1}>
-          <DrawerLine></DrawerLine>
+          <DrawerLine />
           {typeof children === 'function'
             ? children({isOpen, open, close})
             : children}

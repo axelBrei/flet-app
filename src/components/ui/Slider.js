@@ -21,16 +21,12 @@ export const Slider = ({
   error,
   options,
 }) => {
-  const {width} = useWindowDimension();
-  const [_value, setValue] = useState(minValue);
   const [focused, setFocused] = useState(false);
-  const values = useMemo(
-    () => ({
-      maxValue: options.length > 0 ? options.length - 1 : maxValue,
-      minValue: options.length > 0 ? 0 : minValue,
-    }),
-    [maxValue, minValue, options],
-  );
+  const values = {
+    maxValue: options.length > 0 ? options.length - 1 : maxValue,
+    minValue: options.length > 0 ? 0 : minValue,
+  };
+  const [_value, setValue] = useState(values.minValue);
 
   useEffect(() => {
     if (value) {
@@ -63,22 +59,25 @@ export const Slider = ({
 
   const trackMarks = useMemo(
     () =>
-      options.length > 0 ? options.map((_, idx) => idx) : [minValue, maxValue],
+      options.length > 0
+        ? options.map((_, idx, arr) => idx)
+        : [minValue, maxValue],
     [options, minValue, maxValue],
   );
 
   const renderTrackMarcks = useCallback(
-    (i) => (
-      <TrackContainer hidden={options.length === 0}>
-        <OptionText
-          hidden={options.length === 0}
-          textAlign={i === options.length - 1 || i === 0 ? 'left' : 'center'}
-          left={i === options.length - 1 ? -80 : i === 0 ? 2 : 0}>
-          {options[i]?.label}
-        </OptionText>
-        <TrackMark selected={options.length !== 0 && i <= _value} />
-      </TrackContainer>
-    ),
+    (i) =>
+      options.length > 0 && (
+        <TrackContainer hidden={options.length === 0}>
+          <OptionText
+            hidden={options.length === 0}
+            textAlign={i === options.length - 1 || i === 0 ? 'left' : 'center'}
+            left={i === options.length - 1 ? -80 : i === 0 ? 2 : 0}>
+            {options[i]?.label}
+          </OptionText>
+          <TrackMark selected={options.length !== 0 && i <= _value} />
+        </TrackContainer>
+      ),
     [options, _value],
   );
 
@@ -87,7 +86,7 @@ export const Slider = ({
       <Label>{label}</Label>
       <ComponentContainer>
         <RNSlider
-          value={_value}
+          value={_value ?? 0}
           onValueChange={setValue}
           maximumValue={values.maxValue}
           minimumValue={values.minValue}
@@ -123,7 +122,7 @@ export const Slider = ({
 };
 
 Slider.defaultProps = {
-  values: null,
+  value: null,
   minValue: 0,
   maxValue: 100,
   valueSign: '',
@@ -161,7 +160,7 @@ const OptionText = styled(AppText)`
   display: ${(props) =>
     props.hidden ? 'none' : Platform.select({web: 'unset', native: 'flex'})};
   max-width: ${scaleDpTheme(85)};
-  font-size: ${scaleDpTheme(11)};
+  font-size: ${scaleDpTheme(9)};
 `;
 
 const TrackMark = styled(View)`

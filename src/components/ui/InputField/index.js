@@ -91,7 +91,6 @@ const Container = styled(View)`
   border-radius: 12px;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
   elevation: 3;
-  overflow: hidden;
 `;
 
 const Input = styled(TextInput)`

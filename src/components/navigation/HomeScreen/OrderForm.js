@@ -39,10 +39,15 @@ export const OrderForm = ({
 
   const onSubmit = useCallback(
     (values) => {
-      values.size = options[values.size];
-      dispatch(updateShipmentDecription(values));
-      navigation.navigate(routes.newShipmentDetailScreen);
-      isOpen && close();
+      close(() => {
+        dispatch(
+          updateShipmentDecription({
+            ...values,
+            [FIELDS.SIZE]: options[values[FIELDS.SIZE]],
+          }),
+        );
+        navigation.navigate(routes.newShipmentDetailScreen);
+      });
     },
     [isOpen, close, navigation, dispatch],
   );

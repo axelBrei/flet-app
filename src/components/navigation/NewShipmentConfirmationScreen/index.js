@@ -76,12 +76,12 @@ export default ({navigation}) => {
       <FormContainer>
         <UserSelectionTextField
           label="Desde"
-          value={shipmentDescription?.endPoint}
+          value={shipmentDescription?.endPoint.name}
           icon="notification-clear-all"
         />
         <UserSelectionTextField
           label="Desde"
-          value={shipmentDescription?.startPoint}
+          value={shipmentDescription?.startPoint.name}
           icon="map-marker-outline"
         />
         <Title>

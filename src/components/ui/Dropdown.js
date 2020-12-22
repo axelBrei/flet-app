@@ -40,7 +40,6 @@ export const Dropdown = ({visible, ...props}) => {
     [props.onChangeText, setValue],
   );
 
-  console.log(value, props.data, props.error);
   return (
     <>
       <InputField

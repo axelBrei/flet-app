@@ -22,7 +22,6 @@ const Map = ({markers, edgePadding, minMarkerAnimation}) => {
     }
   }, [filteredMarkers, mapRef]);
 
-  mapRef.current?.getCamera().then(console.log);
   return (
     <MapView
       ref={mapRef}

@@ -44,7 +44,7 @@ const vehiculeSizeOptions = [
   },
   {
     id: 4,
-    title: 'Moto',
+    title: 'Camión',
     maxWeight: 500,
     Icon: Truck,
   },
@@ -92,7 +92,6 @@ export default ({navigation}) => {
     ),
     [values, _setFieldValue],
   );
-  console.log(errors);
 
   return (
     <Screen scrollable>

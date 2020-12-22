@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
@@ -14,17 +14,21 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 const HomeScreen = () => {
   const {width, height} = useWindowDimension();
-  const {loading, status, check} = usePermission([PERMISSIONS.location]);
-
-  useEffect(() => {
-    check();
-  }, []);
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
 
   return (
     <ScreenComponent>
-      <Map style={{width, height}} />
+      <Map
+        style={{width, height}}
+        minMarkerAnimation={0}
+        markers={[startPoint, endPoint]}
+      />
       <OrderContainer>
-        <OrderForm />
+        <OrderForm
+          onSelectEndPoint={setEndPoint}
+          onSelectStartPoint={setStartPoint}
+        />
       </OrderContainer>
     </ScreenComponent>
   );
@@ -47,4 +51,5 @@ const OrderContainer = styled(Container)`
   padding: ${scaleDpTheme(10)} ${scaleDpTheme(15)};
   border-radius: ${scaleDpTheme(8)};
   box-shadow: 0 3px 6px ${theme.shadowColor};
+  width: max(${scaleDpTheme(270)}, 35%);
 `;

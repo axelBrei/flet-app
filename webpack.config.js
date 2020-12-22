@@ -54,7 +54,6 @@ const babelLoaderConfiguration = {
 const dotenv = require('dotenv').config({
   path: path.join(__dirname, '.env'),
 });
-console.log(dotenv);
 
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
@@ -161,6 +160,7 @@ module.exports = (env) => ({
       'react-native-vector-icons': 'react-native-vector-icons/dist',
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
+      services: path.resolve('./src/services'),
       helpers: path.resolve('./src/helpers'),
       resources: path.resolve('./src/resources'),
       'redux-store': path.resolve('./src/redux-store'),

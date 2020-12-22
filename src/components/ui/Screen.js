@@ -20,6 +20,7 @@ export const Screen = ({
   scrollable,
   removeeTWF,
   classname,
+  enableAvoidKeyboard,
   style,
 }) => {
   const route = useRoute();
@@ -69,6 +70,8 @@ export const Screen = ({
           },
         })}>
         <KeyboardAvoidingView
+          behavior="height"
+          enabled={enableAvoidKeyboard}
           style={{
             height: '100%',
             width: '100%',
@@ -105,4 +108,5 @@ export const Screen = ({
 Screen.defaultProps = {
   removeTWF: false,
   scrollable: false,
+  enableAvoidKeyboard: true,
 };

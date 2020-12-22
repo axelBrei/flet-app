@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useEffect, useCallback, useState} from 'react';
 import styled from 'styled-components';
 import InputField from 'components/ui/InputField';
 import {MainButton} from 'components/ui/MainButton';
@@ -15,6 +15,9 @@ import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
 import {useDispatch} from 'react-redux';
 import {updateShipmentDecription} from 'redux-store/slices/shipmentSlice';
+import {Dropdown} from 'components/ui/Dropdown';
+import {useDebouncedGeocoding} from 'components/Hooks/useDebouncedGeocoding';
+import {useBackHandler} from 'components/Hooks/useBackHandle';
 
 const options = [
   {label: 'Chico'},
@@ -22,18 +25,32 @@ const options = [
   {label: 'Grande'},
   {label: 'Muy grande'},
 ];
-export const OrderForm = ({isOpen, open}) => {
+export const OrderForm = ({
+  isOpen,
+  open,
+  close,
+  onSelectStartPoint,
+  onSelectEndPoint,
+}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [startPointText, setStartPointText] = useState('');
+  const [endPointText, setEndPointText] = useState('');
 
   const onSubmit = useCallback(
     (values) => {
       values.size = options[values.size];
       dispatch(updateShipmentDecription(values));
       navigation.navigate(routes.newShipmentDetailScreen);
+      isOpen && close();
     },
-    [navigation, dispatch],
+    [isOpen, close, navigation, dispatch],
   );
+
+  useBackHandler(() => {
+    isOpen && close();
+    return isOpen;
+  });
 
   const {
     values,
@@ -44,27 +61,66 @@ export const OrderForm = ({isOpen, open}) => {
     handleSubmit,
   } = useFormikCustom(formikConfig(onSubmit));
 
+  const {
+    results: startPointResults,
+    loading: startPointLoading,
+    error: startPointError,
+  } = useDebouncedGeocoding(startPointText);
+  const {
+    results: endPointResults,
+    loading: endPointLoading,
+    error: endPointError,
+  } = useDebouncedGeocoding(endPointText);
+
+  const _onSelectStartPoint = useCallback(
+    (v) => {
+      _setFieldValue(FIELDS.START_POINT)(v);
+      onSelectStartPoint(v);
+    },
+    [_setFieldValue, onSelectStartPoint],
+  );
+
+  const _onSelectEndPoint = useCallback(
+    (v) => {
+      _setFieldValue(FIELDS.END_POINT)(v);
+      onSelectEndPoint(v);
+    },
+    [onSelectEndPoint, _setFieldValue],
+  );
+
   return (
     <FormContainer>
       <Title>Datos de la encomienda</Title>
-      <InputField
+      <Dropdown
         label="¿De donde salimos?"
         icon="notification-clear-all"
+        data={startPointResults}
         onFocus={() => {
           _setFieldTouched(FIELDS.START_POINT)();
           open();
         }}
-        onChangeText={_setFieldValue(FIELDS.START_POINT)}
+        onItemPress={_onSelectStartPoint}
+        onChangeText={setStartPointText}
         value={values[FIELDS.START_POINT]}
-        error={touched[FIELDS.START_POINT] && errors[FIELDS.START_POINT]}
+        loading={startPointLoading}
+        error={
+          startPointError ||
+          (touched[FIELDS.START_POINT] && errors[FIELDS.START_POINT])
+        }
       />
-      <InputField
+      <Dropdown
         label="¿A donde lo llevamos?"
         icon="map-marker-outline"
+        data={endPointResults}
         onFocus={_setFieldTouched(FIELDS.END_POINT)}
-        onChangeText={_setFieldValue(FIELDS.END_POINT)}
+        onChangeText={setEndPointText}
+        onItemPress={_onSelectEndPoint}
         value={values[FIELDS.END_POINT]}
-        error={touched[FIELDS.END_POINT] && errors[FIELDS.END_POINT]}
+        loading={endPointLoading}
+        error={
+          endPointError ||
+          (touched[FIELDS.END_POINT] && errors[FIELDS.END_POINT])
+        }
       />
       <InputField
         label="¿Que estamos llevando?"
@@ -97,7 +153,15 @@ export const OrderForm = ({isOpen, open}) => {
   );
 };
 
+OrderForm.defaultProps = {
+  open: () => {},
+  close: () => {},
+  onSelectStartPoint: () => {},
+  onSelectEndPoint: () => {},
+};
+
 const FormContainer = styled(Container)`
+  width: 100%;
   align-items: center;
   min-height: ${(props) => props.theme.screenHeight * 0.7}px;
   padding-bottom: ${scaleDpTheme(10)};
@@ -112,6 +176,6 @@ const Title = styled(AppText)`
 
 const ContinueButton = styled(MainButton)`
   margin-top: ${scaleDpTheme(20)};
-  width: ${scaleDpTheme(250)};
+  width: 85%;
   min-height: ${scaleDpTheme(30)};
 `;

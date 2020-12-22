@@ -46,7 +46,8 @@
     "redux-persist": "^6.0.0",
     "reselect": "^4.0.0",
     "styled-components": "^5.2.1",
-    "yup": "^0.30.0"
+    "yup": "^0.30.0",
+    "axios": "^0.21.0"
   },
   "devDependencies": {
     "@babel/core": "7.12.3",

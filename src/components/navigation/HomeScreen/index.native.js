@@ -1,5 +1,4 @@
-import React, {useRef} from 'react';
-import {KeyboardAvoidingView} from 'react-native';
+import React, {useState} from 'react';
 import {Screen} from 'components/ui/Screen';
 import {FloatingHamburguerButton} from 'components/ui/FloatingHamburgerButton';
 import {DrawableBottomView} from 'components/ui/DrawableBottomView';
@@ -9,11 +8,27 @@ import Map from 'components/ui/Map/index';
 
 export default () => {
   const {height, width} = useWindowDimension();
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
+
+  console.log(startPoint, endPoint);
   return (
-    <Screen style={{height, width}}>
-      <Map style={{width, height}} />
+    <Screen style={{height, width}} enableAvoidKeyboard={false}>
+      <Map
+        style={{width, height}}
+        markers={[startPoint, endPoint]}
+        minMarkerAnimation={1}
+      />
       <DrawableBottomView>
-        {({isOpen, open, close}) => <OrderForm open={open} isOpen={isOpen} />}
+        {({isOpen, open, close}) => (
+          <OrderForm
+            open={open}
+            isOpen={isOpen}
+            close={close}
+            onSelectStartPoint={setStartPoint}
+            onSelectEndPoint={setEndPoint}
+          />
+        )}
       </DrawableBottomView>
       <FloatingHamburguerButton />
     </Screen>

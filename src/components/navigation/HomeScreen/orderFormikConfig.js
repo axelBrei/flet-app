@@ -37,8 +37,8 @@ const validationSchema = yup.object({
     .string()
     .min(4, minimumFieldLength)
     .required(requiredField),
-  [FIELDS.VALUE]: yup.number().required(requiredField),
-  [FIELDS.SIZE]: yup.number().required(requiredField),
+  [FIELDS.VALUE]: yup.number(),
+  [FIELDS.SIZE]: yup.number(),
 });
 
 export const formikConfig = (onSubmit) => ({

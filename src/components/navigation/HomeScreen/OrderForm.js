@@ -160,7 +160,9 @@ export const OrderForm = ({
 
 OrderForm.defaultProps = {
   open: () => {},
-  close: () => {},
+  close: (cb) => {
+    cb && cb();
+  },
   onSelectStartPoint: () => {},
   onSelectEndPoint: () => {},
 };

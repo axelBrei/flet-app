@@ -1,6 +1,6 @@
-import React, {useRef, useCallback, useMemo, useEffect} from 'react';
+import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Map as GoogleMap, GoogleApiWrapper, Marker} from 'google-maps-react';
+import {GoogleMap, useLoadScript, Marker} from '@react-google-maps/api';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {
   STYLES,
@@ -11,72 +11,99 @@ import {
 } from 'components/ui/Map/constants';
 import Config from 'react-native-config';
 import {theme} from 'constants/theme';
-import MapPinImage from 'resources/assets/map_pin.svg';
+import {scaleDp} from 'helpers/responsiveHelper';
 
-const Map = ({google, markers, minMarkerAnimation, ...props}) => {
-  const {isMobile, width, height} = useWindowDimension();
-  const mapRef = useRef();
+const Map = ({
+  markers,
+  minMarkerAnimation,
+  renderMarker,
+  edgePadding,
+  ...props
+}) => {
+  const {isLoaded, loadError} = useLoadScript({
+    googleMapsApiKey: Config.REACT_APP_GMAPS_API_KEY,
+  });
+  const [mapRef, setMapRef] = useState(null);
   const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
 
-  useEffect(() => {
-    if (
-      filteredMarkers &&
-      filteredMarkers.length > minMarkerAnimation &&
-      mapRef.current.map
-    ) {
-      const bounds = new google.maps.LatLngBounds();
-
+  const fitBounds = (map) => {
+    if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
+      const bounds = new window.google.maps.LatLngBounds();
       filteredMarkers.forEach((marker) => {
-        if (!marker.latitude || !marker.longitude) {
-          return;
-        }
-        bounds.extend(
-          new google.maps.LatLng(marker.latitude, marker.longitude),
-        );
+        bounds.extend({lat: marker.latitude, lng: marker.longitude});
       });
-      mapRef.current.map.fitBounds(bounds);
+      map.fitBounds(bounds, edgePadding);
     }
-  }, [filteredMarkers, google, mapRef]);
+  };
+
+  useEffect(() => {
+    if (mapRef) {
+      fitBounds(mapRef);
+    }
+  }, [mapRef, filteredMarkers]);
+
+  const handleLoad = (map) => {
+    setMapRef(map);
+    fitBounds(map);
+  };
+
+  const renderMapMarker = useCallback(
+    ({icon, ...marker}, index) => {
+      return (
+        <Marker
+          key={index.toString()}
+          id={marker.id}
+          name={marker.id}
+          color={theme.primaryColor}
+          position={{
+            lat: marker.latitude,
+            lng: marker.longitude,
+          }}
+          icon={
+            icon
+              ? {
+                  url: icon,
+                  scaledSize: {height: 60, width: 60},
+                }
+              : WEB_PIN
+          }
+        />
+      );
+    },
+    [renderMarker],
+  );
 
   return (
-    <View style={[styles.container, props.style]}>
+    isLoaded &&
+    !loadError && (
       <GoogleMap
-        {...ZOOM}
-        initialCenter={INITIAL_POSITION}
+        mapContainerStyle={{
+          height: '100%',
+          width: '100%',
+        }}
+        zoom={ZOOM.zoom}
+        clickableIcons={false}
+        options={{
+          fullscreenControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          gestureHandling: 'greedy',
+        }}
         center={INITIAL_POSITION}
-        google={google}
-        ref={mapRef}
-        style={isMobile ? {width, height} : STYLES.map}
-        styles={POIS_STYLE}
-        containerStyle={STYLES.contentContainer}
-        mapTypeControl={false}
-        streetViewControl={false}
-        fullscreenControl={false}>
-        {filteredMarkers.map((marker) => (
-          <Marker
-            id={marker.id}
-            color={theme.primaryColor}
-            position={{
-              lat: marker.latitude,
-              lng: marker.longitude,
-            }}
-            icon={WEB_PIN}
-          />
-        ))}
+        onLoad={handleLoad}>
+        {filteredMarkers.map(renderMapMarker)}
       </GoogleMap>
-    </View>
+    )
   );
 };
 
 Map.defaultProps = {
   minMarkerAnimation: 0,
   markers: [],
+  renderMarker: null,
+  edgePadding: null,
 };
-
-export default GoogleApiWrapper({
-  apiKey: Config.REACT_APP_GMAPS_API_KEY,
-  language: 'es_419',
-})(Map);
+export default React.memo(Map);
 
 const styles = StyleSheet.create({
   container: {

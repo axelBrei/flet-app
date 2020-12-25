@@ -73,5 +73,5 @@ export const WEB_PIN = {
   strokeColor: theme.primaryColor,
   fillColor: theme.primaryColor,
   fillOpacity: 1,
-  scale: 1,
+  scale: 0.8,
 };

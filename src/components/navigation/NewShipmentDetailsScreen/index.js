@@ -61,6 +61,7 @@ export default ({navigation}) => {
 
   const onSubmit = useCallback(
     (values) => {
+      delete values[FIELDS.SIZE]?.Icon;
       dispatch(updateShipmentVehiculeData(values));
       navigation.navigate(routes.newShipmentConfirmationScreen);
     },
@@ -127,7 +128,7 @@ const FormContainer = styled(Container)`
   width: ${(props) =>
     props.theme.isMobile ? props.theme.screenWidth : scaleDp(350)}px;
   padding: ${scaleDpTheme(30)} ${scaleDpTheme(20)};
-  ${(props) => props.theme.isMobile && 'padding-top: 0;'}
+  ${(props) => props.theme.isMobile && 'padding-top: 0px;'}
 `;
 
 const Title = styled(AppText)`

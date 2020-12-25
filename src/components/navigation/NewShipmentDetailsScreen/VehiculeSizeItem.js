@@ -9,7 +9,7 @@ import {theme} from 'constants/theme';
 export const VehiculeSizeItem = ({
   selected,
   onPress,
-  Icon,
+  Icon = () => <></>,
   maxWeight,
   ...props
 }) => {

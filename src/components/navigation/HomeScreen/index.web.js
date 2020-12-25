@@ -21,8 +21,14 @@ const HomeScreen = () => {
     <ScreenComponent>
       <Map
         style={{width, height}}
-        minMarkerAnimation={0}
+        minMarkerAnimation={1}
         markers={[startPoint, endPoint]}
+        edgePadding={{
+          top: height * 0.1,
+          bottom: height * 0.1,
+          left: height * 0.4,
+          right: 0,
+        }}
       />
       <OrderContainer>
         <OrderForm

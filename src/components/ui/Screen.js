@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
-import {disableBodyScroll, enableBodyScroll} from 'body-scroll-lock';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useIsFocused, useRoute} from '@react-navigation/native';
+import {usePlatformEffect, PLATFORMS} from 'components/Hooks/usePlatformEffect';
 
 export const Screen = ({
   children,
@@ -24,7 +24,7 @@ export const Screen = ({
   style,
 }) => {
   const route = useRoute();
-  const {isMobile} = useWindowDimension();
+  const {isMobile, height, width} = useWindowDimension();
   const isFocused = useIsFocused();
   const ViewComponent = React.useMemo(() => {
     return styled(
@@ -42,21 +42,21 @@ export const Screen = ({
   const NativeSafeAreaView =
     Platform.OS === 'web' ? React.Fragment : SafeAreaView;
 
-  useEffect(() => {
-    if (isFocused && !scrollable) {
-      Platform.select({
-        native: () => {},
-        web: () => {
-          const body = document.body;
-          if (isMobile) {
-            disableBodyScroll(body);
-          } else {
-            enableBodyScroll(body);
-          }
-        },
-      })();
-    }
-  }, [route, isMobile, isFocused, scrollable]);
+  usePlatformEffect(
+    () => {
+      const BodyScrollLock = require('body-scroll-lock');
+      const body = document.body;
+      if (isFocused && isMobile) {
+        if (!scrollable) {
+          BodyScrollLock.disableBodyScroll(body);
+        } else {
+          BodyScrollLock.enableBodyScroll(body);
+        }
+      }
+    },
+    [isFocused, isMobile, scrollable],
+    PLATFORMS.WEB,
+  );
 
   return (
     <>
@@ -65,7 +65,7 @@ export const Screen = ({
         {...(Platform.OS !== 'web' && {
           style: {
             height: '100%',
-            width: '100%',
+            width,
             backgroundColor: theme.backgroundColor,
           },
         })}>
@@ -85,9 +85,8 @@ export const Screen = ({
                   alignItems: 'center',
                   overflow: 'hidden',
                   overscrollBehavior: 'none',
-                },
-                isMobile && {
-                  flex: 1,
+                  maxHeight: height,
+                  maxWidth: width,
                 },
                 Platform.select({
                   web: {

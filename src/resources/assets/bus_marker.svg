@@ -12,10 +12,10 @@
     <rect id="shadow" width="26" height="73" rx="8" transform="translate(234 160)" opacity="0.251"/>
     <g id="Bus-2" data-name="Bus" transform="translate(226 152)">
       <g transform="matrix(0.42, -0.91, 0.91, 0.42, -37.2, 65.58)" filter="url(#Shape)">
-        <path id="Shape-2" data-name="Shape" d="M8,0H18a8,8,0,0,1,8,8V65a8,8,0,0,1-8,8H8a8,8,0,0,1-8-8V8A8,8,0,0,1,8,0Z" transform="translate(75.16 6) rotate(65)" fill="#a191d0"/>
+        <path id="Shape-2" data-name="Shape" d="M8,0H18a8,8,0,0,1,8,8V65a8,8,0,0,1-8,8H8a8,8,0,0,1-8-8V8A8,8,0,0,1,8,0Z" transform="translate(75.16 6) rotate(65)" fill="#ffc070"/>
       </g>
       <rect id="Shape-3" data-name="Shape" width="22" height="69" rx="8" transform="translate(2 2)" fill="rgba(0,0,0,0.48)"/>
-      <path id="Shape-4" data-name="Shape" d="M6,0h6a6,6,0,0,1,6,6V54a6,6,0,0,1-6,6H6a6,6,0,0,1-6-6V6A6,6,0,0,1,6,0Z" transform="translate(4 9)" fill="#8872ca"/>
+      <path id="Shape-4" data-name="Shape" d="M6,0h6a6,6,0,0,1,6,6V54a6,6,0,0,1-6,6H6a6,6,0,0,1-6-6V6A6,6,0,0,1,6,0Z" transform="translate(4 9)" fill="#ffab40"/>
     </g>
   </g>
 </svg>

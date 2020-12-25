@@ -38,8 +38,10 @@ export const useWindowDimension = () => {
   );
 
   useEffect(() => {
-    Dimensions.addEventListener('change', (e) => handleChange(e));
-    return Dimensions.removeEventListener('change', handleChange);
+    if (Platform.OS === 'web') {
+      Dimensions.addEventListener('change', (e) => handleChange(e));
+      return Dimensions.removeEventListener('change', handleChange);
+    }
   }, [handleChange]);
 
   return {

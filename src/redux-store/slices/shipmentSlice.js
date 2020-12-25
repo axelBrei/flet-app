@@ -75,7 +75,8 @@ export const createNewShipment = (confirmationData) => async (
   } = getState().shipment;
   try {
     // TODO: call api
-    return dispatch(receiveShipmentSuccess());
+    setTimeout(() => dispatch(receiveShipmentSuccess()), 1200);
+    // return dispatch(receiveShipmentSuccess());
   } catch (e) {
     dispatch(receiveShipmentFail(e));
   }

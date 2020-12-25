@@ -8,12 +8,14 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import HomeScreen from 'components/navigation/HomeScreen/index';
 import NewShipmentDetailsScreen from 'components/navigation/NewShipmentDetailsScreen';
 import NewShipmentConfirmationScreen from 'components/navigation/NewShipmentConfirmationScreen';
+import ShipmentScreen from 'components/navigation/ShipmentScreen';
 
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
   const {isMobile} = useWindowDimension();
   return (
     <Navigator
+      initialRouteName={routes.homeScreen}
       screenOptions={navigationConfig({
         headerTransparent: !isMobile,
         headerBackTitle: 'Volver',
@@ -40,6 +42,13 @@ export default () => {
         component={NewShipmentConfirmationScreen}
         options={{
           title: '',
+        }}
+      />
+      <Screen
+        name={routes.shipmentScreen}
+        component={ShipmentScreen}
+        options={{
+          headerShown: isMobile,
         }}
       />
     </Navigator>

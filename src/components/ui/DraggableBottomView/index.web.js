@@ -18,65 +18,52 @@ import {scaleDpTheme, scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useIsFocused} from '@react-navigation/native';
+import {DraggableContent} from 'components/ui/DraggableBottomView/DraggableContent';
+import {
+  openDrawer,
+  closeDrawer,
+} from 'components/ui/DraggableBottomView/animationHelpers';
 
 export const DraggableContainer = ({
   children,
   initialHiddenContentPercentage,
   externalRef,
+  initiallyOpen,
 }) => {
   const isFocused = useIsFocused();
   const {width, height: screenHeight} = useWindowDimension();
   const [isOpen, setIsOpen] = useState(false);
   const [componentHeight, setComponentHeight] = useState(0);
   const pan = useRef(new Animated.ValueXY()).current;
-  const contentRef = useRef(null);
-
-  const animateDrawerTo = useCallback(
-    (yValue, callback = () => {}) => {
-      Animated.timing(pan, {
-        toValue: {
-          x: 0,
-          y: yValue ?? scaleDp(250),
-        },
-        duration: 150,
-        useNativeDriver: true,
-      }).start(() => {
-        Platform.OS === 'web' && pan.flattenOffset();
-        callback();
-      });
-    },
-    [pan],
-  );
 
   const close = useCallback(
     (callback = () => {}) => {
-      animateDrawerTo(0, () => {
-        setIsOpen(false);
-        callback();
-      });
+      closeDrawer(
+        pan,
+        () => {
+          setIsOpen(false);
+          callback();
+        },
+        true,
+      );
     },
-    [animateDrawerTo, setIsOpen],
+    [setIsOpen],
   );
 
   const open = useCallback(
     (callback = () => {}) => {
-      let toVal = -(
-        componentHeight -
-        initialHiddenContentPercentage * screenHeight
+      openDrawer(
+        pan,
+        componentHeight,
+        initialHiddenContentPercentage,
+        () => {
+          setIsOpen(true);
+          callback();
+        },
+        true,
       );
-      if (Platform.OS !== 'web') toVal -= componentHeight * 0.12;
-      animateDrawerTo(toVal, () => {
-        setIsOpen(true);
-        callback();
-      });
     },
-    [
-      animateDrawerTo,
-      initialHiddenContentPercentage,
-      screenHeight,
-      componentHeight,
-      setIsOpen,
-    ],
+    [initialHiddenContentPercentage, screenHeight, componentHeight, setIsOpen],
   );
 
   const panResponder = PanResponder.create({
@@ -117,19 +104,11 @@ export const DraggableContainer = ({
       if (componentHeight === 0) {
         setComponentHeight(e.nativeEvent.layout.height);
       }
+      if (initiallyOpen) {
+        open();
+      }
     },
-    [componentHeight, setComponentHeight],
-  );
-
-  const topOutputRange = useMemo(
-    () =>
-      componentHeight +
-      componentHeight *
-        Platform.select({
-          native: 0.3,
-          web: 0.2,
-        }),
-    [componentHeight],
+    [open, initiallyOpen, componentHeight, setComponentHeight],
   );
 
   useImperativeHandle(externalRef, () => ({
@@ -138,10 +117,18 @@ export const DraggableContainer = ({
     isOpen,
   }));
 
+  useEffect(() => {
+    if (initiallyOpen) {
+      open();
+    }
+  }, [initiallyOpen, open]);
+
   return (
     <>
       <SafeZone />
       <Animated.View
+        onLayout={measureView}
+        useNativeDriver
         {...panResponder.panHandlers}
         style={[
           Platform.OS === 'web' && {overflow: 'hidden'},
@@ -152,26 +139,14 @@ export const DraggableContainer = ({
             bottom: -(componentHeight * (1 - initialHiddenContentPercentage)),
             backgroundColor: theme.backgroundColor,
             zIndex: 20,
-            transform: [
-              {
-                translateY: pan.y.interpolate({
-                  inputRange: [0, screenHeight],
-                  outputRange: [0, topOutputRange ?? screenHeight],
-                }),
-              },
-              {translateX: 0},
-            ],
+            transform: [{translateY: pan.y}, {translateX: 0}],
           },
         ]}>
-        <DrawableContainer
-          ref={contentRef}
-          onLayout={measureView}
-          activeOpacity={1}>
-          <DrawerLine />
+        <DraggableContent>
           {typeof children === 'function'
             ? children({isOpen, open, close})
             : children}
-        </DrawableContainer>
+        </DraggableContent>
       </Animated.View>
     </>
   );
@@ -181,35 +156,11 @@ DraggableContainer.defaultProps = {
   initialHiddenContentPercentage: 0.3,
 };
 
-export const DrawableBottomView = React.forwardRef((props, ref) => (
+const _DrawableBottomView = React.forwardRef((props, ref) => (
   <DraggableContainer externalRef={ref} {...props} />
 ));
 
-const DrawableContainer = styled(TouchableOpacity)`
-  width: 100%;
-  min-height: ${scaleDpTheme(200)};
-  padding: ${scaleDpTheme(10)};
-  border-top-left-radius: ${scaleDpTheme(8)};
-  border-top-right-radius: ${scaleDpTheme(8)};
-  background-color: ${theme.white};
-  box-shadow: 0.5px -1px 3px ${theme.shadowColor};
-  elevation: 3;
-  z-index: 10;
-  ${Platform.select({
-    web: css`
-      cursor: auto;
-    `,
-  })}
-`;
-
-const DrawerLine = styled(View)`
-  align-self: center;
-  width: ${scaleDpTheme(30)};
-  height: 4px;
-  border-radius: ${scaleDpTheme(1000)};
-  background-color: ${theme.disabled};
-  margin-bottom: ${scaleDpTheme(10)};
-`;
+export default React.memo(_DrawableBottomView);
 
 const SafeZone = styled(View)`
   position: absolute;

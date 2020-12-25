@@ -15,6 +15,7 @@ const _routes = {
   plannedShippments: 'planeados',
   newShipmentDetailScreen: 'orden',
   newShipmentConfirmationScreen: 'orden/confirmar',
+  shipmentScreen: 'orden/seguimiento',
 };
 
 export const routes = Platform.select({

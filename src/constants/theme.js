@@ -10,4 +10,5 @@ export const theme = {
   backdropColor: 'rgba(0,0,0,0.7)',
   shadowColor: 'rgba(0,0,0,0.16)',
   error: 'rgb(213,16,16)',
+  star: '#FCC200',
 };

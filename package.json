@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start:web:dev": "webpack serve --progress --env=dev --color --mode development --config ./webpack.config.js",
-    "start:android": "react-native run-android",
-    "start:ios": "react-native run-ios",
+    "start:android": "npx react-native run-android",
+    "start:ios": "npx react-native run-ios",
     "start": "react-native start",
     "lint": "eslint .",
     "build:web:prod": "webpack --mode production --env=prod",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^1.5.0",
+    "@react-google-maps/api": "^2.0.2",
     "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/drawer": "^5.11.4",
@@ -24,7 +25,6 @@
     "body-scroll-lock": "^3.1.5",
     "dayjs": "^1.9.6",
     "formik": "^2.2.5",
-    "google-maps-react": "^2.0.6",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-dom": "^17.0.1",

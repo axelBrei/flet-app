@@ -12,7 +12,7 @@ export const UserSelectionTextField = ({label, value, icon}) => {
     <RowContainer>
       <Icon size={scaleDp(25)} color={theme.primaryColor} name={icon} />
       <Divider />
-      <Container flex>
+      <Container width="89%">
         <AppText fontSize={12} color={theme.disabled}>
           {label}
         </AppText>

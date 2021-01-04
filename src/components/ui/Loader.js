@@ -1,21 +1,21 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
-import {ActivityIndicator, Platform} from 'react-native';
+import {ActivityIndicator, View, Platform} from 'react-native';
 import {AppText} from 'components/ui/AppText';
 import {Container} from 'components/ui/Container';
 import {theme} from 'constants/theme';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 
 export const Loader = ({children, unmount, message, loading}) => {
   const renderLoader = () => (
-    <>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'large' : 50}
+        size={Platform.OS === 'ios' ? 'large' : scaleDp(50)}
         animating
         color={theme.primaryColor}
       />
       {message && <Message>{message}</Message>}
-    </>
+    </View>
   );
 
   if (loading && unmount) {

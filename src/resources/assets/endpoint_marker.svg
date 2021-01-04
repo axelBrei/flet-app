@@ -1,19 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 38.39 35.676">
-  <defs>
-    <clipPath id="clip-path">
-      <path id="Path_6" data-name="Path 6" d="M21.63-26H11.789c-2.718,0-5.879,1.4-7.061,3.137L.447-16.589c-1.182,1.733.063,3.137,2.781,3.137h9.842l2.781,3.137,8.561-12.548C25.593-24.6,24.348-26,21.63-26Z" transform="translate(0 26)" fill="#ffc070" clip-rule="evenodd"/>
-    </clipPath>
-    <clipPath id="clip-path-2">
-      <path id="Path_3" data-name="Path 3" d="M186.144,286H171.381A7.4,7.4,0,0,0,164,293.381h0v14.763a7.4,7.4,0,0,0,7.381,7.381h14.763l7.381,6.151v-28.3A7.4,7.4,0,0,0,186.144,286Z" transform="translate(-164 -286)" fill="#ffc070"/>
-    </clipPath>
-  </defs>
-  <g id="Group_753" data-name="Group 753" transform="translate(-81 -530)">
-    <g id="shadow" transform="translate(94.532 549.684)" opacity="0.23" clip-path="url(#clip-path)">
-      <rect id="Rectangle_5" data-name="Rectangle 5" width="27" height="17" transform="translate(-1.532 1.316)" fill="#ffc070"/>
-    </g>
-    <g id="mark" transform="translate(81 530)" clip-path="url(#clip-path-2)">
-      <rect id="Rectangle_4" data-name="Rectangle 4" width="32" height="41" transform="translate(-1 -2)" fill="#ffc070"/>
-    </g>
-    <path id="flag-checkered" d="M12.709,5.64H17.3v8.2H11.561l-.328-1.64H6.64v5.741H5V4h7.381l.328,1.64M12.381,12.2h1.64v-1.64h1.64V8.921h-1.64V7.281h-1.64v1.64l-.82-1.64V5.64H9.921v1.64H8.281V5.64H6.64v1.64h1.64v1.64H6.64v1.64h1.64V8.921h1.64v1.64h1.64V8.921l.82,1.64V12.2M9.921,8.921V7.281h1.64v1.64H9.921m2.46,0h1.64v1.64h-1.64Z" transform="translate(85.227 534.612)" fill="#fafafa"/>
-  </g>
-</svg>
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g transform="matrix(1,0,0,1,64.99999999999997,0)"><path xmlns="http://www.w3.org/2000/svg" d="m195 300c57.890625 0 105-47.109375 105-105s-47.109375-105-105-105-105 47.109375-105 105 47.109375 105 105 105zm-49.394531-115.605469 34.394531 34.394531 64.394531-64.394531 21.210938 21.210938-85.605469 85.605469-55.605469-55.605469zm0 0" fill="#ffab40" data-original="#000000" style="" class=""/><path xmlns="http://www.w3.org/2000/svg" d="m195 512 155.902344-199.871094.175781-.21875c25.460937-33.925781 38.921875-74.355468 38.921875-116.910156 0-107.519531-87.480469-195-195-195s-195 87.480469-195 195c0 42.554688 13.460938 82.984375 39.097656 117.128906zm0-452c74.441406 0 135 60.558594 135 135s-60.558594 135-135 135-135-60.558594-135-135 60.558594-135 135-135zm0 0" fill="#ffab40" data-original="#000000" style="" class=""/></g></svg>

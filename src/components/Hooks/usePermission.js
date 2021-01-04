@@ -1,6 +1,8 @@
 import {useState, useEffect, useCallback} from 'react';
 import PermissionManager from 'components/Permissions/index';
+import {PERMISSIONS as PERMISSIONS_BASE} from 'components/Permissions/permissions';
 
+export const PERMISSIONS = PERMISSIONS_BASE;
 export const usePermission = (permissions = []) => {
   const [loadingPermission, setLoadingPermission] = useState(true);
   const [status, setStatus] = useState(false);

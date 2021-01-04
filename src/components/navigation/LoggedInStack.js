@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {routes} from 'constants/config/routes';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -9,11 +9,19 @@ import HomeScreen from 'components/navigation/HomeScreen';
 import OrderShippmentDetailsScreen from 'components/navigation/NewShipmentDetailsScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 import ShipmentStack from 'components/navigation/ShipmentStack';
+import {useSelector} from 'react-redux';
+import {selectUserData} from 'redux-store/slices/loginSlice';
+import {DriverStack} from 'components/navigation/DriverStack';
+import {Platform} from 'react-native-web';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
 export default () => {
-  const {isMobile} = useWindowDimension();
+  const {isMobile, isPWA} = useWindowDimension();
+  const userData = useSelector(selectUserData);
+  // TODO: change isDriver condition to a real one
+  const isDriver = useMemo(() => userData?.user.includes('aa'), [userData]);
+
   return (
     <Navigator
       openByDefault={!isMobile}
@@ -31,13 +39,27 @@ export default () => {
         headerShown: false,
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
-      <Screen
-        name={routes.shipmentStack}
-        component={ShipmentStack}
-        options={{
-          title: 'Realizar un envío',
-        }}
-      />
+      {isDriver ? (
+        Platform.OS !== 'web' ||
+        (isPWA && (
+          <Screen
+            name={routes.dirverHomeScreen}
+            component={DriverStack}
+            options={{
+              headerShown: false,
+              title: 'Home',
+            }}
+          />
+        ))
+      ) : (
+        <Screen
+          name={routes.shipmentStack}
+          component={ShipmentStack}
+          options={{
+            title: 'Realizar un envío',
+          }}
+        />
+      )}
       <Screen
         name={routes.lastShippmentsScreen}
         component={HomeScreen}

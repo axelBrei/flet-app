@@ -11,4 +11,5 @@ export const theme = {
   shadowColor: 'rgba(0,0,0,0.16)',
   error: 'rgb(213,16,16)',
   star: '#FCC200',
+  gray: '#afafaf',
 };

@@ -15,11 +15,25 @@ import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {TextLink} from 'components/ui/TextLink';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {routes} from 'constants/config/routes';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  loginAs,
+  selectLoadingLogin,
+  selectLoginError,
+  selectUserData,
+} from 'redux-store/slices/loginSlice';
+import {Loader} from 'components/ui/Loader';
 
 export const LoginScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+  const loading = useSelector(selectLoadingLogin);
+  const error = useSelector(selectLoginError);
+  const userData = useSelector(selectUserData);
+
   const onPressForgetPassword = () => {};
   const onSubmit = (values) => {
-    navigation.navigate(routes.loggedStack);
+    dispatch(loginAs(values[FIELDS.USERNAME], values[FIELDS.PASSWORD]));
+    // navigation.navigate(routes.loggedStack);
   };
 
   const {
@@ -31,11 +45,13 @@ export const LoginScreen = ({navigation}) => {
     errors,
     handleSubmit,
   } = useFormikCustom(loginFormikConfig(onSubmit));
+
   return (
     <ScreenComponent>
       <FloatingBackgroundOval />
       <Title bold>Iniciar sesion</Title>
       <InputField
+        editable={!loading}
         icon="account-outline"
         label="Usuario"
         value={values[FIELDS.USERNAME]}
@@ -46,6 +62,7 @@ export const LoginScreen = ({navigation}) => {
         onBlur={_setFieldTouched(FIELDS.USERNAME)}
       />
       <InputField
+        editable={!loading}
         icon="lock-outline"
         secureTextEntry
         label="Contaseña"
@@ -56,8 +73,12 @@ export const LoginScreen = ({navigation}) => {
         }
         onBlur={_setFieldTouched(FIELDS.PASSWORD)}
       />
-      <MainButton label="Ingresar" onPress={handleSubmit} />
-      <TextLink onPress={onPressForgetPassword}>Olvide mi contraseña</TextLink>
+      <Loader loading={loading}>
+        <MainButton label="Ingresar" onPress={handleSubmit} />
+        <TextLink onPress={onPressForgetPassword}>
+          Olvide mi contraseña
+        </TextLink>
+      </Loader>
     </ScreenComponent>
   );
 };

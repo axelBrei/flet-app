@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {Platform} from 'react-native';
+import Config from 'react-native-config';
 
 const BASE_URL = 'https://apis.datos.gob.ar/georef/api/direcciones';
 // ?direccion=Colpayo 760&campos=altura.valor, calle.nombre,calle.categoria,ubicacionhttps://apis.datos.gob.ar/georef/api/direcciones?direccion=Colpayo 760&campos=altura.valor, calle.nombre,calle.categoria,ubicacion
@@ -24,6 +26,31 @@ const geocodeAddress = async (street) =>
     },
   });
 
+const directionsUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+const getDirections = async (origin, destination) =>
+  await axios.get(
+    Platform.select({
+      web:
+        process.env.NODE_ENV === 'development'
+          ? 'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f'
+          : directionsUrl,
+      native: directionsUrl,
+    }),
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+      params: {
+        region: 'es',
+        origin,
+        destination,
+        key: Config.REACT_APP_GMAPS_API_KEY,
+      },
+    },
+  );
+
 export default {
   geocodeAddress,
+  getDirections,
 };

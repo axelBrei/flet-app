@@ -10,6 +10,9 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistor} from 'redux-store/index';
 import {changeNavigationState} from 'redux-store/slices/navigationSlice';
+import axios from 'axios';
+
+axios.defaults.withCredentials = false;
 
 const App = () => {
   const dispatch = store.dispatch;

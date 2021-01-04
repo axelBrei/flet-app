@@ -41,13 +41,16 @@ export const useMarkerList = () => {
 
   const orientation = useMemo(() => {
     if (!lastUserPosition) {
-      if (directions) {
+      if (directions.length > 1) {
         const res = getBearingFromCoords(directions[0], directions[1]);
         return res;
       }
       return 0;
     }
-    return getBearingFromCoords(lastUserPosition, currentLocation);
+    if (currentLocation) {
+      return getBearingFromCoords(lastUserPosition, currentLocation);
+    }
+    return 0;
   }, [lastUserPosition, currentLocation, directions]);
 
   useEffect(() => {

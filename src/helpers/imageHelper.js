@@ -7,7 +7,7 @@ export const RotateIcon = function (options) {
   this.rImg.src = this.rImg.src || this.options.url || '';
   this.options.width = this.options.width || this.rImg.width || 52;
   this.options.height = this.options.height || this.rImg.height || 60;
-  console.log(this);
+
   var canvas = document.createElement('canvas');
   canvas.width = this.options.width;
   canvas.height = this.options.height;

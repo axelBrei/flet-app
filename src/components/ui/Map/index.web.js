@@ -31,9 +31,11 @@ const Map = ({
   const fitBounds = (map) => {
     if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
       const bounds = new window.google.maps.LatLngBounds();
-      filteredMarkers.forEach((marker) => {
-        bounds.extend({lat: marker.latitude, lng: marker.longitude});
-      });
+      filteredMarkers
+        .filter((i) => i.latitude && i.longitude)
+        .forEach((marker) => {
+          bounds.extend({lat: marker.latitude, lng: marker.longitude});
+        });
       map.fitBounds(bounds, edgePadding);
     }
   };
@@ -94,10 +96,12 @@ const Map = ({
             radius: 30000,
             zIndex: 1,
           }}
-          path={directions.map((i) => ({
-            lat: i.latitude,
-            lng: i.longitude,
-          }))}
+          path={directions
+            .filter((i) => i.latitude && i.longitude)
+            .map((i) => ({
+              lat: i.latitude,
+              lng: i.longitude,
+            }))}
         />
       ),
     [directions],
@@ -120,7 +124,9 @@ const Map = ({
           }}
           center={INITIAL_POSITION}
           onLoad={handleLoad}>
-          {filteredMarkers.map(renderMapMarker)}
+          {filteredMarkers
+            .filter((i) => i.latitude && i.longitude)
+            .map(renderMapMarker)}
           {renderDirections()}
         </GoogleMap>
       ) : (

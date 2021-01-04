@@ -6,7 +6,7 @@ import {TransitionPresets} from '@react-navigation/stack';
 
 const {width} = Dimensions.get('screen');
 const isMobile = width <= 800 || Platform.OS !== 'web';
-export const navigationConfig = (props) => ({
+export const navigationConfig = (props = {}) => ({
   headerBackTitleVisible: false,
   animationEnabled: true,
   ...(isMobile && TransitionPresets.SlideFromRightIOS),

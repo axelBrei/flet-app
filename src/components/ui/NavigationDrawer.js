@@ -1,16 +1,25 @@
-import React from 'react';
-import {View, StyleSheet, Dimensions, Platform} from 'react-native';
+import React, {useCallback} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import {name as appName} from '../../../package.json';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {AppText} from 'components/ui/AppText';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
 import {AppLogo} from 'components/ui/AppLogo';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {logout} from 'redux-store/slices/loginSlice';
+import {useDispatch} from 'react-redux';
+import {AppText} from 'components/ui/AppText';
+import {LogoutButton} from 'components/ui/LogoutButton';
+import {UserProfileHeader} from 'components/ui/UserProfileHeader';
 
 const {height, width} = Dimensions.get('screen');
 export const NavigationDrawer = (props) => {
@@ -19,6 +28,7 @@ export const NavigationDrawer = (props) => {
       <DrawerContentScrollView {...props} style={styles.drawerContainer}>
         <View style={styles.header}>
           <AppLogo />
+          <UserProfileHeader />
         </View>
         <View
           style={{
@@ -34,6 +44,9 @@ export const NavigationDrawer = (props) => {
           />
         </View>
       </DrawerContentScrollView>
+      <View style={styles.logoutContainer}>
+        <LogoutButton />
+      </View>
       {Platform.OS === 'web' && width > 800 && <View style={styles.divider} />}
     </>
   );
@@ -41,12 +54,12 @@ export const NavigationDrawer = (props) => {
 
 const styles = StyleSheet.create({
   drawerContainer: {
+    flex: 1,
     paddingVertical: scaleDp(15),
     paddingLeft: scaleDp(10),
-    height: '100%',
   },
   header: {
-    marginLeft: scaleDp(20),
+    marginLeft: scaleDp(10),
   },
   item: {
     marginRight: 0,
@@ -66,5 +79,11 @@ const styles = StyleSheet.create({
     bottom: scaleDp(20),
     width: 1,
     backgroundColor: theme.disabled,
+  },
+  logoutContainer: {
+    flex: 1,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 });

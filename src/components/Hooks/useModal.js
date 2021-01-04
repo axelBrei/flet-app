@@ -5,7 +5,7 @@ import {Calendar as WixCalendar} from 'react-native-calendars';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
-export const useModal = (Content, config) => {
+export const useModal = (Content, contentProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleModal = useCallback(() => setIsVisible(!isVisible), [
@@ -23,6 +23,7 @@ export const useModal = (Content, config) => {
           toggleModal={toggleModal}
           closeModal={closeModal}
           openModal={openModal}
+          {...contentProps}
         />
       </Modal>
     );

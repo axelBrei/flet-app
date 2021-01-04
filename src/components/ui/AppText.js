@@ -16,6 +16,7 @@ export const AppText = styled(Text)`
   font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
   width: ${(props) => props.width};
   text-align: ${(props) => props.textAlign};
+  padding: ${(props) => props.padding}px;
 `;
 
 AppText.propTypes = {
@@ -35,4 +36,5 @@ AppText.defaultProps = {
   width: 'auto',
   textAlign: 'left',
   selectable: Platform.OS === 'web' && width <= 800,
+  padding: 0,
 };

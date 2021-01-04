@@ -23,7 +23,7 @@ const Content = styled(View)`
   z-index: 10;
   justify-content: center;
   border-radius: 8px;
-  min-height: ${(props) => props.theme.scale(250)}px;
+  height: auto;
   padding: ${(props) => props.theme.scale(5)}px;
   background-color: ${(props) => props.theme.colors.white};
 `;

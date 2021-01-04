@@ -18,9 +18,21 @@ const _routes = {
   shipmentScreen: 'orden/seguimiento',
 };
 
+const nativeOnlyRoutes = {
+  dirverHomeScreen: 'dirverHomeScreen',
+  driverNewShipmentScreen: 'driverNewShipmentScreen',
+};
+
+const allRoutes = {
+  ..._routes,
+  ...nativeOnlyRoutes,
+};
+
 export const routes = Platform.select({
-  native: _routes,
-  web: Object.entries(_routes).reduce(
+  native: allRoutes,
+  web: Object.entries(
+    process.env.NODE_ENV === 'development' ? allRoutes : _routes,
+  ).reduce(
     (acc, [key, val]) => ({
       ...acc,
       [key]: '/'.concat(val),

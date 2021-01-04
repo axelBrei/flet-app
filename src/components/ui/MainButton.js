@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {Platform, TouchableOpacity, View} from 'react-native';
 import {theme} from 'constants/theme';
 import styled from 'styled-components';
@@ -8,7 +8,8 @@ import {Icon} from 'components/ui/Icon';
 
 const MainButtonAux = ({
   label,
-  icon,
+  leftIcon,
+  rightIcon,
   onPress,
   inverted,
   alternative,
@@ -32,6 +33,20 @@ const MainButtonAux = ({
     }
   }, [inverted, alternative]);
 
+  const showIconOrBlankSpace = useCallback(
+    (iconName) =>
+      !!iconName ? (
+        <Icon
+          color={buttonColors?.color || props.iconColor || theme.fontColor}
+          name={iconName}
+          size={Platform.OS === 'web' ? 30 : 25}
+        />
+      ) : (
+        <View style={{width: Platform.OS === 'web' ? 30 : 25}} />
+      ),
+    [],
+  );
+
   return (
     <Button
       onPress={onPress}
@@ -41,16 +56,11 @@ const MainButtonAux = ({
       style={props.style}
       {...props}>
       <Container>
+        {showIconOrBlankSpace(leftIcon)}
         <Text fontSize={fontSize} color={buttonColors?.color}>
           {label}
         </Text>
-        {!!icon && (
-          <FloatingIcon
-            color={buttonColors?.color ?? theme.white}
-            name={icon}
-            size={Platform.OS === 'web' ? 30 : 25}
-          />
-        )}
+        {showIconOrBlankSpace(rightIcon)}
       </Container>
     </Button>
   );
@@ -59,7 +69,8 @@ const MainButtonAux = ({
 MainButtonAux.defaultProps = {
   label: '',
   fontSize: Platform.OS === 'web' ? 12 : 16,
-  icon: '',
+  leftIcon: '',
+  rightIcon: '',
   onPress: () => {},
   inverted: false,
   alternative: false,
@@ -75,11 +86,7 @@ const Container = styled(View)`
 const Text = styled(AppText)`
   text-align: center;
   color: ${(props) => props.color || props.theme.colors.fontColor};
-`;
-
-const FloatingIcon = styled(Icon)`
-  position: absolute;
-  right: ${scaleDpTheme(5)};
+  padding: 0 ${scaleDpTheme(5)};
 `;
 
 const Button = styled(TouchableOpacity)`

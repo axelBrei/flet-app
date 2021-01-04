@@ -1,6 +1,6 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {useDebounce} from 'components/Hooks/useDebounce';
-import geocodingService from 'services/geocodingService';
+import geocodingService from 'services/geolocationService';
 import axios from 'axios';
 import {capitallize} from 'helpers/stringHelper';
 

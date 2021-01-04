@@ -70,7 +70,8 @@ export const calcRem = (dim) =>
 
 export const scaleDp = (dp) => {
   const dim = Dimensions.get('window');
-  return dp * (calcRem(dim) || 1);
+  const rem = calcRem(dim);
+  return Math.round(100 * dp * (rem || 1)) / 100;
 };
 
-export const scaleDpTheme = (size) => (props) => `${props.theme.scale(size)}px`;
+export const scaleDpTheme = (size) => `${scaleDp(size)}px`;

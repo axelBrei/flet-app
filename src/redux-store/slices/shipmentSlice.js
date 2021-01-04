@@ -49,6 +49,7 @@ const slice = createSlice({
       state.loading.newShipment = false;
       state.error.newShipment = null;
     },
+    requestAcceptShipment: (state) => {},
   },
 });
 

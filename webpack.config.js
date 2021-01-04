@@ -86,6 +86,11 @@ module.exports = (env) => ({
     disableHostCheck: true,
     contentBase: path.resolve('build'),
     historyApiFallback: true,
+    proxy: {
+      // proxy all webpack dev-server requests starting with /observation to Spring Boot backend (localhost:8080)
+      // "/observation": "http://localhost:8080",
+      changeOrigin: true,
+    },
   },
   entry: [
     // load any web API polyfills
@@ -138,6 +143,9 @@ module.exports = (env) => ({
       vectorIconsConfiguration,
       {
         test: /\.svg$/,
+        exclude: [
+          /resources\/map/
+        ],
         use: {
           loader: '@svgr/webpack',
           options: {

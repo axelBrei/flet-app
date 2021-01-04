@@ -7,6 +7,7 @@ export const Container = styled(View)`
   align-items: ${(props) => props.alignItems};
   justify-content: ${(props) => props.justifyContent};
   width: ${(props) => props.width || 'auto'};
+  padding: ${(props) => props.padding};
   ${(props) => props.flex && 'flex: 1;'}
 `;
 
@@ -15,14 +16,12 @@ Container.defaultProps = {
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   width: 'auto',
+  padding: 0,
 };
 Container.propTypes = {
   alignItems: PropTypes.string,
   justifyContent: PropTypes.string,
-  direction: PropTypes.oneOf([
-    'column',
-    'row',
-    'row-reverse',
-    'column-reverse',
-  ]),
+  padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  dir: PropTypes.oneOf(['column', 'row', 'row-reverse', 'column-reverse']),
 };

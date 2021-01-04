@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
 import {Platform, TouchableOpacity, View} from 'react-native';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 
 export const DraggableContent = React.forwardRef(({isOpen, children}, ref) => {
@@ -17,8 +17,8 @@ const DrawableContainer = styled(TouchableOpacity)`
   width: 100%;
   min-height: ${scaleDpTheme(200)};
   padding: ${scaleDpTheme(10)};
-  border-top-left-radius: ${scaleDpTheme(8)};
-  border-top-right-radius: ${scaleDpTheme(8)};
+  border-top-left-radius: ${scaleDp(8)};
+  border-top-right-radius: ${scaleDp(8)};
   background-color: ${theme.white};
   box-shadow: 0.5px -1px 3px ${theme.shadowColor};
   elevation: 3;

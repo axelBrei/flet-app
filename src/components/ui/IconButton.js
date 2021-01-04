@@ -43,7 +43,7 @@ export const IconButton = ({
       <Icon
         name={icon}
         size={scaleDp(size)}
-        color={buttonStyle?.color || theme.white}
+        color={buttonStyle?.color || props.iconColor || theme.white}
       />
     </ButtonContainer>
   );

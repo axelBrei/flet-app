@@ -12,14 +12,15 @@ import ShipmentStack from 'components/navigation/ShipmentStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {DriverStack} from 'components/navigation/DriverStack';
+import {Platform} from 'react-native-web';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
 export default () => {
-  const {isMobile} = useWindowDimension();
+  const {isMobile, isPWA} = useWindowDimension();
   const userData = useSelector(selectUserData);
   // TODO: change isDriver condition to a real one
-  const isDriver = useMemo(() => userData?.user.includes('aa'));
+  const isDriver = useMemo(() => userData?.user.includes('aa'), [userData]);
 
   return (
     <Navigator
@@ -39,14 +40,17 @@ export default () => {
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
       {isDriver ? (
-        <Screen
-          name={routes.dirverHomeScreen}
-          component={DriverStack}
-          options={{
-            headerShown: false,
-            title: 'Home',
-          }}
-        />
+        Platform.OS !== 'web' ||
+        (isPWA && (
+          <Screen
+            name={routes.dirverHomeScreen}
+            component={DriverStack}
+            options={{
+              headerShown: false,
+              title: 'Home',
+            }}
+          />
+        ))
       ) : (
         <Screen
           name={routes.shipmentStack}

@@ -1,4 +1,5 @@
-import {Platform} from 'react-native';
+import {Platform, Dimensions} from 'react-native';
+
 const _routes = {
   landingScreen: 'inicio',
   loginScreen: 'entrar',
@@ -28,15 +29,20 @@ const allRoutes = {
   ...nativeOnlyRoutes,
 };
 
+const {width} = Dimensions.get('window');
 export const routes = Platform.select({
-  native: allRoutes,
-  web: Object.entries(
-    process.env.NODE_ENV === 'development' ? allRoutes : _routes,
-  ).reduce(
-    (acc, [key, val]) => ({
-      ...acc,
-      [key]: '/'.concat(val),
-    }),
-    {},
-  ),
-});
+  native: () => allRoutes,
+  web: () =>
+    Object.entries(
+      (width <= 800 && navigator.standalone) ||
+        window.matchMedia('(display-mode: standalone)').matches
+        ? allRoutes
+        : _routes,
+    ).reduce(
+      (acc, [key, val]) => ({
+        ...acc,
+        [key]: '/'.concat(val),
+      }),
+      {},
+    ),
+})();

@@ -75,4 +75,5 @@ export const selectLoadingDirections = (state) =>
   state.geolocation.loading.directions;
 export const selectDirectionsError = (state) =>
   state.geolocation.error.directions;
-export const selectCurrentDirections = (state) => state.geolocation.directions;
+export const selectCurrentDirections = (state) =>
+  state.geolocation.directions || [];

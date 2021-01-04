@@ -117,7 +117,8 @@ module.exports = (env) => ({
       // filename: './index.html',
     }),
     // PRODUCTION ONLY PLUGINS
-    ...(env && (!env.dev || env.prod)
+    ...// env && (!env.dev || env.prod)
+    (true
       ? [
           new CopyWebpackPlugin({
             patterns: [
@@ -143,9 +144,7 @@ module.exports = (env) => ({
       vectorIconsConfiguration,
       {
         test: /\.svg$/,
-        exclude: [
-          /resources\/map/
-        ],
+        exclude: [/resources\/map/],
         use: {
           loader: '@svgr/webpack',
           options: {

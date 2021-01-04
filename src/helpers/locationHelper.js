@@ -49,7 +49,7 @@ function toDegrees(radians) {
   return radians * (180 / Math.PI);
 }
 
-export const getBearingFromCoords = (startCoords, endCoords) => {
+export const getBearingFromCoords = (startCoords = {}, endCoords = {}) => {
   const initial = {
     latitude: toRadians(startCoords.latitude),
     longitude: toRadians(startCoords.longitude),

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Platform} from 'react-native';
 import Config from 'react-native-config';
 
 const BASE_URL = 'https://apis.datos.gob.ar/georef/api/direcciones';
@@ -25,10 +26,16 @@ const geocodeAddress = async (street) =>
     },
   });
 
+const directionsUrl = 'https://maps.googleapis.com/maps/api/directions/json';
 const getDirections = async (origin, destination) =>
   await axios.get(
-    // 'https://maps.googleapis.com/maps/api/directions/json',
-    'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f',
+    Platform.select({
+      web:
+        process.env.NODE_ENV === 'development'
+          ? 'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f'
+          : directionsUrl,
+      native: directionsUrl,
+    }),
     {
       headers: {
         'Access-Control-Allow-Origin': '*',

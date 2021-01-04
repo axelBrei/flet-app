@@ -1,5 +1,5 @@
 import React from 'react';
-import CarMarkerPng from 'resources/assets/driver_car.png';
+import {Platform, View} from 'react-native';
 
 export const RotateIcon = function (options) {
   this.options = options || {};
@@ -34,4 +34,11 @@ RotateIcon.prototype.setRotation = function (options) {
 };
 RotateIcon.prototype.getUrl = function () {
   return this.canvas.toDataURL('image/png');
+};
+
+export const getRotatedImage = (pngImage, rotationInDeg, options) => {
+  const icon = new RotateIcon({
+    url: pngImage,
+  }).setRotation({deg: rotationInDeg});
+  return icon;
 };

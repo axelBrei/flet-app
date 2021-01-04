@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   getDirectionsFromCurrentLocation,
   selectCurrentDirections,
+  selectLoadingDirections,
 } from 'redux-store/slices/geolocationSlice';
 import styled from 'styled-components';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
@@ -25,7 +26,6 @@ import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMa
 import {Platform} from 'react-native';
 
 export default () => {
-  const [currentLocation, setCurrentLocation] = useState(null);
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverAcceptShipmentLoading);
   const error = useSelector(selectDriverAcceptShipmentError);
@@ -35,7 +35,7 @@ export default () => {
   const shipmentData = useSelector(selectDriverShipmentData);
   const isPackagePickedUp = useSelector(selectIsDriverShipmentPickedUp);
   const directions = useSelector(selectCurrentDirections);
-  const markersList = useMarkerList();
+  const {markersList, loadingMakers, loadingMessage} = useMarkerList();
 
   useEffect(() => {
     if (shipmentData) {
@@ -50,8 +50,9 @@ export default () => {
   return (
     <ScreenComponent>
       <Loader
-        loading={loading || loadingPermissions}
-        message={loading && 'Cargando información del viaje'}>
+        unmount={false}
+        loading={loading || loadingPermissions || loadingMakers}
+        message={loadingMessage}>
         <Map
           followsUserLocation
           showsMyLocationButton
@@ -59,6 +60,7 @@ export default () => {
           markers={markersList}
           style={Platform.select({
             web: {flex: 1, width: '100%'},
+            native: {flex: 1, width: '100%'},
           })}
         />
         <FloatingContainer>

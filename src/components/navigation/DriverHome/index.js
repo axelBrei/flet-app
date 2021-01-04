@@ -54,6 +54,7 @@ export default ({navigation}) => {
         <Map
           style={Platform.select({
             web: {height: '90%', width: '100%'},
+            native: {flex: 1, width: '100%'},
           })}
         />
         <FloatingHamburguerButton />

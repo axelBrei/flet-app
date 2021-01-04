@@ -9,17 +9,21 @@ import {
   selectDriverShipmentData,
   selectIsDriverShipmentPickedUp,
 } from 'redux-store/slices/driverShipmentSlice';
-import {selectCurrentDirections} from 'redux-store/slices/geolocationSlice';
-import {trackUserPosition} from 'helpers/locationHelper';
+import {
+  selectCurrentDirections,
+  selectLoadingDirections,
+} from 'redux-store/slices/geolocationSlice';
+import {getCurrentPosition, trackUserPosition} from 'helpers/locationHelper';
 import {getBearingFromCoords} from 'helpers/locationHelper';
 import {scaleDp} from 'helpers/responsiveHelper';
-import {RotateIcon} from 'components/navigation/DriverNewShipmentScreen/constants';
+import {getRotatedMarker} from 'components/ui/Map/helper';
 
 export const useMarkerList = () => {
   const [lastUserPosition, setLastUserPosition] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const isPackagePickedUp = useSelector(selectIsDriverShipmentPickedUp);
-  const shipmentData = useSelector(selectDriverShipmentData);
+  const [directionsMakers, setDirectionsMakers] = useState(null);
+  const [currentPositionMarker, setCurrenPositionMarker] = useState(null);
+  const loadingDirections = useSelector(selectLoadingDirections);
   const directions = useSelector(selectCurrentDirections);
 
   useEffect(() => {
@@ -46,13 +50,9 @@ export const useMarkerList = () => {
     return getBearingFromCoords(lastUserPosition, currentLocation);
   }, [lastUserPosition, currentLocation, directions]);
 
-  const markersList = useMemo(() => {
-    let dirs = [];
+  useEffect(() => {
     if (directions) {
-      dirs = [
-        {
-          ...directions[0],
-        },
+      setDirectionsMakers([
         {
           ...directions[directions.length - 1],
           anchor: {
@@ -64,43 +64,50 @@ export const useMarkerList = () => {
             web: ENDPOINT_MARKER_PNG,
           }),
         },
-      ];
+      ]);
     }
-    if (currentLocation) {
-      const icon = new RotateIcon({url: CAR_MARKER}).setRotation({
-        deg: orientation,
-      });
-      dirs.push({
-        ...currentLocation,
-        anchor: {
-          x: 0.5,
-          y: 0.4,
-        },
-        iconOptions: {
-          title: 'currentPosition',
-          scaledSize: {height: scaleDp(40), width: scaleDp(40)},
-          anchor: {x: scaleDp(20), y: scaleDp(20)},
-          url: icon.getUrl(),
-        },
-        renderIcon: () => (
-          <View
-            style={{
-              overflow: 'visible',
-              transform: [{rotate: `${orientation}deg`}],
-            }}>
-            <CarMarker height={scaleDp(60)} width={scaleDp(60)} />
-          </View>
-        ),
-      });
-    }
-    return dirs;
-  }, [
-    directions,
-    isPackagePickedUp,
-    currentLocation,
-    shipmentData,
-    orientation,
-  ]);
+  }, [directions, setDirectionsMakers]);
 
-  return markersList;
+  useEffect(() => {
+    const getLocation = async () => {
+      const location = currentLocation || (await getCurrentPosition()).coords;
+      const marker = getRotatedMarker(
+        Platform.select({
+          web: CAR_MARKER,
+          native: CarMarker,
+        }),
+        orientation,
+        scaleDp(40),
+      );
+      setCurrenPositionMarker({
+        ...location,
+        ...marker,
+      });
+    };
+    getLocation();
+  }, [orientation, setCurrenPositionMarker, currentLocation]);
+
+  const markersList = useMemo(() => {
+    let list = directionsMakers ?? [];
+    if (currentPositionMarker) {
+      list.push(currentPositionMarker);
+    }
+    return list;
+  }, [directionsMakers, currentPositionMarker]);
+
+  const loadingMessage = useMemo(() => {
+    if (loadingDirections) {
+      return 'Buscando direcciones';
+    }
+    if (!markersList || markersList.length === 0) {
+      return 'Cargando mapa.';
+    }
+    return 'Cargando información del viaje';
+  }, [markersList, loadingDirections]);
+
+  return {
+    markersList: markersList,
+    loadingMakers: markersList.length === 0 || loadingDirections,
+    loadingMessage,
+  };
 };

@@ -23,9 +23,6 @@ export default () => {
 
   return (
     <Navigator
-      // initialRouteName={
-      //   isDriver ? routes.dirverHomeScreen : routes.shipmentStack
-      // }
       openByDefault={!isMobile}
       drawerType={isMobile ? 'front' : 'permanent'}
       drawerContent={NavigationDrawer}
@@ -41,20 +38,24 @@ export default () => {
         headerShown: false,
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
-      <Screen
-        name={routes.dirverHomeScreen}
-        component={DriverStack}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Screen
-        name={routes.shipmentStack}
-        component={ShipmentStack}
-        options={{
-          title: 'Realizar un envío',
-        }}
-      />
+      {isDriver ? (
+        <Screen
+          name={routes.dirverHomeScreen}
+          component={DriverStack}
+          options={{
+            headerShown: false,
+            title: 'Home',
+          }}
+        />
+      ) : (
+        <Screen
+          name={routes.shipmentStack}
+          component={ShipmentStack}
+          options={{
+            title: 'Realizar un envío',
+          }}
+        />
+      )}
       <Screen
         name={routes.lastShippmentsScreen}
         component={HomeScreen}

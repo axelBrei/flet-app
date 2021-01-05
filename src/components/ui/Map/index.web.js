@@ -1,5 +1,4 @@
 import React, {useState, useCallback, useMemo, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
 import {
   GoogleMap,
   useLoadScript,
@@ -143,12 +142,3 @@ Map.defaultProps = {
   edgePadding: null,
 };
 export default React.memo(Map);
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    left: 0,
-    width: '100%',
-    height: '100%',
-  },
-});

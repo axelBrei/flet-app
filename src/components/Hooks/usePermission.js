@@ -6,13 +6,18 @@ export const PERMISSIONS = PERMISSIONS_BASE;
 export const usePermission = (permissions = []) => {
   const [loadingPermission, setLoadingPermission] = useState(true);
   const [status, setStatus] = useState(false);
+  const [error, setError] = useState(null);
 
   const checkPermissions = useCallback(async (_permissions) => {
-    const res = await PermissionManager.checkPermissions(_permissions);
-    if (res) {
-      setStatus(true);
+    try {
+      const res = await PermissionManager.checkPermissions(_permissions);
+      if (res) {
+        setStatus(true);
+      }
+      setLoadingPermission(false);
+    } catch (e) {
+      setError(e);
     }
-    setLoadingPermission(false);
   }, []);
 
   useEffect(() => {
@@ -22,6 +27,7 @@ export const usePermission = (permissions = []) => {
   return {
     loading: loadingPermission,
     status,
+    error,
     check: () => checkPermissions(permissions),
   };
 };

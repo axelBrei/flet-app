@@ -6,7 +6,6 @@ import {NavigationDrawer} from 'components/ui/NavigationDrawer';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import HomeScreen from 'components/navigation/HomeScreen';
-import OrderShippmentDetailsScreen from 'components/navigation/NewShipmentDetailsScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 import ShipmentStack from 'components/navigation/ShipmentStack';
 import {useSelector} from 'react-redux';
@@ -22,6 +21,11 @@ export default () => {
   // TODO: change isDriver condition to a real one
   const isDriver = useMemo(() => userData?.user.includes('aa'), [userData]);
 
+  const shouldDisplayDriverScreen = useMemo(
+    () =>
+      process.env.NODE_ENV === 'development' || Platform.OS !== 'web' || isPWA,
+    [isPWA],
+  );
   return (
     <Navigator
       openByDefault={!isMobile}
@@ -39,19 +43,17 @@ export default () => {
         headerShown: false,
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
-      {isDriver ? (
-        Platform.OS !== 'web' ||
-        (isPWA && (
-          <Screen
-            name={routes.dirverHomeScreen}
-            component={DriverStack}
-            options={{
-              headerShown: false,
-              title: 'Home',
-            }}
-          />
-        ))
-      ) : (
+      {isDriver && shouldDisplayDriverScreen && (
+        <Screen
+          name={routes.dirverHomeScreen}
+          component={DriverStack}
+          options={{
+            headerShown: false,
+            title: 'Home',
+          }}
+        />
+      )}
+      {!isDriver && (
         <Screen
           name={routes.shipmentStack}
           component={ShipmentStack}

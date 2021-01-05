@@ -35,10 +35,21 @@ export default () => {
   const shipmentData = useSelector(selectDriverShipmentData);
   const isPackagePickedUp = useSelector(selectIsDriverShipmentPickedUp);
   const directions = useSelector(selectCurrentDirections);
-  const {markersList, loadingMakers, loadingMessage} = useMarkerList();
+  const {
+    markersList,
+    loadingMakers,
+    loadingMessage,
+    loadingDirections,
+  } = useMarkerList();
 
   useEffect(() => {
-    if (shipmentData) {
+    if (!loadingDirections && !status) {
+      check();
+    }
+  }, [loadingPermissions, status, check]);
+
+  useEffect(() => {
+    if (isPackagePickedUp ? shipmentData?.endPoint : shipmentData?.startPoint) {
       dispatch(
         getDirectionsFromCurrentLocation(
           isPackagePickedUp ? shipmentData.endPoint : shipmentData.startPoint,
@@ -51,17 +62,16 @@ export default () => {
     <ScreenComponent>
       <Loader
         unmount={false}
-        loading={loading || loadingPermissions || loadingMakers}
+        loading={
+          loading || loadingPermissions || loadingMakers || loadingDirections
+        }
         message={loadingMessage}>
         <Map
           followsUserLocation
           showsMyLocationButton
           directions={directions}
           markers={markersList}
-          style={Platform.select({
-            web: {flex: 1, width: '100%'},
-            native: {flex: 1, width: '100%'},
-          })}
+          style={{flex: 1, width: '100%'}}
         />
         <FloatingContainer>
           {!isPackagePickedUp ? (
@@ -78,7 +88,7 @@ export default () => {
 
 const ScreenComponent = styled(Screen)`
   display: flex;
-  height: 100%;
+  height: ${(props) => props.theme.screenHeight}px;
 `;
 
 const FloatingContainer = styled(Container)`

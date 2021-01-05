@@ -85,5 +85,6 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    paddingBottom: scaleDp(Platform.OS === 'web' ? 65 : 1),
   },
 });

@@ -47,12 +47,12 @@ export const {
  */
 
 export const getDirectionsFromCurrentLocation = ({
-  latitude,
-  longitude,
+  latitude = null,
+  longitude = null,
 }) => async (dispatch) => {
-  if (!latitude || !longitude) return;
-  dispatch(requestDirections());
   try {
+    if (!latitude || !longitude) return;
+    dispatch(requestDirections());
     const {coords: currentCoords, ...rest} = await getCurrentPosition();
     const {data} = await geolocationService.getDirections(
       `${currentCoords.latitude},${currentCoords.longitude}`,
@@ -63,7 +63,6 @@ export const getDirectionsFromCurrentLocation = ({
     ).map(([latitude, longitude]) => ({latitude, longitude}));
     return dispatch(receiveDirectionsSuccess(directions));
   } catch (e) {
-    console.log('error', {...e});
     return dispatch(receiveDirectionsFail(e));
   }
 };

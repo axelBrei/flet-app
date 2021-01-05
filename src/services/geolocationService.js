@@ -38,7 +38,7 @@ const getDirections = async (origin, destination) =>
     }),
     {
       timeout: 2000,
-      headers: {
+      headers: process.env.NODE_ENV !== 'development' && {
         'Access-Control-Allow-Origin': '*',
         'Content-type': 'application/json; charset=UTF-8',
       },
@@ -46,7 +46,9 @@ const getDirections = async (origin, destination) =>
         region: 'es',
         origin,
         destination,
-        key: Config.REACT_APP_GMAPS_API_KEY,
+        key:
+          process.env.NODE_ENV !== 'development' &&
+          Config.REACT_APP_GMAPS_API_KEY,
       },
     },
   );

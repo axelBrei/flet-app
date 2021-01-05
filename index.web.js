@@ -56,4 +56,3 @@ if (checkIsIOS()) {
 if (process.env.NODE_ENV !== 'development') {
   register();
 }
-// register();

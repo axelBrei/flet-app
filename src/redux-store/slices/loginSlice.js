@@ -56,9 +56,8 @@ export const loginAs = (user, pass) => async (dispatch) => {
         pass,
       }),
     );
-    // dispatch(receiveLoginSuccess(data));
   } catch (e) {
-    return dispatch(receiveLoginFail(e));
+    return dispatch(receiveLoginFail(e?.response?.data));
   }
 };
 /**

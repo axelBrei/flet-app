@@ -29,9 +29,10 @@ export default () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverAcceptShipmentLoading);
   const error = useSelector(selectDriverAcceptShipmentError);
-  const {loading: loadingPermissions, status, check} = usePermission([
-    PERMISSIONS.location,
-  ]);
+  const {loading: loadingPermissions, status, check} = usePermission(
+    [PERMISSIONS.location],
+    true,
+  );
   const shipmentData = useSelector(selectDriverShipmentData);
   const isPackagePickedUp = useSelector(selectIsDriverShipmentPickedUp);
   const directions = useSelector(selectCurrentDirections);

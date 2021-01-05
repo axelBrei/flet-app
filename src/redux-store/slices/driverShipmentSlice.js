@@ -67,7 +67,7 @@ export const acceptShipment = (shipmentId) => async (dispatch) => {
     const {data} = await driverShipmentService.acceptShipment(shipmentId);
     dispatch(receiveAcceptShipmentSucces(data));
   } catch (e) {
-    return dispatch(receiveAcceptShipmentFail(e));
+    return dispatch(receiveAcceptShipmentFail(e?.response?.data));
   }
 };
 

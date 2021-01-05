@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const loginAs = (username, password) =>
-  axios.get('https://randomuser.me/api', {
+const loginAs = async (username, password) =>
+  await axios.get('https://randomuser.me/api', {
     headers: {
       'Access-Control-Allow-Origin': '*',
     },

@@ -31,14 +31,14 @@ const getDirections = async (origin, destination) =>
   await axios.get(
     Platform.select({
       web:
-        process.env.NODE_ENV === 'development'
-          ? 'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f'
-          : directionsUrl,
+        // process.env.NODE_ENV === 'development' ?
+        'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f', // TODO: creato google account
+      // : directionsUrl,
       native: directionsUrl,
     }),
     {
       timeout: 2000,
-      headers: {
+      headers: process.env.NODE_ENV !== 'development' && {
         'Access-Control-Allow-Origin': '*',
         'Content-type': 'application/json; charset=UTF-8',
       },
@@ -46,7 +46,9 @@ const getDirections = async (origin, destination) =>
         region: 'es',
         origin,
         destination,
-        key: Config.REACT_APP_GMAPS_API_KEY,
+        key:
+          process.env.NODE_ENV !== 'development' &&
+          Config.REACT_APP_GMAPS_API_KEY,
       },
     },
   );

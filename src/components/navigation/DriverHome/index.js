@@ -30,9 +30,9 @@ export default ({navigation}) => {
     distance: 500,
     dropZone: 'Capital federal',
     onPressAccept: () => {
+      toggle();
       dispatch(acceptShipment(13123));
       navigation.navigate(routes.driverNewShipmentScreen);
-      toggle();
     },
     onPressReject: () => {
       dispatch(rejectShipment());

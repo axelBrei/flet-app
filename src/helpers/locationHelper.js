@@ -7,21 +7,24 @@ export const getCurrentPosition = async (options) =>
     Platform.select({
       native: () => Geolocation.getCurrentPosition(resolve, reject, options),
       web: () => {
-        window.navigator.geolocation.getCurrentPosition(
-          resolve,
-          reject,
-          options,
-        );
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(resolve, reject, options);
+        } else {
+          reject(new Error('Geolocation not available'));
+        }
       },
     })();
   });
 
 export const trackUserPosition = Platform.select({
   web: (callback, error, options) => {
-    const watchNumber = window.navigator.geolocation.watchPosition(
+    if (!navigator.geolocation) {
+      return error(new Error('Geolocation not available'));
+    }
+    const watchNumber = navigator.geolocation.watchPosition(
       (v) => {
         if (!v.coords) {
-          getCurrentPosition(options).then(callback);
+          getCurrentPosition(options).then(callback).catch(error);
         }
         callback({
           coords: {
@@ -33,7 +36,7 @@ export const trackUserPosition = Platform.select({
       error,
       options,
     );
-    return () => window.navigator.geolocation.clearWatch(watchNumber);
+    return () => navigator.geolocation.clearWatch(watchNumber);
   },
   native: (callback, error, options) => {
     const watchNumber = Geolocation.watchPosition(callback, error, options);

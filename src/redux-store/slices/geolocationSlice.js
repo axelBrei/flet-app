@@ -63,7 +63,7 @@ export const getDirectionsFromCurrentLocation = ({
     ).map(([latitude, longitude]) => ({latitude, longitude}));
     return dispatch(receiveDirectionsSuccess(directions));
   } catch (e) {
-    return dispatch(receiveDirectionsFail(e));
+    return dispatch(receiveDirectionsFail(e?.response?.data));
   }
 };
 

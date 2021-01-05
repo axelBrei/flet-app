@@ -31,9 +31,9 @@ const getDirections = async (origin, destination) =>
   await axios.get(
     Platform.select({
       web:
-        process.env.NODE_ENV === 'development'
-          ? 'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f'
-          : directionsUrl,
+        // process.env.NODE_ENV === 'development' ?
+        'https://run.mocky.io/v3/8a41af54-3298-44fc-a261-c33de5b2fa9f', // TODO: creato google account
+      // : directionsUrl,
       native: directionsUrl,
     }),
     {

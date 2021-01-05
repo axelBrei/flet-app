@@ -6,8 +6,13 @@ export const getCurrentPosition = async (options) =>
   new Promise((resolve, reject) => {
     Platform.select({
       native: () => Geolocation.getCurrentPosition(resolve, reject, options),
-      web: () =>
-        navigator.geolocation.getCurrentPosition(resolve, reject, options),
+      web: () => {
+        window.navigator.geolocation.getCurrentPosition(
+          resolve,
+          reject,
+          options,
+        );
+      },
     })();
   });
 

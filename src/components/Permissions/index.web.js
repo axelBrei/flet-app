@@ -6,6 +6,13 @@ const checkPermissions = async (permissions = []) => {
     const res = permissions.map(async (p) => {
       return await navigator.permissions.query({name: p});
     });
+    if (
+      res.some(
+        (i) => ![permissionStatus.GRANTED, permissionStatus.PROMPT].includes(i),
+      )
+    ) {
+      throw new Error('Permission denied');
+    }
     return res.every((i) =>
       [permissionStatus.GRANTED, permissionStatus.PROMPT].includes(i),
     );

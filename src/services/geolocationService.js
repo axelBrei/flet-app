@@ -37,6 +37,7 @@ const getDirections = async (origin, destination) =>
       native: directionsUrl,
     }),
     {
+      timeout: 2000,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-type': 'application/json; charset=UTF-8',

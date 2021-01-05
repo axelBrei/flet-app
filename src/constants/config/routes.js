@@ -34,11 +34,7 @@ export const routes = Platform.select({
   native: () => allRoutes,
   web: () =>
     Object.entries(
-      width <= 800 &&
-        (navigator.standalone ||
-          window.matchMedia('(display-mode: standalone)').matches)
-        ? allRoutes
-        : _routes,
+      Platform.OS !== 'web' || width <= 800 ? allRoutes : _routes,
     ).reduce(
       (acc, [key, val]) => ({
         ...acc,

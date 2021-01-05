@@ -19,7 +19,6 @@ import {
   selectDriverRejectShipmentLoading,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
-import {Platform} from 'react-native';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -50,13 +49,8 @@ export default ({navigation}) => {
 
   return (
     <ScreenComponent>
-      <Loader unmount={false} loading={loading}>
-        <Map
-          style={Platform.select({
-            web: {height: '90%', width: '100%'},
-            native: {flex: 1, width: '100%'},
-          })}
-        />
+      <Loader loading={loading} unmount={false}>
+        <Map style={{flex: 1, width: '100%'}} />
         <FloatingHamburguerButton />
         <AvailableContainer>
           <Switch value={isOnline} onChange={onChangeOnlineStatus} />
@@ -68,8 +62,7 @@ export default ({navigation}) => {
   );
 };
 const ScreenComponent = styled(Screen)`
-  height: 100%;
-  display: flex;
+  height: ${(props) => props.theme.screenHeight}px;
 `;
 
 const AvailableContainer = styled(Container)`

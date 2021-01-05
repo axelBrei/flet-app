@@ -55,19 +55,17 @@ export const useMarkerList = () => {
 
   useEffect(() => {
     if (directions) {
-      setDirectionsMakers([
-        {
-          ...directions[directions.length - 1],
-          anchor: {
-            x: 0.75,
-            y: 0.9,
-          },
-          icon: Platform.select({
-            native: EndpointMarker,
-            web: ENDPOINT_MARKER_PNG,
-          }),
+      setDirectionsMakers({
+        ...directions[directions.length - 1],
+        anchor: {
+          x: 0.75,
+          y: 0.9,
         },
-      ]);
+        icon: Platform.select({
+          native: EndpointMarker,
+          web: ENDPOINT_MARKER_PNG,
+        }),
+      });
     }
   }, [directions, setDirectionsMakers]);
 
@@ -91,7 +89,7 @@ export const useMarkerList = () => {
   }, [orientation, setCurrenPositionMarker, currentLocation]);
 
   const markersList = useMemo(() => {
-    let list = directionsMakers ?? [];
+    let list = directionsMakers ? [directionsMakers] : [];
     if (currentPositionMarker) {
       list.push(currentPositionMarker);
     }
@@ -110,7 +108,8 @@ export const useMarkerList = () => {
 
   return {
     markersList: markersList,
-    loadingMakers: markersList.length === 0 || loadingDirections,
+    loadingMakers: markersList.length === 0,
+    loadingDirections,
     loadingMessage,
   };
 };

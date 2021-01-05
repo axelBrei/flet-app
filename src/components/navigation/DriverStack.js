@@ -9,7 +9,7 @@ const {Navigator, Screen} = createStackNavigator();
 
 export const DriverStack = () => {
   return (
-    <Navigator {...navigationConfig({headerShown: false})}>
+    <Navigator {...navigationConfig()}>
       <Screen
         name={routes.dirverHomeScreen}
         component={DriverHomeScreen}

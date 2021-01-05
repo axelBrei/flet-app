@@ -18,6 +18,7 @@ let reducers = {
 const {width} = Dimensions.get('window');
 if (
   ['android', 'ios'].includes(Platform.OS) ||
+  process.env.NODE_ENV === 'development' ||
   (Platform.OS === 'web' && width <= 800 && navigator.standalone) ||
   window.matchMedia('(display-mode: standalone)').matches
 ) {

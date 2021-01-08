@@ -2,13 +2,32 @@ import {Platform} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Polyline from '@mapbox/polyline';
 
+const defaultOptions = Platform.select({
+  web: {timeout: 5000, maximumAge: 60000},
+  native: {},
+});
+
 export const getCurrentPosition = async (options) =>
   new Promise((resolve, reject) => {
     Platform.select({
       native: () => Geolocation.getCurrentPosition(resolve, reject, options),
       web: () => {
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(resolve, reject, options);
+          navigator.geolocation.getCurrentPosition(
+            (v) => {
+              resolve({
+                coords: {
+                  latitude: v.coords.latitude,
+                  longitude: v.coords.longitude,
+                },
+              });
+            },
+            reject,
+            {
+              ...defaultOptions,
+              ...options,
+            },
+          );
         } else {
           reject(new Error('Geolocation not available'));
         }

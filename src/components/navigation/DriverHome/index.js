@@ -66,8 +66,6 @@ export default ({navigation}) => {
     ];
   }, [userCurrentPosition, lastUserPosition]);
 
-  console.log('Current positions', userCurrentPosition);
-
   const {Modal, toggle, open} = useModal(NewTripModalContent, {
     distance: 500,
     dropZone: 'Capital federal',
@@ -95,6 +93,7 @@ export default ({navigation}) => {
         <Map
           style={{flex: 1, width: '100%'}}
           markers={positionMarker}
+          showsMyLocationButton
         />
         <FloatingHamburguerButton />
         <AvailableContainer>

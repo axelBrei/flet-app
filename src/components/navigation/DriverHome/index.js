@@ -36,13 +36,13 @@ export default ({navigation}) => {
   const [userCurrentPosition, setUserCurrentPosition] = useState(null);
 
   useEffect(() => {
-    const success = (position) => {
+    const handleNewPosition = (position) => {
       if (position.coords.latitude !== userCurrentPosition?.latitude) {
         setLastUserPosition(userCurrentPosition);
         setUserCurrentPosition(position.coords);
       }
     };
-    return trackUserPosition(success, console.log);
+    return trackUserPosition(handleNewPosition);
   }, [userCurrentPosition]);
 
   const positionMarker = useMemo(() => {

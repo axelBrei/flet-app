@@ -17,7 +17,7 @@ export const getCurrentPosition = async (options) =>
   });
 
 export const trackUserPosition = Platform.select({
-  web: (callback, error, options) => {
+  web: (callback, error = () => {}, options = {}) => {
     if (!navigator.geolocation) {
       return error(new Error('Geolocation not available'));
     }
@@ -58,7 +58,7 @@ function toDegrees(radians) {
 }
 
 export const getBearingFromCoords = (startCoords = {}, endCoords = {}) => {
-  if(!startCoords || !endCoords) return 0;
+  if (!startCoords || !endCoords) return 0;
   const initial = {
     latitude: toRadians(startCoords.latitude),
     longitude: toRadians(startCoords.longitude),

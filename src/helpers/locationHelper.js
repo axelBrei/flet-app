@@ -58,6 +58,7 @@ function toDegrees(radians) {
 }
 
 export const getBearingFromCoords = (startCoords = {}, endCoords = {}) => {
+  if(!startCoords || !endCoords) return 0;
   const initial = {
     latitude: toRadians(startCoords.latitude),
     longitude: toRadians(startCoords.longitude),

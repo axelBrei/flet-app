@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useMemo, useEffect} from 'react';
+import React, {useState, useCallback, useMemo, useImperativeHandle, useEffect} from 'react';
 import {
   GoogleMap,
   useLoadScript,
@@ -19,6 +19,7 @@ const Map = ({
   renderMarker,
   edgePadding,
   directions,
+  externalRef,
   ...props
 }) => {
   const {isLoaded, loadError} = useLoadScript({
@@ -27,7 +28,11 @@ const Map = ({
   const [mapRef, setMapRef] = useState(null);
   const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
 
-  const fitBounds = (map) => {
+  const setZoom = useCallback((zoom = 16) => {
+    mapRef?.setZoom(zoom)
+  }, [mapRef])
+
+  const fitBounds = useCallback((map = null) => {
     if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
       const bounds = new window.google.maps.LatLngBounds();
       filteredMarkers
@@ -35,9 +40,12 @@ const Map = ({
         .forEach((marker) => {
           bounds.extend({lat: marker.latitude, lng: marker.longitude});
         });
-      map.fitBounds(bounds, edgePadding);
+      (mapRef || map).fitBounds(bounds, filteredMarkers.length >= 2 && edgePadding);
+      if(filteredMarkers.length < 2){
+        setZoom()
+      }
     }
-  };
+  }, [filteredMarkers, mapRef]);
 
   useEffect(() => {
     if (mapRef) {
@@ -105,6 +113,12 @@ const Map = ({
       ),
     [directions],
   );
+
+  useImperativeHandle(externalRef, () => ({
+    setZoom,
+    fitBounds
+  }))
+
   return (
     <Container style={props.style}>
       {isLoaded && !loadError ? (
@@ -141,4 +155,6 @@ Map.defaultProps = {
   renderMarker: null,
   edgePadding: null,
 };
-export default React.memo(Map);
+export default React.memo(
+  React.forwardRef( (props, ref) => <Map {...props} externalRef={ref}/>)
+);

@@ -1,4 +1,11 @@
-import React, {useState, useCallback, useMemo, useEffect} from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useImperativeHandle,
+  useEffect,
+} from 'react';
+import styled from 'styled-components';
 import {
   GoogleMap,
   useLoadScript,
@@ -9,9 +16,11 @@ import MAP_PIN from 'resources/assets/map_pin.png';
 import {INITIAL_POSITION, ZOOM} from 'components/ui/Map/constants';
 import Config from 'react-native-config';
 import {theme} from 'constants/theme';
-import {scaleDp} from 'helpers/responsiveHelper';
+import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {Container} from 'components/ui/Container';
 import {AppText} from 'components/ui/AppText';
+import {getCurrentPosition} from 'helpers/locationHelper';
+import {IconButton} from 'components/ui/IconButton';
 
 const Map = ({
   markers,
@@ -19,6 +28,8 @@ const Map = ({
   renderMarker,
   edgePadding,
   directions,
+  externalRef,
+  showsMyLocationButton,
   ...props
 }) => {
   const {isLoaded, loadError} = useLoadScript({
@@ -27,17 +38,42 @@ const Map = ({
   const [mapRef, setMapRef] = useState(null);
   const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
 
-  const fitBounds = (map) => {
-    if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
-      const bounds = new window.google.maps.LatLngBounds();
-      filteredMarkers
-        .filter((i) => i.latitude && i.longitude)
-        .forEach((marker) => {
-          bounds.extend({lat: marker.latitude, lng: marker.longitude});
-        });
-      map.fitBounds(bounds, edgePadding);
-    }
-  };
+  const setZoom = useCallback(
+    (zoom = 16) => {
+      mapRef?.setZoom(zoom);
+    },
+    [mapRef],
+  );
+
+  const centerInUserPosition = useCallback(async () => {
+    try {
+      const position = await getCurrentPosition();
+      const {coords} = position;
+      mapRef?.panTo({lat: coords.latitude, lng: coords.longitude});
+      setZoom(17, 5);
+    } catch (e) {}
+  }, [mapRef, setZoom]);
+
+  const fitBounds = useCallback(
+    (map = null) => {
+      if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
+        const bounds = new window.google.maps.LatLngBounds();
+        filteredMarkers
+          .filter((i) => i.latitude && i.longitude)
+          .forEach((marker) => {
+            bounds.extend({lat: marker.latitude, lng: marker.longitude});
+          });
+        (mapRef || map).fitBounds(
+          bounds,
+          filteredMarkers.length >= 2 && edgePadding,
+        );
+        if (filteredMarkers.length < 2) {
+          setZoom();
+        }
+      }
+    },
+    [filteredMarkers, mapRef],
+  );
 
   useEffect(() => {
     if (mapRef) {
@@ -105,6 +141,12 @@ const Map = ({
       ),
     [directions],
   );
+
+  useImperativeHandle(externalRef, () => ({
+    setZoom,
+    fitBounds,
+  }));
+
   return (
     <Container style={props.style}>
       {isLoaded && !loadError ? (
@@ -131,6 +173,14 @@ const Map = ({
       ) : (
         <AppText>Error {loadError}</AppText>
       )}
+      {showsMyLocationButton && (
+        <CurrentLoactionButton
+          onPress={centerInUserPosition}
+          icon="crosshairs-gps"
+          iconColor={theme.fontColor}
+          size={20}
+        />
+      )}
     </Container>
   );
 };
@@ -141,4 +191,22 @@ Map.defaultProps = {
   renderMarker: null,
   edgePadding: null,
 };
-export default React.memo(Map);
+export default React.memo(
+  React.forwardRef((props, ref) => <Map {...props} externalRef={ref} />),
+);
+
+// STYLES
+
+const CurrentLoactionButton = styled(IconButton)`
+  position: absolute;
+  top: ${scaleDpTheme(10)};
+  right: ${scaleDpTheme(10)};
+  height: ${scaleDpTheme(42)};
+  width: ${scaleDpTheme(42)};
+  align-items: center;
+  justify-content: center;
+  border-radius: ${scaleDpTheme(30)};
+  background-color: ${theme.backgroundColor};
+  elevation: 3;
+  box-shadow: 0px 3px 6px ${theme.shadowColor};
+`;

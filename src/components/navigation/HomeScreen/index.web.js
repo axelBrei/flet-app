@@ -8,8 +8,6 @@ import {Container} from 'components/ui/Container';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
 import Map from 'components/ui/Map/index';
-import {usePermission} from 'components/Hooks/usePermission';
-import {PERMISSIONS} from 'components/Permissions/permissions';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 const HomeScreen = () => {

@@ -26,6 +26,7 @@
     "axios": "^0.21.0",
     "body-scroll-lock": "^3.1.5",
     "dayjs": "^1.9.6",
+    "fbjs": "^3.0.0",
     "formik": "^2.2.5",
     "prop-types": "^15.7.2",
     "react": "16.13.1",

@@ -1,5 +1,5 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert} from 'react-native';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
@@ -14,26 +14,26 @@ import {
 import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {TextLink} from 'components/ui/TextLink';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
-import {routes} from 'constants/config/routes';
+import {scaleDp} from 'helpers/responsiveHelper';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   loginAs,
   selectLoadingLogin,
   selectLoginError,
-  selectUserData,
 } from 'redux-store/slices/loginSlice';
 import {Loader} from 'components/ui/Loader';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {Card} from 'components/ui/Card';
 
 export const LoginScreen = ({navigation}) => {
+  const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
   const loading = useSelector(selectLoadingLogin);
   const error = useSelector(selectLoginError);
-  const userData = useSelector(selectUserData);
 
   const onPressForgetPassword = () => {};
   const onSubmit = (values) => {
     dispatch(loginAs(values[FIELDS.USERNAME], values[FIELDS.PASSWORD]));
-    // navigation.navigate(routes.loggedStack);
   };
 
   const {
@@ -43,42 +43,87 @@ export const LoginScreen = ({navigation}) => {
     touched,
     submitCount,
     errors,
+    setErrors,
     handleSubmit,
   } = useFormikCustom(loginFormikConfig(onSubmit));
 
+  useEffect(() => {
+    if (submitCount > 1 && !loading && error) {
+      setErrors({
+        [FIELDS.USERNAME]: 'Usuario y/o contraseña inexistente',
+        [FIELDS.PASSWORD]: 'Usuario y/o contraseña inexistente',
+      });
+    }
+  }, [error, loading, submitCount]);
+
   return (
     <ScreenComponent>
-      <FloatingBackgroundOval />
-      <Title bold>Iniciar sesion</Title>
-      <InputField
-        editable={!loading}
-        icon="account-outline"
-        label="Usuario"
-        value={values[FIELDS.USERNAME]}
-        onChangeText={_setFieldValue(FIELDS.USERNAME)}
-        error={
-          submitCount > 0 && touched[FIELDS.USERNAME] && errors[FIELDS.USERNAME]
-        }
-        onBlur={_setFieldTouched(FIELDS.USERNAME)}
-      />
-      <InputField
-        editable={!loading}
-        icon="lock-outline"
-        secureTextEntry
-        label="Contaseña"
-        value={values[FIELDS.PASSWORD]}
-        onChangeText={_setFieldValue(FIELDS.PASSWORD)}
-        error={
-          submitCount > 0 && touched[FIELDS.PASSWORD] && errors[FIELDS.PASSWORD]
-        }
-        onBlur={_setFieldTouched(FIELDS.PASSWORD)}
-      />
-      <Loader loading={loading}>
-        <MainButton label="Ingresar" onPress={handleSubmit} />
-        <TextLink onPress={onPressForgetPassword}>
-          Olvide mi contraseña
-        </TextLink>
-      </Loader>
+      {isMobile && (
+        <>
+          <FloatingBackgroundOval />
+          <Title bold>Iniciar sesion</Title>
+        </>
+      )}
+      <Card
+        onlyWeb
+        style={{
+          padding: scaleDp(15),
+          width: !isMobile ? 'auto' : '100%',
+          height: 'auto',
+          alignSelf: 'center',
+          alignItems: 'center',
+        }}>
+        <InputField
+          editable={!loading}
+          icon="account-outline"
+          label="Usuario"
+          value={values[FIELDS.USERNAME]}
+          onChangeText={_setFieldValue(FIELDS.USERNAME)}
+          error={
+            submitCount > 0 &&
+            touched[FIELDS.USERNAME] &&
+            errors[FIELDS.USERNAME]
+          }
+          onBlur={_setFieldTouched(FIELDS.USERNAME)}
+          style={
+            !isMobile && {
+              maxWidth: scaleDp(250),
+            }
+          }
+        />
+        <InputField
+          editable={!loading}
+          icon="lock-outline"
+          secureTextEntry
+          label="Contaseña"
+          value={values[FIELDS.PASSWORD]}
+          onChangeText={_setFieldValue(FIELDS.PASSWORD)}
+          error={
+            submitCount > 0 &&
+            touched[FIELDS.PASSWORD] &&
+            errors[FIELDS.PASSWORD]
+          }
+          onBlur={_setFieldTouched(FIELDS.PASSWORD)}
+          style={
+            !isMobile && {
+              maxWidth: scaleDp(250),
+            }
+          }
+        />
+        <Loader
+          loading={loading}
+          onPlace
+          style={{
+            height: scaleDp(70),
+            alignItems: 'center',
+            marginTop: scaleDp(30),
+          }}>
+          <MainButton label="Ingresar" onPress={handleSubmit} />
+          <TextLink onPress={onPressForgetPassword}>
+            Olvide mi contraseña
+          </TextLink>
+        </Loader>
+      </Card>
     </ScreenComponent>
   );
 };
@@ -86,13 +131,14 @@ export const LoginScreen = ({navigation}) => {
 export default LoginScreen;
 
 const ScreenComponent = styled(Screen)`
+  height: ${(props) => props.theme.screenHeight}px;
   padding: ${scaleDpTheme(15)};
   align-items: center;
+  padding-top: ${(props) => props.theme.screenHeight * 0.12}px;
 `;
 
 const Title = styled(AppText)`
-  margin-bottom: 55%;
-  margin-top: 20%;
+  margin-bottom: ${(props) => (props.theme.isMobile ? '55%' : 0)};
   z-index: 2;
   font-size: ${scaleDpTheme(30)};
   color: ${theme.fontColor};

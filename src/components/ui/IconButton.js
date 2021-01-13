@@ -37,7 +37,7 @@ export const IconButton = ({
       onPress={onPress}
       classname={classname}
       borderWidth={buttonStyle?.borderWidth}
-      backgroundColor={buttonStyle?.backgroundColor}
+      backgroundColor={props.backgroundColor || buttonStyle?.backgroundColor}
       style={buttonStyle}
       {...props}>
       <Icon
@@ -66,8 +66,8 @@ IconButton.propTypes = {
 };
 
 const ButtonContainer = styled(TouchableOpacity)`
-  padding: ${scaleDpTheme(8)};
-  border-radius: ${scaleDpTheme(10)};
+  padding: ${(props) => props.padding || scaleDpTheme(8)};
+  border-radius: ${(props) => props.radius || scaleDpTheme(10)};
   background-color: ${(props) => props?.backgroundColor || theme.accentColor};
   border-width: ${(props) => scaleDp(props?.borderWidth || 0)}px;
   border-color: ${theme.accentColor};

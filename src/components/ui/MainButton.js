@@ -1,10 +1,11 @@
-import React, {useCallback, useMemo} from 'react';
-import {Platform, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useMemo, useRef} from 'react';
+import {Platform, TouchableOpacity, Animated, View} from 'react-native';
 import {theme} from 'constants/theme';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {Icon} from 'components/ui/Icon';
+import Hoverable from 'components/ui/Hoverable/index';
 
 const MainButtonAux = ({
   label,
@@ -16,6 +17,7 @@ const MainButtonAux = ({
   fontSize,
   ...props
 }) => {
+  const scale = useRef(new Animated.Value(1)).current;
   const buttonColors = useMemo(() => {
     if (inverted) {
       return {
@@ -47,22 +49,39 @@ const MainButtonAux = ({
     [],
   );
 
+  const handleHover = useCallback(
+    (toValue = 1) =>
+      Animated.timing(scale, {
+        toValue,
+        duration: 150,
+        useNativeDriver: true,
+      }).start,
+    [],
+  );
+
   return (
-    <Button
-      onPress={onPress}
-      classname={props.classname}
-      backgroundColor={buttonColors?.backgroundColor}
-      borderColor={buttonColors?.borderColor}
-      style={props.style}
-      {...props}>
-      <Container>
-        {showIconOrBlankSpace(leftIcon)}
-        <Text fontSize={fontSize} color={buttonColors?.color}>
-          {label}
-        </Text>
-        {showIconOrBlankSpace(rightIcon)}
-      </Container>
-    </Button>
+    <Hoverable onHoverIn={handleHover(1.05)} onHoverOut={handleHover()}>
+      <Button
+        onPress={onPress}
+        classname={props.classname}
+        backgroundColor={buttonColors?.backgroundColor}
+        borderColor={buttonColors?.borderColor}
+        style={[
+          props.style,
+          {
+            transform: [{scale}],
+          },
+        ]}
+        {...props}>
+        <Container>
+          {showIconOrBlankSpace(leftIcon)}
+          <Text fontSize={fontSize} color={buttonColors?.color}>
+            {label}
+          </Text>
+          {showIconOrBlankSpace(rightIcon)}
+        </Container>
+      </Button>
+    </Hoverable>
   );
 };
 
@@ -89,17 +108,18 @@ const Text = styled(AppText)`
   padding: 0 ${scaleDpTheme(5)};
 `;
 
-const Button = styled(TouchableOpacity)`
+const RawButton = styled(TouchableOpacity)`
   background-color: ${(props) =>
     props.backgroundColor || props.theme.colors.primaryColor};
   border-color: ${(props) =>
     props.borderColor || props.theme.colors.primaryColor};
   border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
   margin: ${(props) => scaleDp(5)}px;
-  width: ${scaleDpTheme(200)};
+  width: ${(props) => scaleDpTheme(props.width || 200)};
   height: ${(props) => scaleDp(props.height || 40)}px;
   border-radius: 10px;
   align-items: center;
   justify-content: center;
   z-index: 0;
 `;
+const Button = Animated.createAnimatedComponent(RawButton);

@@ -25,6 +25,7 @@ const ignoreTopLevelFolders = [
   'html-webpack-plugin',
   '@svgr/webpack',
   'google-maps-react',
+  'fbjs',
 ].map((f) => new RegExp(`${path.resolve(f)}/.*`));
 
 module.exports = (async () => {

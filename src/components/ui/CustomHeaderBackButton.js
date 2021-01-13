@@ -32,5 +32,5 @@ export const CustomHeaderBackButton = (props) => {
 };
 
 CustomHeaderBackButton.defaultProps = {
-  tintColor: theme.white,
+  tintColor: theme.fontColor,
 };

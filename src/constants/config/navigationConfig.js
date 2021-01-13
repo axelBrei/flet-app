@@ -21,7 +21,7 @@ export const navigationConfig = (props = {}) => ({
       title: '',
     },
     native: {
-      headerTintColor: theme.white,
+      headerTintColor: theme.fontColor,
     },
   }),
   ...props,

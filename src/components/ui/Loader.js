@@ -5,10 +5,18 @@ import {AppText} from 'components/ui/AppText';
 import {Container} from 'components/ui/Container';
 import {theme} from 'constants/theme';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import PropTypes from 'prop-types';
 
-export const Loader = ({children, unmount, message, loading}) => {
+export const Loader = ({
+  children,
+  onPlace,
+  unmount,
+  message,
+  loading,
+  ...props
+}) => {
   const renderLoader = () => (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{alignItems: 'center', justifyContent: 'center'}}>
       <ActivityIndicator
         size={Platform.OS === 'ios' ? 'large' : scaleDp(50)}
         animating
@@ -18,30 +26,36 @@ export const Loader = ({children, unmount, message, loading}) => {
     </View>
   );
 
-  if (loading && unmount) {
-    return <LoaderContainer>{renderLoader()}</LoaderContainer>;
-  }
+  const Wrapper = onPlace ? View : React.Fragment;
   return (
-    <>
-      {!unmount && loading && (
-        <LoaderContainer unmount>{renderLoader()}</LoaderContainer>
+    <Wrapper
+      {...(onPlace && {
+        style: [props.style],
+      })}>
+      {loading && (
+        <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
       )}
-      {children}
-    </>
+      {unmount && !loading && children}
+    </Wrapper>
   );
 };
 
 Loader.defaultProps = {
   loading: false,
-  unmount: true, // unmount children while loading
+  unmount: true, // unmount children while loading,
+  onPlace: false, // place loader in same place that children
+};
+Loader.propTypes = {
+  unmount: PropTypes.bool,
+  loading: PropTypes.bool,
+  onPlace: PropTypes.bool.isRequired,
+  message: PropTypes.string,
 };
 
 const LoaderContainer = styled(Container)`
-  height: ${(props) => props.theme.screenHeight}px;
-  width: 100%;
+  height: 100%;
   align-items: center;
   justify-content: center;
-  background-color: ${theme.backgroundColor};
   ${(props) =>
     props.unmount &&
     css`

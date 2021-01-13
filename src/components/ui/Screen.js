@@ -81,6 +81,7 @@ export const Screen = ({
               showsVerticalScrollIndicator={false}
               classname={classname}
               style={[
+                {backgroundColor: theme.backgroundColor},
                 !scrollable && {
                   alignItems: 'center',
                   overflow: 'hidden',

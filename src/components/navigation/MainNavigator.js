@@ -11,26 +11,38 @@ import {theme} from 'constants/theme';
 import LoggedInStack from 'components/navigation/LoggedInStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
+import {scaleDp} from 'helpers/responsiveHelper';
 
 const {Navigator, Screen} = createStackNavigator();
 
-const renderPublicRoutes = (width) => (
+const renderPublicRoutes = (width, isMobile) => (
   <>
     <Screen
       name={routes.landingScreen}
       component={LandingScreen}
       options={{
-        headerStyle: {
-          backgroundColor: theme.white,
-        },
-        headerShown: Platform.OS === 'web' && width >= 800,
+        headerShown: false,
       }}
     />
     <Screen
       name={routes.loginScreen}
       component={LoginScreen}
       options={{
-        headerTransparent: true,
+        headerStyle: {
+          backgroundColor: theme.primaryLightColor,
+          height: scaleDp(60),
+        },
+        headerRightContainerStyle: {
+          paddingRight: scaleDp(15),
+          paddingVertical: scaleDp(5),
+        },
+        headerTitleStyle: {
+          width: 'auto',
+          fontSize: scaleDp(16),
+        },
+        headerShown: true,
+        headerTitle: isMobile ? '' : 'Iniciar sesión',
+        headerTransparent: isMobile,
       }}
     />
     <Screen
@@ -50,7 +62,7 @@ const renderPrivateRoutes = () => (
 );
 
 export default () => {
-  const {width} = useWindowDimension();
+  const {width, isMobile} = useWindowDimension();
   const userData = useSelector(selectUserData);
 
   return (
@@ -60,7 +72,7 @@ export default () => {
         title: '',
         headerShown: width <= 800,
       })}>
-      {userData ? renderPrivateRoutes() : renderPublicRoutes(width)}
+      {userData ? renderPrivateRoutes() : renderPublicRoutes(width, isMobile)}
     </Navigator>
   );
 };

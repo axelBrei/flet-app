@@ -15,6 +15,7 @@ const MainButtonAux = ({
   inverted,
   alternative,
   fontSize,
+  style,
   ...props
 }) => {
   const scale = useRef(new Animated.Value(1)).current;
@@ -67,7 +68,7 @@ const MainButtonAux = ({
         backgroundColor={buttonColors?.backgroundColor}
         borderColor={buttonColors?.borderColor}
         style={[
-          props.style,
+          style,
           {
             transform: [{scale}],
           },

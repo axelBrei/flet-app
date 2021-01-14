@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
 import {View, Platform} from 'react-native';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const Card = ({
   children,
@@ -9,9 +10,8 @@ export const Card = ({
   backgroundColor,
   ...props
 }) => {
-  const visible =
-    (Platform.OS === 'web' && onlyWeb) ||
-    (['android', 'ios'].includes(Platform.OS) && onlyMobile);
+  const {isMobile} = useWindowDimension();
+  const visible = isMobile ? !!onlyMobile : !!onlyWeb;
 
   return (
     <CardComponent

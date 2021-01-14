@@ -1,7 +1,9 @@
 {
   "name": "fletex_app",
+  "nameToShow": "FletApp",
   "version": "0.0.1",
   "private": true,
+  "proxy": "http://localhost:3000",
   "scripts": {
     "start:web:dev": "webpack serve --progress --env=dev --color --mode development --config ./webpack.config.js",
     "start:android": "npx react-native run-android",

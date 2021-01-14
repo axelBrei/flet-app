@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import LandingScreen from 'components/navigation/LandingScreen';
+import PageNotFound from 'components/navigation/PageNotFound.web';
 import {RegisterStack} from 'components/navigation/RegisterStack';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import LoginScreen from 'components/navigation/LoginScreen';
@@ -41,6 +42,7 @@ const renderPublicRoutes = (width, isMobile) => (
           fontSize: scaleDp(16),
         },
         headerShown: true,
+        title: 'Iniciar sesión',
         headerTitle: isMobile ? '' : 'Iniciar sesión',
         headerTransparent: isMobile,
       }}
@@ -67,12 +69,21 @@ export default () => {
 
   return (
     <Navigator
-      initialRouteName={routes.homeScreen}
+      // initialRouteName={userData ? routes.landingScreen : routes.loggedStack}
       screenOptions={navigationConfig({
         title: '',
         headerShown: width <= 800,
       })}>
       {userData ? renderPrivateRoutes() : renderPublicRoutes(width, isMobile)}
+      {Platform.OS === 'web' && (
+        <Screen
+          name="pagina-inexistente"
+          component={PageNotFound}
+          options={{
+            title: 'Página inexistente',
+          }}
+        />
+      )}
     </Navigator>
   );
 };

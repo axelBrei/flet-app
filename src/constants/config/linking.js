@@ -13,12 +13,19 @@ export const linkingConfig = {
     screens: linkingRoutes,
   },
   getPathFromState(state, path) {
-    return getPath(state, pageXOffset).split('?')[0];
+    const res = getPath(state, pageXOffset).split('?')[0];
+    if (res === `/${routes.landingScreen}`) {
+      return '';
+    }
+    return res;
   },
   getStateFromPath(path, options) {
-    const routes = getRoutesFromLinking();
-    path = path.slice(1);
-    if (!Object.values(routes).includes(path)) {
+    const linkingRoutes = getRoutesFromLinking();
+    path = path?.slice(1) ?? path;
+    if (path.length <= 1) {
+      path = routes.landingScreen;
+    }
+    if (!Object.values(linkingRoutes).includes(path)) {
       return {
         index: 0,
         routes: [{name: 'pagina-inexistente'}],
@@ -28,7 +35,8 @@ export const linkingConfig = {
     const isPrivateRoute = path.includes('private');
     if (!isLoggedIn && isPrivateRoute) {
       return {
-        routes: [{name: routes.landingScreen}],
+        index: 0,
+        routes: [{name: routes.loginScreen}],
       };
     } else return getState(path, options);
   },

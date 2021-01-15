@@ -5,29 +5,65 @@ import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import PropTypes from 'prop-types';
 import {theme} from 'constants/theme';
 import {Dimensions, Platform} from 'react-native';
+import {fonts, fontVariants} from 'constants/fonts';
 
 const {width} = Dimensions.get('screen');
 
+const [normal, title] = ['OpenSans', 'PlayfairDisplay'];
+
+const getFontFamily = (b, i, isTitle) => {
+  let font = `${isTitle ? title : normal}-`;
+  if (b && i) return font.concat(fontVariants.boldItalic);
+  return font.concat(
+    b ? fontVariants.bold : i ? fontVariants.italic : fontVariants.regular,
+  );
+};
+
+const getWebFontWeight = ({bold: b, italic: i, title}) => {
+  const variant = getFontFamily(b, i, title);
+  switch (variant.split('-')[1]) {
+    case fontVariants.light:
+      return 300;
+    case fontVariants.bold:
+      return title ? 500 : 600;
+    case fontVariants.extraBold:
+      return 800;
+    default:
+      return 400;
+  }
+};
+
 export const AppText = styled(Text)`
-  font-size: ${(props) => scaleDpTheme(props.fontSize)};
+  font-size: ${(props) => scaleDpTheme(props.fontSize + (props.title ? 4 : 0))};
   color: ${(props) =>
     props.alternative ? 'white' : props.color || props.theme.colors.fontColor};
-  font-weight: ${(props) => (props.bold ? 'bold' : 'normal')};
-  font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
   width: ${(props) => props.width};
   text-align: ${(props) => props.textAlign};
   padding: ${(props) => props.padding}px;
+  font-family: ${(props) =>
+    props.fontFamily || getFontFamily(props.bold, props.italic, props.title)};
+  ${Platform.OS === 'web' &&
+  css`
+    font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
+    font-weight: ${getWebFontWeight};
+  `};
 `;
 
 AppText.propTypes = {
+  title: PropTypes.bool.isRequired,
   fontSize: PropTypes.number,
   color: PropTypes.string,
   bold: PropTypes.bool,
   italic: PropTypes.bool,
   alternative: PropTypes.bool,
+  fontFamily: PropTypes.oneOf(Object.values(fonts)),
+  padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  selectable: PropTypes.bool,
+  textAlign: PropTypes.oneOf(['right', 'center', 'left']),
 };
 
 AppText.defaultProps = {
+  title: false,
   alternative: false,
   fontColor: theme.fontColor,
   fontSize: 14,
@@ -37,4 +73,5 @@ AppText.defaultProps = {
   textAlign: 'left',
   selectable: Platform.OS === 'web' && width <= 800,
   padding: 0,
+  fontFamily: null,
 };

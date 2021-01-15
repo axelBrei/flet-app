@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 import styled from 'styled-components';
-import {Icon} from 'components/ui/Icon';
 import {Screen} from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import {AppText} from 'components/ui/AppText';

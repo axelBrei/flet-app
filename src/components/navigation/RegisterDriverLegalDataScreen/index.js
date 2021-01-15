@@ -109,12 +109,14 @@ export default ({navigation}) => {
 const ScreenContainer = styled(Container)`
   padding-left: ${scaleDpTheme(15)};
   padding-right: ${scaleDpTheme(15)};
+  padding-bottom: ${scaleDpTheme(15)};
   align-self: center;
   align-items: center;
+  ${({theme}) => theme.isMobile && `width: ${theme.screenWidth}px`};
 `;
 
 const Title = styled(AppText)`
   padding-top: ${(props) => scaleDp(props.theme.isMobile ? 60 : 10)}px;
-  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 75 : 10)}px;
+  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 90 : 10)}px;
   text-align: center;
 `;

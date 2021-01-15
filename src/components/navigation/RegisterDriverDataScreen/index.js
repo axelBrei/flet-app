@@ -110,6 +110,7 @@ const ScreenContainer = styled(Container)`
   padding-right: ${scaleDpTheme(15)};
   align-self: center;
   align-items: center;
+  ${({theme}) => theme.isMobile && `width: ${theme.screenWidth}px`};
 `;
 
 const Title = styled(AppText)`

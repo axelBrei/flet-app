@@ -62,7 +62,7 @@ const calculateREMforWeb = ({width, height}) => {
       ((width - MSW) / (screenWidth - MSW)) * (MTV - MSV) + MSV; // Linear eq
     remValue = remValue * multiplier;
   }
-  return remValue;
+  return remValue * (width > 1300 ? 1.23 : 1);
 };
 
 export const calcRem = (dim) =>

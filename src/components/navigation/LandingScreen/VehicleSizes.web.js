@@ -32,7 +32,7 @@ const list = [
 export const VehicleSizes = () => {
   return (
     <Container width="100%" padding={`0 ${scaleDpTheme(30)}`}>
-      <AppText fontSize={24} bold padding="10px 0">
+      <AppText title fontSize={16} bold padding="10px 0">
         No importa el tamaño
       </AppText>
       <AppText fontSize={13}>

@@ -31,9 +31,6 @@ const HomeScreen = ({navigation, route}) => {
     return 1;
   }, [width]);
 
-  const _scaleDp = React.useCallback((dp) => scaleDp(dp * scaleDp()), [scale]);
-  const scaleFont = React.useCallback((dp) => dp * scale, [scale]);
-
   useLayoutEffect(() => {
     const navigateToRegister = () => navigation.navigate(routes.registerStack);
 
@@ -72,27 +69,28 @@ const HomeScreen = ({navigation, route}) => {
       <BaseContainer>
         <BannerContainer>
           <Container padding={`0px ${scaleDpTheme(25)}`}>
-            <AppText bold fontSize={scaleFont(32)}>
+            <AppText title bold fontSize={32}>
               {strings.bannerTitle}
             </AppText>
-            <AppText padding="15px 0" fontSize={scaleFont(13)}>
+            <AppText padding="15px 0" fontSize={13}>
               {strings.bannerSubtitle}
             </AppText>
             <Container padding="20px 0px">
-              <AppText bold fontSize={scaleFont(16)}>
+              <AppText title bold fontSize={16}>
                 {strings.driverTitle}
               </AppText>
               <AppText>{strings.driverSubtitle}</AppText>
               <Button
+                width={scaleDp(180)}
                 label={strings.driveWithUs}
                 onPress={navigateToRegisterDriver}
               />
             </Container>
           </Container>
-          <ShipmentBoxes width={_scaleDp(220)} height={_scaleDp(230)} />
+          <ShipmentBoxes width={scaleDp(220)} height={scaleDp(230)} />
         </BannerContainer>
 
-        <Benefits scaleFont={scaleFont} scale={_scaleDp} />
+        <Benefits />
         <VehicleSizes />
       </BaseContainer>
       <Footer />
@@ -123,6 +121,5 @@ const BannerContainer = styled(Container)`
 const Button = styled(MainButton)`
   margin-left: 0;
   margin-top: ${scaleDpTheme(15)};
-  width: ${scaleDpTheme(180)};
   height: ${scaleDpTheme(35)};
 `;

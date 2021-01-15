@@ -15,7 +15,7 @@ export const linkingConfig = {
   getPathFromState(state, path) {
     const res = getPath(state, pageXOffset).split('?')[0];
     if (res === `/${routes.landingScreen}`) {
-      return '';
+      return '/';
     }
     return res;
   },

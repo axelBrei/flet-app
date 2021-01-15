@@ -13,6 +13,7 @@ import store, {persistor} from 'redux-store/index';
 import {changeNavigationState} from 'redux-store/slices/navigationSlice';
 import axios from 'axios';
 import {AppText} from 'components/ui/AppText';
+import {fonts} from 'constants/fonts';
 
 axios.defaults.withCredentials = false;
 
@@ -47,6 +48,7 @@ const App = () => {
           <ThemeProvider
             theme={{
               colors: theme,
+              fonts,
               scale: (size) => size * rem,
               screenWidth: width,
               screenHeight: height,

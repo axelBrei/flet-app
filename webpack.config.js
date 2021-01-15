@@ -23,7 +23,14 @@ const aliasPathJoin = (moduleFolders) =>
 // `node_module`.
 const babelLoaderConfiguration = {
   test: /\.(js)$/,
-  exclude: /node_modules[/\\](?!react-native-swipe-gestures|react-native-gesture-handler|react-native-calendars)/,
+  exclude: [
+    new RegExp(
+      'node_modules[/\\\\](?!react-native-swipe-gestures|react-native-gesture-handler|react-native-calendars)',
+    ),
+    path.resolve('./src/resources/fonts'),
+    path.resolve('./android'),
+    path.resolve('./ios'),
+  ],
   // Add every directory that needs to be compiled by Babel during the build.
   include: [
     path.resolve(appDirectory, 'index.web.js'),
@@ -190,5 +197,8 @@ module.exports = (env) => ({
   // external are files/modules to exlude from bundle
   externals: {
     modal: 'react-native-modal',
+    fonts: './src/resources/fonts',
+    android: './android',
+    ios: './ios',
   },
 });

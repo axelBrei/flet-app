@@ -30,10 +30,10 @@ export default ({navigation}) => {
     <Screen style={styles.screen}>
       <FloatingBackgroundOval />
       <View style={styles.textContainer}>
-        <AppText bold fontSize={30} color={theme.fontColor}>
+        <AppText title bold fontSize={34} color={theme.fontColor}>
           Bienvenido a FletApp
         </AppText>
-        <AppText italic fontSize={20} color={theme.fontColor}>
+        <AppText italic fontSize={19} color={theme.fontColor}>
           Gestioná tus envios, gestioná tu vida
         </AppText>
       </View>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: scaleDp(20),
   },
   textContainer: {
-    marginTop: scaleDp(90),
+    marginTop: scaleDp(70),
     alignItems: 'center',
     flex: 1,
   },

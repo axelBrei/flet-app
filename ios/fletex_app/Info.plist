@@ -2,20 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Necesitamos poder acceder al microfono para poder escuchar el audio de los reclamos</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Necesitamos acceder a tu ubicacion para poder mostrar tu punto de partida en el mapa</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Necesitamos acceder a tu ubicacion para poder trackear un envio</string>
-	<key>NSLocationUsageDescription</key>
-	<string>Necesitamos acceder a tu ubicacion para poder mostrar tu punto de partida en el mapa</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Necesitamos usar tu camara para poder verificar tu identidad</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -51,22 +37,34 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos usar tu camara para poder verificar tu identidad</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicacion para poder mostrar tu punto de partida en el mapa</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicacion para poder trackear un envio</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicacion para poder mostrar tu punto de partida en el mapa</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<string/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos poder acceder al microfono para poder escuchar el audio de los reclamos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>OpenSans-SemiBoldItalic.ttf</string>
+		<string>OpenSans-SemiBold.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>OpenSans-LightItalic.ttf</string>
+		<string>OpenSans-Light.ttf</string>
+		<string>OpenSans-Italic.ttf</string>
+		<string>OpenSans-ExtraBoldItalic.ttf</string>
+		<string>OpenSans-ExtraBold.ttf</string>
+		<string>OpenSans-BoldItalic.ttf</string>
+		<string>OpenSans-Bold.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -83,6 +81,32 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>PlayfairDisplay-Italic-VariableFont_wght.ttf</string>
+		<string>PlayfairDisplay-VariableFont_wght.ttf</string>
+		<string>PlayfairDisplay-Black.ttf</string>
+		<string>PlayfairDisplay-BlackItalic.ttf</string>
+		<string>PlayfairDisplay-Bold.ttf</string>
+		<string>PlayfairDisplay-BoldItalic.ttf</string>
+		<string>PlayfairDisplay-ExtraBold.ttf</string>
+		<string>PlayfairDisplay-ExtraBoldItalic.ttf</string>
+		<string>PlayfairDisplay-Italic.ttf</string>
+		<string>PlayfairDisplay-Medium.ttf</string>
+		<string>PlayfairDisplay-MediumItalic.ttf</string>
+		<string>PlayfairDisplay-Regular.ttf</string>
+		<string>PlayfairDisplay-SemiBold.ttf</string>
+		<string>PlayfairDisplay-SemiBoldItalic.ttf</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

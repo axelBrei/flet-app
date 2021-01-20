@@ -9,23 +9,18 @@ import {fonts, fontVariants} from 'constants/fonts';
 
 const {width} = Dimensions.get('screen');
 
-const [normal, title] = ['OpenSans', 'PlayfairDisplay'];
-
-const getFontFamily = (b, i, isTitle) => {
-  let font = `${isTitle ? title : normal}-`;
-  if (b && i) return font.concat(fontVariants.boldItalic);
-  return font.concat(
-    b ? fontVariants.bold : i ? fontVariants.italic : fontVariants.regular,
-  );
+const getFontFamily = (b, i) => {
+  if (b && i) return fonts.boldItalic;
+  return b ? fonts.bold : i ? fonts.italic : fonts.regular;
 };
 
-const getWebFontWeight = ({bold: b, italic: i, title}) => {
-  const variant = getFontFamily(b, i, title);
+const getWebFontWeight = ({bold: b, italic: i}) => {
+  const variant = getFontFamily(b, i);
   switch (variant.split('-')[1]) {
     case fontVariants.light:
       return 300;
     case fontVariants.bold:
-      return title ? 500 : 600;
+      return 600;
     case fontVariants.extraBold:
       return 800;
     default:
@@ -34,14 +29,14 @@ const getWebFontWeight = ({bold: b, italic: i, title}) => {
 };
 
 export const AppText = styled(Text)`
-  font-size: ${(props) => scaleDpTheme(props.fontSize + (props.title ? 4 : 0))};
+  font-size: ${(props) => scaleDpTheme(props.fontSize)};
   color: ${(props) =>
     props.alternative ? 'white' : props.color || props.theme.colors.fontColor};
   width: ${(props) => props.width};
   text-align: ${(props) => props.textAlign};
   padding: ${(props) => props.padding}px;
   font-family: ${(props) =>
-    props.fontFamily || getFontFamily(props.bold, props.italic, props.title)};
+    props.fontFamily || getFontFamily(props.bold, props.italic)};
   ${Platform.OS === 'web' &&
   css`
     font-style: ${(props) => (props.italic ? 'italic' : 'normal')};

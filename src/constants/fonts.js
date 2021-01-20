@@ -1,4 +1,4 @@
-const [normal, title] = ['OpenSans', 'PlayfairDisplay'];
+const [normal] = ['OpenSans'];
 export const fontVariants = {
   italic: 'Italic',
   light: 'Light',
@@ -21,15 +21,4 @@ export const fonts = {
   boldItalic: `${normal}-${fontVariants.boldItalic}`,
   extraBold: `${normal}-${fontVariants.extraBold}`,
   extraBoldItalic: `${normal}-${fontVariants.extraBoldItalic}`,
-
-  // TITLE FONTS
-  titleItalic: `${title}-${fontVariants.italic}`,
-  titleLight: `${title}-${fontVariants.lightItalic}`,
-  titleLightItalic: `${title}-${fontVariants.lightItalic}`,
-  titleRegular: `${title}-${fontVariants.regular}`,
-  titleBold: `${title}-${fontVariants.bold}`,
-  titleBoldItalic: `${title}-${fontVariants.boldItalic}`,
-  titleSemiBold: `${title}-${fontVariants.semiBold}`,
-  titleExtraBold: `${title}-${fontVariants.extraBold}`,
-  titleExtraBoldItalic: `${title}-${fontVariants.extraBoldItalic}`,
 };

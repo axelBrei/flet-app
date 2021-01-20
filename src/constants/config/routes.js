@@ -71,8 +71,6 @@ export const getRoutesFromLinking = (obj = linkingRoutes, prefix = null) =>
     {},
   );
 
-console.log(getRoutesFromLinking());
-
 const nativeOnlyRoutes = {
   dirverHomeScreen: 'DirverHomeScreen',
   driverNewShipmentScreen: 'DriverNewShipmentScreen',

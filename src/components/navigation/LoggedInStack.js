@@ -19,7 +19,7 @@ export default () => {
   const {isMobile, isPWA} = useWindowDimension();
   const userData = useSelector(selectUserData);
   // TODO: change isDriver condition to a real one
-  const isDriver = useMemo(() => userData?.user.includes('aa'), [userData]);
+  const isDriver = useMemo(() => userData?.isDriver, [userData]);
 
   const shouldDisplayDriverScreen = useMemo(
     () =>
@@ -62,27 +62,27 @@ export default () => {
           }}
         />
       )}
-      <Screen
-        name={routes.lastShippmentsScreen}
-        component={HomeScreen}
-        options={{
-          title: 'Mis pedidos',
-        }}
-      />
-      <Screen
-        name={routes.profileScreen}
-        component={HomeScreen}
-        options={{
-          title: 'Mi cuenta',
-        }}
-      />
-      <Screen
-        name={routes.plannedShippments}
-        component={HomeScreen}
-        options={{
-          title: 'Viajes planeados',
-        }}
-      />
     </Navigator>
   );
 };
+// <Screen
+//   name={routes.lastShippmentsScreen}
+//   component={HomeScreen}
+//   options={{
+//     title: 'Mis pedidos',
+//   }}
+// />
+// <Screen
+//   name={routes.profileScreen}
+//   component={HomeScreen}
+//   options={{
+//     title: 'Mi cuenta',
+//   }}
+// />
+// <Screen
+//   name={routes.plannedShippments}
+//   component={HomeScreen}
+//   options={{
+//     title: 'Viajes planeados',
+//   }}
+// />

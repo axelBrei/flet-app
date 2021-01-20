@@ -13,12 +13,13 @@ export const Loader = ({
   unmount,
   message,
   loading,
+  size,
   ...props
 }) => {
   const renderLoader = () => (
     <View style={{alignItems: 'center', justifyContent: 'center'}}>
       <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'large' : scaleDp(50)}
+        size={Platform.OS === 'ios' ? 'large' : scaleDp(size || 50)}
         animating
         color={theme.primaryColor}
       />

@@ -1,5 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
+import {capitallize} from 'helpers/stringHelper';
 
 const initialState = {
   userData: null,
@@ -45,19 +46,23 @@ export const {
 /**
  * @THUNK
  */
-export const loginAs = (user, pass) => async (dispatch) => {
+export const loginAs = (email, pass) => async (dispatch) => {
   dispatch(requestLogin());
   try {
-    const {data} = await LoginService.loginAs(user, pass);
+    const {
+      data: {user, token},
+    } = await LoginService.loginAs(email, pass);
     dispatch(
       receiveLoginSuccess({
-        ...data.results[0],
-        user,
+        ...user,
+        accesToken: token,
+        email,
         pass,
+        isDriver: user.currier_id > 0,
       }),
     );
   } catch (e) {
-    return dispatch(receiveLoginFail(e?.response?.data));
+    return dispatch(receiveLoginFail(e?.response?.data || e));
   }
 };
 /**
@@ -66,3 +71,18 @@ export const loginAs = (user, pass) => async (dispatch) => {
 export const selectLoadingLogin = (state) => state.login.loading.user;
 export const selectLoginError = (state) => state.login.error.user;
 export const selectUserData = (state) => state.login.userData;
+
+export const selectUserName = createSelector(
+  (state) => state.login.userData?.name,
+  (name) => capitallize(name),
+);
+export const selectUserLastName = createSelector(
+  (state) => state.login.userData?.last_name,
+  (lastName) => capitallize(lastName),
+);
+export const selectUserEmail = (state) => state.login.userData?.email;
+export const selectUserId = (state) => state.login.userData?.user_id;
+export const selectUserPhoto = createSelector(
+  (state) => state.login.userData?.photo,
+  (photo) => (photo ? photo : null),
+);

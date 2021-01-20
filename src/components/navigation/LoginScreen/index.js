@@ -78,7 +78,7 @@ export const LoginScreen = ({navigation}) => {
         <InputField
           editable={!loading}
           icon="account-outline"
-          label="Usuario"
+          label="Email"
           value={values[FIELDS.USERNAME]}
           onChangeText={_setFieldValue(FIELDS.USERNAME)}
           error={

@@ -1,11 +1,9 @@
-import axios from 'axios';
+import {api} from 'constants/network';
 
-const loginAs = async (username, password) =>
-  await axios.get('https://randomuser.me/api', {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    data: {username, password},
+const loginAs = async (email, password) =>
+  await api.post('login', {
+    email,
+    password,
   });
 
 export default {

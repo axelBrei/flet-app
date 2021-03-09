@@ -81,8 +81,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.disabled,
   },
   logoutContainer: {
-    flex: 1,
-    height: '100%',
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: scaleDp(Platform.OS === 'web' ? 65 : 1),

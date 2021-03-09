@@ -8,7 +8,7 @@ const {width} = Dimensions.get('screen');
 const isMobile = width <= 800 || Platform.OS !== 'web';
 export const navigationConfig = (props = {}) => ({
   headerBackTitleVisible: false,
-  animationEnabled: true,
+  animationEnabled: isMobile,
   ...(isMobile && TransitionPresets.SlideFromRightIOS),
   headerStyle: {
     backgroundColor: theme.primaryLightColor,

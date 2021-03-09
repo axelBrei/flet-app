@@ -114,8 +114,15 @@ const Map = ({
     [renderMarker],
   );
 
-  const renderDirections = useCallback(
-    () =>
+  const renderDirections = useCallback(() => {
+    const dirList =
+      directions
+        ?.filter((i) => !(i.latitude && i.longitude))
+        .map((i) => ({
+          lat: i[0],
+          lng: i[1],
+        })) || [];
+    return (
       directions &&
       directions.length > 0 && (
         <Polyline
@@ -131,16 +138,11 @@ const Map = ({
             radius: 30000,
             zIndex: 1,
           }}
-          path={directions
-            .filter((i) => i.latitude && i.longitude)
-            .map((i) => ({
-              lat: i.latitude,
-              lng: i.longitude,
-            }))}
+          path={dirList}
         />
-      ),
-    [directions],
-  );
+      )
+    );
+  }, [directions]);
 
   useImperativeHandle(externalRef, () => ({
     setZoom,

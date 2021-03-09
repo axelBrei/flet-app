@@ -94,6 +94,7 @@ const Container = styled(View)`
 `;
 
 const Input = styled(TextInput)`
+  font-family: ${({theme}) => theme.fonts.regular};
   flex: 1;
   color: ${(props) => props.theme.colors.fontColor};
   min-width: ${scaleDpTheme(150)};

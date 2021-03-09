@@ -10,6 +10,11 @@ const blacklist = require('metro-config/src/defaults/blacklist');
 const path = require('path');
 
 const ignoreTopLevelFolders = [
+  // WEB DIRECTORIES
+  'public',
+  'build',
+  'dist',
+  // END WEB DIRECTORIES
   'react-native-web',
   'react-native-svg-web',
   'react-dom',
@@ -25,8 +30,10 @@ const ignoreTopLevelFolders = [
   'html-webpack-plugin',
   '@svgr/webpack',
   'google-maps-react',
+  'webfontloader',
   'fbjs',
 ].map((f) => new RegExp(`${path.resolve(f)}/.*`));
+const ignoreWebFiles = /.*\.web.js/;
 
 module.exports = (async () => {
   const {
@@ -43,9 +50,13 @@ module.exports = (async () => {
       }),
     },
     resolver: {
-      assetExts: assetExts.filter((ext) => ext !== 'svg'),
+      assetExts: [...assetExts.filter((ext) => ext !== 'svg'), 'web.js'],
       sourceExts: [...sourceExts, 'svg'],
-      blacklistRE: blacklist(ignoreTopLevelFolders),
+      blacklistRE: blacklist([
+        '/webpack.config.js',
+        ...ignoreTopLevelFolders,
+        ignoreWebFiles,
+      ]),
     },
   };
 })();

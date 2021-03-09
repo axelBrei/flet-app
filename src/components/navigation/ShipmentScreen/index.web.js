@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useEffect} from 'react';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
 import MobileScreen from 'components/navigation/ShipmentScreen/index.native';
 import {Screen} from 'components/ui/Screen';
@@ -10,12 +10,53 @@ import {ShipmentDetailCard} from 'components/navigation/ShipmentScreen/ShipmentD
 import Map from 'components/ui/Map';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {getMarkersList} from 'components/navigation/ShipmentScreen/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  fetchShipmentDriverPosition,
+  fetchShipmentStatus,
+  selectCurrentShipment,
+  selectCurrentShipmentStatus,
+  selectDriverPosition,
+} from 'redux-store/slices/shipmentSlice';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
+
+const positionEnabledStates = [
+  SHIPMENT_STATE.COURRIER_CONFIRMED,
+  SHIPMENT_STATE.ON_PROCESS,
+];
 
 const ShipmentScreen = ({route}) => {
-  const shipmentData = route?.params;
+  const dispatch = useDispatch();
   const {width, height} = useWindowDimension();
-  const markers = useMemo(() => getMarkersList(shipmentData), [shipmentData]);
-  // TODO: update driver position
+  const driverPosition = useSelector(selectDriverPosition);
+  const shipmentStatus = useSelector(selectCurrentShipmentStatus);
+
+  useEffect(() => {
+    if (positionEnabledStates.includes(shipmentStatus?.status)) {
+      const positionInterval = setInterval(
+        () => dispatch(fetchShipmentDriverPosition()),
+        5 * 1000,
+      );
+      return () => {
+        clearInterval(positionInterval);
+      };
+    }
+  }, [shipmentStatus]);
+
+  useEffect(() => {
+    const statusInterval = setInterval(() => {
+      dispatch(fetchShipmentStatus());
+    }, 10 * 1000);
+    return () => {
+      clearInterval(statusInterval);
+    };
+  }, []);
+
+  const markers = useMemo(
+    () => getMarkersList(shipmentStatus, driverPosition),
+    [shipmentStatus, driverPosition],
+  );
+
   return (
     <ScreenComponent>
       <Map
@@ -25,7 +66,7 @@ const ShipmentScreen = ({route}) => {
         edgePadding={{
           top: height * 0.25,
           left: height * 0.35,
-          right: 0,
+          right: width * 0.2,
           bottom: 0,
         }}
       />

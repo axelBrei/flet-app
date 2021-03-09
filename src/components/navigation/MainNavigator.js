@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Platform} from 'react-native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import LandingScreen from 'components/navigation/LandingScreen';
-import PageNotFound from 'components/navigation/PageNotFound.web';
+import PageNotFound from 'components/navigation/PageNotFound';
 import {RegisterStack} from 'components/navigation/RegisterStack';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import LoginScreen from 'components/navigation/LoginScreen';
@@ -69,21 +69,19 @@ export default () => {
 
   return (
     <Navigator
-      // initialRouteName={userData ? routes.landingScreen : routes.loggedStack}
+      initialRouteName={!!userData ? routes.loggedStack : routes.landingScreen}
       screenOptions={navigationConfig({
         title: '',
         headerShown: width <= 800,
       })}>
       {userData ? renderPrivateRoutes() : renderPublicRoutes(width, isMobile)}
-      {Platform.OS === 'web' && (
-        <Screen
-          name="pagina-inexistente"
-          component={PageNotFound}
-          options={{
-            title: 'Página inexistente',
-          }}
-        />
-      )}
+      <Screen
+        name="pagina-inexistente"
+        component={PageNotFound}
+        options={{
+          title: 'Página inexistente',
+        }}
+      />
     </Navigator>
   );
 };

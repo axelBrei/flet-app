@@ -13,15 +13,18 @@ export const useDebouncedGeocoding = (inputValue) => {
   const fetchAddresses = useCallback(async () => {
     setLoading(true);
     try {
-      const {data} = await geocodingService.geocodeAddress(
-        debouncedInputValue.split(',')[0],
-      );
-      const addressList = data.direcciones
-        .map((item) => ({
-          id: item.calle.id,
-          latitude: item.ubicacion.lat,
-          longitude: item.ubicacion.lon,
-          name: capitallize(item.nomenclatura, true),
+      const {data} = await geocodingService.geocodeAddress(debouncedInputValue);
+      if (data?.status !== 'OK') {
+        setLoading(false);
+        setError('No se encontraron lugares para la dirección ingresada');
+        return;
+      }
+      const addressList = data.results
+        .map((item, index) => ({
+          id: index,
+          latitude: item.geometry.location.lat,
+          longitude: item.geometry.location.lng,
+          name: capitallize(item.formatted_address, true),
         }))
         .filter(
           (address, index, self) =>

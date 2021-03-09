@@ -12,4 +12,5 @@ export const theme = {
   error: 'rgb(213,16,16)',
   star: '#FCC200',
   gray: '#afafaf',
+  lightGray: '#dedede',
 };

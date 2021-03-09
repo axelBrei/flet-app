@@ -3,8 +3,8 @@ import {strings} from 'constants/strings';
 
 export const FIELDS = {
   DOCUMENT: 'document',
-  BIRTH_DATE: 'birthDate',
-  CBU: 'cbu',
+  BIRTH_DATE: 'dateOfBirth',
+  CBU: 'bankNumber',
   PROFILE_IMAGE: 'profileImage',
 };
 

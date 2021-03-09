@@ -5,67 +5,45 @@ import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 import {Loader} from 'components/ui/Loader';
 import {FloatingHamburguerButton} from 'components/ui/FloatingHamburgerButton';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  getDirectionsFromCurrentLocation,
-  selectCurrentDirections,
-  selectLoadingDirections,
-} from 'redux-store/slices/geolocationSlice';
 import styled from 'styled-components';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
-import {
-  selectDriverAcceptShipmentError,
-  selectDriverAcceptShipmentLoading,
-  selectDriverShipmentData,
-} from 'redux-store/slices/driverShipmentSlice';
+import {decodeDirections} from 'helpers/locationHelper';
+import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {theme} from 'constants/theme';
 import {PickupShipment} from 'components/navigation/DriverNewShipmentScreen/PickupShipment';
 import {Container} from 'components/ui/Container';
-import {selectIsDriverShipmentPickedUp} from 'redux-store/slices/driverShipmentSlice';
 import {DeliverShipmentInformation} from 'components/navigation/DriverNewShipmentScreen/DeliverShipmentInformation';
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
-import {Platform} from 'react-native';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
-export default () => {
-  const dispatch = useDispatch();
-  const loading = useSelector(selectDriverAcceptShipmentLoading);
-  const error = useSelector(selectDriverAcceptShipmentError);
+export default ({navigation}) => {
+  const [directions, setDirections] = useState([]);
   const {loading: loadingPermissions, status, check} = usePermission(
     [PERMISSIONS.location],
     true,
   );
-  const shipmentData = useSelector(selectDriverShipmentData);
-  const isPackagePickedUp = useSelector(selectIsDriverShipmentPickedUp);
-  const directions = useSelector(selectCurrentDirections);
-  const {
-    markersList,
-    loadingMakers,
-    loadingMessage,
-    loadingDirections,
-  } = useMarkerList();
+  const shipment = useSelector(selectDriverShipmentData);
+  const isPackagePickedUp = shipment.status === SHIPMENT_STATE.ON_PROCESS;
+
+  const {markersList, loadingMakers, loadingMessage} = useMarkerList();
 
   useEffect(() => {
-    if (!loadingDirections && !status) {
+    if (shipment?.polyline && directions.length === 0) {
+      setDirections(decodeDirections(shipment.polyline));
+    }
+  }, [directions, shipment]);
+
+  useEffect(() => {
+    if (status !== 'granted') {
       check();
     }
   }, [loadingPermissions, status, check]);
-
-  useEffect(() => {
-    if (isPackagePickedUp ? shipmentData?.endPoint : shipmentData?.startPoint) {
-      dispatch(
-        getDirectionsFromCurrentLocation(
-          isPackagePickedUp ? shipmentData.endPoint : shipmentData.startPoint,
-        ),
-      );
-    }
-  }, [dispatch, shipmentData, isPackagePickedUp]);
 
   return (
     <ScreenComponent>
       <Loader
         unmount={false}
-        loading={
-          loading || loadingPermissions || loadingMakers || loadingDirections
-        }
+        loading={loadingPermissions || loadingMakers}
         message={loadingMessage}>
         <Map
           followsUserLocation

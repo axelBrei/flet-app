@@ -111,7 +111,7 @@ const ComponentContainer = styled(Container)`
 
 const Button = styled(MainButton)`
   height: ${scaleDpTheme(20)};
-  width: ${scaleDpTheme(100)};
+  width: ${scaleDpTheme(120)};
   margin-left: 0;
 `;
 

@@ -61,7 +61,9 @@ export const LoginScreen = ({navigation}) => {
       {isMobile && (
         <>
           <FloatingBackgroundOval />
-          <Title bold>Iniciar sesion</Title>
+          <Title bold title fontSize={30}>
+            Iniciar sesion
+          </Title>
         </>
       )}
       <Card
@@ -76,7 +78,7 @@ export const LoginScreen = ({navigation}) => {
         <InputField
           editable={!loading}
           icon="account-outline"
-          label="Usuario"
+          label="Email"
           value={values[FIELDS.USERNAME]}
           onChangeText={_setFieldValue(FIELDS.USERNAME)}
           error={
@@ -140,6 +142,5 @@ const ScreenComponent = styled(Screen)`
 const Title = styled(AppText)`
   margin-bottom: ${(props) => (props.theme.isMobile ? '55%' : 0)};
   z-index: 2;
-  font-size: ${scaleDpTheme(30)};
   color: ${theme.fontColor};
 `;

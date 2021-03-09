@@ -17,6 +17,17 @@ const _routes = {
   newShipmentDetailScreen: 'orden',
   newShipmentConfirmationScreen: 'confirmar',
   shipmentScreen: 'seguimiento',
+  driverStack: 'courrier',
+  driverHomeScreen: 'inicio-conductor',
+  driverShipmentScreen: 'envio-conductor',
+  shipmentFinishedScreen: 'envio-terminado',
+};
+
+const nativeOnlyRoutes = {
+  dirverHomeScreen: 'DirverHomeScreen',
+  driverNewShipmentScreen: 'DriverNewShipmentScreen',
+  driverShipmentDeliveryConfirmationScreen:
+    'DriverShipmentDeliveryConfirmationScreen',
 };
 
 export const linkingRoutes = {
@@ -42,6 +53,14 @@ export const linkingRoutes = {
           [_routes.newShipmentDetailScreen]: 'detalle',
           [_routes.newShipmentConfirmationScreen]: 'confirmar',
           [_routes.shipmentScreen]: 'seguimiento',
+          [_routes.shipmentFinishedScreen]: 'envio-terminado',
+        },
+      },
+      [_routes.driverStack]: {
+        path: _routes.driverStack,
+        screens: {
+          [nativeOnlyRoutes.driverHomeScreen]: 'inicio-conductor',
+          [nativeOnlyRoutes.driverShipmentScreen]: 'envio-conductor',
         },
       },
       [_routes.lastShippmentsScreen]: 'ultimosPedidos',
@@ -71,23 +90,14 @@ export const getRoutesFromLinking = (obj = linkingRoutes, prefix = null) =>
     {},
   );
 
-console.log(getRoutesFromLinking());
-
-const nativeOnlyRoutes = {
-  dirverHomeScreen: 'DirverHomeScreen',
-  driverNewShipmentScreen: 'DriverNewShipmentScreen',
-};
-
 const allRoutes = {
-  ...(Platform.OS === 'web' ? getRoutesFromLinking() : _routes),
+  // ...(Platform.OS === 'web' ? getRoutesFromLinking() : _routes),
+  ..._routes,
   ...nativeOnlyRoutes,
 };
 
 const {width} = Dimensions.get('window');
 export const routes = Platform.select({
   native: () => allRoutes,
-  web: () =>
-    Platform.OS !== 'web' || width <= 800
-      ? getRoutesFromLinking(allRoutes)
-      : _routes,
+  web: () => (width <= 800 ? allRoutes : _routes),
 })();

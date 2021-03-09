@@ -1,13 +1,30 @@
-import axios from 'axios';
+import {api} from 'constants/network';
 
-const loginAs = async (username, password) =>
-  await axios.get('https://randomuser.me/api', {
+const loginAs = async (email, password) =>
+  await api.post('login', {
+    email,
+    password,
+  });
+
+const registerNewUser = async (user) => await api.put('user', user);
+
+const registerCourrierPersonalData = async (personalData) =>
+  await api.put('courrier', personalData);
+
+const registerCourrierVehicleData = async (vehicleData) =>
+  await api.put('courrier/vehicle', vehicleData);
+
+const registerCourrierLegalData = async (legalData) =>
+  await api.put('courrier/legal', legalData, {
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'form/data',
     },
-    data: {username, password},
   });
 
 export default {
   loginAs,
+  registerNewUser,
+  registerCourrierPersonalData,
+  registerCourrierVehicleData,
+  registerCourrierLegalData,
 };

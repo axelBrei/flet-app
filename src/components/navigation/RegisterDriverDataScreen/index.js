@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
@@ -18,17 +18,29 @@ import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
 import {routes} from 'constants/config/routes';
-import {updateDriverData} from 'redux-store/slices/registerSlice';
-import {useDispatch} from 'react-redux';
+import {
+  registerDriverPersonalData,
+  selectIsLoadingRegister,
+  selectRegisterError,
+} from 'redux-store/slices/registerSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {Loader} from 'components/ui/Loader';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoadingRegister);
+  const error = useSelector(selectRegisterError);
 
   const onSubmit = useCallback(
     (values) => {
-      navigation.navigate(routes.registerDriverVehiculeScreen);
-      dispatch(updateDriverData(values));
+      dispatch(
+        registerDriverPersonalData({
+          ...values,
+          [FIELDS.PROFILE_IMAGE]: null,
+          [FIELDS.BIRTH_DATE]: values[FIELDS.BIRTH_DATE].format('DD/MM/YYYY'),
+        }),
+      );
     },
     [dispatch, navigation],
   );
@@ -37,11 +49,17 @@ export default ({navigation}) => {
     values,
     errors,
     touched,
-    submitCount,
+    isSubmitting,
     handleSubmit,
     _setFieldTouched,
     _setFieldValue,
   } = useFormikCustom(registerDriverDataFormikConfig(onSubmit));
+
+  useEffect(() => {
+    if (isSubmitting && !isLoading && !error) {
+      navigation.navigate(routes.registerDriverVehiculeScreen);
+    }
+  }, [isSubmitting, isLoading, error]);
 
   return (
     <Screen scrollable={isMobile}>
@@ -92,13 +110,15 @@ export default ({navigation}) => {
               touched[FIELDS.PROFILE_IMAGE] && errors[FIELDS.PROFILE_IMAGE]
             }
           />
-          <MainButton
-            label="Continuar"
-            onPress={handleSubmit}
-            style={{
-              width: scaleDp(250),
-            }}
-          />
+          <Loader loading={isLoading}>
+            <MainButton
+              label="Continuar"
+              onPress={handleSubmit}
+              style={{
+                width: scaleDp(250),
+              }}
+            />
+          </Loader>
         </Container>
       </ScreenContainer>
     </Screen>
@@ -110,6 +130,7 @@ const ScreenContainer = styled(Container)`
   padding-right: ${scaleDpTheme(15)};
   align-self: center;
   align-items: center;
+  ${({theme}) => theme.isMobile && `width: ${theme.screenWidth}px`};
 `;
 
 const Title = styled(AppText)`

@@ -12,14 +12,13 @@ import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {DriverStack} from 'components/navigation/DriverStack';
 import {Platform} from 'react-native-web';
+import PageNotFound from 'components/navigation/PageNotFound';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
 export default () => {
   const {isMobile, isPWA} = useWindowDimension();
   const userData = useSelector(selectUserData);
-  // TODO: change isDriver condition to a real one
-  const isDriver = useMemo(() => userData?.user.includes('aa'), [userData]);
 
   const shouldDisplayDriverScreen = useMemo(
     () =>
@@ -43,17 +42,17 @@ export default () => {
         headerShown: false,
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
-      {isDriver && shouldDisplayDriverScreen && (
+      {userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
-          name={routes.dirverHomeScreen}
+          name={routes.driverStack}
           component={DriverStack}
           options={{
             headerShown: false,
-            title: 'Home',
+            title: 'Inicio',
           }}
         />
       )}
-      {!isDriver && (
+      {!userData?.isDriver && (
         <Screen
           name={routes.shipmentStack}
           component={ShipmentStack}
@@ -64,25 +63,26 @@ export default () => {
       )}
       <Screen
         name={routes.lastShippmentsScreen}
-        component={HomeScreen}
+        component={PageNotFound}
         options={{
           title: 'Mis pedidos',
-        }}
-      />
-      <Screen
-        name={routes.profileScreen}
-        component={HomeScreen}
-        options={{
-          title: 'Mi cuenta',
-        }}
-      />
-      <Screen
-        name={routes.plannedShippments}
-        component={HomeScreen}
-        options={{
-          title: 'Viajes planeados',
         }}
       />
     </Navigator>
   );
 };
+
+// <Screen
+//   name={routes.profileScreen}
+//   component={HomeScreen}
+//   options={{
+//     title: 'Mi cuenta',
+//   }}
+// />
+// <Screen
+//   name={routes.plannedShippments}
+//   component={HomeScreen}
+//   options={{
+//     title: 'Viajes planeados',
+//   }}
+// />

@@ -15,7 +15,7 @@ export const linkingConfig = {
   getPathFromState(state, path) {
     const res = getPath(state, pageXOffset).split('?')[0];
     if (res === `/${routes.landingScreen}`) {
-      return '';
+      return '/';
     }
     return res;
   },
@@ -31,7 +31,7 @@ export const linkingConfig = {
         routes: [{name: 'pagina-inexistente'}],
       };
     }
-    const isLoggedIn = !!reduxStore.getState().login.userData;
+    const isLoggedIn = !!reduxStore.getState()?.login?.userData;
     const isPrivateRoute = path.includes('private');
     if (!isLoggedIn && isPrivateRoute) {
       return {

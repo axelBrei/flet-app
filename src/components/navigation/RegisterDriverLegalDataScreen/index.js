@@ -1,6 +1,5 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Screen} from 'components/ui/Screen';
-import {ScrollView} from 'react-native';
 import {
   legalDriverDataFormikConfig,
   FIELDS,
@@ -13,21 +12,24 @@ import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {MainButton} from 'components/ui/MainButton';
-import {Platform} from 'react-native';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {routes} from 'constants/config/routes';
-import {registerDriver} from 'redux-store/slices/registerSlice';
-import {useDispatch} from 'react-redux';
+import {
+  registerDriverLegaleData,
+  selectIsLoadingRegister,
+  selectRegisterError,
+} from 'redux-store/slices/registerSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoadingRegister);
+  const error = useSelector(selectRegisterError);
 
   const onSubmit = useCallback(
     (values) => {
-      dispatch(registerDriver(values));
-      // TODO: replace landing screen for home screen
-      navigation.navigate(routes.landingScreen);
+      dispatch(registerDriverLegaleData(values));
     },
     [navigation, dispatch],
   );
@@ -35,10 +37,18 @@ export default ({navigation}) => {
   const {
     values,
     errors,
+    isSubmitting,
     touched,
     _setFieldValue,
     handleSubmit,
   } = useFormikCustom(legalDriverDataFormikConfig(onSubmit));
+
+  useEffect(() => {
+    if (isSubmitting && !isLoading && !error) {
+      navigation.navigate(routes.loginScreen);
+    }
+  }, [isSubmitting, isLoading, error]);
+
   return (
     <Screen scrollable={isMobile}>
       <FloatingBackgroundOval visible={isMobile} />
@@ -109,12 +119,14 @@ export default ({navigation}) => {
 const ScreenContainer = styled(Container)`
   padding-left: ${scaleDpTheme(15)};
   padding-right: ${scaleDpTheme(15)};
+  padding-bottom: ${scaleDpTheme(15)};
   align-self: center;
   align-items: center;
+  ${({theme}) => theme.isMobile && `width: ${theme.screenWidth}px`};
 `;
 
 const Title = styled(AppText)`
   padding-top: ${(props) => scaleDp(props.theme.isMobile ? 60 : 10)}px;
-  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 75 : 10)}px;
+  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 90 : 10)}px;
   text-align: center;
 `;

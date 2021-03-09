@@ -34,35 +34,36 @@ const benefits = [
   },
 ];
 
-export const Benefits = ({scale, scaleFont}) => {
+export const Benefits = () => {
   return (
     <ComponentContainer dir={'row'}>
       <ProfitImage width={scaleDp(200)} />
       <Container flex>
-        <AppText bold fontSize={scaleFont(16)}>
+        <AppText title bold fontSize={16}>
           Súmate a Fletex y ahorra con todos nuestros beneficios
         </AppText>
-        <BenefitsContainer>
+        <GridContainer>
           {benefits.map(({title, Icon}) => {
             return (
               <Container
                 dir="row"
                 alignItems="flex-start"
                 justifyContent="flex-start"
-                padding={`${scaleDp(5)}px ${scaleDp(10)}px`}
+                padding={`${scaleDp(5)}px 0px`}
                 width={scaleDp(230)}>
                 <Icon
-                  width={scaleDp(25)}
+                  width={scaleDp(30)}
                   height={scaleDp(25)}
                   fill={theme.primaryColor}
+                  style={{marginRight: scaleDp(5)}}
                 />
-                <AppText padding="5" fontSize={scaleFont(13)}>
+                <AppText padding="5" fontSize={13}>
                   {title}
                 </AppText>
               </Container>
             );
           })}
-        </BenefitsContainer>
+        </GridContainer>
       </Container>
     </ComponentContainer>
   );
@@ -71,6 +72,14 @@ export const Benefits = ({scale, scaleFont}) => {
 const ComponentContainer = styled(Container)`
   margin: ${scaleDpTheme(100)} 0;
   width: 100%;
+`;
+
+const GridContainer = styled(Container)`
+  max-width: 1000px;
+  display: grid;
+  grid-auto-flow: row;
+  width: 100%;
+  grid-template-columns: repeat(2, 50%);
 `;
 
 const BenefitsContainer = styled(Container)`

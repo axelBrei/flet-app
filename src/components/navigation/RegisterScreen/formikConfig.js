@@ -5,7 +5,7 @@ export const REGISTER_PERSONAL_DATA_FIELDS = {
   NAME: 'name',
   LAST_NAME: 'lastName',
   PHONE: 'phone',
-  MAIL: 'mail',
+  MAIL: 'email',
   PASSWORD: 'password',
 };
 
@@ -41,7 +41,8 @@ const validationSchema = yup.object().shape({
   [FIELDS.PHONE]: yup
     .string()
     .min(5, minimumFieldLength)
-    .matches(/^(\+54)?9?(11|15){1}[0-9]{6,8}$/gm, {
+    .matches(/[0-9]{6,8}$/gm, {
+      // ^(\+54)?9?(11|15){1}
       excludeEmptyString: true,
       message: validPhone,
     })

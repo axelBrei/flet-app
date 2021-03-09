@@ -12,6 +12,7 @@ import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {DriverStack} from 'components/navigation/DriverStack';
 import {Platform} from 'react-native-web';
+import PageNotFound from 'components/navigation/PageNotFound';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
@@ -60,17 +61,17 @@ export default () => {
           }}
         />
       )}
+      <Screen
+        name={routes.lastShippmentsScreen}
+        component={PageNotFound}
+        options={{
+          title: 'Mis pedidos',
+        }}
+      />
     </Navigator>
   );
 };
 
-// <Screen
-//   name={routes.lastShippmentsScreen}
-//   component={HomeScreen}
-//   options={{
-//     title: 'Mis pedidos',
-//   }}
-// />
 // <Screen
 //   name={routes.profileScreen}
 //   component={HomeScreen}

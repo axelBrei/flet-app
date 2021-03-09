@@ -36,9 +36,9 @@ const App = () => {
             web: {
               linking: linkingConfig,
               onStateChange,
-              initialState:
-                process.env.NODE_ENV !== 'production' &&
-                store.getState()?.navigation?.state,
+              ...(process.env.NODE_ENV !== 'production' && {
+                initialState: store.getState()?.navigation?.state,
+              }),
               documentTitle: {
                 formatter: (options, route) => {
                   if (options?.title) {

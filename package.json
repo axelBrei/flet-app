@@ -6,6 +6,7 @@
   "proxy": "http://localhost:3000",
   "scripts": {
     "start:web:dev": "webpack serve --progress --env=dev --color --mode development --config ./webpack.config.js",
+    "start:web:prod": "webpack serve --progress --env=dev --color --mode production --config ./webpack.config.js",
     "start:android": "npx react-native run-android",
     "start:ios": "npx react-native run-ios",
     "start": "react-native start",

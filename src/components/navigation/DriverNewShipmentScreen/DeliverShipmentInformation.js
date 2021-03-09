@@ -1,30 +1,39 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import styled from 'styled-components';
 import {MainButton} from 'components/ui/MainButton';
 import {UserSelectionTextField} from 'components/ui/UserSelectionTextField';
 import {AppText} from 'components/ui/AppText';
 import {Icon} from 'components/ui/Icon';
 import {Container} from 'components/ui/Container';
-import {useSelector} from 'react-redux';
-import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  markShipmentAsDelivered,
+  selectDriverShipmentData,
+} from 'redux-store/slices/driverShipmentSlice';
 import {theme} from 'constants/theme';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 
 export const DeliverShipmentInformation = () => {
+  const dispatch = useDispatch();
   const shipmentData = useSelector(selectDriverShipmentData);
+
+  const onPressFinishShipment = useCallback(() => {
+    dispatch(markShipmentAsDelivered());
+  }, []);
+
   return (
     <ContentContainer>
       <UserSelectionTextField
         label="Entregar paquete en"
         icon="package-variant-closed"
-        value={shipmentData?.endPoint?.address}
+        value={shipmentData?.endPoint?.name}
       />
-      <AppText padding={`${scaleDpTheme(5)} 0`}>
-        Pago:{' '}
-        <AppText bold color={theme.primaryDarkColor}>
-          {shipmentData?.paymentMode}
-        </AppText>
-      </AppText>
+      {/*<AppText padding={`${scaleDpTheme(5)} 0`}>*/}
+      {/*  Pago:{' '}*/}
+      {/*  <AppText bold color={theme.primaryDarkColor}>*/}
+      {/*    {shipmentData?.paymentMode}*/}
+      {/*  </AppText>*/}
+      {/*</AppText>*/}
       <DisclaimerContainer>
         <Icon
           name="information-outline"
@@ -35,7 +44,11 @@ export const DeliverShipmentInformation = () => {
           Si el pago es en efectivo recordá reclamarlo
         </AppText>
       </DisclaimerContainer>
-      <Button label="Finalizar entrega" leftIcon="check-circle-outline" />
+      <Button
+        label="Finalizar entrega"
+        leftIcon="check-circle-outline"
+        onPress={onPressFinishShipment}
+      />
     </ContentContainer>
   );
 };

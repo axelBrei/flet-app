@@ -1,36 +1,32 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import InputField from 'components/ui/InputField';
 import {
   personalDataFormikConfig,
   REGISTER_PERSONAL_DATA_FIELDS as FIELDS,
 } from 'components/navigation/RegisterScreen/formikConfig';
 import {MainButton} from 'components/ui/MainButton';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {routes} from 'constants/config/routes';
 import {
-  updateRegisterData,
   registerUser,
+  selectIsLoadingRegister,
+  selectRegisterError,
 } from 'redux-store/slices/registerSlice';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {useRoute} from '@react-navigation/native';
 import styled, {css} from 'styled-components';
+import {Loader} from 'components/ui/Loader';
 
 export const RegisterForm = ({navigation}) => {
   const route = useRoute();
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoadingRegister);
+  const error = useSelector(selectRegisterError);
   const isDriverRegistrations = route.params?.driver;
 
   const _onSubmit = useCallback(
     (values) => {
-      dispatch(
-        (isDriverRegistrations ? updateRegisterData : registerUser)(values),
-      );
-      navigation.navigate(
-        isDriverRegistrations
-          ? routes.registerDriverDataScreen
-          : // TODO: replace landing screen for home screen
-            routes.landingScreen,
-      );
+      dispatch(registerUser(values, !isDriverRegistrations));
     },
     [isDriverRegistrations, dispatch, navigation],
   );
@@ -39,10 +35,22 @@ export const RegisterForm = ({navigation}) => {
     values,
     errors,
     touched,
+    isSubmitting,
     handleSubmit,
     _setFieldValue,
     _setFieldTouched,
   } = useFormikCustom(personalDataFormikConfig(_onSubmit));
+
+  useEffect(() => {
+    if (isSubmitting && !isLoading && !error) {
+      navigation.navigate(
+        isDriverRegistrations
+          ? routes.registerDriverDataScreen
+          : routes.homeScreen,
+      );
+    }
+  }, [isLoading, error, isSubmitting]);
+
   return (
     <>
       <InputField
@@ -52,6 +60,7 @@ export const RegisterForm = ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.NAME)}
         onBlur={_setFieldTouched(FIELDS.NAME)}
         error={touched[FIELDS.NAME] && errors[FIELDS.NAME]}
+        disabled={isLoading}
       />
       <InputField
         label="Apellido"
@@ -60,6 +69,7 @@ export const RegisterForm = ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.LAST_NAME)}
         onBlur={_setFieldTouched(FIELDS.LAST_NAME)}
         error={touched[FIELDS.LAST_NAME] && errors[FIELDS.LAST_NAME]}
+        disabled={isLoading}
       />
       <InputField
         label="Teléfono"
@@ -69,6 +79,7 @@ export const RegisterForm = ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.PHONE)}
         onBlur={_setFieldTouched(FIELDS.PHONE)}
         error={touched[FIELDS.PHONE] && errors[FIELDS.PHONE]}
+        disabled={isLoading}
       />
       <InputField
         label="Email"
@@ -78,6 +89,7 @@ export const RegisterForm = ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.MAIL)}
         onBlur={_setFieldTouched(FIELDS.MAIL)}
         error={touched[FIELDS.MAIL] && errors[FIELDS.MAIL]}
+        disabled={isLoading}
       />
       <InputField
         label="Contraseña"
@@ -87,8 +99,11 @@ export const RegisterForm = ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.PASSWORD)}
         onBlur={_setFieldTouched(FIELDS.PASSWORD)}
         error={touched[FIELDS.PASSWORD] && errors[FIELDS.PASSWORD]}
+        disabled={isLoading}
       />
-      <Button label="Siguiente" onPress={handleSubmit} />
+      <Loader loading={isLoading}>
+        <Button label="Siguiente" onPress={handleSubmit} />
+      </Loader>
     </>
   );
 };

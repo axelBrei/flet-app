@@ -21,7 +21,7 @@ import {
 } from 'components/navigation/NewShipmentDetailsScreen/orderShippmentDetailsFormikConfig';
 import {routes} from 'constants/config/routes';
 import {useDispatch} from 'react-redux';
-import {updateShipmentVehiculeData} from 'redux-store/slices/shipmentSlice';
+import {updateShipmentVehiculeData} from 'redux-store/slices/newShipmentSlice';
 
 const vehiculeSizeOptions = [
   {
@@ -51,8 +51,8 @@ const vehiculeSizeOptions = [
 ];
 
 const extraHelpOptions = [
-  {text: 'Sí, quiero que el conductor me ayude'},
-  {text: 'No, no hace falta'},
+  {text: 'Sí, quiero que el conductor me ayude', value: true},
+  {text: 'No, no hace falta', value: false},
 ];
 
 export default ({navigation}) => {
@@ -62,7 +62,13 @@ export default ({navigation}) => {
   const onSubmit = useCallback(
     (values) => {
       delete values[FIELDS.SIZE]?.Icon;
-      dispatch(updateShipmentVehiculeData(values));
+      const {[FIELDS.EXTRA_HELP]: extraHelp, ...rest} = values;
+      dispatch(
+        updateShipmentVehiculeData({
+          ...rest,
+          [FIELDS.EXTRA_HELP]: extraHelp.value,
+        }),
+      );
       navigation.navigate(routes.newShipmentConfirmationScreen);
     },
     [navigation, dispatch],

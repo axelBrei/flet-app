@@ -1,20 +1,25 @@
 import {Platform, Dimensions} from 'react-native';
 import {combineReducers} from '@reduxjs/toolkit';
 import registerSlice from 'redux-store/slices/registerSlice';
-import loginReducer from 'redux-store/slices/loginSlice';
+import loginSlice from 'redux-store/slices/loginSlice';
 import navigationReducer from 'redux-store/slices/navigationSlice';
-import shipmentReducer from 'redux-store/slices/shipmentSlice';
+import newShipmentReducer from 'redux-store/slices/newShipmentSlice';
 import driverShipmentReducer from 'redux-store/slices/driverShipmentSlice';
 import geocodingReducer from 'redux-store/slices/geolocationSlice';
+import courrierReducer from 'redux-store/slices/driverSlice';
+import shipmentReducer from 'redux-store/slices/shipmentSlice';
 
-let reducers = {
+const reducers = {
+  login: loginSlice,
   navigation: navigationReducer,
-  login: loginReducer,
   register: registerSlice,
+  newShipment: newShipmentReducer,
   shipment: shipmentReducer,
   geolocation: geocodingReducer,
+  courrier: courrierReducer,
 };
 
+let extraReducers = {};
 const {width} = Dimensions.get('window');
 if (
   ['android', 'ios'].includes(Platform.OS) ||
@@ -22,10 +27,12 @@ if (
   (Platform.OS === 'web' && width <= 800 && navigator.standalone) ||
   window.matchMedia('(display-mode: standalone)').matches
 ) {
-  reducers = {
-    ...reducers,
+  Object.assign(extraReducers, {
     driverShipment: driverShipmentReducer,
-  };
+  });
 }
 
-export const rootReducer = combineReducers(reducers);
+export const rootReducer = combineReducers({
+  ...reducers,
+  ...extraReducers,
+});

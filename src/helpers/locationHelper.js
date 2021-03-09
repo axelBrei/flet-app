@@ -63,7 +63,7 @@ export const trackUserPosition = Platform.select({
   },
 });
 
-export const decodeDirections = (overviewPolyline) =>
+export const decodeDirections = (overviewPolyline = '') =>
   Polyline.decode(overviewPolyline);
 
 // Converts from degrees to radians.

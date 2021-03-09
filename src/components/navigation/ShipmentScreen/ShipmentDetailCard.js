@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
@@ -9,34 +9,39 @@ import {AssignedDriverProfile} from 'components/navigation/ShipmentScreen/Assign
 import {theme} from 'constants/theme';
 import {useNavigation} from '@react-navigation/native';
 import {Platform} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  cancelShipment,
+  selectCurrentShipmentStatus,
+} from 'redux-store/slices/shipmentSlice';
+import {getCardContentComponent} from 'components/navigation/ShipmentScreen/shipmentHelper';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import {routes} from 'constants/config/routes';
 
 export const ShipmentDetailCard = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const shipmentStatus = useSelector(selectCurrentShipmentStatus);
+
+  useEffect(() => {
+    if (shipmentStatus?.status === SHIPMENT_STATE.FINISHED) {
+      navigation.navigate(routes.shipmentFinishedScreen);
+    }
+  }, [shipmentStatus]);
+
   const onPressHaveAProblem = useCallback(() => {}, []);
 
   const onPressCancel = useCallback(() => {
+    dispatch(cancelShipment());
     navigation.popToTop();
   }, [navigation]);
 
+  const Component = getCardContentComponent(shipmentStatus?.status);
+
   return (
     <Card>
-      <Title>¡Gracias por elegirnos!</Title>
-      <AppText>Tu conductor asignado es:</AppText>
-      <AssignedDriverProfile />
-      <Container>
-        <ShipmentDataText>
-          Tiempo estimado de llegada{' '}
-          <AppText color={theme.primaryDarkColor}>4 min.</AppText>
-        </ShipmentDataText>
-        <ShipmentDataText>
-          Costo total <AppText color={theme.primaryDarkColor}>$2000</AppText>
-        </ShipmentDataText>
-        <ShipmentDataText>
-          Valor asegurado{' '}
-          <AppText color={theme.primaryDarkColor}>$15.000</AppText>
-        </ShipmentDataText>
-      </Container>
       <ButtonContainer>
+        {shipmentStatus?.status && <Component />}
         <MainButton
           label="Tengo un problema"
           inverted
@@ -55,20 +60,9 @@ const Card = styled(Container)`
     props.theme.isMobile ? `${props.theme.screenWidth}px` : '100%'};
   align-items: flex-start;
 `;
-
-const Title = styled(AppText)`
-  margin: ${scaleDpTheme(10)} 0;
-  font-weight: bold;
-  font-size: ${scaleDpTheme(18)};
-`;
-
 const ButtonContainer = styled(Container)`
   width: 100%;
   margin-top: ${scaleDpTheme(30)};
   align-items: center;
   justify-content: center;
-`;
-
-const ShipmentDataText = styled(AppText)`
-  padding: ${scaleDpTheme(7)} 0;
 `;

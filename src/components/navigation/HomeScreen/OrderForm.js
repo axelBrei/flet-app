@@ -14,16 +14,16 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
 import {useDispatch} from 'react-redux';
-import {updateShipmentDecription} from 'redux-store/slices/shipmentSlice';
+import {updateShipmentDecription} from 'redux-store/slices/newShipmentSlice';
 import {Dropdown} from 'components/ui/Dropdown';
 import {useDebouncedGeocoding} from 'components/Hooks/useDebouncedGeocoding';
 import {useBackHandler} from 'components/Hooks/useBackHandle';
 
 const options = [
-  {label: 'Chico'},
-  {label: 'Mediano'},
-  {label: 'Grande'},
-  {label: 'Muy grande'},
+  {label: 'Chico', level: 1},
+  {label: 'Mediano', level: 2},
+  {label: 'Grande', level: 3},
+  {label: 'Muy grande', level: 4},
 ];
 export const OrderForm = ({
   isOpen,
@@ -40,10 +40,20 @@ export const OrderForm = ({
   const onSubmit = useCallback(
     (values) => {
       close(() => {
+        const {
+          [FIELDS.VALUE]: packageValue,
+          [FIELDS.DESC]: description,
+          [FIELDS.SIZE]: size,
+          ...rest
+        } = values;
         dispatch(
           updateShipmentDecription({
-            ...values,
-            [FIELDS.SIZE]: options[values[FIELDS.SIZE]],
+            ...rest,
+            package: {
+              value: packageValue,
+              description,
+              level: 12, //options[size]?.level,
+            },
           }),
         );
         navigation.navigate(routes.newShipmentDetailScreen);

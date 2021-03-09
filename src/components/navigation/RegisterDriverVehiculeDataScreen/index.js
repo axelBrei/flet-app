@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Screen} from 'components/ui/Screen';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
@@ -16,31 +16,52 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {Dimensions} from 'react-native';
 import {routes} from 'constants/config/routes';
-import {updateVehiculeData} from 'redux-store/slices/registerSlice';
-import {useDispatch} from 'react-redux';
+import {
+  registerDriverVehicleData,
+  selectIsLoadingRegister,
+  selectRegisterError,
+} from 'redux-store/slices/registerSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('screen');
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoadingRegister);
+  const error = useSelector(selectRegisterError);
 
   const onSubmit = useCallback(
     (values) => {
-      dispatch(updateVehiculeData(values));
-      navigation.navigate(routes.registerDriverLegalsScreen);
+      dispatch(
+        registerDriverVehicleData({
+          ...values,
+          dimensions: {
+            height: 2,
+            width: 2,
+            length: 3,
+          },
+        }),
+      );
     },
     [navigation, dispatch],
   );
 
   const {
     values,
+    isSubmitting,
     errors,
     touched,
     _setFieldValue,
     _setFieldTouched,
     handleSubmit,
   } = useFormikCustom(vehiculeDataFormikConfig(onSubmit));
+
+  useEffect(() => {
+    if (isSubmitting && !isLoading && !error) {
+      navigation.navigate(routes.registerDriverLegalsScreen);
+    }
+  }, [isSubmitting, isLoading, error]);
 
   return (
     <Screen scrollable={isMobile}>

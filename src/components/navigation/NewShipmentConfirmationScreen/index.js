@@ -20,11 +20,14 @@ import {
   selectNewShipmentError,
   selectNewShipmentLoading,
   createNewShipment,
-} from 'redux-store/slices/shipmentSlice';
+} from 'redux-store/slices/newShipmentSlice';
 import {routes} from 'constants/config/routes';
 import {Loader} from 'components/ui/Loader';
 
-const insuranceOptions = [{text: 'Sí'}, {text: 'No'}];
+const insuranceOptions = [
+  {text: 'Sí', value: true},
+  {text: 'No', value: false},
+];
 const paymentOptions = [
   {id: 0, text: 'Tarjeta de crédito', icon: 'credit-card-outline'},
   {id: 1, text: 'Efectivo', icon: 'cash'},
@@ -34,32 +37,38 @@ export default ({navigation}) => {
   const dispatch = useDispatch();
   const loading = useSelector(selectNewShipmentLoading);
   const error = useSelector(selectNewShipmentError);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const {shipmentDescription, shipmentVehicule} = useSelector(
     selectNewShipmentData,
   );
 
-  useEffect(() => {
-    if (isFormSubmitted && !loading && !error) {
-      // TODO navigate to confirmation success screen
-      navigation.navigate(routes.shipmentScreen);
-    }
-  }, [loading, error, isFormSubmitted, navigation]);
-
   const onSubmit = useCallback(
     (values) => {
-      dispatch(createNewShipment(values));
-      setIsFormSubmitted(true);
+      const {[FIELDS.ADD_INSURANCE]: insurance, ...rest} = values;
+      dispatch(
+        createNewShipment({
+          ...rest,
+          [FIELDS.ADD_INSURANCE]: insurance.value,
+          [FIELDS.PAYMENT_METHOD]: '',
+        }),
+      );
     },
-    [dispatch, setIsFormSubmitted],
+    [dispatch],
   );
 
-  const {values, handleSubmit, _setFieldValue} = useFormikCustom(
+  const {values, handleSubmit, _setFieldValue, isSubmitting} = useFormikCustom(
     formikConfig(onSubmit, {
       [FIELDS.PAYMENT_METHOD]: paymentOptions[0],
       [FIELDS.ADD_INSURANCE]: insuranceOptions[1],
     }),
   );
+
+  useEffect(() => {
+    if (isSubmitting && !loading && !error) {
+      console.log(navigation);
+      // TODO navigate to confirmation success screen
+      // navigation.navigate(routes.shipmentScreen);
+    }
+  }, [loading, error, isSubmitting, navigation]);
 
   const renderPaymentOptions = useCallback(
     (item, idx) => (

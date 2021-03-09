@@ -18,8 +18,6 @@ const {Navigator, Screen} = createDrawerNavigator();
 export default () => {
   const {isMobile, isPWA} = useWindowDimension();
   const userData = useSelector(selectUserData);
-  // TODO: change isDriver condition to a real one
-  const isDriver = useMemo(() => userData?.isDriver, [userData]);
 
   const shouldDisplayDriverScreen = useMemo(
     () =>
@@ -43,17 +41,17 @@ export default () => {
         headerShown: false,
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       }}>
-      {isDriver && shouldDisplayDriverScreen && (
+      {userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
-          name={routes.dirverHomeScreen}
+          name={routes.driverStack}
           component={DriverStack}
           options={{
             headerShown: false,
-            title: 'Home',
+            title: 'Inicio',
           }}
         />
       )}
-      {!isDriver && (
+      {!userData?.isDriver && (
         <Screen
           name={routes.shipmentStack}
           component={ShipmentStack}
@@ -65,6 +63,7 @@ export default () => {
     </Navigator>
   );
 };
+
 // <Screen
 //   name={routes.lastShippmentsScreen}
 //   component={HomeScreen}

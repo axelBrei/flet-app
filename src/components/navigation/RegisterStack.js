@@ -16,7 +16,6 @@ export const RegisterStack = ({route}) => {
   const {isMobile} = useWindowDimension();
   return (
     <Navigator
-      initialRouteName={routes.registerPersonalDataScreen}
       screenOptions={navigationConfig({
         title: '',
         headerTransparent: isMobile,

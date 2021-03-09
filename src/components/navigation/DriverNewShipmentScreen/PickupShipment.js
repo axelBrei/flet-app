@@ -7,6 +7,7 @@ import {AppText} from 'components/ui/AppText';
 import {theme} from 'constants/theme';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  markShipmentAsPickedUp,
   selectDriverShipmentData,
   setPickedUp,
 } from 'redux-store/slices/driverShipmentSlice';
@@ -17,7 +18,7 @@ export const PickupShipment = () => {
   const shipmentData = useSelector(selectDriverShipmentData);
 
   const onPressButton = useCallback(() => {
-    dispatch(setPickedUp());
+    dispatch(markShipmentAsPickedUp());
   }, [dispatch]);
 
   return (
@@ -25,12 +26,8 @@ export const PickupShipment = () => {
       <UserSelectionTextField
         label="Retirar paquete en"
         icon="package-variant-closed"
-        value={shipmentData?.endPoint?.address}
+        value={shipmentData?.endPoint?.name}
       />
-      <Container dir="row">
-        <AppText padding={`0 ${scaleDp(5)}`}>Información adicional:</AppText>
-        <AppText bold>{shipmentData?.endPoint?.extraInfo}</AppText>
-      </Container>
       <Button
         onPress={onPressButton}
         label="Paquete recogido"

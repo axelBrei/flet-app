@@ -5,26 +5,19 @@ import ENDPOINT_MARKER_PNG from 'resources/assets/endpoint_marker.png';
 import CarMarker from 'resources/assets/driver_car.svg';
 import CAR_MARKER from 'resources/assets/driver_car.png';
 import {useSelector} from 'react-redux';
-import {
-  selectDriverShipmentData,
-  selectIsDriverShipmentPickedUp,
-} from 'redux-store/slices/driverShipmentSlice';
-import {
-  selectCurrentDirections,
-  selectLoadingDirections,
-} from 'redux-store/slices/geolocationSlice';
 import {getCurrentPosition, trackUserPosition} from 'helpers/locationHelper';
 import {getBearingFromCoords} from 'helpers/locationHelper';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {getRotatedMarker} from 'components/ui/Map/helper';
+import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
 export const useMarkerList = () => {
   const [lastUserPosition, setLastUserPosition] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directionsMakers, setDirectionsMakers] = useState(null);
   const [currentPositionMarker, setCurrenPositionMarker] = useState(null);
-  const loadingDirections = useSelector(selectLoadingDirections);
-  const directions = useSelector(selectCurrentDirections);
+  const shipment = useSelector(selectDriverShipmentData);
 
   useEffect(() => {
     return trackUserPosition(
@@ -40,23 +33,24 @@ export const useMarkerList = () => {
   }, [currentLocation]);
 
   const orientation = useMemo(() => {
-    if (!lastUserPosition) {
-      if (directions.length > 1) {
-        const res = getBearingFromCoords(directions[0], directions[1]);
-        return res;
-      }
-      return 0;
-    }
     if (currentLocation) {
-      return getBearingFromCoords(lastUserPosition, currentLocation);
+      return getBearingFromCoords(
+        lastUserPosition || shipment.startPoint,
+        currentLocation,
+      );
     }
     return 0;
-  }, [lastUserPosition, currentLocation, directions]);
+  }, [lastUserPosition, currentLocation, shipment]);
 
   useEffect(() => {
-    if (directions) {
+    if (shipment.id) {
+      const point =
+        shipment.status === SHIPMENT_STATE.COURRIER_CONFIRMED
+          ? shipment.startPoint
+          : shipment.endPoint;
       setDirectionsMakers({
-        ...directions[directions.length - 1],
+        latitude: point.latitude,
+        longitude: point.longitude,
         anchor: {
           x: 0.75,
           y: 0.9,
@@ -67,7 +61,7 @@ export const useMarkerList = () => {
         }),
       });
     }
-  }, [directions, setDirectionsMakers]);
+  }, [shipment, setDirectionsMakers]);
 
   useEffect(() => {
     const getLocation = async () => {
@@ -97,19 +91,15 @@ export const useMarkerList = () => {
   }, [directionsMakers, currentPositionMarker]);
 
   const loadingMessage = useMemo(() => {
-    if (loadingDirections) {
-      return 'Buscando direcciones';
-    }
     if (!markersList || markersList.length === 0) {
       return 'Cargando mapa.';
     }
     return 'Cargando información del viaje';
-  }, [markersList, loadingDirections]);
+  }, [markersList]);
 
   return {
     markersList: markersList,
     loadingMakers: markersList.length === 0,
-    loadingDirections,
     loadingMessage,
   };
 };

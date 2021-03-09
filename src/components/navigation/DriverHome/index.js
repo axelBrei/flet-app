@@ -13,43 +13,87 @@ import {NewTripModalContent} from 'components/navigation/DriverHome/NewTripModal
 import {routes} from 'constants/config/routes';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  acceptShipment,
+  confirmShipment,
+  fetchPendingShipments,
   rejectShipment,
   selectDriverRejectShipmentError,
   selectDriverRejectShipmentLoading,
+  selectDriverShipmentData,
+  selectLoadingPendingShipmentAnswer,
+  selectPendingShipment,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {getRotatedMarker} from 'components/ui/Map/helper';
-import {getBearingFromCoords, trackUserPosition} from 'helpers/locationHelper';
+import {
+  getBearingFromCoords,
+  getCurrentPosition,
+  trackUserPosition,
+} from 'helpers/locationHelper';
 import {Platform} from 'react-native';
 import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {
+  changeOnlineStatus,
+  selectCurrentPosition,
+  selectOnlineStatus,
+  selectOnlineStatusError,
+  selectOnlineStatusLoading,
+  selectPreviosPosition,
+  updatePosition,
+} from 'redux-store/slices/driverSlice';
+import {useIsFocused} from '@react-navigation/native';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
-  const {height} = useWindowDimension();
-  const loading = useSelector(selectDriverRejectShipmentLoading);
+  const isFocused = useIsFocused();
+  const {height, isMobile} = useWindowDimension();
+  const loading = useSelector(selectLoadingPendingShipmentAnswer);
   const error = useSelector(selectDriverRejectShipmentError);
-  const [isOnline, setIsOnline] = useState(false);
-  const [lastUserPosition, setLastUserPosition] = useState(null);
-  const [userCurrentPosition, setUserCurrentPosition] = useState(null);
+  const isOnline = useSelector(selectOnlineStatus);
+  const currentPosition = useSelector(selectCurrentPosition);
+  const previosPosition = useSelector(selectPreviosPosition);
+  const pendingShipment = useSelector(selectPendingShipment);
+  const currentShipment = useSelector(selectDriverShipmentData);
 
   useEffect(() => {
-    const handleNewPosition = (position) => {
-      if (position.coords.latitude !== userCurrentPosition?.latitude) {
-        setLastUserPosition(userCurrentPosition);
-        setUserCurrentPosition(position.coords);
+    const handleNewPosition = (p) => {
+      const position = p.coords;
+      if (
+        !currentPosition.latitude ||
+        position.latitude !== currentPosition?.latitude
+      ) {
+        dispatch(updatePosition(position));
       }
     };
     return trackUserPosition(handleNewPosition);
-  }, [userCurrentPosition]);
+  }, [currentPosition]);
+
+  useEffect(() => {
+    if (isOnline && isFocused) {
+      const timeout = setInterval(() => {
+        dispatch(fetchPendingShipments());
+      }, 7 * 1000);
+      return () => clearInterval(timeout);
+    }
+  }, [isOnline, pendingShipment]);
+
+  useEffect(() => {
+    if (pendingShipment) {
+      toggle();
+    }
+  }, [pendingShipment]);
+
+  useEffect(() => {
+    if (currentShipment && !pendingShipment) {
+      navigation.navigate(routes.driverShipmentScreen);
+    }
+  }, [loading, error, navigation]);
 
   const positionMarker = useMemo(() => {
-    const orientation = getBearingFromCoords(
-      lastUserPosition,
-      userCurrentPosition,
-    );
+    if (!currentPosition.latitude) return;
+
+    const orientation = getBearingFromCoords(previosPosition, currentPosition);
     const marker = getRotatedMarker(
       Platform.select({
         web: CAR_MARKER,
@@ -60,53 +104,56 @@ export default ({navigation}) => {
     );
     return [
       {
-        ...userCurrentPosition,
+        ...currentPosition,
         ...marker,
       },
     ];
-  }, [userCurrentPosition, lastUserPosition]);
+  }, [currentPosition, previosPosition]);
 
   const {Modal, toggle, open} = useModal(NewTripModalContent, {
-    distance: 500,
-    dropZone: 'Capital federal',
+    distance: pendingShipment?.startPoint?.distance,
+    dropZone: pendingShipment?.endPoint?.name.split(',')[2],
     onPressAccept: () => {
+      dispatch(confirmShipment());
       toggle();
-      dispatch(acceptShipment(13123));
-      navigation.navigate(routes.driverNewShipmentScreen);
     },
     onPressReject: () => {
       dispatch(rejectShipment());
     },
   });
 
-  const onChangeOnlineStatus = useCallback(
-    (newOnlineStatus) => {
-      setIsOnline(newOnlineStatus);
-      newOnlineStatus && setTimeout(toggle, 1000); // TODO: remove this line
-    },
-    [toggle],
-  );
+  const onChangeOnlineStatus = useCallback((newOnlineStatus) => {
+    dispatch(changeOnlineStatus(newOnlineStatus));
+  }, []);
 
   return (
     <ScreenComponent>
-      <Loader loading={loading} unmount={false}>
-        <Map
-          style={{flex: 1, width: '100%'}}
-          markers={positionMarker}
-          showsMyLocationButton
-        />
-        <FloatingHamburguerButton />
-        <AvailableContainer>
-          <Switch value={isOnline} onChange={onChangeOnlineStatus} />
-          <AppText padding={10}>Esperando Viajes</AppText>
-        </AvailableContainer>
-        <Modal />
+      <Loader unmount={false}>
+        <ContentContainer>
+          <Map
+            style={{flex: 1, width: '100%'}}
+            markers={positionMarker}
+            showsMyLocationButton
+          />
+          {isMobile && <FloatingHamburguerButton />}
+          <AvailableContainer>
+            <Switch value={isOnline} onChange={onChangeOnlineStatus} />
+            <AppText padding={10}>Esperando Viajes</AppText>
+          </AvailableContainer>
+          <Modal />
+        </ContentContainer>
       </Loader>
     </ScreenComponent>
   );
 };
 const ScreenComponent = styled(Screen)`
   height: ${(props) => props.theme.screenHeight}px;
+`;
+
+const ContentContainer = styled(Container)`
+  flex: 1;
+  height: 100%;
+  width: 100%;
 `;
 
 const AvailableContainer = styled(Container)`

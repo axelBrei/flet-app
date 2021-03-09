@@ -21,6 +21,7 @@ export const Screen = ({
   removeeTWF,
   classname,
   enableAvoidKeyboard,
+  alignItems,
   style,
 }) => {
   const route = useRoute();
@@ -83,11 +84,12 @@ export const Screen = ({
               style={[
                 {backgroundColor: theme.backgroundColor},
                 !scrollable && {
-                  alignItems: 'center',
+                  alignItems,
                   overflow: 'hidden',
                   overscrollBehavior: 'none',
                   maxHeight: height,
                   maxWidth: width,
+                  height: '100%',
                 },
                 Platform.select({
                   web: {
@@ -109,4 +111,5 @@ Screen.defaultProps = {
   removeTWF: false,
   scrollable: false,
   enableAvoidKeyboard: true,
+  alignItems: 'center',
 };

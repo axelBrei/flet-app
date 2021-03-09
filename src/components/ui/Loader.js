@@ -28,6 +28,9 @@ export const Loader = ({
   );
 
   const Wrapper = onPlace ? View : React.Fragment;
+  if (unmount && loading) {
+    return <Wrapper>{renderLoader()}</Wrapper>;
+  }
   return (
     <Wrapper
       {...(onPlace && {
@@ -36,7 +39,7 @@ export const Loader = ({
       {loading && (
         <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
       )}
-      {unmount && !loading && children}
+      {!loading && children}
     </Wrapper>
   );
 };

@@ -15,7 +15,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['geocoding', 'shipment', 'navigation'],
+  blacklist: [
+    'geocoding',
+    process.env.NODE_ENV !== 'production' && 'navigation',
+  ],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

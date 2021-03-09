@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Platform} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
@@ -69,7 +69,7 @@ export default () => {
 
   return (
     <Navigator
-      // initialRouteName={userData ? routes.landingScreen : routes.loggedStack}
+      initialRouteName={!!userData ? routes.loggedStack : routes.landingScreen}
       screenOptions={navigationConfig({
         title: '',
         headerShown: width <= 800,

@@ -14,8 +14,10 @@ import {changeNavigationState} from 'redux-store/slices/navigationSlice';
 import axios from 'axios';
 import {AppText} from 'components/ui/AppText';
 import {fonts} from 'constants/fonts';
+import {configureAuthInterceptor} from 'constants/network';
 
 axios.defaults.withCredentials = false;
+configureAuthInterceptor(store);
 
 const App = () => {
   const dispatch = store.dispatch;
@@ -34,6 +36,9 @@ const App = () => {
             web: {
               linking: linkingConfig,
               onStateChange,
+              initialState:
+                process.env.NODE_ENV !== 'production' &&
+                store.getState()?.navigation?.state,
               documentTitle: {
                 formatter: (options, route) => {
                   if (options?.title) {

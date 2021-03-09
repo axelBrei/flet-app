@@ -31,7 +31,7 @@ export const linkingConfig = {
         routes: [{name: 'pagina-inexistente'}],
       };
     }
-    const isLoggedIn = !!reduxStore.getState().login.userData;
+    const isLoggedIn = !!reduxStore.getState()?.login?.userData;
     const isPrivateRoute = path.includes('private');
     if (!isLoggedIn && isPrivateRoute) {
       return {

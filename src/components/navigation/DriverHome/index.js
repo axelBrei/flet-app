@@ -43,6 +43,7 @@ import {
   updatePosition,
 } from 'redux-store/slices/driverSlice';
 import {useIsFocused} from '@react-navigation/native';
+import {useDebounce} from 'components/Hooks/useDebounce';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ export default ({navigation}) => {
   const previosPosition = useSelector(selectPreviosPosition);
   const pendingShipment = useSelector(selectPendingShipment);
   const currentShipment = useSelector(selectDriverShipmentData);
+  const debouncedCurrentPosition = useDebounce(currentPosition, 500);
 
   useEffect(() => {
     const handleNewPosition = (p) => {
@@ -66,14 +68,16 @@ export default ({navigation}) => {
         dispatch(updatePosition(position));
       }
     };
-    return trackUserPosition(handleNewPosition);
-  }, [currentPosition]);
+    if (isFocused) {
+      return trackUserPosition(handleNewPosition);
+    }
+  }, [isFocused, currentPosition]);
 
   useEffect(() => {
     if (isOnline && isFocused) {
       const timeout = setInterval(() => {
         dispatch(fetchPendingShipments());
-      }, 7 * 1000);
+      }, 6 * 1000);
       return () => clearInterval(timeout);
     }
   }, [isOnline, pendingShipment]);
@@ -91,9 +95,12 @@ export default ({navigation}) => {
   }, [loading, error, navigation]);
 
   const positionMarker = useMemo(() => {
-    if (!currentPosition.latitude) return;
+    if (!debouncedCurrentPosition.latitude) return;
 
-    const orientation = getBearingFromCoords(previosPosition, currentPosition);
+    const orientation = getBearingFromCoords(
+      previosPosition,
+      debouncedCurrentPosition,
+    );
     const marker = getRotatedMarker(
       Platform.select({
         web: CAR_MARKER,
@@ -104,11 +111,11 @@ export default ({navigation}) => {
     );
     return [
       {
-        ...currentPosition,
+        ...debouncedCurrentPosition,
         ...marker,
       },
     ];
-  }, [currentPosition, previosPosition]);
+  }, [debouncedCurrentPosition, previosPosition]);
 
   const {Modal, toggle, open} = useModal(NewTripModalContent, {
     distance: pendingShipment?.startPoint?.distance,

@@ -7,7 +7,7 @@ import {FloatingHamburguerButton} from 'components/ui/FloatingHamburgerButton';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
-import {decodeDirections} from 'helpers/locationHelper';
+import {decodeDirections, trackUserPosition} from 'helpers/locationHelper';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {theme} from 'constants/theme';
 import {PickupShipment} from 'components/navigation/DriverNewShipmentScreen/PickupShipment';
@@ -15,8 +15,10 @@ import {Container} from 'components/ui/Container';
 import {DeliverShipmentInformation} from 'components/navigation/DriverNewShipmentScreen/DeliverShipmentInformation';
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import {updatePosition} from 'redux-store/slices/driverSlice';
 
 export default ({navigation}) => {
+  const dispatch = useDispatch();
   const [directions, setDirections] = useState([]);
   const {loading: loadingPermissions, status, check} = usePermission(
     [PERMISSIONS.location],
@@ -25,7 +27,11 @@ export default ({navigation}) => {
   const shipment = useSelector(selectDriverShipmentData);
   const isPackagePickedUp = shipment.status === SHIPMENT_STATE.ON_PROCESS;
 
-  const {markersList, loadingMakers, loadingMessage} = useMarkerList();
+  const {
+    markersList,
+    loadingMakers,
+    loadingMessage,
+  } = useMarkerList((position) => dispatch(updatePosition(position)));
 
   useEffect(() => {
     if (shipment?.polyline && directions.length === 0) {

@@ -15,16 +15,19 @@ import {SHIPMENT_STATE} from 'constants/shipmentStates';
 export const CourrierDelivering = () => {
   const shipment = useSelector(selectCurrentShipment);
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
-  const goingToPickUp = shipmentStatus === SHIPMENT_STATE.COURRIER_CONFIRMED;
-
+  const goingToPickUp =
+    shipmentStatus?.status === SHIPMENT_STATE.COURRIER_CONFIRMED;
   return (
     <Container>
-      <Title>¡Gracias por elegirnos!</Title>
-      <AppText>Tu conductor asignado es:</AppText>
+      <Title>
+        {goingToPickUp
+          ? '¡Gracias por elegirnos!'
+          : 'El conductor esta llevando tu paquete'}
+      </Title>
       <AssignedDriverProfile />
       <Container>
         <ShipmentDataText>
-          Tiempo estimado de llegada{' '}
+          Tiempo de llegada{' '}
           <AppText color={theme.primaryDarkColor}>
             {shipmentStatus.duration} min.
           </AppText>
@@ -45,11 +48,11 @@ export const CourrierDelivering = () => {
 };
 
 const Title = styled(AppText)`
-  margin: ${scaleDpTheme(10)} 0;
+  margin: ${scaleDpTheme(3)} 0;
   font-weight: bold;
   font-size: ${scaleDpTheme(18)};
 `;
 
 const ShipmentDataText = styled(AppText)`
-  padding: ${scaleDpTheme(7)} 0;
+  padding: ${scaleDpTheme(5)} 0;
 `;

@@ -8,13 +8,16 @@ import {theme} from 'constants/theme';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   markShipmentAsPickedUp,
+  selectDriverIsLoadingShipmentStatus,
   selectDriverShipmentData,
   setPickedUp,
 } from 'redux-store/slices/driverShipmentSlice';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import {Loader} from 'components/ui/Loader';
 
 export const PickupShipment = () => {
   const dispatch = useDispatch();
+  const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipmentData = useSelector(selectDriverShipmentData);
 
   const onPressButton = useCallback(() => {
@@ -28,12 +31,14 @@ export const PickupShipment = () => {
         icon="package-variant-closed"
         value={shipmentData?.endPoint?.name}
       />
-      <Button
-        onPress={onPressButton}
-        label="Paquete recogido"
-        leftIcon="check-circle-outline"
-        iconColor={theme.fontColor}
-      />
+      <Loader loading={loading}>
+        <Button
+          onPress={onPressButton}
+          label="Paquete recogido"
+          leftIcon="check-circle-outline"
+          iconColor={theme.fontColor}
+        />
+      </Loader>
     </ContentContainer>
   );
 };

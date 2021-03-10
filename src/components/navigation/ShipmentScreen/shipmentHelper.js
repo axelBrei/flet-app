@@ -19,6 +19,6 @@ export const getCardContentComponent = (status = '') => {
       return ShipmentSecurityCode;
     }
     default:
-      return React.Fragment;
+      return null;
   }
 };

@@ -36,12 +36,14 @@ export const ShipmentDetailCard = () => {
     navigation.popToTop();
   }, [navigation]);
 
-  const Component = getCardContentComponent(shipmentStatus?.status);
+  const Component = getCardContentComponent(
+    shipmentStatus?.status || SHIPMENT_STATE.PENDING_COURRIER,
+  );
 
   return (
     <Card>
       <ButtonContainer>
-        {shipmentStatus?.status && <Component />}
+        {Component && <Component />}
         <MainButton
           label="Tengo un problema"
           inverted

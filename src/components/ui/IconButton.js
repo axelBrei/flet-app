@@ -22,7 +22,7 @@ export const IconButton = ({
         color: theme.accentColor,
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: theme.accentColor,
+        borderColor: props.borderColor || theme.accentColor,
       };
     }
     if (alternative) {
@@ -37,13 +37,14 @@ export const IconButton = ({
       onPress={onPress}
       classname={classname}
       borderWidth={buttonStyle?.borderWidth}
-      backgroundColor={props.backgroundColor || buttonStyle?.backgroundColor}
       style={buttonStyle}
+      backgroundColor={props.backgroundColor || buttonStyle?.backgroundColor}
+      borderColor={props.borderColor || buttonStyle?.borderColor}
       {...props}>
       <Icon
         name={icon}
         size={scaleDp(size)}
-        color={buttonStyle?.color || props.iconColor || theme.white}
+        color={props.iconColor || buttonStyle?.color || theme.white}
       />
     </ButtonContainer>
   );
@@ -70,5 +71,5 @@ const ButtonContainer = styled(TouchableOpacity)`
   border-radius: ${(props) => props.radius || scaleDpTheme(10)};
   background-color: ${(props) => props?.backgroundColor || theme.accentColor};
   border-width: ${(props) => scaleDp(props?.borderWidth || 0)}px;
-  border-color: ${theme.accentColor};
+  border-color: ${(props) => props.borderColor || theme.accentColor};
 `;

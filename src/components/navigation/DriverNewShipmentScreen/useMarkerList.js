@@ -12,7 +12,7 @@ import {getRotatedMarker} from 'components/ui/Map/helper';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
-export const useMarkerList = () => {
+export const useMarkerList = (updatePosition) => {
   const [lastUserPosition, setLastUserPosition] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directionsMakers, setDirectionsMakers] = useState(null);
@@ -20,11 +20,21 @@ export const useMarkerList = () => {
   const shipment = useSelector(selectDriverShipmentData);
 
   useEffect(() => {
+    const get = async () => {
+      const pos = await getCurrentPosition();
+      console.log('position', pos);
+      updatePosition(pos.coords);
+    };
+    get();
+  }, []);
+
+  useEffect(() => {
     return trackUserPosition(
       (position) => {
         if (position.coords.latitude !== currentLocation?.latitude) {
           setLastUserPosition(currentLocation);
           setCurrentLocation(position.coords);
+          updatePosition(position.coords);
         }
       },
       (e) => console.log('track error', e),
@@ -45,7 +55,7 @@ export const useMarkerList = () => {
   useEffect(() => {
     if (shipment.id) {
       const point =
-        shipment.status === SHIPMENT_STATE.COURRIER_CONFIRMED
+        shipment.status === SHIPMENT_STATE.ON_PROCESS
           ? shipment.startPoint
           : shipment.endPoint;
       setDirectionsMakers({

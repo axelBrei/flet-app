@@ -8,13 +8,16 @@ import {Container} from 'components/ui/Container';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   markShipmentAsDelivered,
+  selectDriverIsLoadingShipmentStatus,
   selectDriverShipmentData,
 } from 'redux-store/slices/driverShipmentSlice';
 import {theme} from 'constants/theme';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import {Loader} from 'components/ui/Loader';
 
 export const DeliverShipmentInformation = () => {
   const dispatch = useDispatch();
+  const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipmentData = useSelector(selectDriverShipmentData);
 
   const onPressFinishShipment = useCallback(() => {
@@ -44,11 +47,13 @@ export const DeliverShipmentInformation = () => {
           Si el pago es en efectivo recordá reclamarlo
         </AppText>
       </DisclaimerContainer>
-      <Button
-        label="Finalizar entrega"
-        leftIcon="check-circle-outline"
-        onPress={onPressFinishShipment}
-      />
+      <Loader loading={loading}>
+        <Button
+          label="Finalizar entrega"
+          leftIcon="check-circle-outline"
+          onPress={onPressFinishShipment}
+        />
+      </Loader>
     </ContentContainer>
   );
 };

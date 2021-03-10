@@ -194,7 +194,7 @@ export const selectDriverRejectShipmentLoading = (state) =>
 export const selectDriverRejectShipmentError = (state) =>
   state.driverShipment.error.reject;
 
-const selectConirmShipmentLoading = (state) =>
+export const selectConirmShipmentLoading = (state) =>
   state.driverShipment.loading.confirm;
 const selectConirmShipmentError = (state) => state.driverShipment.error.confirm;
 
@@ -210,3 +210,6 @@ export const selectPendingShipment = (state) =>
 export const selectSecureCodeError = (state) => state.driverShipment.error.code;
 export const selectIsLoadingSecureCode = (state) =>
   state.driverShipment.loading.code;
+
+export const selectDriverIsLoadingShipmentStatus = (state) =>
+  state.driverShipment.loading.status;

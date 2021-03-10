@@ -7,6 +7,9 @@ import {MainButton} from 'components/ui/MainButton';
 import {TextLink} from 'components/ui/TextLink';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
+import {useSelector} from 'react-redux';
+import {selectLoadingPendingShipmentAnswer} from 'redux-store/slices/driverShipmentSlice';
+import {Loader} from 'components/ui/Loader';
 
 const strings = {
   newTrip: '¡Nuevo viaje!',
@@ -22,6 +25,7 @@ export const NewTripModalContent = ({
   onPressAccept,
   onPressReject,
 }) => {
+  const loading = useSelector(selectLoadingPendingShipmentAnswer);
   return (
     <ContentContainer>
       <AppText width="100%" textAlign="center" fontSize={24} bold>
@@ -46,14 +50,16 @@ export const NewTripModalContent = ({
           />
           <AppText padding={scaleDp(5)}>{strings.disclaimer}</AppText>
         </Container>
-        <MainButton
-          onPress={onPressAccept}
-          label="Aceptar"
-          style={{width: '75%'}}
-        />
-        <TextLink fontSize={14} color={theme.error} onPress={onPressReject}>
-          {strings.reject}
-        </TextLink>
+        <Loader loading={loading}>
+          <MainButton
+            onPress={onPressAccept}
+            label="Aceptar"
+            style={{width: '75%'}}
+          />
+          <TextLink fontSize={14} color={theme.error} onPress={onPressReject}>
+            {strings.reject}
+          </TextLink>
+        </Loader>
       </ButtonsContainer>
     </ContentContainer>
   );

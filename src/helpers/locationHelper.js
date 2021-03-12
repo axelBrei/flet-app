@@ -53,7 +53,10 @@ export const trackUserPosition = Platform.select({
         });
       },
       error,
-      options,
+      {
+        ...defaultOptions,
+        ...options,
+      },
     );
     return () => navigator.geolocation.clearWatch(watchNumber);
   },

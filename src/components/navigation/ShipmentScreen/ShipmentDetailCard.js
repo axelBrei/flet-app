@@ -42,8 +42,8 @@ export const ShipmentDetailCard = () => {
 
   return (
     <Card>
+      {Component && <Component />}
       <ButtonContainer>
-        {Component && <Component />}
         <MainButton
           label="Tengo un problema"
           inverted
@@ -61,6 +61,7 @@ const Card = styled(Container)`
   width: ${(props) =>
     props.theme.isMobile ? `${props.theme.screenWidth}px` : '100%'};
   align-items: flex-start;
+  padding: 0 ${scaleDpTheme(5)};
 `;
 const ButtonContainer = styled(Container)`
   width: 100%;

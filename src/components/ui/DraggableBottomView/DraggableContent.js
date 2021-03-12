@@ -16,9 +16,9 @@ export const DraggableContent = React.forwardRef(({isOpen, children}, ref) => {
 const DrawableContainer = styled(TouchableOpacity)`
   width: 100%;
   min-height: ${scaleDpTheme(200)};
-  padding: ${scaleDpTheme(10)};
-  border-top-left-radius: ${scaleDp(8)};
-  border-top-right-radius: ${scaleDp(8)};
+  padding: ${scaleDpTheme(10)} 0px;
+  border-top-left-radius: ${scaleDp(8)}px;
+  border-top-right-radius: ${scaleDp(8)}px;
   background-color: ${theme.white};
   box-shadow: 0.5px -1px 3px ${theme.shadowColor};
   elevation: 3;

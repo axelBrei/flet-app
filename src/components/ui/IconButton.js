@@ -68,7 +68,9 @@ IconButton.propTypes = {
 
 const ButtonContainer = styled(TouchableOpacity)`
   padding: ${(props) => props.padding || scaleDpTheme(8)};
-  border-radius: ${(props) => props.radius || scaleDpTheme(10)};
+  border-radius: ${(props) =>
+    (typeof props.radius === 'string' ? `${props.radius}px` : props.radius) ||
+    scaleDpTheme(10)};
   background-color: ${(props) => props?.backgroundColor || theme.accentColor};
   border-width: ${(props) => scaleDp(props?.borderWidth || 0)}px;
   border-color: ${(props) => props.borderColor || theme.accentColor};

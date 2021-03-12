@@ -69,4 +69,5 @@ AppText.defaultProps = {
   selectable: Platform.OS === 'web' && width <= 800,
   padding: 0,
   fontFamily: null,
+  autoCapitalize: false,
 };

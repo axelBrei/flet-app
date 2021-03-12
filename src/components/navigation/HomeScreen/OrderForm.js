@@ -182,6 +182,8 @@ const FormContainer = styled(Container)`
   align-items: center;
   min-height: ${(props) => props.theme.screenHeight * 0.7}px;
   padding-bottom: ${scaleDpTheme(10)};
+  padding-right: 10px;
+  padding-left: 10px;
 `;
 
 const Title = styled(AppText)`

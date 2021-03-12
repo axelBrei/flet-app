@@ -28,4 +28,5 @@ export default {
   checkPermissions,
   requestPermission,
   PERMISSIONS,
+  STATUS: permissionStatus,
 };

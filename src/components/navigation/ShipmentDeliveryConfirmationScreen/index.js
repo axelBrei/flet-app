@@ -35,8 +35,9 @@ export default () => {
     <Screen>
       <Title bold>Ingrese el codigo de seguridad</Title>
       <AppText textAlign="center">
-        Pedile este codigo a la persona que
-        <br /> realizo el envío para poder finalizarlo
+        {
+          'Pedile este codigo a la persona que\\nrealizo el envío para poder finalizarlo'
+        }
       </AppText>
       <PackageDelivered width={width * 0.7} height={height * 0.3} />
       <ContentContainer>

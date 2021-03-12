@@ -25,17 +25,18 @@ const slice = createSlice({
   name: 'courrier',
   initialState,
   reducers: {
-    requestChangeOnlineStatus: (state) => {
+    requestChangeOnlineStatus: (state, action) => {
       state.loading.status = true;
       state.error.status = null;
+      state.isOnline = action.payload;
     },
     receiveChangeOnlineStatusSuccess: (state, action) => {
       state.loading.status = false;
-      state.isOnline = action.payload;
     },
     receiveChangeOnlineStatusFail: (state, action) => {
       state.loading.status = false;
-      state.error.status = action.payload;
+      state.error.status = action.payload.error;
+      state.isOnline = !action.payload.status;
     },
     requestUpdatePosition: (state) => {
       state.loading.position = true;
@@ -69,12 +70,17 @@ export const {
  */
 
 export const changeOnlineStatus = (isOnline) => async (dispatch) => {
-  dispatch(requestChangeOnlineStatus());
+  dispatch(requestChangeOnlineStatus(isOnline));
   try {
     const {data} = await courrierService.changeOnlineStatus(isOnline);
     dispatch(receiveChangeOnlineStatusSuccess(isOnline));
   } catch (e) {
-    dispatch(receiveChangeOnlineStatusFail(e?.response?.data || e));
+    dispatch(
+      receiveChangeOnlineStatusFail({
+        status: isOnline,
+        error: e?.response?.data || e,
+      }),
+    );
   }
 };
 

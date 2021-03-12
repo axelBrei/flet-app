@@ -55,7 +55,10 @@ const slice = createSlice({
     },
     receiveShipmentStatusSuccess: (state, {payload}) => {
       state.loading.status = false;
-      state.shipmentStatus = payload;
+      state.shipmentStatus = {
+        ...state.shipmentStatus,
+        ...payload,
+      };
     },
     receiveShipmentStatusFail: (state, action) => {
       state.loading.status = false;
@@ -121,7 +124,9 @@ export const fetchShipmentDriverPosition = () => async (dispatch, getState) => {
       }),
     );
   } catch (e) {
-    dispatch(receiveDriverPositionFail(e?.response?.data?.message || e));
+    dispatch(
+      receiveDriverPositionFail(e?.response?.data?.message || e.message),
+    );
   }
 };
 

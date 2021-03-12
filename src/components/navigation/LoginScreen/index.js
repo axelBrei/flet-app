@@ -80,6 +80,7 @@ export const LoginScreen = ({navigation}) => {
           icon="account-outline"
           label="Email"
           value={values[FIELDS.USERNAME]}
+          keyboardType="email-address"
           onChangeText={_setFieldValue(FIELDS.USERNAME)}
           error={
             submitCount > 0 &&

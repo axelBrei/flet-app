@@ -12,6 +12,7 @@ import {useModal} from 'components/Hooks/useModal';
 import {NewTripModalContent} from 'components/navigation/DriverHome/NewTripModalContent';
 import {routes} from 'constants/config/routes';
 import {useDispatch, useSelector} from 'react-redux';
+import PermissionManager from 'components/Permissions/index';
 import {
   confirmShipment,
   fetchPendingShipments,
@@ -37,8 +38,6 @@ import {
   changeOnlineStatus,
   selectCurrentPosition,
   selectOnlineStatus,
-  selectOnlineStatusError,
-  selectOnlineStatusLoading,
   selectPreviosPosition,
   updatePosition,
 } from 'redux-store/slices/driverSlice';
@@ -59,17 +58,26 @@ export default ({navigation}) => {
   const debouncedCurrentPosition = useDebounce(currentPosition, 500);
 
   useEffect(() => {
-    const handleNewPosition = (p) => {
-      const position = p.coords;
-      if (
-        !currentPosition.latitude ||
-        position.latitude !== currentPosition?.latitude
-      ) {
-        dispatch(updatePosition(position));
+    const askPermissions = async () => {
+      const status = await PermissionManager.checkPermissions([
+        PermissionManager.PERMISSIONS.location,
+      ]);
+      if (status) {
+        const handleNewPosition = (p) => {
+          const position = p.coords;
+          if (
+            !currentPosition.latitude ||
+            position.latitude !== currentPosition?.latitude
+          ) {
+            dispatch(updatePosition(position));
+          }
+        };
+        trackUserPosition(handleNewPosition);
       }
     };
+
     if (isFocused) {
-      return trackUserPosition(handleNewPosition);
+      askPermissions();
     }
   }, [isFocused, currentPosition]);
 

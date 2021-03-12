@@ -71,7 +71,7 @@ export const Screen = ({
           },
         })}>
         <KeyboardAvoidingView
-          behavior="height"
+          behavior="position"
           enabled={enableAvoidKeyboard}
           style={{
             height: '100%',

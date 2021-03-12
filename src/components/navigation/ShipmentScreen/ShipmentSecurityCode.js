@@ -10,7 +10,7 @@ import {theme} from 'constants/theme';
 export const ShipmentSecurityCode = () => {
   const status = useSelector(selectCurrentShipmentStatus);
   return (
-    <Container>
+    <Container width="100%">
       <AppText width="100%" textAlign="center">
         Tu codigo de seguridad es:
       </AppText>
@@ -34,5 +34,6 @@ const Disclaimer = styled(AppText)`
   font-size: ${scaleDpTheme(12)};
   color: ${theme.backdropColor};
   text-align: center;
+  width: 100%;
   margin-bottom: ${scaleDpTheme(10)};
 `;

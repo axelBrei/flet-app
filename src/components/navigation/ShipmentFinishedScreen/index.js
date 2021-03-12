@@ -19,7 +19,7 @@ export default ({navigation}) => {
   }, [navigation]);
 
   return (
-    <Screen alignItems="flex-start">
+    <Screen alignItems={isMobile ? 'center' : 'flex-start'}>
       <ScreenContainer>
         <Title bold>El pedido ya fue entregado</Title>
         <PackageDelivered width={width * (isMobile ? 0.8 : 0.3)} />

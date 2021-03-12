@@ -49,8 +49,10 @@ const Map = ({
     try {
       const position = await getCurrentPosition();
       const {coords} = position;
-      mapRef?.panTo({lat: coords.latitude, lng: coords.longitude});
-      setZoom(17, 5);
+      if (coords.latitude && coords.longitude) {
+        mapRef?.panTo({lat: coords.latitude, lng: coords.longitude});
+        setZoom(17, 5);
+      }
     } catch (e) {}
   }, [mapRef, setZoom]);
 

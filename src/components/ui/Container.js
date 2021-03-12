@@ -1,14 +1,17 @@
 import styled, {css} from 'styled-components';
 import {View} from 'react-native';
 import PropTypes from 'prop-types';
+import {Platform} from 'react-native';
 
 export const Container = styled(View)`
   flex-direction: ${(props) => props.dir};
   align-items: ${(props) => props.alignItems};
   justify-content: ${(props) => props.justifyContent};
   width: ${(props) => props.width || 'auto'};
-  padding: ${(props) => props.padding};
-  ${(props) => props.flex && 'flex: 1;'}
+  padding: ${(props) => {
+    // if (Platform.OS === 'android') return 0;
+    return props.padding;
+  }};
 `;
 
 Container.defaultProps = {

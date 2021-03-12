@@ -47,31 +47,33 @@ const Map = ({
   }, [mapRef]);
 
   const renderMarkers = useCallback(
-    ({icon: SvgIcon, renderIcon, ...marker}, index) => (
-      <Marker
-        key={`${index}`}
-        identifier={`${index}`}
-        coordinate={{
-          latitude: marker.latitude,
-          longitude: marker.longitude,
-        }}
-        anchor={{
-          x: marker?.anchor?.x || 0.5,
-          y: marker?.anchor?.y || 1,
-        }}>
-        {renderIcon ? (
-          renderIcon()
-        ) : SvgIcon ? (
-          <SvgIcon height={scaleDp(35)} width={scaleDp(35)} />
-        ) : (
-          <Icon
-            name="map-marker"
-            size={scaleDp(30)}
-            color={theme.primaryColor}
-          />
-        )}
-      </Marker>
-    ),
+    ({icon: SvgIcon, renderIcon, ...marker}, index) =>
+      marker.latitude &&
+      marker.longitude && (
+        <Marker
+          key={`${index}`}
+          identifier={`${index}`}
+          coordinate={{
+            latitude: marker.latitude,
+            longitude: marker.longitude,
+          }}
+          anchor={{
+            x: marker?.anchor?.x || 0.5,
+            y: marker?.anchor?.y || 1,
+          }}>
+          {renderIcon ? (
+            renderIcon()
+          ) : SvgIcon ? (
+            <SvgIcon height={scaleDp(35)} width={scaleDp(35)} />
+          ) : (
+            <Icon
+              name="map-marker"
+              size={scaleDp(30)}
+              color={theme.primaryColor}
+            />
+          )}
+        </Marker>
+      ),
     [],
   );
 
@@ -80,18 +82,21 @@ const Map = ({
     mapRef.current.animateCamera({center: coords});
   }, [mapRef]);
 
-  const renderDirections = useCallback(
-    () =>
-      isMapReady &&
-      directions && (
+  const renderDirections = useCallback(() => {
+    if (isMapReady && directions) {
+      const dirs = directions.map((i) => ({
+        latitude: i[0],
+        longitude: i[1],
+      }));
+      return (
         <MapView.Polyline
-          coordinates={directions}
+          coordinates={dirs}
           strokeWidth={scaleDp(4)}
           strokeColor={theme.primaryLightColor}
         />
-      ),
-    [directions, isMapReady],
-  );
+      );
+    }
+  }, [directions, isMapReady]);
 
   return (
     <>

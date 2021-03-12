@@ -37,7 +37,7 @@ export const AssignedDriverProfile = () => {
         />
         <Container>
           <AppText padding={'0px 5'} bold>
-            {vehicle?.number.toUpperCase()}
+            {vehicle?.number?.toUpperCase()}
           </AppText>
           <AppText padding={'0px 5'}>
             {vehicle?.model} {vehicle?.year}

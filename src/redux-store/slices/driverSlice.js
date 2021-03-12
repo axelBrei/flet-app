@@ -86,13 +86,13 @@ export const changeOnlineStatus = (isOnline) => async (dispatch) => {
 
 export const updatePosition = (position) => async (dispatch, getState) => {
   const vehicleList = getState().login.userData?.courrier?.vehicle;
-  if (!vehicleList || vehicleList.length === 0) {
+  if (!vehicleList || vehicleList?.length === 0) {
     return;
   }
   dispatch(requestUpdatePosition());
   try {
     const currentPosition = selectCurrentPosition(getState());
-    await courrierService.updatePosition(position, vehicleList?.[0].id);
+    await courrierService.updatePosition(position, vehicleList?.[0]?.id);
     dispatch(
       receiveUpdatePositionSuccess({
         currentPosition: position,

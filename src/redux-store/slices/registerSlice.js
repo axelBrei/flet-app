@@ -113,7 +113,7 @@ export const registerDriverVehicleData = (vehicleData) => async (
   dispatch(requestRegister());
   try {
     const {courrier_id} = getState().register;
-    vehicleData.carYear = parseInt(vehicleData.carYear);
+    vehicleData.carYear = parseInt(vehicleData?.carYear);
     await loginService.registerCourrierVehicleData({
       ...vehicleData,
       ...courrier_id,

@@ -47,7 +47,7 @@ import {useDebounce} from 'components/Hooks/useDebounce';
 export default ({navigation}) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const {height, isMobile} = useWindowDimension();
+  const {height, isMobile, isPwa} = useWindowDimension();
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
   const error = useSelector(selectDriverRejectShipmentError);
   const isOnline = useSelector(selectOnlineStatus);
@@ -58,10 +58,13 @@ export default ({navigation}) => {
   const debouncedCurrentPosition = useDebounce(currentPosition, 500);
 
   useEffect(() => {
-    const askPermissions = async () => {
-      const status = await PermissionManager.checkPermissions([
-        PermissionManager.PERMISSIONS.location,
-      ]);
+    const askPermissions = async (skip = false) => {
+      let status = skip;
+      if (!skip) {
+        status = await PermissionManager.checkPermissions([
+          PermissionManager.PERMISSIONS.location,
+        ]);
+      }
       if (status) {
         const handleNewPosition = (p) => {
           const position = p.coords;
@@ -77,7 +80,7 @@ export default ({navigation}) => {
     };
 
     if (isFocused) {
-      askPermissions();
+      askPermissions(!['android', 'ios'].includes(Platform.OS));
     }
   }, [isFocused, currentPosition]);
 

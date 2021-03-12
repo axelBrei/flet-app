@@ -23,7 +23,6 @@ export default () => {
   const loading = useSelector(selectIsLoadingSecureCode);
 
   const onPressAccept = useCallback(() => {
-    console.log(securityCode);
     if (securityCode.length === 5) {
       dispatch(uploadConfirmationCode(securityCode));
     } else {

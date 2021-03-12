@@ -17,6 +17,7 @@ const checkPermissions = async (permissions = []) => {
       [permissionStatus.GRANTED, permissionStatus.PROMPT].includes(i),
     );
   }
+  return true;
 };
 
 export default {

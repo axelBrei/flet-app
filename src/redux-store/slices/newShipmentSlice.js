@@ -52,6 +52,11 @@ const slice = createSlice({
     },
     requestAcceptShipment: (state) => {},
   },
+  extraReducers: {
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export default slice.reducer;

@@ -50,6 +50,11 @@ const slice = createSlice({
       state.loading.data = false;
     },
   },
+  extraReducers: {
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export default slice.reducer;

@@ -20,6 +20,11 @@ const slice = createSlice({
       state.state = action.payload;
     },
   },
+  extraReducers: {
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export default slice.reducer;

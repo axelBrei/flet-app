@@ -14,7 +14,7 @@ import {selectCurrentShipment} from 'redux-store/slices/shipmentSlice';
 import ShipmentFinishedScreen from 'components/navigation/ShipmentFinishedScreen';
 
 const {Navigator, Screen} = createStackNavigator();
-console.log(routes);
+
 export default () => {
   const {isMobile} = useWindowDimension();
   const currentShipment = useSelector(selectCurrentShipment);

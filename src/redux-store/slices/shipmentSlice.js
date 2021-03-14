@@ -74,6 +74,9 @@ const slice = createSlice({
     'newShipment/receiveNewShipmentSuccess': (state, action) => {
       state.currentShipment = action.payload;
     },
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 

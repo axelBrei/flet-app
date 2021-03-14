@@ -94,12 +94,6 @@ export default ({navigation}) => {
   }, [isOnline, pendingShipment]);
 
   useEffect(() => {
-    if (pendingShipment) {
-      toggle();
-    }
-  }, [pendingShipment]);
-
-  useEffect(() => {
     if (currentShipment && !pendingShipment) {
       navigation.navigate(routes.driverShipmentScreen);
     }
@@ -139,6 +133,12 @@ export default ({navigation}) => {
       dispatch(rejectShipment());
     },
   });
+
+  useEffect(() => {
+    if (pendingShipment) {
+      open();
+    }
+  }, [pendingShipment]);
 
   const onChangeOnlineStatus = useCallback((newOnlineStatus) => {
     dispatch(changeOnlineStatus(newOnlineStatus));

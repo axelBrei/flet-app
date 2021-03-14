@@ -52,6 +52,11 @@ const slice = createSlice({
       state.error.position = action.payload;
     },
   },
+  extraReducers: {
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export default slice.reducer;

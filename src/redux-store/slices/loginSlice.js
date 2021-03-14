@@ -33,7 +33,7 @@ const slice = createSlice({
       state.error.user = action.payload;
     },
     logout: (state) => {
-      state.userData = null;
+      Object.assign(state, initialState);
     },
   },
   extraReducers: {
@@ -80,21 +80,21 @@ export const loginAs = (email, pass) => async (dispatch) => {
  */
 export const selectLoadingLogin = (state) => state.login.loading.user;
 export const selectLoginError = (state) => state.login.error.user;
-export const selectUserData = (state) => state.login.userData;
+export const selectUserData = (state) => state.login?.userData;
 
 export const selectUserName = createSelector(
-  (state) => state.login.userData?.name,
+  (state) => state.login?.userData?.name,
   (name) => (!!name ? capitallize(name) : ''),
 );
 export const selectUserLastName = createSelector(
-  (state) => state.login.userData?.lastName,
+  (state) => state.login?.userData?.lastName,
   (lastName) => (!!lastName ? capitallize(lastName) : ''),
 );
-export const selectUserEmail = (state) => state.login.userData?.email;
-export const selectUserId = (state) => state.login.userData?.id;
+export const selectUserEmail = (state) => state.login?.userData?.email;
+export const selectUserId = (state) => state.login?.userData?.id;
 export const selectUserPhoto = createSelector(
-  (state) => state.login.userData?.photo,
+  (state) => state.login?.userData?.photo,
   (photo) => (photo ? photo : null),
 );
 
-export const selectIsDriver = (state) => state.login.userData?.isDriver;
+export const selectIsDriver = (state) => state.login?.userData?.isDriver;

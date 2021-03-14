@@ -71,7 +71,11 @@ export const Screen = ({
           },
         })}>
         <KeyboardAvoidingView
-          behavior="position"
+          behavior={Platform.select({
+            android: 'height',
+            ios: 'position',
+            web: 'position',
+          })}
           enabled={enableAvoidKeyboard}
           style={{
             height: '100%',

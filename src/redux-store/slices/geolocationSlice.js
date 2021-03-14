@@ -32,6 +32,11 @@ const slice = createSlice({
       state.error.directions = action.payload;
     },
   },
+  extraReducers: {
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export default slice.reducer;

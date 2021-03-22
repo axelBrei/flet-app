@@ -19,11 +19,15 @@ export const keysToCamelCase = (object) =>
 
 export const keysToSnakeCase = (object) =>
   Object.keys(object).reduce((acc, key) => {
-    const isObject = object[key] && typeof object[key] === 'object';
-    return {
-      ...acc,
-      [camelToSnakeCase(key)]: isObject
-        ? keysToSnakeCase(object[key])
-        : object[key],
-    };
+    try {
+      const isObject = typeof object?.[key] === 'object';
+      return {
+        ...acc,
+        [camelToSnakeCase(key)]: isObject
+          ? keysToSnakeCase(object[key])
+          : object[key],
+      };
+    } catch (e) {
+      return acc;
+    }
   }, {});

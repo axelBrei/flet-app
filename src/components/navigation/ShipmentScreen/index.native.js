@@ -13,11 +13,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchShipmentDriverPosition,
   fetchShipmentStatus,
+  selectCurrentShipment,
   selectCurrentShipmentStatus,
   selectDriverPosition,
 } from 'redux-store/slices/shipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {decodeDirections} from 'helpers/locationHelper';
+import {theme} from 'constants/theme';
+import {useShipmentIntervals} from 'components/navigation/ShipmentScreen/useShipmentIntervals';
 
 const positionEnabledStates = [
   SHIPMENT_STATE.COURRIER_CONFIRMED,
@@ -29,61 +32,60 @@ export default ({route}) => {
   const {height, width} = useWindowDimension();
   const driverPosition = useSelector(selectDriverPosition);
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
-  const [directions, setDirections] = useState([]);
+  const currentShipment = useSelector(selectCurrentShipment);
 
-  useEffect(() => {
-    if (positionEnabledStates.includes(shipmentStatus?.status)) {
-      if (directions.length === 0) {
-        setDirections(decodeDirections(shipmentStatus?.polyline));
-      }
-      const positionInterval = setInterval(
-        () => dispatch(fetchShipmentDriverPosition()),
-        5 * 1000,
-      );
-      return () => {
-        clearInterval(positionInterval);
-      };
-    }
-  }, [shipmentStatus]);
+  useShipmentIntervals();
+  // const [directions, setDirections] = useState([]);
 
-  useEffect(() => {
-    const statusInterval = setInterval(() => {
-      dispatch(fetchShipmentStatus());
-    }, 10 * 1000);
-    return () => {
-      clearInterval(statusInterval);
-    };
-  }, []);
+  // useEffect(() => {
+  //   if (positionEnabledStates.includes(shipmentStatus?.status)) {
+  //     if (directions.length === 0) {
+  //       setDirections(decodeDirections(shipmentStatus?.polyline));
+  //     }
+  //   }
+  // }, [shipmentStatus]);
 
   const markers = useMemo(
-    () => getMarkersList(shipmentStatus, driverPosition),
+    () =>
+      getMarkersList(
+        shipmentStatus?.startPoint ? shipmentStatus : currentShipment,
+        driverPosition,
+      ),
     [shipmentStatus, driverPosition],
   );
 
+  console.log(markers);
   return (
     <Screen
       style={{height, width}}
       scrollable={false}
       enableAvoidKeyboard={false}>
       <Map
-        style={{height, width}}
+        style={
+          // {width, height: height * 0.75}
+          {flex: 1}
+        }
         markers={markers}
         minMarkerAnimation={0}
-        directions={directions}
+        edgePadding={{
+          top: 40,
+          bottom: 40,
+        }}
+        // directions={directions}
       />
-      <DraggableBottomView initialHiddenContentPercentage={0.35}>
-        <CardContainer>
-          <ShipmentDetailCard />
-        </CardContainer>
-      </DraggableBottomView>
+      <CardContainer>
+        <ShipmentDetailCard />
+      </CardContainer>
     </Screen>
   );
 };
 
-const CardContainer = styled(Container)`
-  height: ${(props) =>
-    Platform.select({
-      web: props.theme.screenHeight * 0.7,
-      native: scaleDp(450),
-    })}px;
+const CardContainer = styled.View`
+  width: 100%;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  background-color: ${theme.white};
+  box-shadow: 3px -3px 8px ${theme.shadowColor};
+  margin-bottom: 40px;
+  bottom: 25px;
 `;

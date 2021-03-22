@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import loginService from 'services/loginService';
 import {initialValues as commonInitialValues} from 'components/navigation/RegisterScreen/formikConfig';
-import {initialValues as driverDataInitialValues} from 'components/navigation/RegisterDriverDataScreen/registerDriverDataFormikConfig';
+import {initialValues as driverDataInitialValues} from 'components/navigation/RegisterPersonalDataScreen/formikConfig';
 import {initialValues as vehiculeDataInitialValues} from 'components/navigation/RegisterDriverVehiculeDataScreen/vehiculeDataFormikConfig';
 import {initialValues as legalDataInitialValues} from 'components/navigation/RegisterDriverLegalDataScreen/legalDriverDataFormikConfig';
 import {receiveLoginSuccess} from 'redux-store/slices/loginSlice';
@@ -10,8 +10,8 @@ const initialState = {
   userToken: null,
   courrier_id: null,
   data: {
-    common: commonInitialValues,
-    driverData: driverDataInitialValues,
+    common: commonInitialValues({}),
+    driverData: driverDataInitialValues({}, true),
     vehiculeData: vehiculeDataInitialValues,
     legalData: legalDataInitialValues,
   },
@@ -34,20 +34,29 @@ const slice = createSlice({
     receiveRegisterSuccess: (state, {payload}) => {
       state.loading.data = false;
       state.userToken = payload.userToken;
+      state.data = initialState.data;
     },
     receiveRegisterFail: (state, action) => {
       state.loading.data = false;
       state.error.data = action.payload;
     },
-    receiveCourrierDataSuccess: (state, action) => {
+    receiveCourrierDataSuccess: (
+      state,
+      {payload: {courrierId, userToken, ...payload}},
+    ) => {
       state.loading.data = false;
-      state.courrier_id = action.payload;
+      state.data.driverData = payload;
+      state.courrier_id = courrierId;
+      state.userToken = userToken;
     },
     receiveCourrierVehicleDataSuccess: (state, action) => {
       state.loading.data = false;
     },
     receiveCourrierLegaldataSuccess: (state, action) => {
       state.loading.data = false;
+    },
+    updateCommonUserData: (state, action) => {
+      state.data.common = action.payload;
     },
   },
   extraReducers: {
@@ -66,47 +75,75 @@ export const {
   requestRegister,
   receiveRegisterSuccess,
   receiveRegisterFail,
+  updateCommonUserData,
 } = slice.actions;
 
 /**
  * @THUNK
  */
 
-export const registerUser = (
-  {phone, ...userData},
-  dispatchLogin = true,
-) => async (dispatch) => {
+export const registerUser = (personalData, isDriver) => async (
+  dispatch,
+  getState,
+) => {
+  const accountUserData = selectCommonRegisterData(getState());
   dispatch(requestRegister());
   try {
+    const {countryCode, areaCode, number, ...courrierData} = personalData;
     const user = {
-      ...userData,
+      ...accountUserData,
       phone: {
-        country_code: '0054',
-        area_code: '911',
-        number: phone,
+        countryCode: countryCode,
+        areaCode: areaCode,
+        number: number,
       },
     };
     const {data} = await loginService.registerNewUser(user);
-    dispatch(receiveRegisterSuccess({...user, ...data}));
-    dispatchLogin && dispatch(receiveLoginSuccess({...user, ...data}));
+    try {
+      isDriver &&
+        (await dispatch(
+          registerDriverPersonalData(courrierData, data.userToken),
+        ));
+    } catch (e) {
+      return await dispatch(registerDriverPersonalData(courrierData));
+    }
+    !isDriver && dispatch(receiveLoginSuccess({...user, ...data}));
   } catch (e) {
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
 
-export const registerDriverPersonalData = (personalData) => async (
-  dispatch,
-  getState,
-) => {
+export const registerDriverPersonalData = (
+  {profile, dateOfBirth, ...personalData},
+  token,
+) => async (dispatch) => {
   dispatch(requestRegister());
   try {
-    delete personalData.profileImage;
-    personalData.document = parseInt(personalData.document);
-    const {data} = await loginService.registerCourrierPersonalData(
-      personalData,
+    const numericData = Object.keys(personalData).reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: parseInt(personalData?.[key]),
+      }),
+      {},
     );
-    dispatch(receiveCourrierDataSuccess(data));
+    const {data} = await loginService.registerCourrierPersonalData(
+      {
+        dateOfBirth: dateOfBirth?.format('DD/MM/YYYY'),
+        ...numericData,
+      },
+      token,
+    );
+    dispatch(
+      receiveCourrierDataSuccess({
+        userToken: token,
+        ...data,
+        profile,
+        dateOfBirth: dateOfBirth?.format('DD/MM/YYYY'),
+        ...numericData,
+      }),
+    );
   } catch (e) {
+    console.log(e);
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -118,13 +155,16 @@ export const registerDriverVehicleData = (vehicleData) => async (
   dispatch(requestRegister());
   try {
     const {courrier_id} = getState().register;
-    vehicleData.carYear = parseInt(vehicleData?.carYear);
+    const {licenseFront, licenseBack, carYear, ...values} = vehicleData;
+    vehicleData.carYear = parseInt(carYear);
     await loginService.registerCourrierVehicleData({
-      ...vehicleData,
-      ...courrier_id,
+      ...values,
+      carYear: parseInt(carYear),
+      courrier_id,
     });
-    dispatch(receiveCourrierVehicleDataSuccess());
+    dispatch(receiveCourrierVehicleDataSuccess(vehicleData));
   } catch (e) {
+    console.log(e);
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -135,13 +175,11 @@ export const registerDriverLegaleData = (legalData) => async (
 ) => {
   dispatch(requestRegister());
   try {
-    const {courrier_id} = getState().register;
-    await loginService.registerCourrierLegalData({
-      ...legalData,
-      ...courrier_id,
-    });
+    console.log(legalData);
+    await loginService.registerCourrierLegalData(legalData);
     dispatch(receiveCourrierLegaldataSuccess());
   } catch (e) {
+    console.log(e);
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -151,3 +189,9 @@ export const registerDriverLegaleData = (legalData) => async (
  */
 export const selectIsLoadingRegister = (state) => state.register.loading.data;
 export const selectRegisterError = (state) => state.register.error.data;
+
+export const selectCommonRegisterData = (state) =>
+  state.register.data?.common || {};
+
+export const selectRegisterDriverData = (state) =>
+  state.register.data?.driverData || {};

@@ -14,7 +14,7 @@ export const Dropdown = ({visible, ...props}) => {
   const measureInput = useCallback(
     ({nativeEvent: {layout}}) => {
       setInputMeasures({
-        top: layout.y + layout.height - scaleDp(25),
+        top: layout.y + layout.height - 15,
         width: layout.width,
       });
     },
@@ -55,7 +55,10 @@ export const Dropdown = ({visible, ...props}) => {
       {dropdownOpen && (
         <FlatList
           onBlur={() => setDropdownOpen(false)}
-          style={[styles.listContainer, inputMeasures]}
+          style={[
+            styles.listContainer,
+            {top: inputMeasures.top, width: inputMeasures.width - 40},
+          ]}
           nestedScrollEnabled
           removeClippedSubviews={false}
           keyExtractor={(_, i) => i.toString()}
@@ -94,8 +97,9 @@ const styles = StyleSheet.create({
   listContainer: {
     width: '100%',
     position: 'absolute',
-    backgroundColor: theme.white,
+    backgroundColor: theme.grayBackground,
     maxHeight: scaleDp(250),
+    borderWidth: 0,
     borderBottomLeftRadius: scaleDp(8),
     borderBottomRightRadius: scaleDp(8),
     paddingHorizontal: scaleDp(10),

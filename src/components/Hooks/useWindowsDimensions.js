@@ -37,6 +37,10 @@ export const useWindowDimension = () => {
     [setCurrentDimension],
   );
 
+  const widthWithPadding = useMemo(() => dimensions.width - 40, [
+    dimensions.width,
+  ]);
+
   useEffect(() => {
     if (Platform.OS === 'web') {
       Dimensions.addEventListener('change', (e) => handleChange(e));
@@ -48,5 +52,6 @@ export const useWindowDimension = () => {
     ...currentDimension,
     isMobile,
     isPWA,
+    widthWithPadding,
   };
 };

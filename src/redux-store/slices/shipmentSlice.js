@@ -1,11 +1,21 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, createSelector} from '@reduxjs/toolkit';
+import {defaultMemoize, createSelectorCreator} from 'reselect';
 import shipmentService from 'services/shipmentService';
 import courrierService from 'services/courrierService';
 import dayjs from 'dayjs';
+import {
+  createPositionCheckSelector,
+  createStateCheckSelector,
+} from 'redux-store/customSelectors';
 
 const initialState = {
   currentShipment: {},
-  driverPosition: null,
+  driverPosition: {
+    latitude: 0,
+    longitude: 0,
+    timestamp: 0,
+    lastUpdate: '',
+  },
   shipmentStatus: null,
   loading: {
     cancel: false,
@@ -43,7 +53,10 @@ const slice = createSlice({
     },
     receiveDriverPositionSuccess: (state, action) => {
       state.loading.driverPosition = true;
-      state.driverPosition = action.payload;
+      state.driverPosition = {
+        ...action.payload,
+        lastUpdate: '',
+      };
     },
     receiveDriverPositionFail: (state, action) => {
       state.loading.driverPosition = true;
@@ -118,7 +131,7 @@ export const fetchShipmentDriverPosition = () => async (dispatch, getState) => {
   try {
     const {
       courrier: {id},
-    } = selectCurrentShipment(getState());
+    } = selectCurrentShipmentStatus(getState());
     const {data} = await courrierService.getPosition(id);
     dispatch(
       receiveDriverPositionSuccess({
@@ -148,11 +161,24 @@ export const cancelShipment = () => async (dispatch, getState) => {
  * @SELECTORS
  */
 
-export const selectCurrentShipment = (state) => state.shipment.currentShipment;
+export const selectCurrentShipment = createSelector(
+  (state) => state.shipment.currentShipment,
+  (s) => s,
+);
 
 export const selectIsLoadingShipmentStatus = (state) =>
   state.shipment.loading.status;
 
-export const selectDriverPosition = (state) => state.shipment.driverPosition;
-export const selectCurrentShipmentStatus = (state) =>
-  state.shipment.shipmentStatus;
+export const selectDriverPosition = createPositionCheckSelector(
+  (state) => state.shipment.driverPosition,
+  (d) => d,
+);
+export const selectCurrentShipmentStatus = createStateCheckSelector(
+  (state) => state.shipment?.shipmentStatus,
+  (s) => s,
+);
+
+export const selectCurrentShipmentStatusString = createStateCheckSelector(
+  (state) => state.shipment?.shipmentStatus,
+  (shipmentStatus) => shipmentStatus?.status,
+);

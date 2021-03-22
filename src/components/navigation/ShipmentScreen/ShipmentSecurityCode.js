@@ -6,34 +6,32 @@ import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {useSelector} from 'react-redux';
 import {selectCurrentShipmentStatus} from 'redux-store/slices/shipmentSlice';
 import {theme} from 'constants/theme';
+import {Title} from 'components/ui/Title';
+import {StaticInputField} from 'components/ui/StaticInputField';
 
 export const ShipmentSecurityCode = () => {
   const status = useSelector(selectCurrentShipmentStatus);
   return (
-    <Container width="100%">
-      <AppText width="100%" textAlign="center">
-        Tu codigo de seguridad es:
+    <>
+      <Title size={18}>El conductor ha llegado a la direccion de entrega</Title>
+      <AppText fontSize={12}>
+        Muéstrale este código para que te entregue el pedido
       </AppText>
-      <Code bold>{status?.secureCode}</Code>
-      <Disclaimer>
-        Dale este codigo al conductor para que te pueda entregar el paquete
-      </Disclaimer>
-    </Container>
+      <CodeContainer>
+        <StaticInputField
+          textAlign="center"
+          bold
+          fontSize={24}
+          label="Codigo de seguridad">
+          {status?.secureCode}
+        </StaticInputField>
+      </CodeContainer>
+    </>
   );
 };
 
-const Code = styled(AppText)`
+const CodeContainer = styled.View`
   width: 100%;
-  text-align: center;
-  font-size: ${scaleDpTheme(25)};
-  margin-top: ${scaleDpTheme(10)};
-  margin-bottom: ${scaleDpTheme(20)};
-`;
-
-const Disclaimer = styled(AppText)`
-  font-size: ${scaleDpTheme(12)};
-  color: ${theme.backdropColor};
-  text-align: center;
-  width: 100%;
-  margin-bottom: ${scaleDpTheme(10)};
+  align-items: center;
+  padding: 15px 0 0;
 `;

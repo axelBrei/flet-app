@@ -45,6 +45,7 @@ export const DriverStack = () => {
           component={DriverDeliveryConfirmation}
           options={{
             title: 'Confimacion de envío',
+            headerShown: false,
           }}
         />
       )}

@@ -17,7 +17,11 @@ export const Loader = ({
   ...props
 }) => {
   const renderLoader = () => (
-    <View style={{alignItems: 'center', justifyContent: 'center'}}>
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
       <ActivityIndicator
         size={Platform.OS === 'ios' ? 'large' : scaleDp(size || 50)}
         animating
@@ -27,9 +31,9 @@ export const Loader = ({
     </View>
   );
 
-  const Wrapper = onPlace ? View : React.Fragment;
+  const Wrapper = onPlace ? ComponentContainer : React.Fragment;
   if (unmount && loading) {
-    return <Wrapper>{renderLoader()}</Wrapper>;
+    return <ComponentContainer>{renderLoader()}</ComponentContainer>;
   }
   return (
     <Wrapper
@@ -56,24 +60,30 @@ Loader.propTypes = {
   message: PropTypes.string,
 };
 
+const ComponentContainer = styled.View`
+  height: ${({theme}) => theme.screenHeight}px;
+  align-items: center;
+  justify-content: center;
+`;
+
 const LoaderContainer = styled(Container)`
-  height: 100%;
   align-items: center;
   justify-content: center;
   ${(props) =>
     props.unmount &&
     css`
+      height: ${({theme}) => theme.screenHeight}px;
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
       z-index: 100;
     `}
 `;
 
 const Message = styled(AppText)`
-  font-size: ${scaleDpTheme(15)};
-  margin: ${scaleDpTheme(7)};
+  font-size: 16px;
+  margin: 10px 0;
   text-align: center;
+  font-weight: bold;
 `;

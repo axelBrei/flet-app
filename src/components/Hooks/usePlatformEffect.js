@@ -13,7 +13,12 @@ export const usePlatformEffect = (
   conditions: Array,
   platform: String,
 ) => {
-  if (Platform.OS === platform) {
-    useEffect(callback, conditions);
-  }
+  // if (Platform.OS === platform) {
+  //   useEffect(callback, conditions);
+  // }
+  useEffect(() => {
+    if (Platform.OS === platform) {
+      return callback();
+    }
+  }, conditions);
 };

@@ -6,9 +6,14 @@ const initialState = {
     shipmentDescription: {
       startPoint: null,
       endPoint: null,
-      description: '',
-      value: 0,
-      size: null,
+      package: {
+        description: '',
+        value: null,
+        height: null,
+        width: null,
+        length: null,
+        weight: null,
+      },
     },
     shipmentVehicule: {
       vehiculeSize: null,
@@ -32,8 +37,12 @@ const slice = createSlice({
   name: 'newShipment',
   initialState,
   reducers: {
-    updateShipmentDecription: (state, action) => {
-      state.shipmentRequest.shipmentDescription = action.payload;
+    updateNewShipmentLocations: (state, {payload}) => {
+      state.shipmentRequest.shipmentDescription.startPoint = payload.startPoint;
+      state.shipmentRequest.shipmentDescription.endPoint = payload.endPoint;
+    },
+    updateShipmentDescription: (state, action) => {
+      state.shipmentRequest.shipmentDescription.package = action.payload;
     },
     updateShipmentVehiculeData: (state, action) => {
       state.shipmentRequest.shipmentVehicule = action.payload;
@@ -62,7 +71,8 @@ const slice = createSlice({
 export default slice.reducer;
 
 export const {
-  updateShipmentDecription,
+  updateNewShipmentLocations,
+  updateShipmentDescription,
   updateShipmentVehiculeData,
   requestNewShipment,
   receiveNewShipmentSuccess,
@@ -72,7 +82,7 @@ export const {
 /**
  * @THUNK
  */
-export const createNewShipment = (confirmationData) => async (
+export const createNewShipment = (confirmationInformation) => async (
   dispatch,
   getState,
 ) => {
@@ -82,12 +92,25 @@ export const createNewShipment = (confirmationData) => async (
     shipmentVehicule: shipmentVehicle,
   } = selectNewShipmentData(getState());
   try {
+    const {height, width, length, ...rest} = shipmentDescription.package;
     const {data} = await shipmentService.createNewShipment({
-      shipmentDescription,
-      shipmentVehicle,
-      confirmationInformation: confirmationData,
+      shipmentDescription: {
+        ...shipmentDescription,
+        package: {
+          ...rest,
+          level: height * width * length,
+        },
+      },
+      shipmentVehicle: {
+        ...shipmentVehicle,
+        comments: '',
+      },
+      confirmationInformation: {
+        ...confirmationInformation,
+        paymentMethod: confirmationInformation?.paymentMethod?.title,
+      },
     });
-    dispatch(receiveNewShipmentSuccess(data));
+    dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
   } catch (e) {
     dispatch(receiveNewShipmentFail(e?.response?.data));
   }

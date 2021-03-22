@@ -25,6 +25,7 @@ import {IconButton} from 'components/ui/IconButton';
 const Map = ({
   markers,
   minMarkerAnimation,
+  accesible,
   renderMarker,
   edgePadding,
   directions,
@@ -95,18 +96,19 @@ const Map = ({
           key={index.toString()}
           id={marker.id}
           name={marker.id}
-          color={theme.primaryColor}
           position={{
             lat: marker.latitude,
             lng: marker.longitude,
           }}
           icon={{
             url: icon ? icon : MAP_PIN,
+            color: theme.primaryColor,
+            tintColor: theme.primaryColor,
             scaledSize: iconSize
               ? iconSize
               : {
-                  height: scaleDp(35),
-                  width: scaleDp(35),
+                  height: 30,
+                  width: 30,
                 },
             ...iconOptions,
           }}
@@ -166,6 +168,14 @@ const Map = ({
             streetViewControl: false,
             mapTypeControl: false,
             gestureHandling: 'greedy',
+            draggable: accesible,
+            panControlOptions: accesible,
+            rotateControlOptions: accesible,
+            scaleControlOptions: accesible,
+            zoomControlOptions: accesible,
+            scrollWheel: accesible,
+            zoomControl: accesible,
+            disableDoubleClickZoom: accesible,
           }}
           center={INITIAL_POSITION}
           onLoad={handleLoad}>

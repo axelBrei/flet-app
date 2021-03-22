@@ -1,14 +1,9 @@
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components';
-import {AppText} from 'components/ui/AppText';
-import {MainButton} from 'components/ui/MainButton';
-import {TextLink} from 'components/ui/TextLink';
 import {Container} from 'components/ui/Container';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {AssignedDriverProfile} from 'components/navigation/ShipmentScreen/AssignedDriverProfile';
 import {theme} from 'constants/theme';
 import {useNavigation} from '@react-navigation/native';
-import {Platform} from 'react-native';
+import {LayoutAnimation} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   cancelShipment,
@@ -17,6 +12,7 @@ import {
 import {getCardContentComponent} from 'components/navigation/ShipmentScreen/shipmentHelper';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {routes} from 'constants/config/routes';
+import {LabelIconButton} from 'components/ui/LabelIconButton';
 
 export const ShipmentDetailCard = () => {
   const navigation = useNavigation();
@@ -27,6 +23,10 @@ export const ShipmentDetailCard = () => {
     if (shipmentStatus?.status === SHIPMENT_STATE.FINISHED) {
       navigation.navigate(routes.shipmentFinishedScreen);
     }
+  }, [shipmentStatus]);
+
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [shipmentStatus]);
 
   const onPressHaveAProblem = useCallback(() => {}, []);
@@ -44,28 +44,34 @@ export const ShipmentDetailCard = () => {
     <Card>
       {Component && <Component />}
       <ButtonContainer>
-        <MainButton
-          label="Tengo un problema"
-          inverted
+        <LabelIconButton
+          icon="alert-circle"
+          label={'Tengo un\nproblema'}
           onPress={onPressHaveAProblem}
         />
-        <TextLink fontSize={12} color={theme.error} onPress={onPressCancel}>
-          Cancelar Pedido
-        </TextLink>
+        {shipmentStatus?.status !== SHIPMENT_STATE.DELIVERED && (
+          <LabelIconButton
+            onPress={onPressCancel}
+            icon="close"
+            label="Cancelar"
+            backgroundColor={theme.cancel}
+            fontColor={theme.white}
+          />
+        )}
       </ButtonContainer>
     </Card>
   );
 };
 
 const Card = styled(Container)`
-  width: ${(props) =>
-    props.theme.isMobile ? `${props.theme.screenWidth}px` : '100%'};
+  width: 100%;
   align-items: flex-start;
-  padding: 0 ${scaleDpTheme(5)};
+  padding: 30px 20px 20px;
 `;
 const ButtonContainer = styled(Container)`
   width: 100%;
-  margin-top: ${scaleDpTheme(30)};
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+  margin-top: 25px;
 `;

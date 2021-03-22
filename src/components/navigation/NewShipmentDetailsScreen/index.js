@@ -1,19 +1,10 @@
 import React, {useCallback} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {Screen} from 'components/ui/Screen';
-import {AppText} from 'components/ui/AppText';
-import {RadioGroup} from 'components/ui/RadioGroup';
-import InputField from 'components/ui/InputField';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {Container} from 'components/ui/Container';
-import {FlatList} from 'react-native';
+import {View} from 'react-native';
 import {VehiculeSizeItem} from 'components/navigation/NewShipmentDetailsScreen/VehiculeSizeItem';
-import Motorbike from 'resources/assets/motorbike.svg';
-import Car from 'resources/assets/car.svg';
-import Pickup from 'resources/assets/camioneta.svg';
-import Truck from 'resources/assets/truck.svg';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {MainButton} from 'components/ui/MainButton';
 import {
   formikConfig,
@@ -22,51 +13,25 @@ import {
 import {routes} from 'constants/config/routes';
 import {useDispatch} from 'react-redux';
 import {updateShipmentVehiculeData} from 'redux-store/slices/newShipmentSlice';
-
-const vehiculeSizeOptions = [
-  {
-    id: 1,
-    title: 'Moto',
-    maxWeight: 5,
-    Icon: Motorbike,
-  },
-  {
-    id: 2,
-    title: 'Auto',
-    maxWeight: 70,
-    Icon: Car,
-  },
-  {
-    id: 3,
-    title: 'Camioneta',
-    maxWeight: 120,
-    Icon: Pickup,
-  },
-  {
-    id: 4,
-    title: 'Camión',
-    maxWeight: 500,
-    Icon: Truck,
-  },
-];
-
-const extraHelpOptions = [
-  {text: 'Sí, quiero que el conductor me ayude', value: true},
-  {text: 'No, no hace falta', value: false},
-];
+import {Title} from 'components/ui/Title';
+import {VehicleDimensions} from 'components/navigation/NewShipmentDetailsScreen/VehicleDimensions';
+import {WarningMessage} from 'components/ui/WarningMessage';
+import {DriverHelpCard} from 'components/navigation/NewShipmentDetailsScreen/DriverHelpCard';
+import {vehiculeSizeOptions} from 'constants/vehicleSizes';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
-  const {isMobile} = useWindowDimension();
 
   const onSubmit = useCallback(
     (values) => {
-      delete values[FIELDS.SIZE]?.Icon;
-      const {[FIELDS.EXTRA_HELP]: extraHelp, ...rest} = values;
+      const vehicleSize = values[FIELDS.SIZE];
+      const {dimensions, ...size} = vehicleSize;
       dispatch(
         updateShipmentVehiculeData({
-          ...rest,
-          [FIELDS.EXTRA_HELP]: extraHelp.value,
+          ...values,
+          [FIELDS.SIZE]: {
+            ...size,
+          },
         }),
       );
       navigation.navigate(routes.newShipmentConfirmationScreen);
@@ -74,17 +39,9 @@ export default ({navigation}) => {
     [navigation, dispatch],
   );
 
-  const {
-    values,
-    errors,
-    touched,
-    _setFieldValue,
-    _setFieldTouched,
-    handleSubmit,
-  } = useFormikCustom(
+  const {values, _setFieldValue, handleSubmit} = useFormikCustom(
     formikConfig(onSubmit, {
       [FIELDS.SIZE]: vehiculeSizeOptions[0],
-      [FIELDS.EXTRA_HELP]: extraHelpOptions[1],
     }),
   );
 
@@ -101,55 +58,62 @@ export default ({navigation}) => {
   );
 
   return (
-    <Screen scrollable>
+    <Screen scrollable removeTWF>
+      <VehicleTitle>¿Qué vehículo necesitás?</VehicleTitle>
+      <GridList>{vehiculeSizeOptions.map(renderVehiculeSize)}</GridList>
       <FormContainer>
-        <Title>¿Que tamaño de vehículo necesitas?</Title>
-        {vehiculeSizeOptions.map(renderVehiculeSize)}
-        <Title>¿Necesitas una mano?</Title>
-        <RadioGroup
-          initialIndex={1}
-          style={{
-            marginLeft: scaleDp(10),
-          }}
-          options={extraHelpOptions}
-          onPressOption={_setFieldValue(FIELDS.EXTRA_HELP)}
+        <VehicleDimensions {...values[FIELDS.SIZE]} />
+        <WarningMessage
+          message={
+            'Tené en cuenta que si el paquete no entra en el vehículo seleccionado se te cobrará una extra por el cambio  de vehículo.'
+          }
         />
-        <Title>¿Queres agregar alguna observación?</Title>
-        <CommentText
-          multiline
-          value={values[FIELDS.COMMENTS]}
-          error={touched[FIELDS.COMMENTS] && errors[FIELDS.COMMENTS]}
-          onFocus={_setFieldTouched(FIELDS.COMMENTS)}
-          onChangeText={_setFieldValue(FIELDS.COMMENTS)}
-          label="Ingresá aca tu observación"
-          style={{marginTop: scaleDp(10)}}
+        <DriverHelpCard
+          value={values[FIELDS.EXTRA_HELP]}
+          onChangeValue={_setFieldValue(FIELDS.EXTRA_HELP)}
         />
-        <Button label="Continuar" onPress={handleSubmit} />
+        <ButtonContainer>
+          <MainButton label="Continuar" onPress={handleSubmit} />
+        </ButtonContainer>
       </FormContainer>
     </Screen>
   );
 };
 
+const VehicleTitle = styled(Title)`
+  margin-left: 20px;
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      margin-top: 70px;
+    `}
+`;
+
 const FormContainer = styled(Container)`
-  width: ${(props) =>
-    props.theme.isMobile ? props.theme.screenWidth : scaleDp(350)}px;
-  padding: ${scaleDpTheme(30)} ${scaleDpTheme(20)};
-  ${(props) => props.theme.isMobile && 'padding-top: 0px;'}
+  width: ${(props) => (props.theme.isMobile ? props.theme.screenWidth : 414)}px;
+  padding: 10px 20px;
 `;
 
-const Title = styled(AppText)`
-  margin-top: ${scaleDpTheme(15)};
-  margin-bottom: ${scaleDpTheme(5)};
-  font-size: ${scaleDpTheme(16)};
-  font-weight: bold;
+const GridList = styled(View)`
+  margin-left: 20px;
+  flex-direction: row;
+  justify-content: center;
+
+  width: ${({theme}) => theme.screenWidth}px;
+  flex-basis: 100%;
+  flex-grow: 1;
+  flex-wrap: wrap;
+
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+    `}
 `;
 
-const CommentText = styled(InputField)`
-  height: ${scaleDpTheme(80)};
-  margin-bottom: ${scaleDpTheme(15)};
-`;
-
-const Button = styled(MainButton)`
-  align-self: center;
-  margin-top: ${scaleDpTheme(25)};
+const ButtonContainer = styled(View)`
+  width: 100%;
+  align-items: center;
 `;

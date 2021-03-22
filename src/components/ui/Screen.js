@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {
   Platform,
   StatusBar,
@@ -12,50 +12,58 @@ import {
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {useIsFocused, useRoute} from '@react-navigation/native';
-import {usePlatformEffect, PLATFORMS} from 'components/Hooks/usePlatformEffect';
+import {useIsFocused, useRoute, useFocusEffect} from '@react-navigation/native';
+import {useHeaderHeight} from '@react-navigation/stack';
+import {useBodyLock} from 'components/Contexts/BodyLockContext/index';
+import {PLATFORMS, usePlatformEffect} from 'components/Hooks/usePlatformEffect';
 
 export const Screen = ({
   children,
   scrollable,
-  removeeTWF,
+  removeTWF,
   classname,
   enableAvoidKeyboard,
   alignItems,
   style,
+  ...props
 }) => {
+  const {lockBody, unlockBody} = useBodyLock();
   const route = useRoute();
+  const headerHeight = useHeaderHeight();
   const {isMobile, height, width} = useWindowDimension();
   const isFocused = useIsFocused();
   const ViewComponent = React.useMemo(() => {
     return styled(
-      Platform.OS === 'android' && !removeeTWF
-        ? TouchableWithoutFeedback
-        : View,
+      Platform.OS !== 'web' && !removeTWF ? TouchableWithoutFeedback : View,
     )`
-      background-color: ${(props) => props.theme.colors.backgroundColor};
+      background-color: ${(props) => props.theme.colors.white};
       height: 100%;
       width: 100%;
     `;
-  }, [removeeTWF]);
+  }, [removeTWF]);
 
   const ScrollableLayer = scrollable ? ScrollView : View;
   const NativeSafeAreaView =
     Platform.OS === 'web' ? React.Fragment : SafeAreaView;
 
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === PLATFORMS.WEB && isMobile && !scrollable) {
+        lockBody();
+        return () => {
+          unlockBody();
+        };
+      }
+    }, [scrollable, isMobile, lockBody, unlockBody]),
+  );
+
   usePlatformEffect(
     () => {
-      const BodyScrollLock = require('body-scroll-lock');
-      const body = document.body;
-      if (isFocused && isMobile) {
-        if (!scrollable) {
-          BodyScrollLock.disableBodyScroll(body);
-        } else {
-          BodyScrollLock.enableBodyScroll(body);
-        }
+      if (scrollable) {
+        unlockBody(route);
       }
     },
-    [isFocused, isMobile, scrollable],
+    [scrollable],
     PLATFORMS.WEB,
   );
 
@@ -67,16 +75,15 @@ export const Screen = ({
           style: {
             height: '100%',
             width,
-            backgroundColor: theme.backgroundColor,
+            backgroundColor: theme.white,
           },
         })}>
         <KeyboardAvoidingView
           behavior={Platform.select({
-            android: 'height',
             ios: 'position',
-            web: 'position',
           })}
-          enabled={enableAvoidKeyboard}
+          keyboardVerticalOffset={props.keyboardVerticalOffset}
+          enabled={Platform.OS !== 'web' && enableAvoidKeyboard}
           style={{
             height: '100%',
             width: '100%',
@@ -85,18 +92,21 @@ export const Screen = ({
             <ScrollableLayer
               showsVerticalScrollIndicator={false}
               classname={classname}
+              contentContainerStyle={props.contentContainerStyle}
               style={[
-                {backgroundColor: theme.backgroundColor},
+                {backgroundColor: theme.white},
                 !scrollable && {
                   alignItems,
                   overflow: 'hidden',
                   overscrollBehavior: 'none',
-                  maxHeight: height,
                   maxWidth: width,
                   height: '100%',
                 },
                 Platform.select({
                   web: {
+                    // paddingTop: headerHeight,
+                    // maxHeight: height,
+                    // minHeight: height,
                     overflowX: 'hidden',
                   },
                 }),
@@ -115,5 +125,4 @@ Screen.defaultProps = {
   removeTWF: false,
   scrollable: false,
   enableAvoidKeyboard: true,
-  alignItems: 'center',
 };

@@ -1,15 +1,9 @@
 import React, {useCallback, useEffect} from 'react';
-import {Image, View} from 'react-native';
 import PropTypes from 'prop-types';
-import {MainButton} from 'components/ui/MainButton';
-import styled from 'styled-components';
-import {AppText} from 'components/ui/AppText';
 import {Icon} from 'components/ui/Icon';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {Container} from 'components/ui/Container';
 import {theme} from 'constants/theme';
 import PermissionManager from 'components/Permissions/index';
-import {AnimatedError} from 'components/ui/AnimatedError';
+import InputField from 'components/ui/InputField';
 
 const SelectImage = ({
   label,
@@ -18,6 +12,8 @@ const SelectImage = ({
   acceptTypes,
   value,
   onSelectImage,
+  onFocus,
+  ...props
 }) => {
   const inputRef = React.useRef(null);
 
@@ -30,7 +26,7 @@ const SelectImage = ({
       const image = event.target.files[0];
       onSelectImage({
         ...image,
-        name: image.name,
+        filename: image.name,
         size: image.size,
         mime: image.type,
         modificationDate: image.lastModified,
@@ -40,57 +36,52 @@ const SelectImage = ({
     [onSelectImage],
   );
 
-  const cleanImage = useCallback(() => {
-    onSelectImage(null);
-  }, [onSelectImage]);
+  const cleanImage = useCallback(
+    (t) => {
+      t === '' && onSelectImage(null);
+    },
+    [onSelectImage],
+  );
+
+  const _onFocus = useCallback(
+    (e) => {
+      console.log(e, 'focus');
+      inputRef.current?.click();
+      return true;
+    },
+    [inputRef],
+  );
+
   return (
-    <ComponentContainer>
-      <Container dir="row" alignItems="center">
-        <RoundedIconContainer>
-          {value ? (
-            <SelectedImage source={{uri: value.path}} />
-          ) : (
-            <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
-          )}
-        </RoundedIconContainer>
-        <Container width="100%">
-          <AppText bold width="100%" textAlign="left">
-            {label}
-          </AppText>
-          <input
-            ref={inputRef}
-            id="file-uploader"
-            name="file-uploader"
-            type="file"
-            style={{
-              opacity: 0,
-              height: 1,
-              width: 1,
-              pointerEvents: 'none',
-              position: 'absolute',
-            }}
-            onChange={fileOnChange}
-            accept={acceptTypes}
-            capture="user"
-          />
-          {value ? (
-            <CancelButton
-              onPress={cleanImage}
-              alternative
-              label="Borrar foto"
-            />
-          ) : (
-            <Button
-              onPress={() => inputRef.current?.click()}
-              htmlFor="file-uploader"
-              label="subir foto"
-              inverted
-            />
-          )}
-        </Container>
-      </Container>
-      <AnimatedError error={error} />
-    </ComponentContainer>
+    <>
+      <InputField
+        label={label}
+        value={value?.filename}
+        renderAccesory={() => (
+          <Icon name={'cloud-upload'} color={theme.disabledFont} size={25} />
+        )}
+        clearable
+        onChangeText={cleanImage}
+        onFocus={_onFocus}
+        error={error}
+        {...props}
+      />
+      <input
+        ref={inputRef}
+        id="file-uploader"
+        name="file-uploader"
+        type="file"
+        style={{
+          opacity: 0.01,
+          height: 1,
+          width: 1,
+          pointerEvents: 'none',
+        }}
+        onChange={fileOnChange}
+        accept={acceptTypes}
+        capture="user"
+      />
+    </>
   );
 };
 
@@ -103,38 +94,3 @@ SelectImage.propTypes = {
   maxFiles: PropTypes.number,
 };
 export default SelectImage;
-
-const ComponentContainer = styled(Container)`
-  margin-top: ${scaleDpTheme(5)};
-  margin-bottom: ${scaleDpTheme(15)};
-`;
-
-const Button = styled(MainButton)`
-  height: ${scaleDpTheme(20)};
-  width: ${scaleDpTheme(120)};
-  margin-left: 0;
-`;
-
-const SelectedImage = styled(Image)`
-  height: 135%;
-  width: 135%;
-`;
-
-const CancelButton = styled(MainButton)`
-  height: ${scaleDpTheme(20)};
-  width: ${scaleDpTheme(100)};
-  margin-left: 0;
-`;
-
-const RoundedIconContainer = styled(View)`
-  align-items: center;
-  justify-content: center;
-  border-color: ${theme.accentColor};
-  height: ${scaleDpTheme(48)};
-  width: ${scaleDpTheme(48)};
-  border-width: 2px;
-  border-radius: 50%;
-  padding: ${scaleDpTheme(5)};
-  margin-right: ${scaleDpTheme(3)};
-  overflow: hidden;
-`;

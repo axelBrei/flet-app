@@ -7,7 +7,7 @@ import {SecurityCodeInput} from 'components/navigation/ShipmentDeliveryConfirmat
 import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {Container} from 'components/ui/Container';
 import {Alert, View} from 'react-native';
-import PackageDelivered from 'resources/assets/package_delivered.svg';
+import PackageDelivered from 'resources/images/box_delivered.svg';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -15,12 +15,13 @@ import {
   uploadConfirmationCode,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
+import {ShipmentValueCard} from 'components/navigation/ShipmentDeliveryConfirmationScreen/ShipmentValueCard';
 
 export default () => {
   const dispatch = useDispatch();
-  const {width, height} = useWindowDimension();
+  const {widthWithPadding} = useWindowDimension();
+
   const [securityCode, setSecurityCode] = useState('');
-  const loading = useSelector(selectIsLoadingSecureCode);
 
   const onPressAccept = useCallback(() => {
     if (securityCode.length === 5) {
@@ -31,43 +32,28 @@ export default () => {
   }, [securityCode]);
 
   return (
-    <Screen>
-      <Title bold>Ingrese el codigo de seguridad</Title>
-      <AppText textAlign="center">
-        {
-          'Pedile este codigo a la persona que\\nrealizo el envío para poder finalizarlo'
-        }
-      </AppText>
-      <PackageDelivered width={width * 0.7} height={height * 0.3} />
-      <ContentContainer>
-        <InputContainer>
-          <SecurityCodeInput
-            value={securityCode}
-            onChangeValue={setSecurityCode}
-          />
-        </InputContainer>
-        <Loader loading={loading}>
-          <MainButton label="Finalizar envío" onPress={onPressAccept} />
-        </Loader>
-      </ContentContainer>
+    <Screen scrollable>
+      <ScreenContainer>
+        <ShipmentValueCard />
+        <ImageContainer>
+          <PackageDelivered width={widthWithPadding} height={150} />
+        </ImageContainer>
+        <SecurityCodeInput
+          value={securityCode}
+          onChangeValue={setSecurityCode}
+          onPressAccept={onPressAccept}
+        />
+      </ScreenContainer>
     </Screen>
   );
 };
 
-const Title = styled(AppText)`
-  font-size: ${scaleDpTheme(20)};
-  margin-top: ${scaleDpTheme(15)};
-  margin-bottom: ${scaleDpTheme(30)};
-`;
-
-const ContentContainer = styled(View)`
-  display: flex;
-  flex: 1;
-  padding-top: ${scaleDpTheme(15)};
-  padding-bottom: ${scaleDpTheme(35)};
+const ScreenContainer = styled(Screen)`
+  padding: 0 20px 65px;
   align-items: center;
+  justify-content: center;
 `;
 
-const InputContainer = styled(View)`
-  flex: 1;
+const ImageContainer = styled.View`
+  margin: 20px 0;
 `;

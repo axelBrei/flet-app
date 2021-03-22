@@ -17,7 +17,7 @@ export const persistConfig = {
   storage: AsyncStorage,
   blacklist: [
     'geocoding',
-    process.env.NODE_ENV !== 'production' && 'navigation',
+    process.env.NODE_ENV !== 'development' && 'navigation',
   ],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -27,7 +27,16 @@ const store = configureStore({
   devTools: true,
   middleware: getDefaultMiddleware({
     serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      ignoredActions: [
+        FLUSH,
+        REHYDRATE,
+        PAUSE,
+        PERSIST,
+        PURGE,
+        REGISTER,
+        'shipment/receiveDriverPositionSuccess',
+        'shipment/receiveShipmentStatusSuccess',
+      ],
     },
   }),
 });

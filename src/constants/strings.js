@@ -4,7 +4,7 @@ export const strings = {
     minimumFieldLength: 'Mínimo ${min} caracteres.',
     emailRequired: 'Ingrese un mail válido.',
     validPhone: 'Ingrese un teléfono válido',
-    onlyNumbers: 'Ingrese caracteres unicamente',
+    onlyNumbers: 'Ingrese números unicamente',
     specifycLength: 'Debe ingresar ${length} caracteres',
     maximumFieldLength: 'Maximo ${max} caracteres.',
   },

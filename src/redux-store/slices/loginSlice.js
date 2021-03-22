@@ -40,11 +40,6 @@ const slice = createSlice({
     [receiveRegisterSuccess]: (state, action) => {
       state.userData = action.payload;
     },
-    [receiveCourrierDataSuccess]: (state, {payload}) => {
-      state.userData.courrier = {
-        id: payload,
-      };
-    },
   },
 });
 

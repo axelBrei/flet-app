@@ -24,5 +24,8 @@ export const navigationConfig = (props = {}) => ({
       headerTintColor: theme.fontColor,
     },
   }),
+  cardStyle: {
+    backgroundColor: 'white',
+  },
   ...props,
 });

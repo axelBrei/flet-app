@@ -30,7 +30,7 @@ export default ({route}) => {
         )}
 
         <Navigator
-          initialRouteName={routes.registerDriverVehiculeScreen}
+          // initialRouteName={routes.registerDriverVehiculeScreen}
           screenOptions={navigationConfig({
             title: '',
             headerShown: false,

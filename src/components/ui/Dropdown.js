@@ -5,16 +5,19 @@ import {scaleDp} from 'helpers/responsiveHelper';
 import {AppText} from 'components/ui/AppText';
 import {theme} from 'constants/theme';
 import PropTypes from 'prop-types';
+import {Loader} from 'components/ui/Loader';
+import {Icon} from 'components/ui/Icon';
 
-export const Dropdown = ({visible, ...props}) => {
+export const Dropdown = ({visible, data, ...props}) => {
   const [value, setValue] = useState(props.value?.name ?? props.value);
   const [dropdownOpen, setDropdownOpen] = useState(visible);
   const [inputMeasures, setInputMeasures] = useState({});
 
   const measureInput = useCallback(
     ({nativeEvent: {layout}}) => {
+      console.log(layout);
       setInputMeasures({
-        top: layout.y + layout.height - 15,
+        top: layout.y + layout.height - 18,
         width: layout.width,
       });
     },
@@ -40,6 +43,8 @@ export const Dropdown = ({visible, ...props}) => {
     [props.onChangeText, setValue],
   );
 
+  console.log(data);
+
   return (
     <>
       <InputField
@@ -47,30 +52,43 @@ export const Dropdown = ({visible, ...props}) => {
         onChangeText={onChangeText}
         value={value?.name ?? value}
         onLayout={measureInput}
+        error={null}
+        renderAccesory={() => (
+          <TouchableOpacity onPress={() => setDropdownOpen(!dropdownOpen)}>
+            <Icon
+              name={dropdownOpen ? 'chevron-up' : 'chevron-down'}
+              size={22}
+            />
+          </TouchableOpacity>
+        )}
         onFocus={() => {
           setDropdownOpen(true);
-          props.onFocus();
+          props.onFocus?.();
+          return true;
         }}
       />
       {dropdownOpen && (
         <FlatList
+          data={data}
           onBlur={() => setDropdownOpen(false)}
           style={[
             styles.listContainer,
-            {top: inputMeasures.top, width: inputMeasures.width - 40},
+            {top: inputMeasures.top, width: inputMeasures.width},
           ]}
           nestedScrollEnabled
           removeClippedSubviews={false}
           keyExtractor={(_, i) => i.toString()}
           initialNumToRender={2}
+          contentContainerStyle={styles.list}
           renderItem={({item}) => (
             <TouchableOpacity
               style={styles.item}
               onPress={() => onPressItem(item)}>
-              <AppText numberOfLines={1}>{item.name}</AppText>
+              <AppText style={styles.itemText} numberOfLines={1}>
+                {item.name}
+              </AppText>
             </TouchableOpacity>
           )}
-          data={props.data}
         />
       )}
     </>
@@ -78,6 +96,7 @@ export const Dropdown = ({visible, ...props}) => {
 };
 
 Dropdown.defaultProps = {
+  visible: false,
   data: [],
   onItemPress: () => {},
   value: null,
@@ -98,23 +117,20 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     backgroundColor: theme.grayBackground,
-    maxHeight: scaleDp(250),
-    borderWidth: 0,
+    maxHeight: 250,
     borderBottomLeftRadius: scaleDp(8),
     borderBottomRightRadius: scaleDp(8),
-    paddingHorizontal: scaleDp(10),
-    shadowColor: theme.shadowColor,
-    shadowOffset: {width: 0, height: 13},
-    shadowRadius: 6,
-    zIndex: 100,
-    elevation: 6,
+    zIndex: 999,
   },
   list: {
-    width: '100%',
+    paddingTop: 5,
   },
-  listContent: {width: '100%', height: scaleDp(50)},
   item: {
-    height: scaleDp(35),
-    paddingVertical: scaleDp(5),
+    minHeight: 35,
+    marginTop: 5,
+    marginHorizontal: 20,
+  },
+  itemText: {
+    fontWeight: 'bold',
   },
 });

@@ -33,6 +33,7 @@ export const FIELDS = {
   WIDTH: 'width',
   LENGTH: 'length',
   WEIGHT: 'weight',
+  VEHICLE_TYPE: 'type',
 };
 
 export const initialValues = {
@@ -46,6 +47,7 @@ export const initialValues = {
   [FIELDS.WEIGHT]: '',
   [FIELDS.LICENSE_FRONT]: null,
   [FIELDS.LICENSE_BACK]: null,
+  [FIELDS.VEHICLE_TYPE]: null,
 };
 
 const validationSchema = yup.object({
@@ -73,6 +75,7 @@ const validationSchema = yup.object({
   [FIELDS.WEIGHT]: yup.number().required(requiredField),
   [FIELDS.LICENSE_FRONT]: yup.object().nullable().required(requiredField),
   [FIELDS.LICENSE_BACK]: yup.object().nullable().required(requiredField),
+  [FIELDS.VEHICLE_TYPE]: yup.object().nullable().required(requiredField),
 });
 
 export const vehiculeDataFormikConfig = (onSubmit) => ({

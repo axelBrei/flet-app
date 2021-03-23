@@ -37,6 +37,7 @@ export default ({navigation}) => {
         [FIELDS.HEIGHT]: h,
         [FIELDS.WIDTH]: w,
         [FIELDS.LENGTH]: l,
+        [FIELDS.WEIGHT]: weight,
         ...rest
       } = values;
       dispatch(
@@ -46,6 +47,7 @@ export default ({navigation}) => {
             height: parseInt(h),
             width: parseInt(w),
             length: parseInt(l),
+            weight: parseInt(weight),
           },
         }),
       );
@@ -108,39 +110,6 @@ export default ({navigation}) => {
           setFieldTouched={_setFieldTouched}
           errors={errors}
         />
-        {/*<IconCard*/}
-        {/*  renderImage={(size) => <CarImage height={size} width={size} />}>*/}
-        {/*  <AppText bold color={theme.white} padding={5}>*/}
-        {/*    Capcidad de carga*/}
-        {/*  </AppText>*/}
-        {/*  <DimensionInput*/}
-        {/*    label="Alto"*/}
-        {/*    unitString="Cm."*/}
-        {/*    keyboardType="numeric"*/}
-        {/*    value={values[FIELDS.HEIGHT]}*/}
-        {/*    onBlur={_setFieldTouched(FIELDS.HEIGHT)}*/}
-        {/*    onChangeText={_setFieldValue(FIELDS.HEIGHT)}*/}
-        {/*    error={touched[FIELDS.HEIGHT] && errors[FIELDS.HEIGHT]}*/}
-        {/*  />*/}
-        {/*  <DimensionInput*/}
-        {/*    label="Ancho"*/}
-        {/*    unitString="Cm."*/}
-        {/*    keyboardType="numeric"*/}
-        {/*    value={values[FIELDS.WIDTH]}*/}
-        {/*    onBlur={_setFieldTouched(FIELDS.WIDTH)}*/}
-        {/*    onChangeText={_setFieldValue(FIELDS.WIDTH)}*/}
-        {/*    error={touched[FIELDS.WIDTH] && errors[FIELDS.WIDTH]}*/}
-        {/*  />*/}
-        {/*  <DimensionInput*/}
-        {/*    label="Largo"*/}
-        {/*    unitString="Cm."*/}
-        {/*    keyboardType="numeric"*/}
-        {/*    value={values[FIELDS.LENGTH]}*/}
-        {/*    onBlur={_setFieldTouched(FIELDS.LENGTH)}*/}
-        {/*    onChangeText={_setFieldValue(FIELDS.LENGTH)}*/}
-        {/*    error={touched[FIELDS.LENGTH] && errors[FIELDS.LENGTH]}*/}
-        {/*  />*/}
-        {/*</IconCard>*/}
         <ImagesContainer>
           <SelectImage
             style={{width: '49%'}}
@@ -159,7 +128,6 @@ export default ({navigation}) => {
             error={touched[FIELDS.LICENSE_BACK] && errors[FIELDS.LICENSE_BACK]}
           />
         </ImagesContainer>
-
         <MainButton
           loading={isLoading}
           onPress={handleSubmit}

@@ -33,40 +33,44 @@ export const useModal = (Content, contentProps, modalProps) => {
     [setIsVisible],
   );
 
-  const renderModal = useCallback(() => {
-    return (
-      <Modal
-        isVisible={isVisible}
-        onBackdropPress={!modalProps?.cancelable ? () => {} : closeModal}
-        closeModal={closeModal}
-        style={
-          modalProps?.fullscreen && {
-            marginHorizontal: 0,
-            marginTop: 35,
-            marginBottom: 0,
-            justifyContent: 'flex-end',
+  const renderModal = useCallback(
+    ({...props}) => {
+      return (
+        <Modal
+          isVisible={isVisible}
+          onBackdropPress={!modalProps?.cancelable ? () => {} : closeModal}
+          closeModal={closeModal}
+          style={
+            modalProps?.fullscreen && {
+              marginHorizontal: 0,
+              marginTop: 35,
+              marginBottom: 0,
+              justifyContent: 'flex-end',
+            }
           }
-        }
-        {...modalProps}>
-        <ModalContext.Provider
-          value={{
-            closeModal,
-            openModal,
-            toggleModal,
-            isVisible,
-          }}>
-          <Content
-            isModalVisible={isVisible}
-            toggleModal={toggleModal}
-            closeModal={closeModal}
-            openModal={openModal}
-            {...contentProps}
-            {...extraParams}
-          />
-        </ModalContext.Provider>
-      </Modal>
-    );
-  }, [openModal, closeModal, toggleModal, isVisible]);
+          {...modalProps}>
+          <ModalContext.Provider
+            value={{
+              closeModal,
+              openModal,
+              toggleModal,
+              isVisible,
+            }}>
+            <Content
+              isModalVisible={isVisible}
+              toggleModal={toggleModal}
+              closeModal={closeModal}
+              openModal={openModal}
+              {...contentProps}
+              {...extraParams}
+              {...props}
+            />
+          </ModalContext.Provider>
+        </Modal>
+      );
+    },
+    [openModal, closeModal, toggleModal, isVisible],
+  );
 
   return {
     Modal: renderModal,

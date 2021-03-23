@@ -32,6 +32,7 @@ export const FIELDS = {
   HEIGHT: 'height',
   WIDTH: 'width',
   LENGTH: 'length',
+  WEIGHT: 'weight',
 };
 
 export const initialValues = {
@@ -42,6 +43,7 @@ export const initialValues = {
   [FIELDS.HEIGHT]: '',
   [FIELDS.WIDTH]: '',
   [FIELDS.LENGTH]: '',
+  [FIELDS.WEIGHT]: '',
   [FIELDS.LICENSE_FRONT]: null,
   [FIELDS.LICENSE_BACK]: null,
 };
@@ -68,6 +70,7 @@ const validationSchema = yup.object({
   [FIELDS.HEIGHT]: yup.string().required(requiredField),
   [FIELDS.WIDTH]: yup.number().required(requiredField),
   [FIELDS.LENGTH]: yup.number().required(requiredField),
+  [FIELDS.WEIGHT]: yup.number().required(requiredField),
   [FIELDS.LICENSE_FRONT]: yup.object().nullable().required(requiredField),
   [FIELDS.LICENSE_BACK]: yup.object().nullable().required(requiredField),
 });

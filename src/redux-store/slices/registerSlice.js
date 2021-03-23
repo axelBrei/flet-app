@@ -119,17 +119,11 @@ export const registerDriverPersonalData = (
 ) => async (dispatch) => {
   dispatch(requestRegister());
   try {
-    const numericData = Object.keys(personalData).reduce(
-      (acc, key) => ({
-        ...acc,
-        [key]: parseInt(personalData?.[key]),
-      }),
-      {},
-    );
     const {data} = await loginService.registerCourrierPersonalData(
       {
+        ...personalData,
         dateOfBirth: dateOfBirth?.format('DD/MM/YYYY'),
-        ...numericData,
+        document: parseInt(personalData.document),
       },
       token,
     );
@@ -138,8 +132,8 @@ export const registerDriverPersonalData = (
         userToken: token,
         ...data,
         profile,
+        ...personalData,
         dateOfBirth: dateOfBirth?.format('DD/MM/YYYY'),
-        ...numericData,
       }),
     );
   } catch (e) {

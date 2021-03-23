@@ -16,6 +16,9 @@ export default ({route}) => {
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
 
+  route.params = {
+    driver: true,
+  };
   return (
     <ScreenComponent scrollable>
       <Container>
@@ -27,6 +30,7 @@ export default ({route}) => {
         )}
 
         <Navigator
+          initialRouteName={routes.registerDriverVehiculeScreen}
           screenOptions={navigationConfig({
             title: '',
             headerShown: false,

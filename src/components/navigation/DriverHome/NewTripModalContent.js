@@ -15,7 +15,7 @@ import {StaticInputField} from 'components/ui/StaticInputField';
 import {IconCard} from 'components/ui/IconCard';
 import PackageImage from 'resources/images/open-box.svg';
 import DestinationImage from 'resources/images/destination-pin.svg';
-import {RowWithBoldData} from 'components/navigation/DriverHome/RowWithBoldData';
+import {RowWithBoldData} from 'components/ui/RowWithBoldData';
 
 const strings = {
   newTrip: '¡Nuevo viaje!',

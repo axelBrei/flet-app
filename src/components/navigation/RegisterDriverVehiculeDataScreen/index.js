@@ -24,6 +24,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {IconCard} from 'components/ui/IconCard';
 import {theme} from 'constants/theme';
+import {VehicleCapacityCard} from 'components/navigation/RegisterDriverVehiculeDataScreen/VehicleCapacityCard';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -79,7 +80,7 @@ export default ({navigation}) => {
           error={touched[FIELDS.PLATE] && errors[FIELDS.PLATE]}
         />
         <InputField
-          label="Modelo"
+          label="Marca y Modelo"
           value={values[FIELDS.MODEL]}
           onBlur={_setFieldTouched(FIELDS.MODEL)}
           onChangeText={_setFieldValue(FIELDS.MODEL)}
@@ -100,39 +101,46 @@ export default ({navigation}) => {
           onChangeText={_setFieldValue(FIELDS.COLOR)}
           error={touched[FIELDS.COLOR] && errors[FIELDS.COLOR]}
         />
-        <IconCard
-          renderImage={(size) => <CarImage height={size} width={size} />}>
-          <AppText bold color={theme.white} padding={5}>
-            Capcidad de carga
-          </AppText>
-          <DimensionInput
-            label="Alto"
-            unitString="Cm."
-            keyboardType="numeric"
-            value={values[FIELDS.HEIGHT]}
-            onBlur={_setFieldTouched(FIELDS.HEIGHT)}
-            onChangeText={_setFieldValue(FIELDS.HEIGHT)}
-            error={touched[FIELDS.HEIGHT] && errors[FIELDS.HEIGHT]}
-          />
-          <DimensionInput
-            label="Ancho"
-            unitString="Cm."
-            keyboardType="numeric"
-            value={values[FIELDS.WIDTH]}
-            onBlur={_setFieldTouched(FIELDS.WIDTH)}
-            onChangeText={_setFieldValue(FIELDS.WIDTH)}
-            error={touched[FIELDS.WIDTH] && errors[FIELDS.WIDTH]}
-          />
-          <DimensionInput
-            label="Largo"
-            unitString="Cm."
-            keyboardType="numeric"
-            value={values[FIELDS.LENGTH]}
-            onBlur={_setFieldTouched(FIELDS.LENGTH)}
-            onChangeText={_setFieldValue(FIELDS.LENGTH)}
-            error={touched[FIELDS.LENGTH] && errors[FIELDS.LENGTH]}
-          />
-        </IconCard>
+        <VehicleCapacityCard
+          values={values}
+          touched={touched}
+          setFieldValue={_setFieldValue}
+          setFieldTouched={_setFieldTouched}
+          errors={errors}
+        />
+        {/*<IconCard*/}
+        {/*  renderImage={(size) => <CarImage height={size} width={size} />}>*/}
+        {/*  <AppText bold color={theme.white} padding={5}>*/}
+        {/*    Capcidad de carga*/}
+        {/*  </AppText>*/}
+        {/*  <DimensionInput*/}
+        {/*    label="Alto"*/}
+        {/*    unitString="Cm."*/}
+        {/*    keyboardType="numeric"*/}
+        {/*    value={values[FIELDS.HEIGHT]}*/}
+        {/*    onBlur={_setFieldTouched(FIELDS.HEIGHT)}*/}
+        {/*    onChangeText={_setFieldValue(FIELDS.HEIGHT)}*/}
+        {/*    error={touched[FIELDS.HEIGHT] && errors[FIELDS.HEIGHT]}*/}
+        {/*  />*/}
+        {/*  <DimensionInput*/}
+        {/*    label="Ancho"*/}
+        {/*    unitString="Cm."*/}
+        {/*    keyboardType="numeric"*/}
+        {/*    value={values[FIELDS.WIDTH]}*/}
+        {/*    onBlur={_setFieldTouched(FIELDS.WIDTH)}*/}
+        {/*    onChangeText={_setFieldValue(FIELDS.WIDTH)}*/}
+        {/*    error={touched[FIELDS.WIDTH] && errors[FIELDS.WIDTH]}*/}
+        {/*  />*/}
+        {/*  <DimensionInput*/}
+        {/*    label="Largo"*/}
+        {/*    unitString="Cm."*/}
+        {/*    keyboardType="numeric"*/}
+        {/*    value={values[FIELDS.LENGTH]}*/}
+        {/*    onBlur={_setFieldTouched(FIELDS.LENGTH)}*/}
+        {/*    onChangeText={_setFieldValue(FIELDS.LENGTH)}*/}
+        {/*    error={touched[FIELDS.LENGTH] && errors[FIELDS.LENGTH]}*/}
+        {/*  />*/}
+        {/*</IconCard>*/}
         <ImagesContainer>
           <SelectImage
             style={{width: '49%'}}

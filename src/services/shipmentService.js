@@ -24,6 +24,9 @@ const cancelShipment = async (shipmentId) =>
 const checkShipmentStatus = async (shipmentId) =>
   await api.get(`shipment/status?shipment_id=${shipmentId}`);
 
+const getNewShipmentPrice = async (shipmentData) =>
+  await api.post('shipment/price', shipmentData);
+
 export default {
   fetchPendingShipments,
   createNewShipment,
@@ -34,4 +37,5 @@ export default {
   updateShipmentToPickedUp,
   updateShipmentToDelivered,
   uploadConfirmationCode,
+  getNewShipmentPrice,
 };

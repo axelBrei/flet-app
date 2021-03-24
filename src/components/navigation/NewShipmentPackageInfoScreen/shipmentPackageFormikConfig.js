@@ -5,7 +5,6 @@ import {setLocale} from 'yup';
 yup.setLocale({
   mixed: {
     notType: ({path, type, value, originalValue}) => {
-      console.log(type);
       switch (type) {
         case 'number':
           return 'Debe ser númerico';

@@ -14,6 +14,10 @@ import {
   selectNewShipmentError,
   selectNewShipmentLoading,
   createNewShipment,
+  fetchShipmentPrice,
+  clearShipmentPrice,
+  selectNewShipmentPrice,
+  selectShipmentPriceError,
 } from 'redux-store/slices/newShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {CardContainer} from 'components/ui/CardContainer';
@@ -22,6 +26,7 @@ import {StaticInputField} from 'components/ui/StaticInputField';
 import {InsuranceCard} from 'components/navigation/NewShipmentConfirmationScreen/InsuranceCard';
 import {PaymentMethodCard} from 'components/navigation/NewShipmentConfirmationScreen/PaymentMethodCard';
 import {MainButton} from 'components/ui/MainButton';
+import {ShipmentPrice} from 'components/navigation/NewShipmentConfirmationScreen/ShipmentPrice';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -29,6 +34,12 @@ export default ({navigation}) => {
   const loading = useSelector(selectNewShipmentLoading);
   const error = useSelector(selectNewShipmentError);
   const {shipmentDescription} = useSelector(selectNewShipmentData);
+  const priceError = useSelector(selectShipmentPriceError);
+  const currentPrice = useSelector(selectNewShipmentPrice);
+
+  useEffect(() => {
+    dispatch(clearShipmentPrice());
+  }, []);
 
   const onSubmit = useCallback(
     (values) => {
@@ -47,14 +58,13 @@ export default ({navigation}) => {
     isSubmitting,
   } = useFormikCustom(formikConfig(onSubmit));
 
-  useEffect(() => {
-    if (isSubmitting && !loading && !error) {
-      console.log(navigation);
-      // TODO navigate to confirmation success screen
-      // navigation.navigate(routes.shipmentScreen);
-    }
-  }, [loading, error, isSubmitting, navigation]);
-  console.log(errors, error);
+  const onChangeInsurance = useCallback(
+    (val) => {
+      _setFieldValue(FIELDS.INSURANCE)(val);
+      dispatch(fetchShipmentPrice(values));
+    },
+    [_setFieldValue, values],
+  );
 
   return (
     <ScreenComponent scrollable={!loading}>
@@ -83,7 +93,7 @@ export default ({navigation}) => {
         </ShipmentInformationContainer>
         <FormContainer>
           <InsuranceCard
-            onChangeInsurance={_setFieldValue(FIELDS.INSURANCE)}
+            onChangeInsurance={onChangeInsurance}
             selectedInsurance={values[FIELDS.INSURANCE]}
             error={touched[FIELDS.INSURANCE] && errors[FIELDS.INSURANCE]}
             onFocus={_setFieldTouched(FIELDS.INSURANCE)}
@@ -96,7 +106,14 @@ export default ({navigation}) => {
             }
             onFocus={_setFieldTouched(FIELDS.PAYMENT_METHOD)}
           />
-          <Button label="Confirmar" onPress={handleSubmit} />
+          <CardContainer backgroundColor={theme.grayBackground}>
+            <ShipmentPrice />
+            <Button
+              label="Confirmar"
+              onPress={handleSubmit}
+              disabled={priceError || !currentPrice}
+            />
+          </CardContainer>
         </FormContainer>
       </Loader>
     </ScreenComponent>
@@ -151,5 +168,5 @@ const ColorizedCard = styled(CardContainer)`
 `;
 
 const Button = styled(MainButton)`
-  margin: 20px 0;
+  margin: 0 20px 20px;
 `;

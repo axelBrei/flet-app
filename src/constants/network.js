@@ -3,7 +3,6 @@ import Config from 'react-native-config';
 import {keysToCamelCase, keysToSnakeCase} from 'helpers/objectHelper.js';
 import {loginAs} from 'redux-store/slices/loginSlice';
 
-console.log(Config);
 export const api = axios.create({
   baseURL: Config.REACT_APP_BASE_URL + '/',
   headers: {

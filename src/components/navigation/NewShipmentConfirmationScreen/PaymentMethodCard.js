@@ -70,6 +70,7 @@ const PressableContainer = styled.TouchableOpacity`
   width: 100%;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 `;
 
 const PaymentMethodText = styled(AppText)`

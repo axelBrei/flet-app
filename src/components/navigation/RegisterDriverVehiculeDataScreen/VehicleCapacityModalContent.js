@@ -46,8 +46,6 @@ export const VehicleCapacityModalContent = ({
     }
   };
 
-  console.log(errors);
-
   return (
     <Container>
       <Title width="100%" textAlign="left">

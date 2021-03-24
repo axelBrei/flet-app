@@ -104,7 +104,6 @@ export default ({navigation}) => {
   );
 
   useEffect(() => {
-    console.log(pendingShipment);
     if (pendingShipment) {
       open();
     }

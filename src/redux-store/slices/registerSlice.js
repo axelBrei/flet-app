@@ -169,7 +169,6 @@ export const registerDriverLegaleData = (legalData) => async (
 ) => {
   dispatch(requestRegister());
   try {
-    console.log(legalData);
     await loginService.registerCourrierLegalData(legalData);
     dispatch(receiveCourrierLegaldataSuccess());
   } catch (e) {

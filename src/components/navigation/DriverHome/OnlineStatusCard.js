@@ -19,7 +19,6 @@ export const OnlineStatusCard = ({onPressButton}) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [isOnline]);
 
-  console.log(isOnline);
   return (
     <Container>
       <Row>

@@ -61,7 +61,6 @@ const babelLoaderConfiguration = {
 const dotenv = require('dotenv').config({
   path: path.join(__dirname, '.env'),
 });
-
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
   test: /\.(gif|jpe?g|png)$/,
@@ -113,17 +112,19 @@ module.exports = (env) => ({
     publicPath: '/',
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.parsed),
-    }),
+    new webpack.DefinePlugin(
+      !!dotenv.error
+        ? {'process.env': JSON.stringify(process.env)}
+        : {
+          'process.env': JSON.stringify({
+            ...process.env,
+            ...dotenv.parsed,
+          }),
+        },
+    ),
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
     }),
-    // new webpack.DefinePlugin({
-    //   'process.env.REACT_APP_SC_ATTR': JSON.stringify('data-styled-fletapp'),
-    //   'process.env.SC_ATTR': JSON.stringify('data-styled-fletapp'),
-    //   'process.env.REACT_APP_SC_DISABLE_SPEEDY': '1',
-    // }),
     new HtmlWebPackPlugin({
       template: 'public/index.html',
       // filename: './index.html',
@@ -131,21 +132,21 @@ module.exports = (env) => ({
     // PRODUCTION ONLY PLUGINS
     ...(env && (!env.dev || env.prod)
       ? [
-          new CopyWebpackPlugin({
-            patterns: [
-              // {from: 'public/images', to: 'images'},
-              {from: path.resolve(appDirectory, './public')},
-            ],
-          }),
-          new InjectManifest({
-            swSrc: path.resolve(
-              appDirectory,
-              './src/serviceWorkerWorkbox.web.js',
-            ),
-            swDest: 'service-worker.js',
-            maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
-          }),
-        ]
+        new CopyWebpackPlugin({
+          patterns: [
+            // {from: 'public/images', to: 'images'},
+            {from: path.resolve(appDirectory, './public')},
+          ],
+        }),
+        new InjectManifest({
+          swSrc: path.resolve(
+            appDirectory,
+            './src/serviceWorkerWorkbox.web.js',
+          ),
+          swDest: 'service-worker.js',
+          maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
+        }),
+      ]
       : []),
   ],
   module: {

@@ -60,6 +60,8 @@ const babelLoaderConfiguration = {
 
 const dotenv = require('dotenv').config({
   path: path.join(__dirname, '.env'),
+  allowEmptyValues: true,
+  systemvars: true,
 });
 
 // This is needed for webpack to import static images in JavaScript files.
@@ -82,6 +84,7 @@ const vectorIconsConfiguration = {
 // Try the environment variable, otherwise use root
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
+console.log(dotenv.parsed);
 module.exports = (env) => ({
   devtool: 'inline-source-map',
   devServer: {
@@ -113,12 +116,18 @@ module.exports = (env) => ({
     publicPath: '/',
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.parsed),
-    }),
-    new webpack.DefinePlugin({
-      'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
-    }),
+    new webpack.DefinePlugin(
+      dotenv.error
+        ? {}
+        : {
+            'process.env.REACT_APP_BASE_URL': dotenv.parsed.REACT_APP_BASE_URL,
+            'process.env.REACT_APP_GMAPS_API_KEY':
+              dotenv.parsed.REACT_APP_GMAPS_API_KEY,
+            'process.env.REACT_APP_ACCESS_TOKEN':
+              dotenv.parsed.REACT_APP_ACCESS_TOKEN,
+            'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
+          },
+    ),
     // new webpack.DefinePlugin({
     //   'process.env.REACT_APP_SC_ATTR': JSON.stringify('data-styled-fletapp'),
     //   'process.env.SC_ATTR': JSON.stringify('data-styled-fletapp'),

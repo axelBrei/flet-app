@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import {useUserData} from 'components/Hooks/useUserData';
@@ -9,15 +9,37 @@ import {theme} from 'constants/theme';
 import {useSelector} from 'react-redux';
 import {selectOnlineStatus} from 'redux-store/slices/driverSlice';
 import TimePicker from 'components/ui/TimePicker';
+import dayjs from 'dayjs';
 
 export const OnlineStatusCard = ({onPressButton}) => {
   const {name} = useUserData();
   const isOnline = useSelector(selectOnlineStatus);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    error && setError(null);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [isOnline]);
+
+  const onChangeData = useCallback(
+    ({datetime, ...rest}) => {
+      if (datetime.isBefore(dayjs())) {
+        setError('Debe ser un horario futuro');
+      }
+      setSelectedTime({...rest, date: datetime});
+    },
+    [onPressButton, setError],
+  );
+
+  const _onPressButton = () => {
+    if (!error) {
+      onPressButton(!isOnline, {
+        ...selectedTime,
+        until: selectedTime.date.valueOf(),
+      });
+    }
+  };
 
   return (
     <Container>
@@ -34,14 +56,15 @@ export const OnlineStatusCard = ({onPressButton}) => {
           label="¿Hasta que hora estas hoy?"
           icon="clock"
           value={selectedTime}
-          onChangeValue={setSelectedTime}
+          onChangeValue={onChangeData}
+          error={error}
         />
       )}
       <Button
         bold={false}
         isOnline={isOnline}
         label={isOnline ? 'Dejar de buscar viajes' : 'Empezar a buscar viajes'}
-        onPress={() => onPressButton(!isOnline)}
+        onPress={_onPressButton}
       />
     </Container>
   );

@@ -74,10 +74,10 @@ export const {
  * @THUNK
  */
 
-export const changeOnlineStatus = (isOnline) => async (dispatch) => {
+export const changeOnlineStatus = (isOnline, until) => async (dispatch) => {
   dispatch(requestChangeOnlineStatus(isOnline));
   try {
-    const {data} = await courrierService.changeOnlineStatus(isOnline);
+    await courrierService.changeOnlineStatus({until, isOnline});
     dispatch(receiveChangeOnlineStatusSuccess(isOnline));
   } catch (e) {
     dispatch(

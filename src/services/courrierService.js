@@ -1,7 +1,7 @@
 import {api} from 'constants/network';
 
-const changeOnlineStatus = async (isOnline) =>
-  await api.post('courrier/status', {isOnline, keepCase: true});
+const changeOnlineStatus = async (data) =>
+  await api.post('courrier/status', {...data, keepCase: true});
 
 const updatePosition = async (position, vehicle_id) =>
   await api.post('courrier/position', {...position, vehicle_id});

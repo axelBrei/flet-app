@@ -54,7 +54,6 @@ export default ({route}) => {
     [shipmentStatus, driverPosition],
   );
 
-  console.log(markers);
   return (
     <Screen
       style={{height, width}}

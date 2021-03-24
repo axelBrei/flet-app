@@ -18,7 +18,6 @@ import {
   fetchPendingShipments,
   rejectShipment,
   selectDriverRejectShipmentError,
-  selectDriverRejectShipmentLoading,
   selectDriverShipmentData,
   selectLoadingPendingShipmentAnswer,
   selectPendingShipment,
@@ -43,55 +42,20 @@ import {
 } from 'redux-store/slices/driverSlice';
 import {useIsFocused} from '@react-navigation/native';
 import {useDebounce} from 'components/Hooks/useDebounce';
+import {useUpdateCurrentPosition} from 'components/navigation/DriverHome/useUpdateCurrentPosition';
+import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFetchPendignShipment';
+import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCard';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
-  const {height, isMobile, isPwa} = useWindowDimension();
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
   const error = useSelector(selectDriverRejectShipmentError);
-  const isOnline = useSelector(selectOnlineStatus);
-  const currentPosition = useSelector(selectCurrentPosition);
   const previosPosition = useSelector(selectPreviosPosition);
   const pendingShipment = useSelector(selectPendingShipment);
   const currentShipment = useSelector(selectDriverShipmentData);
-  const debouncedCurrentPosition = useDebounce(currentPosition, 500);
 
-  useEffect(() => {
-    const askPermissions = async (skip = false) => {
-      let status = skip;
-      if (!skip) {
-        status = await PermissionManager.checkPermissions([
-          PermissionManager.PERMISSIONS.location,
-        ]);
-      }
-      if (status) {
-        const handleNewPosition = (p) => {
-          const position = p.coords;
-          if (
-            !currentPosition.latitude ||
-            position.latitude !== currentPosition?.latitude
-          ) {
-            dispatch(updatePosition(position));
-          }
-        };
-        trackUserPosition(handleNewPosition);
-      }
-    };
-
-    if (isFocused) {
-      askPermissions(!['android', 'ios'].includes(Platform.OS));
-    }
-  }, [isFocused, currentPosition]);
-
-  useEffect(() => {
-    if (isOnline && isFocused) {
-      const timeout = setInterval(() => {
-        dispatch(fetchPendingShipments());
-      }, 6 * 1000);
-      return () => clearInterval(timeout);
-    }
-  }, [isOnline, pendingShipment]);
+  const debouncedCurrentPosition = useUpdateCurrentPosition();
+  useFetcingPendingShipment();
 
   useEffect(() => {
     if (currentShipment && !pendingShipment) {
@@ -112,7 +76,7 @@ export default ({navigation}) => {
         native: CarMarker,
       }),
       orientation,
-      scaleDp(40),
+      40,
     );
     return [
       {
@@ -122,19 +86,25 @@ export default ({navigation}) => {
     ];
   }, [debouncedCurrentPosition, previosPosition]);
 
-  const {Modal, toggle, open} = useModal(NewTripModalContent, {
-    distance: pendingShipment?.startPoint?.distance,
-    dropZone: pendingShipment?.endPoint?.name.split(',')[2],
-    onPressAccept: () => {
-      dispatch(confirmShipment());
-      toggle();
+  const {Modal, toggle, open, close} = useModal(
+    NewTripModalContent,
+    {
+      distance: pendingShipment?.startPoint?.distance,
+      dropZone: pendingShipment?.endPoint?.name.split(',')[2],
+      onPressAccept: () => {
+        dispatch(confirmShipment());
+        close();
+      },
+      onPressReject: () => {
+        dispatch(rejectShipment());
+        close();
+      },
     },
-    onPressReject: () => {
-      dispatch(rejectShipment());
-    },
-  });
+    {cancelable: false},
+  );
 
   useEffect(() => {
+    console.log(pendingShipment);
     if (pendingShipment) {
       open();
     }
@@ -145,40 +115,16 @@ export default ({navigation}) => {
   }, []);
 
   return (
-    <ScreenComponent>
+    <Screen>
       <Loader unmount={false}>
-        <ContentContainer>
-          <Map
-            style={{flex: 1, width: '100%'}}
-            markers={positionMarker}
-            showsMyLocationButton
-          />
-          {isMobile && <FloatingHamburguerButton />}
-          <AvailableContainer>
-            <Switch value={isOnline} onChange={onChangeOnlineStatus} />
-            <AppText padding={10}>Esperando Viajes</AppText>
-          </AvailableContainer>
-          <Modal />
-        </ContentContainer>
+        <Map
+          style={{flex: 1, width: '100%'}}
+          markers={positionMarker}
+          showsMyLocationButton
+        />
+        <OnlineStatusCard onPressButton={onChangeOnlineStatus} />
+        <Modal />
       </Loader>
-    </ScreenComponent>
+    </Screen>
   );
 };
-const ScreenComponent = styled(Screen)`
-  height: ${(props) => props.theme.screenHeight}px;
-`;
-
-const ContentContainer = styled(Container)`
-  flex: 1;
-  height: 100%;
-  width: 100%;
-`;
-
-const AvailableContainer = styled(Container)`
-  background-color: ${theme.white};
-  align-items: center;
-  justify-content: center;
-  height: ${scaleDpTheme(80)};
-  width: 100%;
-  flex-direction: row;
-`;

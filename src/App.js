@@ -1,6 +1,6 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {nameToShow as appName} from '../package.json';
-import {Platform, Linking} from 'react-native';
+import {Platform, Linking, UIManager} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from 'components/navigation/MainNavigator';
 import {linkingConfig} from 'constants/config/linking';
@@ -12,16 +12,27 @@ import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistor} from 'redux-store/index';
 import {changeNavigationState} from 'redux-store/slices/navigationSlice';
 import axios from 'axios';
-import {AppText} from 'components/ui/AppText';
 import {fonts} from 'constants/fonts';
 import {configureAuthInterceptor} from 'constants/network';
+import BodyLockProvider from 'components/Contexts/BodyLockContext/index';
+import {useHeaderHeight} from '@react-navigation/stack';
 
 axios.defaults.withCredentials = false;
 configureAuthInterceptor(store);
 
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
+
 const App = () => {
   const dispatch = store.dispatch;
   const {rem, width, height, isMobile} = useWindowDimension();
+  let headerHeight = 0;
+  try {
+    headerHeight = useHeaderHeight?.();
+  } catch (e) {}
 
   const onStateChange = useCallback(
     (state) => dispatch(changeNavigationState(state)),
@@ -36,7 +47,7 @@ const App = () => {
             web: {
               linking: linkingConfig,
               onStateChange,
-              ...(process.env.NODE_ENV !== 'production' && {
+              ...(process.env.NODE_ENV !== 'development' && {
                 initialState: store.getState()?.navigation?.state,
               }),
               documentTitle: {
@@ -58,8 +69,11 @@ const App = () => {
               screenWidth: width,
               screenHeight: height,
               isMobile,
+              headerHeight: headerHeight,
             }}>
-            <MainNavigator />
+            <BodyLockProvider>
+              <MainNavigator />
+            </BodyLockProvider>
           </ThemeProvider>
         </NavigationContainer>
       </PersistGate>

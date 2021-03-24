@@ -2,6 +2,7 @@ import {createSlice, createSelector} from '@reduxjs/toolkit';
 import driverShipmentService from 'services/shipmentService';
 import shipmentService from 'services/shipmentService';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import {createStateCheckSelector} from 'redux-store/customSelectors';
 
 const initialState = {
   pendingShipment: null,
@@ -48,7 +49,7 @@ const slice = createSlice({
       state.pendingShipment = null;
     },
     receiveConfirmShipmentFail: (state, action) => {
-      state.loading.confirm = true;
+      state.loading.confirm = false;
       state.error.confirm = action.payload;
     },
     requestRejectShipment: (state) => {
@@ -87,6 +88,11 @@ const slice = createSlice({
     receiveSubmitConfirmationCodeFail: (state, action) => {
       state.loading.code = false;
       state.error.code = action.payload;
+    },
+  },
+  extraReducers: {
+    'login/logout': (state) => {
+      Object.assign(state, initialState);
     },
   },
 });
@@ -186,8 +192,10 @@ export const uploadConfirmationCode = (code) => async (dispatch, getState) => {
  * @SELECTORS
  */
 
-export const selectDriverShipmentData = (state) =>
-  state.driverShipment.shipmentData;
+export const selectDriverShipmentData = createStateCheckSelector(
+  (state) => state.driverShipment.shipmentData,
+  (s) => s || {},
+);
 
 export const selectDriverRejectShipmentLoading = (state) =>
   state.driverShipment.loading.reject;
@@ -212,4 +220,4 @@ export const selectIsLoadingSecureCode = (state) =>
   state.driverShipment.loading.code;
 
 export const selectDriverIsLoadingShipmentStatus = (state) =>
-  state.driverShipment.loading.status;
+  state.driverShipment.loading.stateChange;

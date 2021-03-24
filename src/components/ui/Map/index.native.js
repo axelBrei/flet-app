@@ -16,24 +16,27 @@ const Map = ({
   minMarkerAnimation,
   directions,
   showsMyLocationButton,
+  accesible,
   ...props
 }) => {
   const [isMapReady, setIsMapReady] = useState(false);
-  const {height} = useWindowDimension();
   const mapRef = useRef(null);
   const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
 
+  const fitToMarkers = useCallback(() => {
+    let options = {animated: true};
+    edgePadding && (options.edgePadding = edgePadding);
+    mapRef.current?.fitToSuppliedMarkers(
+      filteredMarkers.map((_, i) => `${i}`),
+      options,
+    );
+  }, [mapRef, filteredMarkers, edgePadding]);
+
   useEffect(() => {
-    if (filteredMarkers.length > minMarkerAnimation && edgePadding) {
-      mapRef.current?.fitToSuppliedMarkers(
-        filteredMarkers.map((_, i) => `${i}`),
-        {
-          animated: true,
-          edgePadding,
-        },
-      );
+    if (filteredMarkers.length >= minMarkerAnimation) {
+      fitToMarkers();
     }
-  }, [filteredMarkers, mapRef, edgePadding]);
+  }, [filteredMarkers, mapRef]);
 
   useEffect(() => {
     if (directions) {
@@ -43,7 +46,7 @@ const Map = ({
 
   const onMapReady = useCallback(() => {
     setIsMapReady(true);
-    if (filteredMarkers.length > 0) mapRef.current.fitToElements(true);
+    if (filteredMarkers.length > 0) fitToMarkers();
   }, [mapRef]);
 
   const renderMarkers = useCallback(
@@ -64,13 +67,9 @@ const Map = ({
           {renderIcon ? (
             renderIcon()
           ) : SvgIcon ? (
-            <SvgIcon height={scaleDp(35)} width={scaleDp(35)} />
+            <SvgIcon height={30} width={30} />
           ) : (
-            <Icon
-              name="map-marker"
-              size={scaleDp(30)}
-              color={theme.primaryColor}
-            />
+            <Icon name="map-marker" size={32} color={theme.primaryColor} />
           )}
         </Marker>
       ),
@@ -79,7 +78,7 @@ const Map = ({
 
   const centerOnUserLocation = useCallback(async () => {
     const {coords} = await getCurrentPosition();
-    mapRef.current.animateCamera({center: coords});
+    mapRef.current.animateCamera({center: coords, zoom: 16});
   }, [mapRef]);
 
   const renderDirections = useCallback(() => {
@@ -101,6 +100,7 @@ const Map = ({
   return (
     <>
       <MapView
+        classname={props.classname}
         ref={mapRef}
         onMapReady={onMapReady}
         style={[styles.map, props.style]}
@@ -114,19 +114,22 @@ const Map = ({
         rotateEnabled={false}
         {...props}
         showsPointsOfInterest={false}
-        showsMyLocationButton={
-          Platform.OS === 'android' && showsMyLocationButton
-        }
+        showsMyLocationButton={false}
         showsCompass={false}
         showsScale={false}
         showsBuildings={false}
         showsIndoors={false}
         showsTraffic={false}
-        showsIndoorLevelPicker={false}>
+        showsIndoorLevelPicker={false}
+        zoomControlEnabled={accesible}
+        pitchEnabled={accesible}
+        zoomEnabled={accesible}
+        zoomTapEnabled={accesible}
+        scrollEnabled={accesible}>
         {filteredMarkers.map(renderMarkers)}
         {renderDirections()}
       </MapView>
-      {Platform.OS === 'ios' && showsMyLocationButton && (
+      {showsMyLocationButton && (
         <CurrentLoactionButton
           onPress={centerOnUserLocation}
           icon="crosshairs-gps"

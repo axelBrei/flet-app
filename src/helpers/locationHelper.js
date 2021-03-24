@@ -1,10 +1,17 @@
-import {Platform} from 'react-native';
+import {Platform, Linking} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Polyline from '@mapbox/polyline';
 
 const defaultOptions = Platform.select({
-  web: {timeout: 5000, maximumAge: 60000},
-  native: {},
+  web: {
+    timeout: 5000,
+    maximumAge: 60000,
+  },
+  native: {
+    useSignificantChanges: true,
+    timeout: 5000,
+    maximumAge: 60000,
+  },
 });
 
 export const getCurrentPosition = async (options) =>
@@ -61,7 +68,10 @@ export const trackUserPosition = Platform.select({
     return () => navigator.geolocation.clearWatch(watchNumber);
   },
   native: (callback, error, options) => {
-    const watchNumber = Geolocation.watchPosition(callback, error, options);
+    const watchNumber = Geolocation.watchPosition(callback, error, {
+      ...defaultOptions,
+      ...options,
+    });
     return () => Geolocation.clearWatch(watchNumber);
   },
 });
@@ -101,4 +111,16 @@ export const getBearingFromCoords = (startCoords = {}, endCoords = {}) => {
   }
 
   return (toDegrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
+};
+
+export const openMapsOnDevice = (location) => {
+  const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+  const latLng = `${location.latitude},${location.longitude}`;
+  const label = 'Custom Label';
+  const url = Platform.select({
+    ios: `${scheme}${label}@${latLng}`,
+    android: `${scheme}${latLng}(${label})`,
+  });
+
+  Linking.openURL(url);
 };

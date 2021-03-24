@@ -1,8 +1,8 @@
 import React from 'react';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {WaitingCourrier} from 'components/navigation/ShipmentScreen/WaitingCourrier';
-import {CourrierDelivering} from 'components/navigation/ShipmentScreen/CourrierDelivering';
 import {ShipmentSecurityCode} from 'components/navigation/ShipmentScreen/ShipmentSecurityCode';
+import {CourrierConfirmed} from 'components/navigation/ShipmentScreen/CourrierConfirmed';
 
 export const getCardContentComponent = (status = '') => {
   switch (status) {
@@ -10,10 +10,10 @@ export const getCardContentComponent = (status = '') => {
       return WaitingCourrier;
     }
     case SHIPMENT_STATE.COURRIER_CONFIRMED: {
-      return CourrierDelivering;
+      return CourrierConfirmed('¡Hemos encontrado un conductor!');
     }
     case SHIPMENT_STATE.ON_PROCESS: {
-      return CourrierDelivering;
+      return CourrierConfirmed('Te están llevando tu paquete');
     }
     case SHIPMENT_STATE.DELIVERED: {
       return ShipmentSecurityCode;

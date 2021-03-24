@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 import {routes} from 'constants/config/routes';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationDrawer} from 'components/ui/NavigationDrawer';
 import {scaleDp} from 'helpers/responsiveHelper';
@@ -11,14 +12,37 @@ import ShipmentStack from 'components/navigation/ShipmentStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {DriverStack} from 'components/navigation/DriverStack';
-import {Platform} from 'react-native-web';
+import {Platform} from 'react-native';
 import PageNotFound from 'components/navigation/PageNotFound';
+import {Icon} from 'components/ui/Icon';
+import ProfileScreen from 'components/navigation/ProfileScreen';
 
-const {Navigator, Screen} = createDrawerNavigator();
+const getIconForRoute = (routeName) => {
+  switch (routeName.toLowerCase()) {
+    case 'envio':
+      return 'home';
+    case 'courrier':
+      return 'handshake';
+    case 'ultimospedidos':
+      return 'truck';
+    case 'perfil':
+      return 'account';
+    default:
+      return 'account-question';
+  }
+};
 
 export default () => {
-  const {isMobile, isPWA} = useWindowDimension();
+  const {isMobile, isPWA, width} = useWindowDimension();
   const userData = useSelector(selectUserData);
+
+  const {Navigator, Screen} = useMemo(
+    () =>
+      Platform.OS === 'web' && width > 800
+        ? createDrawerNavigator()
+        : createBottomTabNavigator(),
+    [width],
+  );
 
   const shouldDisplayDriverScreen = useMemo(
     () =>
@@ -38,26 +62,43 @@ export default () => {
         backgroundColor: theme.backgroundColor,
         border: 0,
       }}
-      screenOptions={{
+      tabBarOptions={{
+        activeTintColor: theme.primaryDarkColor,
+        inactiveTintColor: theme.fontColor,
+        keyboardHidesTabBar: true,
+        style: {
+          paddingVertical: 10,
+
+          ...Platform.select({
+            web: {height: 75, paddingBottom: 15},
+          }),
+        },
+      }}
+      screenOptions={({route}) => ({
         headerShown: false,
+        tabBarIcon: ({focused, color, size}) => (
+          <Icon
+            name={getIconForRoute(route?.name)}
+            size={32}
+            color={focused ? theme.primaryDarkColor : theme.fontColor}
+          />
+        ),
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
-      }}>
+      })}>
+      <Screen
+        name={routes.shipmentStack}
+        component={ShipmentStack}
+        options={{
+          title: 'Inicio',
+        }}
+      />
       {userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.driverStack}
           component={DriverStack}
           options={{
             headerShown: false,
-            title: 'Inicio',
-          }}
-        />
-      )}
-      {!userData?.isDriver && (
-        <Screen
-          name={routes.shipmentStack}
-          component={ShipmentStack}
-          options={{
-            title: 'Realizar un envío',
+            title: 'Trabajo',
           }}
         />
       )}
@@ -66,6 +107,13 @@ export default () => {
         component={PageNotFound}
         options={{
           title: 'Mis pedidos',
+        }}
+      />
+      <Screen
+        name={routes.profileScreen}
+        component={ProfileScreen}
+        options={{
+          title: 'Mi perfil',
         }}
       />
     </Navigator>

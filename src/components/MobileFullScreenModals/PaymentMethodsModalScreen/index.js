@@ -1,0 +1,52 @@
+import React, {useCallback} from 'react';
+import styled from 'styled-components';
+import {FullScreenModalContainer} from 'components/MobileFullScreenModals/FullScreenModalContainer';
+import {AppText} from 'components/ui/AppText';
+import {FlatList} from 'react-native';
+import {PaymentMethodItem} from 'components/MobileFullScreenModals/PaymentMethodsModalScreen/PaymenMethodItem';
+import {useModalContext} from 'components/Hooks/useModal';
+
+const paymentMethodsList = [
+  {
+    id: 0,
+    title: 'Efectivo',
+    imageUrl: 'https://image.flaticon.com/icons/png/128/4343/4343031.png',
+  },
+  {
+    id: 1,
+    title: 'Tarjeta crédito/débito',
+    imageUrl: 'https://image.flaticon.com/icons/png/128/4342/4342816.png',
+  },
+];
+
+export default ({selectedMethod, onChangeSelectedMethod}) => {
+  const {closeModal} = useModalContext();
+
+  const onPressItem = useCallback(
+    (item) => () => {
+      onChangeSelectedMethod(item);
+      closeModal?.();
+    },
+    [closeModal, onChangeSelectedMethod],
+  );
+
+  const renderItem = useCallback(
+    ({item}) => (
+      <PaymentMethodItem
+        onPress={onPressItem(item)}
+        selected={selectedMethod?.id === item.id}
+        {...item}
+      />
+    ),
+    [closeModal, selectedMethod, onChangeSelectedMethod],
+  );
+  return (
+    <FullScreenModalContainer title="Métodos de pago">
+      <FlatList
+        data={paymentMethodsList}
+        renderItem={renderItem}
+        keyExtractor={(_, i) => i.toString()}
+      />
+    </FullScreenModalContainer>
+  );
+};

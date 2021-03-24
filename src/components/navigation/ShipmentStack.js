@@ -12,6 +12,7 @@ import ShipmentScreen from 'components/navigation/ShipmentScreen';
 import {useSelector} from 'react-redux';
 import {selectCurrentShipment} from 'redux-store/slices/shipmentSlice';
 import ShipmentFinishedScreen from 'components/navigation/ShipmentFinishedScreen';
+import NewShipmentPackageDescriptionScreen from 'components/navigation/NewShipmentPackageInfoScreen';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -25,6 +26,11 @@ export default () => {
         headerBackTitle: 'Volver',
         headerTintColor: isMobile ? theme.fontColor : theme.primaryDarkColor,
         headerBackTitleVisible: !isMobile,
+        headerTitleStyle: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          color: theme.fontColor,
+        },
       })}>
       {currentShipment.shipmentId ? (
         <>
@@ -32,7 +38,7 @@ export default () => {
             name={routes.shipmentScreen}
             component={ShipmentScreen}
             options={{
-              headerShown: isMobile,
+              headerShown: !isMobile,
             }}
           />
           <Screen
@@ -51,10 +57,27 @@ export default () => {
             }}
           />
           <Screen
+            name={routes.newShipmentPackageDetailScreen}
+            component={NewShipmentPackageDescriptionScreen}
+            options={{
+              title: '',
+              headerTitle: 'Nuevo Pedido',
+              headerStyle: {
+                backgroundColor: theme.white,
+                shadowColor: 'transparent',
+              },
+            }}
+          />
+          <Screen
             name={routes.newShipmentDetailScreen}
             component={NewShipmentDetailsScreen}
             options={{
               title: '',
+              headerTitle: 'Nuevo Pedido',
+              headerStyle: {
+                backgroundColor: theme.white,
+                shadowColor: 'transparent',
+              },
             }}
           />
           <Screen

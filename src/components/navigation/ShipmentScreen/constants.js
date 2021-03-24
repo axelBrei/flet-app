@@ -1,16 +1,16 @@
 import {Platform} from 'react-native';
-import BUS_MARKER_SVG from 'resources/assets/bus_marker.svg';
 import END_POINT_MARKER_SVG from 'resources/assets/endpoint_marker.svg';
 import END_POINT_MARKER_PNG from 'resources/assets/endpoint_marker.png';
-import BUS_MARKER_PNG from 'resources/assets/bus_marker.png';
+import CarMarker from 'resources/assets/driver_car.svg';
+import CAR_MARKER from 'resources/assets/driver_car.png';
 
 export const getMarkersList = (shipmentData = {}, driverPosition = {}) => [
   shipmentData?.startPoint,
-  {
+  driverPosition.latitude !== 0 && {
     ...driverPosition,
     icon: Platform.select({
-      native: BUS_MARKER_SVG,
-      web: BUS_MARKER_PNG,
+      native: CarMarker,
+      web: CAR_MARKER,
     }),
   },
   {

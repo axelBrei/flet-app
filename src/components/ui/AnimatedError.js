@@ -1,37 +1,47 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Text, Animated, Platform} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import styled from 'styled-components';
+import {View, Animated, Platform} from 'react-native';
 import {theme} from 'constants/theme';
-import {scaleDp} from 'helpers/responsiveHelper';
 
-export const AnimatedError = ({error}) => {
-  const errorOpacity = useRef(new Animated.Value(0)).current;
+export const AnimatedError = ({error, errorFontSize}) => {
+  const fontSize = useRef(new Animated.Value(0)).current;
+  const position = useRef(new Animated.ValueXY({x: 0, y: -2})).current;
 
   useEffect(() => {
-    Animated.spring(errorOpacity, {
-      useNativeDriver: true,
-      duration: 100,
-      toValue: error ? 1 : 0,
-    }).start();
-  }, [errorOpacity, error]);
+    Animated.parallel([
+      Animated.timing(fontSize, {
+        useNativeDriver: true,
+        duration: 150,
+        toValue: 8,
+      }),
+      Animated.timing(position, {
+        useNativeDriver: true,
+        duration: 150,
+        toValue: {
+          x: Platform.OS === 'web' ? 10 : 0,
+          y: 0,
+        },
+      }),
+    ]).start();
+  }, []);
 
   return (
-    <Animated.Text
-      style={{
-        width: '100%',
-        height: scaleDp(13),
-        opacity: errorOpacity,
-        color: theme.error,
-        marginLeft: scaleDp(Platform.OS === 'web' ? 5 : 15),
-        marginTop: scaleDp(1),
-        marginBottom: scaleDp(2),
-        fontSize: scaleDp(
-          Platform.select({
-            web: 8,
-            native: 10,
-          }),
-        ),
-      }}>
-      {error}
-    </Animated.Text>
+    <Container>
+      <Animated.Text
+        style={{
+          width: '100%',
+          color: theme.error,
+          fontSize: errorFontSize || 8,
+          transform: [{translateX: position.x}, {translateY: position.y}],
+        }}>
+        {error}
+      </Animated.Text>
+    </Container>
   );
 };
+
+const Container = styled(View)`
+  position: absolute;
+  top: 100%;
+  left: ${Platform.OS === 'web' ? 5 : 15}px;
+`;

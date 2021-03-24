@@ -4,25 +4,29 @@ import {
   legalDriverDataFormikConfig,
   FIELDS,
 } from 'components/navigation/RegisterDriverLegalDataScreen/legalDriverDataFormikConfig';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import SelectImage from 'components/ui/SelectImage/index';
 import {Container} from 'components/ui/Container';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
+import {scaleDp} from 'helpers/responsiveHelper';
+import {Row} from 'components/ui/Row';
+import InputField from 'components/ui/InputField';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {MainButton} from 'components/ui/MainButton';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {routes} from 'constants/config/routes';
+import IdCardImage from 'resources/images/id-card.svg';
+import DriverLicenceImage from 'resources/images/driver-license.svg';
 import {
   registerDriverLegaleData,
   selectIsLoadingRegister,
   selectRegisterError,
 } from 'redux-store/slices/registerSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import {IconCard} from 'components/ui/IconCard';
+import {theme} from 'constants/theme';
 
 export default ({navigation}) => {
-  const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingRegister);
   const error = useSelector(selectRegisterError);
@@ -37,34 +41,28 @@ export default ({navigation}) => {
   const {
     values,
     errors,
-    isSubmitting,
+    submited,
     touched,
     _setFieldValue,
     handleSubmit,
   } = useFormikCustom(legalDriverDataFormikConfig(onSubmit));
 
   useEffect(() => {
-    if (isSubmitting && !isLoading && !error) {
-      navigation.navigate(routes.loginScreen);
+    if (submited && !isLoading && !error) {
+      navigation.navigate(routes.registerDriverCompleteScreen);
     }
-  }, [isSubmitting, isLoading, error]);
+  }, [submited, isLoading, error]);
 
   return (
-    <Screen scrollable={isMobile}>
-      <FloatingBackgroundOval visible={isMobile} />
+    <Screen scrollable>
       <ScreenContainer>
-        <Title bold fontSize={25} textAlign="center">
-          {'Ahora tenemos que verificar\nque puedas manejar'}
-        </Title>
-        <Container
-          style={
-            !isMobile && {
-              maxWidth: scaleDp(350),
-              alignSelf: 'center',
-            }
-          }>
+        <IconCard
+          renderImage={(size) => <IdCardImage height={size} width={size} />}>
+          <AppText padding={5} bold color={theme.white}>
+            DNI
+          </AppText>
           <SelectImage
-            label="Foto de tu DNI (Frente)"
+            label="Frente"
             value={values[FIELDS.DOCUMENT_FRONT]}
             error={
               touched[FIELDS.DOCUMENT_FRONT] && errors[FIELDS.DOCUMENT_FRONT]
@@ -72,57 +70,90 @@ export default ({navigation}) => {
             onSelectImage={_setFieldValue(FIELDS.DOCUMENT_FRONT)}
           />
           <SelectImage
-            label="Foto de tu DNI (Dorso)"
+            label="Dorso"
             value={values[FIELDS.DOCUMENT_BACK]}
             error={
               touched[FIELDS.DOCUMENT_BACK] && errors[FIELDS.DOCUMENT_BACK]
             }
             onSelectImage={_setFieldValue(FIELDS.DOCUMENT_BACK)}
           />
+        </IconCard>
+        <IconCard
+          reverse
+          renderImage={(size) => (
+            <DriverLicenceImage height={size} width={size} />
+          )}>
+          <AppText padding={5} bold color={theme.white}>
+            Licencia
+          </AppText>
           <SelectImage
-            label="Foto de la poliza de seguro"
+            label="Frente"
+            value={values[FIELDS.LICENSE_FRONT]}
+            error={
+              touched[FIELDS.LICENSE_FRONT] && errors[FIELDS.LICENSE_FRONT]
+            }
+            onSelectImage={_setFieldValue(FIELDS.LICENSE_FRONT)}
+          />
+          <SelectImage
+            label="Dorso"
+            value={values[FIELDS.LICENSE_BACK]}
+            error={touched[FIELDS.LICENSE_BACK] && errors[FIELDS.LICENSE_BACK]}
+            onSelectImage={_setFieldValue(FIELDS.LICENSE_BACK)}
+          />
+        </IconCard>
+        <Row>
+          <SelectImage
+            style={{width: '49%', marginTop: 10}}
+            label="Seguro"
             value={values[FIELDS.INSURANCE]}
             error={touched[FIELDS.INSURANCE] && errors[FIELDS.INSURANCE]}
             onSelectImage={_setFieldValue(FIELDS.INSURANCE)}
           />
-          <SelectImage
-            label="Foto del libre antecedentes"
-            value={values[FIELDS.BACKGROUND]}
-            error={touched[FIELDS.BACKGROUND] && errors[FIELDS.BACKGROUND]}
-            onSelectImage={_setFieldValue(FIELDS.BACKGROUND)}
-          />
-          <SelectImage
-            label={
-              'Foto de la verificación de vivienda,\nmonotributo o pago de servicios'
-            }
-            value={values[FIELDS.ADDRESS_VALIDATION]}
-            error={
-              touched[FIELDS.ADDRESS_VALIDATION] &&
-              errors[FIELDS.ADDRESS_VALIDATION]
-            }
-            onSelectImage={_setFieldValue(FIELDS.ADDRESS_VALIDATION)}
-          />
-          <MainButton
-            label="Finalizar"
-            onPress={handleSubmit}
-            style={{
-              width: scaleDp(250),
-              alignSelf: 'center',
-            }}
-          />
-        </Container>
+          <InputField style={{width: '49%'}} label="Vencimiento" />
+        </Row>
+
+        <SelectImage
+          label="Foto del libre antecedentes"
+          value={values[FIELDS.BACKGROUND]}
+          error={touched[FIELDS.BACKGROUND] && errors[FIELDS.BACKGROUND]}
+          onSelectImage={_setFieldValue(FIELDS.BACKGROUND)}
+        />
+        <SelectImage
+          label={'Pago de servicios o monotributo'}
+          value={values[FIELDS.ADDRESS_VALIDATION]}
+          error={
+            touched[FIELDS.ADDRESS_VALIDATION] &&
+            errors[FIELDS.ADDRESS_VALIDATION]
+          }
+          onSelectImage={_setFieldValue(FIELDS.ADDRESS_VALIDATION)}
+        />
+        <MainButton
+          loading={isLoading}
+          label="Finalizar"
+          onPress={handleSubmit}
+          style={{
+            width: scaleDp(250),
+            alignSelf: 'center',
+          }}
+        />
       </ScreenContainer>
     </Screen>
   );
 };
 
 const ScreenContainer = styled(Container)`
-  padding-left: ${scaleDpTheme(15)};
-  padding-right: ${scaleDpTheme(15)};
-  padding-bottom: ${scaleDpTheme(15)};
+  padding: 0 20px 20px;
   align-self: center;
   align-items: center;
-  ${({theme}) => theme.isMobile && `width: ${theme.screenWidth}px`};
+  width: 100%;
+
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      padding: 20px 0;
+      width: 414px;
+      align-self: center;
+    `}
 `;
 
 const Title = styled(AppText)`

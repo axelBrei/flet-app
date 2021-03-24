@@ -11,7 +11,7 @@ export const AppLogo = ({color, size}) => {
     <Container dir="row" alignItems="center">
       <StyledIcon
         name="truck-fast-outline"
-        size={scaleDp(size + 30)}
+        size={scaleDp(size + 20)}
         color={color}
       />
       <AppText bold fontSize={size} color={color}>

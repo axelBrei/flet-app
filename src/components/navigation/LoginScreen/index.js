@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Alert} from 'react-native';
+import {View} from 'react-native';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
@@ -11,9 +11,7 @@ import {
   loginFormikConfig,
   LOGIN_FIELDS as FIELDS,
 } from 'components/navigation/LoginScreen/loginFormikConfig';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {TextLink} from 'components/ui/TextLink';
-import {FloatingBackgroundOval} from 'components/ui/FloatingBackgroundOval';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -23,15 +21,23 @@ import {
 } from 'redux-store/slices/loginSlice';
 import {Loader} from 'components/ui/Loader';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {Card} from 'components/ui/Card';
+import {openMapsOnDevice} from 'helpers/locationHelper';
+import LoginImage from 'resources/images/login.svg';
+import {PasswordInput} from 'components/navigation/LoginScreen/PasswordInput';
 
-export const LoginScreen = ({navigation}) => {
-  const {isMobile} = useWindowDimension();
+export const LoginScreen = ({}) => {
+  const {widthWithPadding, height, isMobile} = useWindowDimension();
   const dispatch = useDispatch();
   const loading = useSelector(selectLoadingLogin);
   const error = useSelector(selectLoginError);
 
-  const onPressForgetPassword = () => {};
+  const onPressForgetPassword = () => {
+    openMapsOnDevice({
+      latitude: -34.61943940808439,
+      longitude: -58.454993291653814,
+    });
+  };
+
   const onSubmit = (values) => {
     dispatch(loginAs(values[FIELDS.USERNAME], values[FIELDS.PASSWORD]));
   };
@@ -58,29 +64,15 @@ export const LoginScreen = ({navigation}) => {
 
   return (
     <ScreenComponent>
-      {isMobile && (
-        <>
-          <FloatingBackgroundOval />
-          <Title bold title fontSize={30}>
-            Iniciar sesion
-          </Title>
-        </>
-      )}
-      <Card
-        onlyWeb
-        style={{
-          padding: scaleDp(15),
-          width: !isMobile ? 'auto' : '100%',
-          height: 'auto',
-          alignSelf: 'center',
-          alignItems: 'center',
-        }}>
+      <LoginImage width={widthWithPadding} height={height * 0.3} />
+      <InputsContainer>
         <InputField
           editable={!loading}
-          icon="account-outline"
+          icon="account"
           label="Email"
           value={values[FIELDS.USERNAME]}
           keyboardType="email-address"
+          autoCapitalize="none"
           onChangeText={_setFieldValue(FIELDS.USERNAME)}
           error={
             submitCount > 0 &&
@@ -94,10 +86,8 @@ export const LoginScreen = ({navigation}) => {
             }
           }
         />
-        <InputField
+        <PasswordInput
           editable={!loading}
-          icon="lock-outline"
-          secureTextEntry
           label="Contaseña"
           value={values[FIELDS.PASSWORD]}
           onChangeText={_setFieldValue(FIELDS.PASSWORD)}
@@ -113,20 +103,16 @@ export const LoginScreen = ({navigation}) => {
             }
           }
         />
-        <Loader
-          loading={loading}
-          onPlace
-          style={{
-            height: scaleDp(70),
-            alignItems: 'center',
-            marginTop: scaleDp(30),
-          }}>
-          <MainButton label="Ingresar" onPress={handleSubmit} />
-          <TextLink onPress={onPressForgetPassword}>
-            Olvide mi contraseña
-          </TextLink>
+      </InputsContainer>
+      <ButtonsContainer>
+        <Loader loading={loading}>
+          <Button label="Ingresar" onPress={handleSubmit} />
+          <Link onPress={onPressForgetPassword}>¿Olvidaste tu contraseña?</Link>
         </Loader>
-      </Card>
+      </ButtonsContainer>
+      <AppText>
+        ¿Todavia no tenes cuenta? <Link alternate>Crear cuenta</Link>
+      </AppText>
     </ScreenComponent>
   );
 };
@@ -135,13 +121,33 @@ export default LoginScreen;
 
 const ScreenComponent = styled(Screen)`
   height: ${(props) => props.theme.screenHeight}px;
-  padding: ${scaleDpTheme(15)};
   align-items: center;
-  padding-top: ${(props) => props.theme.screenHeight * 0.12}px;
+  padding: 60px 20px 0;
 `;
 
-const Title = styled(AppText)`
-  margin-bottom: ${(props) => (props.theme.isMobile ? '55%' : 0)};
-  z-index: 2;
-  color: ${theme.fontColor};
+const InputsContainer = styled(View)`
+  padding-top: 15px;
+  flex-shrink: 1;
+  width: 100%;
+  align-items: center;
+`;
+
+const ButtonsContainer = styled(View)`
+  flex: 0.7;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+`;
+
+const Button = styled(MainButton)`
+  margin-bottom: 25px;
+  width: 250px;
+`;
+
+const Link = styled(TextLink)`
+  text-decoration: none;
+  font-size: 14px;
+  color: ${(props) =>
+    props.alternate ? theme.primaryColor : theme.primaryDarkColor};
+  font-weight: bold;
 `;

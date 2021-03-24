@@ -1,16 +1,10 @@
 import React, {useCallback} from 'react';
-import {View, Platform, Image} from 'react-native';
-import styled from 'styled-components';
-import {Container} from 'components/ui/Container';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {MainButton} from 'components/ui/MainButton';
+import {Platform, Alert} from 'react-native';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
-import {IconButton} from 'components/ui/IconButton';
-import {AppText} from 'components/ui/AppText';
 import ImagePicker from 'react-native-image-crop-picker';
 import PermissionManager from 'components/Permissions/index';
-import {AnimatedError} from 'components/ui/AnimatedError';
+import InputField from 'components/ui/InputField';
 
 const defaultProps = {
   cropperToolbarTitle: 'Editá la foto',
@@ -29,6 +23,7 @@ const SelectImage = ({
   error,
   acceptTypes,
   value,
+  onFocus,
   onSelectImage,
   ...props
 }) => {
@@ -66,44 +61,44 @@ const SelectImage = ({
     onSelectImage(image);
   }, [onSelectImage, maxFiles]);
 
-  const cleanImage = useCallback(() => {
-    onSelectImage(null);
-  }, [onSelectImage]);
+  const _onFocus = useCallback((e) => {
+    Alert.alert(
+      'Elegí una fuente',
+      'Elegi de donde querés selccionar la foto',
+      [
+        {
+          text: 'Cámara',
+          onPress: onPressCamera,
+        },
+        {
+          text: 'Galería',
+          onPress: onPressGalery,
+        },
+        {text: 'Cancelar', style: 'cancel'},
+      ],
+    );
+    return true;
+  }, []);
+
+  const onClear = useCallback((t) => {
+    if (t === '') {
+      onSelectImage(null);
+    }
+  }, []);
 
   return (
-    <ComponentContainer>
-      <Container dir="row" alignItems="center">
-        <RoundedIconContainer>
-          {value ? (
-            <SelectedImage source={{uri: value.path}} />
-          ) : (
-            <Icon name="account" size={scaleDp(35)} color={theme.accentColor} />
-          )}
-        </RoundedIconContainer>
-        <Container>
-          <AppText fontSize={14}>{label}</AppText>
-          {value ? (
-            <CancelButton onPress={cleanImage} inverted label="Borrar foto" />
-          ) : (
-            <Container dir="row" width="80%" justifyContent="center">
-              <OptionButton
-                alternative
-                icon="image-outline"
-                size={25}
-                onPress={onPressGalery}
-              />
-              <OptionButton
-                inverted
-                icon="camera-outline"
-                size={25}
-                onPress={onPressCamera}
-              />
-            </Container>
-          )}
-        </Container>
-      </Container>
-      <AnimatedError error={error} />
-    </ComponentContainer>
+    <InputField
+      label={label}
+      value={value?.filename}
+      renderAccesory={() => (
+        <Icon name={'cloud-upload'} color={theme.disabledFont} size={25} />
+      )}
+      clearable
+      onChangeText={onClear}
+      onFocus={_onFocus}
+      error={error}
+      {...props}
+    />
   );
 };
 
@@ -112,37 +107,3 @@ SelectImage.defaultProps = {
 };
 
 export default SelectImage;
-const ComponentContainer = styled(Container)`
-  margin-top: ${scaleDpTheme(10)};
-  margin-bottom: ${scaleDpTheme(10)};
-  justify-content: center;
-`;
-
-const SelectedImage = styled(Image)`
-  height: 135%;
-  width: 135%;
-`;
-
-const CancelButton = styled(MainButton)`
-  height: ${scaleDpTheme(30)};
-  width: 100%;
-`;
-
-const RoundedIconContainer = styled(View)`
-  align-items: center;
-  justify-content: center;
-  border-color: ${theme.accentColor};
-  height: ${scaleDpTheme(60)};
-  width: ${scaleDpTheme(60)};
-  border-width: 2px;
-  border-radius: ${scaleDpTheme(30)};
-  padding: ${scaleDpTheme(5)};
-  margin-right: ${scaleDpTheme(3)};
-  overflow: hidden;
-`;
-
-const OptionButton = styled(IconButton)`
-  margin-top: ${scaleDpTheme(3)};
-  margin-left: ${scaleDpTheme(15)};
-  margin-right: ${scaleDpTheme(15)};
-`;

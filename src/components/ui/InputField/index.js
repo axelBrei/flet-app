@@ -6,8 +6,11 @@ import {AnimatedError} from 'components/ui/AnimatedError';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
 import PropTypes from 'prop-types';
+import {AnimatedLabel} from 'components/ui/InputField/AnimatedLabel';
+import {AppText} from 'components/ui/AppText';
 
 const InputField = ({
+  externalRef,
   label,
   error,
   onFocus,
@@ -15,15 +18,30 @@ const InputField = ({
   icon,
   loading,
   clearable,
+  renderAccesory,
   onLayout,
+  disableErrors,
+  unitString,
+  style,
   ...props
 }) => {
-  const inputRef = useRef(null);
+  const inputRef = useRef(externalRef);
 
-  const _onFocus = useCallback(() => {
-    inputRef.current?.focus();
-    typeof onFocus === 'function' && onFocus();
-  }, [onFocus, inputRef]);
+  React.useImperativeHandle(externalRef, () => ({
+    focus: inputRef.current?.focus?.(),
+  }));
+
+  const _onFocus = useCallback(
+    (e) => {
+      if (typeof onFocus === 'function' && onFocus()) {
+        e.preventDefault?.();
+        inputRef.current?.blur();
+      } else {
+        inputRef.current?.focus();
+      }
+    },
+    [onFocus, inputRef],
+  );
 
   const _onBlur = useCallback(() => {
     inputRef.current?.blur();
@@ -35,32 +53,43 @@ const InputField = ({
   }, [props]);
 
   return (
-    <ComponentContainer style={props.style} onLayout={onLayout}>
+    <ComponentContainer style={style} onLayout={onLayout}>
       <Container
-        classname={props.classname}
-        onFocus={_onFocus}
+        // onFocus={_onFocus}
         onBlur={_onBlur}
         error={error}
         style={props.containerStyle}>
-        {!!icon && (
-          <Icon
-            name={icon}
-            size={scaleDp(20)}
-            color={theme.primaryLightColor}
-          />
-        )}
+        {!!icon && <Icon name={icon} size={25} color={theme.fontColor} />}
         <Input
           autoCompleteType={props.autoCompleteType}
           ref={inputRef}
           onBlur={_onBlur}
           onFocus={_onFocus}
+          autoCorrect={false}
+          autoCapitalize={props.disableCapitalize ? 'none' : 'words'}
+          blurOnSubmit
+          placeholderTextColor={theme.disabledFont}
           {...props}
           placeholder={label}
         />
+        {unitString && !!props.value && (
+          <UnitText onPress={_onFocus}>{unitString}</UnitText>
+        )}
+        {!icon && !!props.value && (
+          <AnimatedLabel label={label} valuePresent={props.value} />
+        )}
         <Loader size={20} animating={loading} color={theme.primaryColor} />
-        {clearable && <ClearIcon name="close-circle" onPress={onClear} />}
+        {clearable && props.value !== '' && (
+          <ClearIcon
+            name="close-circle"
+            onPress={onClear}
+            size={20}
+            isAlone={!renderAccesory()}
+          />
+        )}
+        {!!renderAccesory && renderAccesory(onClear)}
       </Container>
-      <AnimatedError error={error} />
+      {!disableErrors && error && <AnimatedError error={error} />}
     </ComponentContainer>
   );
 };
@@ -68,56 +97,79 @@ const InputField = ({
 InputField.defaultProps = {
   autoCompleteType: 'off',
   loading: false,
+  icon: null,
+  disableErrors: false,
+  renderAccesory: () => null,
+  unitString: null,
+  value: '',
+  disableCapitalize: false,
 };
 InputField.propTypes = {
   onChangeText: PropTypes.func.isRequired,
+  keyboardType: PropTypes.oneOf([
+    'default',
+    'number-pad',
+    'email-address',
+    'numeric',
+    'decimal-pad',
+    'phone-pad',
+  ]),
+  disableCapitalize: PropTypes.bool,
 };
-export default InputField;
+export default React.forwardRef((props, ref) => (
+  <InputField externalRef={ref} {...props} />
+));
 
 const ComponentContainer = styled(View)`
   display: flex;
   width: 100%;
   z-index: 0;
+  margin-bottom: 15px;
 `;
 
 const Container = styled(View)`
   align-items: center;
-  padding-left: ${scaleDpTheme(10)};
-  padding-right: ${scaleDpTheme(10)};
+  padding: 0 20px;
   flex-direction: row;
-  background-color: white;
-  border-color: ${(props) => (props.error ? theme.error : 'transparent')};
+  background-color: ${theme.grayBackground};
+  border-radius: 40px;
   border-width: 1px;
-  border-radius: 12px;
-  box-shadow: 0px 3px 6px ${theme.shadowColor};
-  elevation: 3;
+  border-color: ${({error}) => (error ? theme.error : 'transparent')};
 `;
 
 const Input = styled(TextInput)`
   font-family: ${({theme}) => theme.fonts.regular};
+  z-index: 2;
   flex: 1;
   color: ${(props) => props.theme.colors.fontColor};
-  min-width: ${scaleDpTheme(150)};
-  font-size: ${scaleDpTheme(12)};
-  padding-top: ${scaleDpTheme(15)};
-  padding-bottom: ${scaleDpTheme(15)};
-  padding-left: ${scaleDpTheme(10)};
+  padding: 15px 0 15px 5px;
+  font-size: 14px;
   overflow: hidden;
   ${(props) =>
     props.theme.screenWidth < 800 &&
     Platform.OS === 'web' &&
     css`
       min-font-size: 17px;
-      font-size: max(${(props) => scaleDp(props.fontSize) + 'px'}, 20px);
     `}
 `;
 
 const ClearIcon = styled(Icon)`
-  color: ${(props) => props.theme.colors.primaryLightColor};
-  flex: 1;
+  color: ${(props) => props.theme.colors.fontColor};
+  flex-shrink: 1;
   text-align: right;
+  margin-right: ${(props) => (props.isAlone ? 0 : '10px')};
 `;
 
 const Loader = styled(ActivityIndicator)`
   width: ${scaleDpTheme(15)};
+`;
+
+const UnitText = styled(AppText)`
+  font-size: 14px;
+  ${(props) =>
+    props.theme.screenWidth < 800 &&
+    Platform.OS === 'web' &&
+    css`
+      min-font-size: 17px;
+    `}
 `;

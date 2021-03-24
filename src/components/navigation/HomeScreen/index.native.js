@@ -1,42 +1,30 @@
 import React, {useState} from 'react';
+import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
-import {FloatingHamburguerButton} from 'components/ui/FloatingHamburgerButton';
-import DraggableBottomView from 'components/ui/DraggableBottomView/index';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {OrderForm} from 'components/navigation/HomeScreen/OrderForm';
-import Map from 'components/ui/Map/index';
-import {scaleDp} from 'helpers/responsiveHelper';
+import {View} from 'react-native';
+import {theme} from 'constants/theme';
+import {UserProfileHeader} from 'components/ui/UserProfileHeader';
+import {NewShipmentForm} from 'components/navigation/HomeScreen/NewShipmentForm';
 
 export default () => {
-  const {height, width} = useWindowDimension();
-  const [startPoint, setStartPoint] = useState(null);
-  const [endPoint, setEndPoint] = useState(null);
-
   return (
-    <Screen style={{height, width}} enableAvoidKeyboard={false}>
-      <Map
-        style={{width, height}}
-        markers={[startPoint, endPoint]}
-        minMarkerAnimation={1}
-        edgePadding={{
-          bottom: scaleDp(550),
-          right: scaleDp(50),
-          top: scaleDp(50),
-          left: scaleDp(50),
-        }}
-      />
-      <DraggableBottomView>
-        {({isOpen, open, close}) => (
-          <OrderForm
-            open={open}
-            isOpen={isOpen}
-            close={close}
-            onSelectStartPoint={setStartPoint}
-            onSelectEndPoint={setEndPoint}
-          />
-        )}
-      </DraggableBottomView>
-      <FloatingHamburguerButton />
-    </Screen>
+    <ScreenContainer enableAvoidKeyboard={false}>
+      <UserProfileHeader />
+      <BodyContainer>
+        <NewShipmentForm />
+      </BodyContainer>
+    </ScreenContainer>
   );
 };
+
+const ScreenContainer = styled(Screen)`
+  background-color: ${theme.primaryLightColor};
+`;
+
+const BodyContainer = styled(View)`
+  flex: 1;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: ${theme.backgroundColor};
+  padding: 40px 20px 0;
+`;

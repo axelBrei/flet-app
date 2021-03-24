@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import LandingScreen from 'components/navigation/LandingScreen';
 import PageNotFound from 'components/navigation/PageNotFound';
-import {RegisterStack} from 'components/navigation/RegisterStack';
+import RegisterStack from 'components/navigation/RegisterStack';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import LoginScreen from 'components/navigation/LoginScreen';
 import {navigationConfig} from 'constants/config/navigationConfig';
@@ -13,6 +13,7 @@ import LoggedInStack from 'components/navigation/LoggedInStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {scaleDp} from 'helpers/responsiveHelper';
+import {AppLogo} from 'components/ui/AppLogo';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -30,27 +31,24 @@ const renderPublicRoutes = (width, isMobile) => (
       component={LoginScreen}
       options={{
         headerStyle: {
-          backgroundColor: theme.primaryLightColor,
-          height: scaleDp(60),
+          height: 'auto',
+          minHeight: 100,
         },
-        headerRightContainerStyle: {
-          paddingRight: scaleDp(15),
-          paddingVertical: scaleDp(5),
-        },
-        headerTitleStyle: {
-          width: 'auto',
-          fontSize: scaleDp(16),
-        },
-        headerShown: true,
-        title: 'Iniciar sesión',
-        headerTitle: isMobile ? '' : 'Iniciar sesión',
-        headerTransparent: isMobile,
+        headerTransparent: true,
+        headerTitle: () => <AppLogo color={theme.primaryColor} />,
       }}
     />
     <Screen
       name={routes.registerStack}
       component={RegisterStack}
-      options={{headerShown: false}}
+      options={{
+        headerTitle: () => <AppLogo color={theme.primaryColor} />,
+        headerStyle: {
+          backgroundColor: theme.white,
+        },
+        headerTintColor: theme.primaryDarkColor,
+        headerShown: true,
+      }}
     />
   </>
 );

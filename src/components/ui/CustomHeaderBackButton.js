@@ -6,12 +6,17 @@ import {theme} from 'constants/theme';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {AppText} from 'components/ui/AppText';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {useNavigation} from 'components/Hooks/useNavigation';
 
 export const CustomHeaderBackButton = (props) => {
   const {isMobile} = useWindowDimension();
+  const navigation = useNavigation();
+
+  const onPress = props.canGoBack ? props?.onPress : navigation.goBack;
+
   return (
     <TouchableOpacity
-      onPress={props.onPress}
+      onPress={onPress}
       style={{
         flex: 1,
         alignItems: 'center',

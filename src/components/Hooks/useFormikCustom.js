@@ -3,6 +3,7 @@ import {useFormik} from 'formik';
 
 export const useFormikCustom = (formikConfig) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submited, setSubmited] = useState(false);
   const {setFieldTouched, setFieldValue, ...formikProps} = useFormik(
     formikConfig,
   );
@@ -18,7 +19,10 @@ export const useFormikCustom = (formikConfig) => {
   }, [formikProps.isSubmitting]);
 
   const _setFieldTouched = useCallback(
-    (field) => () => setFieldTouched(field, true, true),
+    (field) => () => {
+      setFieldTouched(field, true, true);
+      return false;
+    },
     [setFieldTouched],
   );
 
@@ -32,6 +36,7 @@ export const useFormikCustom = (formikConfig) => {
   const handleSubmit = useCallback(
     (...params) => {
       formikProps.handleSubmit(...params);
+      setTimeout(() => setSubmited(true), 300);
     },
     [formikProps.isSubmitting],
   );
@@ -43,5 +48,6 @@ export const useFormikCustom = (formikConfig) => {
     setFieldTouched,
     _setFieldTouched,
     _setFieldValue,
+    submited,
   };
 };

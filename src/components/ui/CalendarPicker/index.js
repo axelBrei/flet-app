@@ -1,12 +1,12 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import styled from 'styled-components';
-import {View, Pressable} from 'react-native';
+import styled, {css} from 'styled-components';
+import {View, Pressable, Platform} from 'react-native';
 import {Modal} from 'components/ui/Modal/index';
-import {AppText} from 'components/ui/AppText';
 import {formatDate} from 'helpers/dateHelper';
 import {useModal} from 'components/Hooks/useModal';
 import {Calendar} from 'components/ui/Calendar';
 import InputField from 'components/ui/InputField';
+import {Title} from 'components/ui/Title';
 
 export default ({
   label,
@@ -14,6 +14,8 @@ export default ({
   onSelectDay = () => {},
   calendarOptions,
   error,
+  hideIcon,
+  ...props
 }) => {
   const [currentDate, setCurrentDate] = useState(value);
   useEffect(() => {
@@ -32,16 +34,29 @@ export default ({
   const renderCalendar = useCallback(
     ({toggleModal}) => (
       <ModalContainer>
-        <AppText>Seleccioná la fecha</AppText>
+        <Title>Seleccioná la fecha</Title>
         <Calendar onDayPress={onDayPress(toggleModal)} {...calendarOptions} />
       </ModalContainer>
     ),
     [onDayPress, calendarOptions],
   );
 
-  const {Modal, toggle, isModalVisible} = useModal(renderCalendar);
+  const {Modal, toggle, isModalVisible} = useModal(
+    renderCalendar,
+    {},
+    {cancelable: true},
+  );
 
   const onFocusInput = useCallback(() => {}, [toggle]);
+
+  const onCleanInput = useCallback(
+    (t) => {
+      if (t === '') {
+        setCurrentDate(null);
+      }
+    },
+    [setCurrentDate],
+  );
 
   return (
     <>
@@ -52,9 +67,11 @@ export default ({
           editable={false}
           pointerEvents="none"
           label={label || 'Selecciona una fecha'}
-          icon="calendar"
+          icon={!hideIcon && 'calendar'}
           value={formatDate(currentDate)}
+          onChangeText={onCleanInput}
           error={error}
+          {...props}
         />
       </InputContainer>
       <Modal />
@@ -71,5 +88,17 @@ const InputContainer = styled(Pressable)`
 `;
 
 const ModalContainer = styled(View)`
+  width: 100%;
   background-color: ${(props) => props.theme.colors.white};
+  border-radius: 20px;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+
+  ${({theme}) =>
+    Platform.OS === 'web' &&
+    theme.isMobile &&
+    css`
+      width: ${theme.screenWidth - 40}px;
+    `};
 `;

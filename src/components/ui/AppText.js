@@ -29,7 +29,7 @@ const getWebFontWeight = ({bold: b, italic: i}) => {
 };
 
 export const AppText = styled(Text)`
-  font-size: ${(props) => scaleDpTheme(props.fontSize)};
+  font-size: ${(props) => props.fontSize}px;
   color: ${(props) =>
     props.alternative ? 'white' : props.color || props.theme.colors.fontColor};
   width: ${(props) => props.width};
@@ -39,6 +39,7 @@ export const AppText = styled(Text)`
     props.fontFamily || getFontFamily(props.bold, props.italic)};
   ${Platform.OS === 'web' &&
   css`
+    min-font-size: 17px;
     font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
     font-weight: ${getWebFontWeight};
   `};
@@ -69,5 +70,5 @@ AppText.defaultProps = {
   selectable: Platform.OS === 'web' && width <= 800,
   padding: 0,
   fontFamily: null,
-  autoCapitalize: false,
+  autoCapitalize: 'none',
 };

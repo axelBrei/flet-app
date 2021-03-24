@@ -22,7 +22,6 @@ export const useMarkerList = (updatePosition) => {
   useEffect(() => {
     const get = async () => {
       const pos = await getCurrentPosition();
-      console.log('position', pos);
       updatePosition(pos.coords);
     };
     get();
@@ -37,7 +36,12 @@ export const useMarkerList = (updatePosition) => {
           updatePosition(position.coords);
         }
       },
-      (e) => console.log('track error', e),
+      async (e) => {
+        const pos = await getCurrentPosition();
+        setLastUserPosition(currentLocation || pos.coords);
+        setCurrentLocation(pos.coords);
+        updatePosition(pos.coords);
+      },
       {useSignificantChanges: true}, // avoids refresh every second
     );
   }, [currentLocation]);
@@ -55,9 +59,9 @@ export const useMarkerList = (updatePosition) => {
   useEffect(() => {
     if (shipment.id) {
       const point =
-        shipment.status === SHIPMENT_STATE.ON_PROCESS
-          ? shipment.startPoint
-          : shipment.endPoint;
+        shipment?.status === SHIPMENT_STATE.ON_PROCESS
+          ? shipment.endPoint
+          : shipment.startPoint;
       setDirectionsMakers({
         latitude: point.latitude,
         longitude: point.longitude,

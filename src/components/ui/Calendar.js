@@ -1,18 +1,13 @@
 import React, {useCallback, useState, useMemo} from 'react';
-import {
-  Platform,
-  StyleSheet,
-  View,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import styled, {css} from 'styled-components';
+import {Platform, View, TouchableOpacity} from 'react-native';
 import {LocaleConfig, Calendar as WixCalendar} from 'react-native-calendars';
 import {scaleDp} from 'helpers/responsiveHelper';
-import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
 import dayjs from 'dayjs';
 import {formatDate, fromDate} from 'helpers/dateHelper';
 import {AppText} from 'components/ui/AppText';
+import {theme} from 'constants/theme';
 
 LocaleConfig.locales.es = {
   monthNames: [
@@ -120,29 +115,23 @@ export const Calendar = ({currentDate, onDayPress, future, past}) => {
   const renderYearItem = useCallback(
     ({item}) => (
       <TouchableOpacity onPress={onYearPress(item)} key={item.toString()}>
-        <AppText
-          fontSize={Platform.OS === 'web' ? 14 : 20}
-          style={styles.yearOption}>
-          {item}
-        </AppText>
+        <YearText>{item}</YearText>
       </TouchableOpacity>
     ),
     [onYearPress],
   );
 
   return (
-    <View style={styles.container}>
+    <Container>
       {yearSelectionVisible ? (
-        <View style={styles.yearSelection}>
-          <FlatList
-            data={yearsToShow}
-            keyExtractor={(_, index) => index.toString()}
-            initialScrollIndex={past || future ? 0 : 100}
-            renderItem={renderYearItem}
-          />
-        </View>
+        <YearListContainer
+          data={yearsToShow.reverse()}
+          keyExtractor={(_, index) => index.toString()}
+          initialScrollIndex={past || future ? 0 : 100}
+          renderItem={renderYearItem}
+        />
       ) : (
-        <WixCalendar
+        <StyledCalendar
           onDayPress={onPressDay}
           current={dayToShow}
           markedDates={{
@@ -150,24 +139,40 @@ export const Calendar = ({currentDate, onDayPress, future, past}) => {
           }}
           renderHeader={renderHeader}
           renderArrow={renderArrows}
+          theme={{
+            selectedDayBackgroundColor: theme.primaryLightColor,
+          }}
         />
       )}
-    </View>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    height: scaleDp(Platform.OS === 'web' ? 200 : 350),
-    backgroundColor: theme.white,
-  },
-  yearSelection: {
-    flex: 1,
-    zIndex: 10,
-    backgroundColor: theme.white,
-  },
-  yearOption: {
-    paddingVertical: scaleDp(5),
-    alignSelf: 'center',
-  },
-});
+const Container = styled.View`
+  width: 100%;
+`;
+
+const StyledCalendar = styled(WixCalendar)`
+  width: 100%;
+
+  ${({theme}) =>
+    Platform.OS === 'web' &&
+    !theme.isMobile &&
+    css`
+      width: 40%;
+      min-width: 350px;
+    `};
+`;
+
+const YearListContainer = styled.FlatList`
+  height: 300px;
+`;
+
+const YearText = styled(AppText)`
+  padding: 10px 0;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+`;

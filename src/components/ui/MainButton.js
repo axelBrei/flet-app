@@ -1,10 +1,14 @@
 import React, {useCallback, useMemo, useRef} from 'react';
-import {Platform, TouchableOpacity, Animated, View} from 'react-native';
+import {
+  Platform,
+  TouchableOpacity,
+  Animated,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import {theme} from 'constants/theme';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {Icon} from 'components/ui/Icon';
 import Hoverable from 'components/ui/Hoverable/index';
 
 const MainButtonAux = ({
@@ -16,39 +20,10 @@ const MainButtonAux = ({
   alternative,
   fontSize,
   style,
+  children,
   ...props
 }) => {
   const scale = useRef(new Animated.Value(1)).current;
-  const buttonColors = useMemo(() => {
-    if (inverted) {
-      return {
-        color: theme.accentColor,
-        backgroundColor: theme.white,
-        borderWidth: scaleDp(1),
-        borderColor: theme.accentColor,
-      };
-    }
-    if (alternative) {
-      return {
-        color: theme.white,
-        backgroundColor: theme.primaryDarkColor,
-      };
-    }
-  }, [inverted, alternative]);
-
-  const showIconOrBlankSpace = useCallback(
-    (iconName) =>
-      !!iconName ? (
-        <Icon
-          color={buttonColors?.color || props.iconColor || theme.fontColor}
-          name={iconName}
-          size={Platform.OS === 'web' ? 30 : 25}
-        />
-      ) : (
-        <View style={{width: Platform.OS === 'web' ? 30 : 25}} />
-      ),
-    [],
-  );
 
   const handleHover = useCallback(
     (toValue = 1) =>
@@ -60,26 +35,28 @@ const MainButtonAux = ({
     [],
   );
 
+  if (props.loading) {
+    return (
+      <View style={[style, {height: 43, justifyContent: 'center'}]}>
+        <ActivityIndicator
+          animating
+          color={props.loaderColor || theme.primaryColor}
+        />
+      </View>
+    );
+  }
   return (
     <Hoverable onHoverIn={handleHover(1.05)} onHoverOut={handleHover()}>
       <Button
         onPress={onPress}
         classname={props.classname}
-        backgroundColor={buttonColors?.backgroundColor}
-        borderColor={buttonColors?.borderColor}
-        style={[
-          style,
-          {
-            transform: [{scale}],
-          },
-        ]}
+        inverted={inverted}
+        style={[style, {transform: [{scale}]}]}
         {...props}>
         <Container>
-          {showIconOrBlankSpace(leftIcon)}
-          <Text fontSize={fontSize} color={buttonColors?.color}>
-            {label}
+          <Text fontSize={fontSize} inverted={inverted} bold={props.bold}>
+            {label || children}
           </Text>
-          {showIconOrBlankSpace(rightIcon)}
         </Container>
       </Button>
     </Hoverable>
@@ -88,12 +65,13 @@ const MainButtonAux = ({
 
 MainButtonAux.defaultProps = {
   label: '',
-  fontSize: Platform.OS === 'web' ? 12 : 16,
+  fontSize: Platform.OS === 'web' ? 13 : 14,
   leftIcon: '',
   rightIcon: '',
   onPress: () => {},
   inverted: false,
   alternative: false,
+  bold: true,
 };
 export const MainButton = MainButtonAux;
 
@@ -105,22 +83,22 @@ const Container = styled(View)`
 
 const Text = styled(AppText)`
   text-align: center;
-  color: ${(props) => props.color || props.theme.colors.fontColor};
-  padding: 0 ${scaleDpTheme(5)};
+  color: ${({inverted}) => (inverted ? theme.primaryColor : theme.white)};
+  padding: 0 5px;
+  font-size: ${(props) => props.fontSize || 16}px;
 `;
 
-const RawButton = styled(TouchableOpacity)`
-  background-color: ${(props) =>
-    props.backgroundColor || props.theme.colors.primaryColor};
-  border-color: ${(props) =>
-    props.borderColor || props.theme.colors.primaryColor};
-  border-width: ${(props) => (props.borderColor ? 1 : 0)}px;
-  margin: ${(props) => scaleDp(5)}px;
-  width: ${(props) => scaleDpTheme(props.width || 200)};
-  height: ${(props) => scaleDp(props.height || 40)}px;
-  border-radius: 10px;
-  align-items: center;
-  justify-content: center;
-  z-index: 0;
-`;
-const Button = Animated.createAnimatedComponent(RawButton);
+const Button = Animated.createAnimatedComponent(
+  styled(TouchableOpacity)`
+    background-color: ${({inverted}) =>
+      inverted ? theme.white : theme.primaryColor};
+    border-color: ${theme.primaryColor};
+    border-width: ${({inverted}) => (inverted ? '1px' : '0px')};
+    margin: 5px;
+    padding: 10px 50px;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+  `,
+);

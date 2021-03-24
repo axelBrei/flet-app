@@ -60,11 +60,8 @@ const babelLoaderConfiguration = {
 
 const dotenv = require('dotenv').config({
   path: path.join(__dirname, '.env'),
-  allowEmptyValues: true,
-  systemvars: true,
-  silent: true,
 });
-
+console.log(!!dotenv.error);
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
   test: /\.(gif|jpe?g|png)$/,
@@ -117,7 +114,7 @@ module.exports = (env) => ({
   },
   plugins: [
     new webpack.DefinePlugin(
-      dotenv.error
+      !!dotenv.error
         ? {'process.env': JSON.stringify(process.env)}
         : {
             'process.env': JSON.stringify({

@@ -4,7 +4,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const WebpackDotenv = require('dotenv-webpack');
 const {GenerateSW, InjectManifest} = require('workbox-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname, './');
@@ -117,25 +116,9 @@ module.exports = (env) => ({
     publicPath: '/',
   },
   plugins: [
-    new WebpackDotenv({
-      path: path.join(__dirname, '.env'),
-      allowEmptyValues: true,
-      systemvars: true,
-      silent: true,
-    }),
-    // new webpack.DefinePlugin(
-    //   dotenv.error
-    //     ? {}
-    //     : {
-    //         'process.env':
-    //         'process.env.REACT_APP_BASE_URL': dotenv.parsed.REACT_APP_BASE_URL,
-    //         'process.env.REACT_APP_GMAPS_API_KEY':
-    //           dotenv.parsed.REACT_APP_GMAPS_API_KEY,
-    //         'process.env.REACT_APP_ACCESS_TOKEN':
-    //           dotenv.parsed.REACT_APP_ACCESS_TOKEN,
-    //
-    //       },
-    // ),
+    new webpack.DefinePlugin(
+      dotenv.error ? {} : {'process.env': JSON.stringify(dotenv.parsed)},
+    ),
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
     }),

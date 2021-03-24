@@ -64,7 +64,7 @@ export default ({onPressAccept}) => {
     if (!item) {
       res = index < 2 ? '1' : '59';
     }
-    res && setHour(res);
+    res && setMinute(res);
   });
 
   const renderItem = ({item}) => (

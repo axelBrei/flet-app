@@ -45,6 +45,7 @@ import {useDebounce} from 'components/Hooks/useDebounce';
 import {useUpdateCurrentPosition} from 'components/navigation/DriverHome/useUpdateCurrentPosition';
 import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFetchPendignShipment';
 import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCard';
+import dayjs from 'dayjs';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -109,8 +110,8 @@ export default ({navigation}) => {
     }
   }, [pendingShipment]);
 
-  const onChangeOnlineStatus = useCallback((newOnlineStatus) => {
-    dispatch(changeOnlineStatus(newOnlineStatus));
+  const onChangeOnlineStatus = useCallback((newOnlineStatus, time) => {
+    dispatch(changeOnlineStatus(newOnlineStatus, time.until));
   }, []);
 
   return (

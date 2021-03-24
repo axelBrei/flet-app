@@ -15,7 +15,6 @@ export const Dropdown = ({visible, data, ...props}) => {
 
   const measureInput = useCallback(
     ({nativeEvent: {layout}}) => {
-      console.log(layout);
       setInputMeasures({
         top: layout.y + layout.height - 18,
         width: layout.width,
@@ -42,8 +41,6 @@ export const Dropdown = ({visible, data, ...props}) => {
     },
     [props.onChangeText, setValue],
   );
-
-  console.log(data);
 
   return (
     <>

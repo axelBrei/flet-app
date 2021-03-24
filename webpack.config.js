@@ -126,11 +126,11 @@ module.exports = (env) => ({
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
     }),
-    // new webpack.DefinePlugin({
-    //   'process.env.REACT_APP_SC_ATTR': JSON.stringify('data-styled-fletapp'),
-    //   'process.env.SC_ATTR': JSON.stringify('data-styled-fletapp'),
-    //   'process.env.REACT_APP_SC_DISABLE_SPEEDY': '1',
-    // }),
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_SC_ATTR': JSON.stringify('data-styled-fletapp'),
+      'process.env.SC_ATTR': JSON.stringify('data-styled-fletapp'),
+      'process.env.REACT_APP_SC_DISABLE_SPEEDY': '1',
+    }),
     new HtmlWebPackPlugin({
       template: 'public/index.html',
       // filename: './index.html',

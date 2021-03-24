@@ -117,7 +117,14 @@ module.exports = (env) => ({
   },
   plugins: [
     new webpack.DefinePlugin(
-      dotenv.error ? {} : {'process.env': JSON.stringify(dotenv.parsed)},
+      dotenv.error
+        ? {'process.env': JSON.stringify(process.env)}
+        : {
+            'process.env': JSON.stringify({
+              ...process.env,
+              ...dotenv.parsed,
+            }),
+          },
     ),
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),

@@ -1,20 +1,40 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import InputField from 'components/ui/InputField';
 import {Row} from 'components/ui/Row';
 import {MainButton} from 'components/ui/MainButton';
 import {Title} from 'components/ui/Title';
+import {useModalContext} from 'components/Hooks/useModal';
 
-export default () => {
+export default ({onPressAccept}) => {
+  const {closeModal} = useModalContext();
+  const [hour, setHour] = useState(12);
+  const [minute, setMinute] = useState(30);
+
+  const _onPressAccept = useCallback(() => {
+    onPressAccept({hour, minute});
+    closeModal();
+  }, [onPressAccept, hour, minute]);
+
   return (
     <Container>
       <Title>Seleccioná un horario</Title>
       <Row>
-        <InputField style={{width: '49%'}} label="Hora" />
-        <InputField style={{width: '49%'}} label="Minutos" />
+        <InputField
+          style={{width: '49%'}}
+          onChangeText={setHour}
+          label="Hora"
+          value={hour}
+        />
+        <InputField
+          style={{width: '49%'}}
+          onChangeText={setMinute}
+          label="Minutos"
+          value={minute}
+        />
       </Row>
-      <MainButton>Aceptar</MainButton>
+      <MainButton onPress={_onPressAccept}>Aceptar</MainButton>
     </Container>
   );
 };

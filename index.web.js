@@ -5,6 +5,12 @@ import {name as appName} from './package.json';
 import {register} from 'serviceWorkerConfig.web';
 import WebFont from 'webfontloader';
 
+Object.assign(process.env, {
+  REACT_APP_SC_ATTR: 'data-styled-fletapp',
+  SC_ATTR: 'data-styled-fletapp',
+  REACT_APP_SC_DISABLE_SPEEDY: 1,
+});
+
 // Generate required css
 import iconFont from './node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf';
 const iconFontStyles = `@font-face {

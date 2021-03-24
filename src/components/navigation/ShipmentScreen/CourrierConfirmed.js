@@ -26,7 +26,6 @@ export const CourrierConfirmed = (title) => () => {
     [duration],
   );
 
-  console.log(shipmentStatus);
   return (
     <Container>
       <Title size={19}>{title}</Title>
@@ -46,7 +45,6 @@ export const CourrierConfirmed = (title) => () => {
         <LabeledImage
           renderImage={() => {
             const item = vehiculeSizeOptions.find((i) => i.id === 2);
-            console.log(item);
             return item?.renderIcon(50);
           }}
           label={`${

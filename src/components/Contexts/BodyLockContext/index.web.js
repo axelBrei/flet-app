@@ -38,7 +38,6 @@ export default ({children}) => {
   const unlockBody = () => {
     const element = document.getElementById('lock-view');
     if (locked) {
-      console.log('unlock body');
       enableBodyScroll(element);
       setLocked(false);
     }

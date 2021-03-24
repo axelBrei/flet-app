@@ -2,6 +2,10 @@ import {createSlice} from '@reduxjs/toolkit';
 import shipmentService from 'services/shipmentService';
 
 const initialState = {
+  shipmentPrice: {
+    price: null,
+    until: null,
+  },
   shipmentRequest: {
     shipmentDescription: {
       startPoint: null,
@@ -27,9 +31,11 @@ const initialState = {
   },
   loading: {
     newShipment: false,
+    price: false,
   },
   error: {
     newShipment: null,
+    price: null,
   },
 };
 
@@ -60,6 +66,21 @@ const slice = createSlice({
       state.error.newShipment = null;
     },
     requestAcceptShipment: (state) => {},
+    requestShipmentPrice: (state) => {
+      state.loading.price = true;
+      state.error.price = null;
+    },
+    receiveShipmentPriceSuccess: (state, action) => {
+      state.loading.price = false;
+      state.shipmentPrice = action.payload;
+    },
+    receiveShipmentPriceFail: (state, action) => {
+      state.loading.price = false;
+      state.error.price = action.payload;
+    },
+    clearShipmentPrice: (state) => {
+      state.shipmentPrice = initialState.shipmentPrice;
+    },
   },
   extraReducers: {
     'login/logout': (state) => {
@@ -77,11 +98,53 @@ export const {
   requestNewShipment,
   receiveNewShipmentSuccess,
   receiveNewShipmentFail,
+  requestShipmentPrice,
+  receiveShipmentPriceSuccess,
+  receiveShipmentPriceFail,
+  clearShipmentPrice,
 } = slice.actions;
 
 /**
  * @THUNK
  */
+
+export const fetchShipmentPrice = (confirmationInformation) => async (
+  dispatch,
+  getState,
+) => {
+  dispatch(requestShipmentPrice());
+  try {
+    const {
+      shipmentDescription,
+      shipmentVehicule: shipmentVehicle,
+    } = selectNewShipmentData(getState());
+    const {height, width, length, ...rest} = shipmentDescription.package;
+    const {data} = await shipmentService.getNewShipmentPrice({
+      shipmentDescription: {
+        ...shipmentDescription,
+        package: {
+          ...shipmentDescription.package,
+          level:
+            shipmentDescription.package.height *
+            shipmentDescription.package.width *
+            shipmentDescription.package.length,
+        },
+      },
+      shipmentVehicle: {
+        ...shipmentVehicle,
+        comments: '',
+      },
+      confirmationInformation: {
+        ...confirmationInformation,
+        paymentMethod: confirmationInformation?.paymentMethod?.title,
+      },
+    });
+    dispatch(receiveShipmentPriceSuccess(data));
+  } catch (e) {
+    dispatch(receiveShipmentPriceFail(e?.response?.data?.message || e));
+  }
+};
+
 export const createNewShipment = (confirmationInformation) => async (
   dispatch,
   getState,
@@ -97,7 +160,7 @@ export const createNewShipment = (confirmationInformation) => async (
       shipmentDescription: {
         ...shipmentDescription,
         package: {
-          ...rest,
+          ...shipmentDescription.package,
           level: height * width * length,
         },
       },
@@ -125,3 +188,10 @@ export const selectNewShipmentError = (state) =>
   state.newShipment.error.newShipment;
 export const selectNewShipmentData = (state) =>
   state.newShipment.shipmentRequest;
+
+export const selectLoadingShipmentPrice = (state) =>
+  state.newShipment.loading.price;
+export const selectShipmentPriceError = (state) =>
+  state.newShipment.error.price;
+export const selectNewShipmentPrice = (state) =>
+  state.newShipment.shipmentPrice?.price;

@@ -38,7 +38,7 @@ export default ({navigation}) => {
         updateShipmentDescription({
           ...rest,
           [FIELDS.VALUE]: parseInt(values[FIELDS.VALUE]),
-          // [FIELDS.WEIGHT]: parseInt(values[FIELDS.WEIGHT]),
+          [FIELDS.WEIGHT]: parseInt(values[FIELDS.WEIGHT]),
         }),
       );
       navigation.navigate(routes.newShipmentDetailScreen);

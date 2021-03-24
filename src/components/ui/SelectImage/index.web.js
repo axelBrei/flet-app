@@ -45,7 +45,6 @@ const SelectImage = ({
 
   const _onFocus = useCallback(
     (e) => {
-      console.log(e, 'focus');
       inputRef.current?.click();
       return true;
     },

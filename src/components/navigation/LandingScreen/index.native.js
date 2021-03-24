@@ -48,6 +48,7 @@ export default ({navigation}) => {
 
 // STYLES
 const ScreenComponent = styled(Screen)`
+  height: ${({theme}) => theme.screenHeight}px;
   flex-direction: column;
   align-items: center;
   background-color: ${theme.backgroundColor};

@@ -11,6 +11,7 @@
     "start:ios": "npx react-native run-ios",
     "start": "react-native start",
     "lint": "eslint .",
+    "pull-web-enviorment": "chmod +x ./pullEnviorment.sh && ./pullEnviorment.sh",
     "build:web:prod": "webpack --mode production --env=prod",
     "cleanAndroid": "cd android && rm -rf app/build && ./gradlew clean && cd ..",
     "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors"

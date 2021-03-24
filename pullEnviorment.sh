@@ -1,5 +1,6 @@
 #!/bin/bash
 
+yum install -y wget
 
 mkdir enviorments
 wget -O ./.env $ENV_URL

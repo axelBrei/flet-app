@@ -96,8 +96,9 @@ export const updatePosition = (position) => async (dispatch, getState) => {
   }
   dispatch(requestUpdatePosition());
   try {
+    console.log(vehicleList);
     const currentPosition = selectCurrentPosition(getState());
-    await courrierService.updatePosition(position, vehicleList?.[0]?.id);
+    await courrierService.updatePosition(position, vehicleList['0']?.id);
     dispatch(
       receiveUpdatePositionSuccess({
         currentPosition: position,

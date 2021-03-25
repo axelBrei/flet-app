@@ -36,7 +36,7 @@ export const OnlineStatusCard = ({onPressButton}) => {
     if (!error) {
       onPressButton(!isOnline, {
         ...selectedTime,
-        until: selectedTime.date.valueOf(),
+        until: selectedTime?.date.valueOf(),
       });
     }
   };

@@ -10,6 +10,7 @@ import {
 
 const initialState = {
   currentShipment: {},
+  lastShipments: [],
   driverPosition: {
     latitude: 0,
     longitude: 0,
@@ -22,12 +23,14 @@ const initialState = {
     status: false,
     driverPosition: false,
     shipmentStatus: false,
+    history: false,
   },
   error: {
     cancel: null,
     status: null,
     driverPosition: null,
     shipmentStatus: null,
+    history: null,
   },
 };
 
@@ -82,6 +85,18 @@ const slice = createSlice({
       state.driverPosition = initialState.driverPosition;
       state.shipmentStatus = initialState.shipmentStatus;
     },
+    requestLastShipments: (state) => {
+      state.loading.history = true;
+      state.error.history = null;
+    },
+    receiveLastShipmentsSuccess: (state, action) => {
+      state.loading.history = false;
+      state.lastShipments = action.payload;
+    },
+    receiveLastShipmentsFail: (state, action) => {
+      state.loading.history = false;
+      state.error.history = action.payload;
+    },
   },
   extraReducers: {
     'newShipment/receiveNewShipmentSuccess': (state, action) => {
@@ -106,6 +121,9 @@ export const {
   receiveShipmentStatusSuccess,
   receiveShipmentStatusFail,
   cleanShipments,
+  requestLastShipments,
+  receiveLastShipmentsSuccess,
+  receiveLastShipmentsFail,
 } = slice.actions;
 
 /*
@@ -157,6 +175,16 @@ export const cancelShipment = () => async (dispatch, getState) => {
   }
 };
 
+export const fetchLastShipments = () => async (dispatch) => {
+  dispatch(requestLastShipments());
+  try {
+    const {data} = await shipmentService.getLastShipments();
+    dispatch(receiveLastShipmentsSuccess(data));
+  } catch (e) {
+    dispatch(receiveLastShipmentsFail(e?.response?.data?.message || e));
+  }
+};
+
 /*
  * @SELECTORS
  */
@@ -182,3 +210,9 @@ export const selectCurrentShipmentStatusString = createStateCheckSelector(
   (state) => state.shipment?.shipmentStatus,
   (shipmentStatus) => shipmentStatus?.status,
 );
+
+// last shipments
+export const selectIsLoadingLastShipments = (state) =>
+  state.shipment.loading.history;
+export const selectLastShipmentsError = (state) => state.shipment.error.history;
+export const selectLastShipments = (state) => state.shipment.lastShipments;

@@ -1,36 +1,27 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {FullScreenModalContainer} from 'components/MobileFullScreenModals/FullScreenModalContainer';
 import {FlatList} from 'react-native';
 import {InsuranceItem} from 'components/MobileFullScreenModals/InsuranceSelectionModalScreen/InsuranceItem';
-
-const list = [
-  {
-    id: 0,
-    title: 'Sin cobertura',
-    description: 'No se asegura el paquete',
-    valueModificator: 0,
-  },
-  {
-    id: 1,
-    title: 'Básico',
-    description: 'Se asegura un 10% del valor del paquete',
-    valueModificator: 0.1,
-  },
-  {
-    id: 2,
-    title: 'Plus',
-    description: 'Se asegura un 25% del valor del paquete',
-    valueModificator: 0.25,
-  },
-  {
-    id: 3,
-    title: 'Ultra',
-    description: 'Se asegura un 50% del valor del paquete',
-    valueModificator: 0.5,
-  },
-];
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  fetchInsurances,
+  selectInsuranceList,
+  selectInsuranceListError,
+  selectLoadingInsuranceList,
+} from 'redux-store/slices/insuranceSlice';
+import {Loader} from 'components/ui/Loader';
+import {AppText} from 'components/ui/AppText';
 
 export default ({closeModal, onPressItem, selectedInsurance}) => {
+  const dispatch = useDispatch();
+  const list = useSelector(selectInsuranceList);
+  const isLoading = useSelector(selectLoadingInsuranceList);
+  const error = useSelector(selectInsuranceListError);
+
+  useEffect(() => {
+    dispatch(fetchInsurances());
+  }, []);
+
   const _onPressItem = useCallback(
     (item) => () => {
       onPressItem(item);
@@ -53,11 +44,14 @@ export default ({closeModal, onPressItem, selectedInsurance}) => {
 
   return (
     <FullScreenModalContainer title="Seleccioná una opcion:">
-      <FlatList
-        keyExtractor={(_, i) => i.toString()}
-        data={list}
-        renderItem={renderItem}
-      />
+      <Loader loading={isLoading}>
+        <FlatList
+          keyExtractor={(_, i) => i.toString()}
+          data={list}
+          renderItem={renderItem}
+          ListEmptyComponent={() => <AppText>{error}</AppText>}
+        />
+      </Loader>
     </FullScreenModalContainer>
   );
 };

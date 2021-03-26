@@ -18,6 +18,7 @@ export const api = axios.create({
     'El pedido tardó demasiado, por favor intentá nuevamente',
   transformResponse: (data) => {
     const parsedData = JSON.parse(data);
+
     return keysToCamelCase(parsedData);
   },
   transformRequest: (data) => {
@@ -50,6 +51,7 @@ export const configureAuthInterceptor = (store) => {
           await store.dispatch(loginAs(email, pass));
           await api.request(err.config);
         } catch (e) {
+          console.log('relogin fail', e);
           Promise.reject(err);
         }
       }

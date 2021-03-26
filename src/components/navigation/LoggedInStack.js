@@ -6,7 +6,6 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationDrawer} from 'components/ui/NavigationDrawer';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
-import HomeScreen from 'components/navigation/HomeScreen';
 import {TransitionPresets} from '@react-navigation/stack';
 import ShipmentStack from 'components/navigation/ShipmentStack';
 import {useSelector} from 'react-redux';
@@ -104,9 +103,12 @@ export default () => {
       )}
       <Screen
         name={routes.lastShippmentsScreen}
-        component={PageNotFound}
+        getComponent={() =>
+          require('components/navigation/LastShipmentsScreen').default
+        }
         options={{
           title: 'Mis pedidos',
+          headerShown: true,
         }}
       />
       <Screen

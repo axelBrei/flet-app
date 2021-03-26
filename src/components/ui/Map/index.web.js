@@ -126,6 +126,7 @@ const Map = ({
           lat: i[0],
           lng: i[1],
         })) || [];
+
     return (
       directions &&
       directions.length > 0 && (

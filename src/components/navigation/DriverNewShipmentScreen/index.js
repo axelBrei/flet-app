@@ -48,6 +48,9 @@ export default ({}) => {
         loading={loadingPermissions || loadingMakers}
         message={loadingMessage}>
         <Map
+          style={{
+            flex: 1,
+          }}
           followsUserLocation
           showsMyLocationButton
           directions={directions}
@@ -61,4 +64,6 @@ export default ({}) => {
 
 const ScreenComponent = styled(Screen)`
   display: flex;
+  flex: 1;
+  height: 100%;
 `;

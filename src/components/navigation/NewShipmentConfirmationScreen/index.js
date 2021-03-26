@@ -60,8 +60,8 @@ export default ({navigation}) => {
 
   const onChangeInsurance = useCallback(
     (val) => {
+      dispatch(fetchShipmentPrice({...values, [FIELDS.INSURANCE]: val}));
       _setFieldValue(FIELDS.INSURANCE)(val);
-      dispatch(fetchShipmentPrice(values));
     },
     [_setFieldValue, values],
   );

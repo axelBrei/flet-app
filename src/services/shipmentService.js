@@ -27,6 +27,8 @@ const checkShipmentStatus = async (shipmentId) =>
 const getNewShipmentPrice = async (shipmentData) =>
   await api.post('shipment/price', shipmentData);
 
+const getLastShipments = async () => await api.get('shipment/history');
+
 export default {
   fetchPendingShipments,
   createNewShipment,
@@ -38,4 +40,5 @@ export default {
   updateShipmentToDelivered,
   uploadConfirmationCode,
   getNewShipmentPrice,
+  getLastShipments,
 };

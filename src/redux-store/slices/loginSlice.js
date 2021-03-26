@@ -1,6 +1,7 @@
 import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
 import {capitallize} from 'helpers/stringHelper';
+import {receiveShipmentStatusSuccess} from 'redux-store/slices/shipmentSlice';
 import {
   receiveCourrierDataSuccess,
   receiveRegisterSuccess,
@@ -59,6 +60,9 @@ export const loginAs = (email, pass) => async (dispatch) => {
   dispatch(requestLogin());
   try {
     const {data} = await LoginService.loginAs(email, pass);
+
+    data.shipment && dispatch(receiveShipmentStatusSuccess(data.shipment));
+
     dispatch(
       receiveLoginSuccess({
         ...data,

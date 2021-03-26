@@ -9,6 +9,7 @@ import geocodingReducer from 'redux-store/slices/geolocationSlice';
 import courrierReducer from 'redux-store/slices/driverSlice';
 import shipmentReducer from 'redux-store/slices/shipmentSlice';
 import vehicleTypesreducer from 'redux-store/slices/vehicleTypesSlice';
+import insuranceReducer from 'redux-store/slices/insuranceSlice';
 
 const reducers = {
   login: loginSlice,
@@ -18,6 +19,7 @@ const reducers = {
   shipment: shipmentReducer,
   geolocation: geocodingReducer,
   courrier: courrierReducer,
+  insurance: insuranceReducer,
   vehicleTypes: vehicleTypesreducer,
 };
 

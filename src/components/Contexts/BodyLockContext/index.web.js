@@ -26,19 +26,23 @@ export default ({children}) => {
     ref.current?.scrollTo(0, 0);
   }, [navigationState, ref]);
 
-  const lockBody = () => {
+  const lockBody = (elem) => {
+    const screenElement = document.getElementById(elem);
     const element = document.getElementById('lock-view');
     if (!locked) {
       ref.current?.scrollTo(0, 0);
       disableBodyScroll(element);
+      disableBodyScroll(screenElement);
       setLocked(true);
     }
   };
 
-  const unlockBody = () => {
+  const unlockBody = (elem) => {
     const element = document.getElementById('lock-view');
+    const screenElement = document.getElementById(elem);
     if (locked) {
       enableBodyScroll(element);
+      enableBodyScroll(screenElement);
       setLocked(false);
     }
   };

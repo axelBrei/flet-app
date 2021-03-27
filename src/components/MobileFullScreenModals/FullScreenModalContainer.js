@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {Platform, View} from 'react-native';
 import {Title} from 'components/ui/Title';
 import {Icon} from 'components/ui/Icon';
@@ -34,7 +34,7 @@ const Screen = styled.View`
   width: ${(props) => (props.theme.isMobile ? '100%' : '450px')};
   height: ${(props) =>
     Platform.select({
-      native: '100%',
+      native: '95%',
       web: (props.theme.isMobile ? props.theme.screenHeight - 104 : 550) + 'px',
     })};
   padding: 20px;

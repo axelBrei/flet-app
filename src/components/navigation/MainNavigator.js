@@ -71,6 +71,12 @@ export default () => {
       screenOptions={navigationConfig({
         title: '',
         headerShown: width <= 800,
+        cardStyle: {
+          backgroundColor: theme.white,
+          paddingBottom: Platform.select({
+            web: () => (navigator.platform.includes('iPhone') ? 25 : 0),
+          })?.(),
+        },
       })}>
       {userData ? renderPrivateRoutes() : renderPublicRoutes(width, isMobile)}
       <Screen

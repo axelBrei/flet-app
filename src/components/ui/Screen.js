@@ -12,8 +12,7 @@ import {
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {useIsFocused, useRoute, useFocusEffect} from '@react-navigation/native';
-import {useHeaderHeight} from '@react-navigation/stack';
+import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useBodyLock} from 'components/Contexts/BodyLockContext/index';
 import {PLATFORMS, usePlatformEffect} from 'components/Hooks/usePlatformEffect';
 
@@ -29,9 +28,7 @@ export const Screen = ({
 }) => {
   const {lockBody, unlockBody} = useBodyLock();
   const route = useRoute();
-  const headerHeight = useHeaderHeight();
-  const {isMobile, height, width} = useWindowDimension();
-  const isFocused = useIsFocused();
+  const {isMobile, width} = useWindowDimension();
   const ViewComponent = React.useMemo(() => {
     return styled(
       Platform.OS !== 'web' && !removeTWF ? TouchableWithoutFeedback : View,
@@ -49,12 +46,12 @@ export const Screen = ({
   useFocusEffect(
     useCallback(() => {
       if (Platform.OS === PLATFORMS.WEB && isMobile && !scrollable) {
-        lockBody();
+        lockBody(route);
         return () => {
-          unlockBody();
+          unlockBody(route);
         };
       }
-    }, [scrollable, isMobile, lockBody, unlockBody]),
+    }, [scrollable, isMobile, lockBody, unlockBody, route]),
   );
 
   usePlatformEffect(
@@ -90,6 +87,7 @@ export const Screen = ({
           }}>
           <ViewComponent accessible={!scrollable} onPress={Keyboard.dismiss}>
             <ScrollableLayer
+              nativeID={route.name}
               showsVerticalScrollIndicator={false}
               classname={classname}
               contentContainerStyle={props.contentContainerStyle}

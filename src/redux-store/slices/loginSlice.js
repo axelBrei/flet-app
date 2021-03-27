@@ -93,7 +93,7 @@ export const selectUserEmail = (state) => state.login?.userData?.email;
 export const selectUserId = (state) => state.login?.userData?.id;
 export const selectUserPhoto = createSelector(
   (state) => state.login?.userData?.photo,
-  (photo) => (photo ? photo : null),
+  (photo) => (photo ? {uri: photo} : null),
 );
 
 export const selectIsDriver = (state) => state.login?.userData?.isDriver;

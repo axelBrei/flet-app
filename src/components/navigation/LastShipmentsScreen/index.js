@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {RefreshControl} from 'react-native';
 import {Screen} from 'components/ui/Screen';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,6 +14,7 @@ import {CommonList} from 'components/ui/CommonList';
 import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
 import {LastShipmentItem} from 'components/navigation/LastShipmentsScreen/LastShipmentItem';
+import {Platform} from 'react-native';
 
 export default () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -37,7 +38,7 @@ export default () => {
   }, []);
 
   return (
-    <Screen removeTWF>
+    <Screen removeTWF scrollable={Platform.OS === 'web'}>
       <Loader loading={isLoading && !refreshing}>
         <Title padding={20}>Mis ultimos pedidos</Title>
         <List
@@ -54,6 +55,7 @@ export default () => {
               }}
             />
           }
+          showsVerticalScrollIndicator={Platform.OS === 'web'}
           renderItem={renderItem}
           EmptyListComponent={() => <Title>{error}</Title>}
           data={lastShipmentList}
@@ -66,4 +68,5 @@ export default () => {
 
 const List = styled(CommonList)`
   flex: 1;
+  min-height: ${(props) => props.theme.screenHeight - 100}px;
 `;

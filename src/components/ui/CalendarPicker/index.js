@@ -88,17 +88,10 @@ const InputContainer = styled(Pressable)`
 `;
 
 const ModalContainer = styled(View)`
-  width: 100%;
   background-color: ${(props) => props.theme.colors.white};
   border-radius: 20px;
   padding: 20px;
   align-items: center;
   justify-content: center;
-
-  ${({theme}) =>
-    Platform.OS === 'web' &&
-    theme.isMobile &&
-    css`
-      width: ${theme.screenWidth - 40}px;
-    `};
+  width: 100%;
 `;

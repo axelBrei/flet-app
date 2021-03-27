@@ -61,5 +61,6 @@ const StyledRow = styled(Row)`
     !theme.isMobile &&
     css`
       max-width: 414px;
+      elevation: 0;
     `}
 `;

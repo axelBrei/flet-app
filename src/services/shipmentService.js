@@ -5,7 +5,8 @@ const fetchPendingShipments = async () => await api.get('shipment/courrier');
 const confirmShipment = async (shipmentId) =>
   await api.post(`shipment/confirm?shipment_id=${shipmentId}`, {});
 
-const rejectShipment = async (shipmentId) => {};
+const rejectShipment = async (shipmentId) =>
+  await api.post(`shipment/reject?shipment_id=${shipmentId}`, {});
 
 const updateShipmentToPickedUp = async (shipmentId) =>
   await api.post(`shipment/picked?shipment_id=${shipmentId}`, {});

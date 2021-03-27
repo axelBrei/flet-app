@@ -64,6 +64,5 @@ export default ({}) => {
 
 const ScreenComponent = styled(Screen)`
   display: flex;
-  flex: 1;
   height: 100%;
 `;

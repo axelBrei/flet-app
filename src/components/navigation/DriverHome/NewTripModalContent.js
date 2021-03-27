@@ -8,7 +8,10 @@ import {TextLink} from 'components/ui/TextLink';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
 import {useSelector} from 'react-redux';
-import {selectLoadingPendingShipmentAnswer} from 'redux-store/slices/driverShipmentSlice';
+import {
+  selectLoadingPendingShipmentAnswer,
+  selectPendingShipment,
+} from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {Title} from 'components/ui/Title';
 import {StaticInputField} from 'components/ui/StaticInputField';
@@ -25,22 +28,30 @@ const strings = {
   reject: 'Rechazar',
 };
 
+const getDistanceIfKm = (distance) => {
+  if (distance > 999) {
+    return `${(distance / 1000).toString().substring(0, 4)} Km.`;
+  }
+  return `${distance} Mts.`;
+};
+
 export const NewTripModalContent = ({
   distance,
   dropZone,
   onPressAccept,
   onPressReject,
 }) => {
+  const shipment = useSelector(selectPendingShipment);
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
   return (
     <Container>
       <Title width="100%">¡Nuevo viaje!</Title>
       <Row>
         <StaticInputField bold label="Distancia" style={{width: '45%'}}>
-          {distance} Km.
+          {getDistanceIfKm(distance)}
         </StaticInputField>
         <StaticInputField bold label="Llegas a las" style={{width: '45%'}}>
-          12:49 Hs.
+          {shipment?.startPoint?.duration}
         </StaticInputField>
       </Row>
       <IconCard
@@ -50,13 +61,22 @@ export const NewTripModalContent = ({
           <PackageImage height={size - 20} width={size - 20} />
         )}>
         <Title alternative>Paquete</Title>
-        <RowWithBoldData label="Alto" data="0,5 metros" />
-        <RowWithBoldData label="Ancho" data="0,5 metros" />
-        <RowWithBoldData label="Largo" data="0,5 metros" />
+        <RowWithBoldData
+          label="Alto"
+          data={`${shipment?.package.height} Cm.`}
+        />
+        <RowWithBoldData
+          label="Ancho"
+          data={`${shipment?.package.height} Cm.`}
+        />
+        <RowWithBoldData
+          label="Largo"
+          data={`${shipment?.package.height} Cm.`}
+        />
         <RowWithBoldData
           numberOfLines={1}
           label="Desc."
-          data="Una descripcion"
+          data={shipment?.package.description}
         />
       </IconCard>
       <IconCard
@@ -66,8 +86,11 @@ export const NewTripModalContent = ({
           <DestinationImage height={size - 25} width={size - 25} />
         )}>
         <Title alternative>Destino</Title>
-        <RowWithBoldData label="Zona" data="Capital Federal" />
-        <RowWithBoldData label="Llegada" data="21:45 - 21:55 Hs." />
+        <RowWithBoldData
+          label="Zona"
+          data={shipment?.endPoint?.name.split(', ')[2]}
+        />
+        <RowWithBoldData label="Llegada" data={shipment?.endPoint?.duration} />
       </IconCard>
       {loading ? (
         <ActivityIndicator
@@ -78,10 +101,10 @@ export const NewTripModalContent = ({
         />
       ) : (
         <Row>
-          <Button color={theme.cancel} onPress={onPressReject}>
+          <Button backgroundColor={theme.cancel} onPress={onPressReject}>
             Cancelar
           </Button>
-          <Button color={theme.online} onPress={onPressAccept}>
+          <Button backgroundColor={theme.online} onPress={onPressAccept}>
             Aceptar
           </Button>
         </Row>
@@ -121,7 +144,7 @@ const ButtonsContainer = styled(Container)`
 `;
 
 const Button = styled(MainButton)`
-  background-color: ${(props) => props.color};
+  background-color: ${(props) => props.backgroundColor};
   padding: 10px;
   width: 45%;
   margin-top: 10px;

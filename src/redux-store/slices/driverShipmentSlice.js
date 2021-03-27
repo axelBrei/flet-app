@@ -142,7 +142,7 @@ export const confirmShipment = () => async (dispatch, getState) => {
   }
 };
 
-export const rejectShipment = () => async (dispatch) => {
+export const rejectShipment = () => async (dispatch, getState) => {
   dispatch(requestRejectShipment());
   try {
     const {id} = selectPendingShipment(getState());

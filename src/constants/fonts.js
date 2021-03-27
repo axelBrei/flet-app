@@ -1,4 +1,4 @@
-const [normal] = ['OpenSans'];
+const [normal] = ['Poppins'];
 export const fontVariants = {
   italic: 'Italic',
   light: 'Light',

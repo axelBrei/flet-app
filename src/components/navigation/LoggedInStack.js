@@ -108,7 +108,7 @@ export default () => {
         }
         options={{
           title: 'Mis pedidos',
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Screen

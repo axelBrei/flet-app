@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
+import {Platform} from 'react-native';
 import {AppText} from 'components/ui/AppText';
 import dayjs from 'dayjs';
 import {theme} from 'constants/theme';
@@ -81,6 +82,13 @@ const Container = styled.View`
   margin: 10px 0;
   border-bottom-width: 0.5px;
   border-color: ${theme.lightGray};
+
+  ${(props) =>
+    Platform.OS === 'web' &&
+    !props.theme.isMobile &&
+    css`
+      max-width: 550px;
+    `}
 `;
 
 const ShipmentDate = styled(Title)`

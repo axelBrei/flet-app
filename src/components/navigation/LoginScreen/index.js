@@ -85,6 +85,7 @@ export const LoginScreen = ({}) => {
               maxWidth: scaleDp(250),
             }
           }
+          textContentType="username"
         />
         <PasswordInput
           editable={!loading}
@@ -102,6 +103,8 @@ export const LoginScreen = ({}) => {
               maxWidth: scaleDp(250),
             }
           }
+          onSubmitEditing={handleSubmit}
+          textContentType="password"
         />
       </InputsContainer>
       <ButtonsContainer>

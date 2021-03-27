@@ -1,20 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {CustomImage} from 'components/ui/Image';
 import {AppText} from 'components/ui/AppText';
-import {Container} from 'components/ui/Container';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {useUserData} from 'components/Hooks/useUserData';
 import {theme} from 'constants/theme';
 
-export const UserProfileHeader = () => {
+export const UserProfileHeader = ({style}) => {
   const {name, lastName, picture} = useUserData();
   return (
-    <ComponentContainer dir="row">
+    <ComponentContainer style={style}>
       <RoundImage source={picture} defaultIcon="account" />
-      <Container dir="column" width="100%">
+      <Container>
         <UserName>
           {name} {lastName}
         </UserName>
@@ -24,9 +23,12 @@ export const UserProfileHeader = () => {
   );
 };
 
-const ComponentContainer = styled(Container)`
+const ComponentContainer = styled.View`
   padding: 30px 25px;
+  flex-direction: row;
 `;
+
+const Container = styled.View``;
 
 const RoundImage = styled(CustomImage)`
   height: 65px;
@@ -39,6 +41,12 @@ const UserName = styled(AppText)`
   color: ${theme.white};
   font-size: 24px;
   font-weight: bold;
+
+  ${(props) =>
+    !props.theme.isMobile &&
+    css`
+      font-size: 20px;
+    `};
 `;
 
 const Disclaimer = styled(AppText)`

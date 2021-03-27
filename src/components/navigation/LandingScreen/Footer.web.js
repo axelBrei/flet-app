@@ -25,10 +25,14 @@ export const Footer = () => {
   const openUrl = useCallback((url) => () => window.open(url, '_blank'), []);
   return (
     <ComponentContainer>
-      <AppLogo size={12} />
+      <AppLogo size={12} color={theme.white} />
       <Container dir="row" alignItems="center">
-        <Icon name="email-outline" size={20} />
-        <AppText onPress={onPressMail} fontSize={14} padding=" 1px 5">
+        <Icon name="email-outline" size={20} color={theme.white} />
+        <AppText
+          onPress={onPressMail}
+          fontSize={14}
+          padding=" 1px 5"
+          color={theme.white}>
           {mail}
         </AppText>
       </Container>
@@ -43,17 +47,19 @@ export const Footer = () => {
               onPress={openUrl(url)}
               icon={name}
               size={20}
+              iconColor={theme.white}
               style={{
                 padding: 0,
                 marginTop: scaleDp(15),
                 marginRight: scaleDp(10),
               }}
               backgroundColor={theme.primaryLightColor}
-              iconColor={theme.fontColor}
             />
           ))}
         </Container>
-        <AppText fontSize={10}>©2021 - Todos los derechos reservados</AppText>
+        <AppText fontSize={10} color={theme.white}>
+          ©2021 - Todos los derechos reservados
+        </AppText>
       </Container>
     </ComponentContainer>
   );

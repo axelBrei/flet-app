@@ -33,8 +33,12 @@ export const Header = () => {
           onPress={navigateToRegister}
         />
         <AppText
-          padding={`0px ${scaleDp(15)}`}
-          fontSize={12}
+          padding="0px 15"
+          fontSize={15}
+          width={120}
+          textAlign="center"
+          color={theme.white}
+          bold
           onPress={navigateToLogin}>
           Ingresar
         </AppText>

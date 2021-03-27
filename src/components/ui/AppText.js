@@ -37,10 +37,12 @@ export const AppText = styled(Text)`
   padding: ${(props) => props.padding}px;
   font-family: ${(props) =>
     props.fontFamily || getFontFamily(props.bold, props.italic)};
+  font-weight: ${(props) => (props.bold ? 'bold' : 'normal')};
+  font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
+
   ${Platform.OS === 'web' &&
   css`
     min-font-size: 17px;
-    font-style: ${(props) => (props.italic ? 'italic' : 'normal')};
     font-weight: ${getWebFontWeight};
   `};
 `;
@@ -69,6 +71,6 @@ AppText.defaultProps = {
   textAlign: 'left',
   selectable: Platform.OS === 'web' && width <= 800,
   padding: 0,
-  fontFamily: null,
+  fontFamily: fonts.regular,
   autoCapitalize: 'none',
 };

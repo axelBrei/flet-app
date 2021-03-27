@@ -1,48 +1,30 @@
-import React, {useCallback} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  Platform,
-} from 'react-native';
-import {name as appName} from '../../../package.json';
+import React from 'react';
+import {View, StyleSheet, Dimensions, Platform} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {scaleDp} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
-import {Icon} from 'components/ui/Icon';
 import {AppLogo} from 'components/ui/AppLogo';
-import {logout} from 'redux-store/slices/loginSlice';
-import {useDispatch} from 'react-redux';
-import {AppText} from 'components/ui/AppText';
 import {LogoutButton} from 'components/ui/LogoutButton';
-import {UserProfileHeader} from 'components/ui/UserProfileHeader';
+import {fonts} from 'constants/fonts';
 
-const {height, width} = Dimensions.get('screen');
+const {width} = Dimensions.get('screen');
 export const NavigationDrawer = (props) => {
   return (
     <>
       <DrawerContentScrollView {...props} style={styles.drawerContainer}>
         <View style={styles.header}>
           <AppLogo />
-          <UserProfileHeader />
         </View>
-        <View
-          style={{
-            paddingTop: scaleDp(30),
-            flex: 1,
-          }}>
-          <DrawerItemList
-            {...props}
-            activeBackgroundColor={theme.primaryLightColor}
-            activeTintColor={theme.fontColor}
-            itemStyle={styles.item}
-            labelStyle={styles.itemLabel}
-          />
-        </View>
+        <DrawerItemList
+          {...props}
+          activeBackgroundColor={theme.primaryLightColor}
+          activeTintColor={theme.white}
+          inactiveTintColor={theme.fontColor}
+          itemStyle={styles.item}
+          labelStyle={styles.itemLabel}
+        />
       </DrawerContentScrollView>
       <View style={styles.logoutContainer}>
         <LogoutButton />
@@ -55,34 +37,48 @@ export const NavigationDrawer = (props) => {
 const styles = StyleSheet.create({
   drawerContainer: {
     flex: 1,
-    paddingVertical: scaleDp(15),
-    paddingLeft: scaleDp(10),
+    paddingVertical: 15,
+    paddingLeft: 10,
   },
   header: {
-    marginLeft: scaleDp(10),
+    marginVertical: 20,
+    marginLeft: 10,
   },
   item: {
     marginRight: 0,
-    paddingLeft: scaleDp(10),
+    paddingLeft: 10,
     borderRadius: 0,
-    borderTopLeftRadius: scaleDp(20),
-    borderBottomLeftRadius: scaleDp(20),
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    fontFamily: fonts.regular,
   },
   itemLabel: {
-    fontSize: scaleDp(13),
+    fontSize: 16,
+    fontFamily: fonts.regular,
   },
   divider: {
     position: 'absolute',
     right: 0,
     height: 'auto',
-    top: scaleDp(20),
-    bottom: scaleDp(20),
+    top: 50,
+    bottom: 50,
     width: 1,
     backgroundColor: theme.disabled,
   },
   logoutContainer: {
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingBottom: scaleDp(Platform.OS === 'web' ? 65 : 1),
+    paddingBottom: Platform.OS === 'web' ? 65 : 1,
+  },
+  userHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.primaryLightColor,
+    borderRadius: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 5,
+    alignSelf: 'center',
+    marginVertical: 25,
+    marginRight: 15,
   },
 });

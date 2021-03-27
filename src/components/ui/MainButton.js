@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {theme} from 'constants/theme';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import Hoverable from 'components/ui/Hoverable/index';
 
@@ -54,7 +54,11 @@ const MainButtonAux = ({
         style={[style, {transform: [{scale}]}]}
         {...props}>
         <Container>
-          <Text fontSize={fontSize} inverted={inverted} bold={props.bold}>
+          <Text
+            color={props.color || (inverted ? theme.primaryColor : theme.white)}
+            fontSize={fontSize}
+            inverted={inverted}
+            bold={props.bold}>
             {label || children}
           </Text>
         </Container>
@@ -79,11 +83,16 @@ const Container = styled(View)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  ${(props) =>
+    !props.theme.isMobile &&
+    css`
+      max-width: 374px;
+    `}
 `;
 
 const Text = styled(AppText)`
   text-align: center;
-  color: ${({inverted}) => (inverted ? theme.primaryColor : theme.white)};
   padding: 0 5px;
   font-size: ${(props) => props.fontSize || 16}px;
 `;
@@ -100,5 +109,11 @@ const Button = Animated.createAnimatedComponent(
     align-items: center;
     justify-content: center;
     z-index: 0;
+
+    ${(props) =>
+      !props.theme.isMobile &&
+      css`
+        max-width: 374px;
+      `}
   `,
 );

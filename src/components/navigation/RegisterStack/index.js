@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
 import RegisterScreen from 'components/navigation/RegisterScreen';
-import RegisterDriverVehiculeDataScreen from 'components/navigation/RegisterDriverVehiculeDataScreen';
 import {theme} from 'constants/theme';
 import {Screen as BaseScreen} from 'components/ui/Screen';
 import RegisterPersonalDataScreen from 'components/navigation/RegisterPersonalDataScreen';
@@ -15,20 +14,9 @@ const {Navigator, Screen} = createStackNavigator();
 export default ({route}) => {
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
-
-  route.params = {
-    driver: true,
-  };
   return (
     <ScreenComponent scrollable>
       <Container>
-        {!headerHidden && (
-          <StepSelector
-            currentIndex={currentScreenIndex}
-            reduced={!route.params?.driver}
-          />
-        )}
-
         <Navigator
           // initialRouteName={routes.registerDriverVehiculeScreen}
           screenOptions={navigationConfig({
@@ -81,6 +69,12 @@ export default ({route}) => {
             }}
           />
         </Navigator>
+        {!headerHidden && (
+          <StepSelector
+            currentIndex={currentScreenIndex}
+            reduced={!route.params?.driver}
+          />
+        )}
       </Container>
     </ScreenComponent>
   );
@@ -92,5 +86,6 @@ const ScreenComponent = styled(BaseScreen)`
 
 const Container = styled.View`
   background-color: transparent;
+  flex-direction: column-reverse;
   height: ${({theme}) => theme.screenHeight - 65}px;
 `;

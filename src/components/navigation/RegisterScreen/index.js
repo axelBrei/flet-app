@@ -51,6 +51,7 @@ export default ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.NAME)}
         onBlur={_setFieldTouched(FIELDS.NAME)}
         error={touched[FIELDS.NAME] && errors[FIELDS.NAME]}
+        textContentType="name"
       />
       <InputField
         label="Apellido"
@@ -58,6 +59,7 @@ export default ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.LAST_NAME)}
         onBlur={_setFieldTouched(FIELDS.LAST_NAME)}
         error={touched[FIELDS.LAST_NAME] && errors[FIELDS.LAST_NAME]}
+        textContentType="familyName"
       />
       <InputField
         label="Email"
@@ -67,6 +69,7 @@ export default ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.MAIL)}
         onBlur={_setFieldTouched(FIELDS.MAIL)}
         error={touched[FIELDS.MAIL] && errors[FIELDS.MAIL]}
+        textContentType="emailAddress"
       />
       <PasswordInput
         label="Contraseña"
@@ -75,6 +78,7 @@ export default ({navigation}) => {
         onChangeText={_setFieldValue(FIELDS.PASSWORD)}
         onBlur={_setFieldTouched(FIELDS.PASSWORD)}
         error={touched[FIELDS.PASSWORD] && errors[FIELDS.PASSWORD]}
+        textContentType="newPassword"
       />
       <PasswordInput
         label="Confirmar contraseña"

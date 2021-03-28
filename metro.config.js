@@ -6,7 +6,7 @@
  */
 const {getDefaultConfig} = require('metro-config');
 
-const blacklist = require('metro-config/src/defaults/blacklist');
+// const blacklist = require('metro-config/src/defaults/blacklist');
 const path = require('path');
 
 const ignoreTopLevelFolders = [
@@ -32,7 +32,7 @@ const ignoreTopLevelFolders = [
   'google-maps-react',
   'webfontloader',
   'fbjs',
-].map((f) => new RegExp(`${path.resolve(f)}/.*`));
+].map(f => new RegExp(`${path.resolve(f)}/.*`));
 const ignoreWebFiles = /.*\.web.js/;
 
 module.exports = (async () => {
@@ -45,18 +45,18 @@ module.exports = (async () => {
       getTransformOptions: async () => ({
         transform: {
           experimentalImportSupport: false,
-          inlineRequires: false,
+          inlineRequires: true,
         },
       }),
     },
     resolver: {
-      assetExts: [...assetExts.filter((ext) => ext !== 'svg'), 'web.js'],
+      assetExts: [...assetExts.filter(ext => ext !== 'svg'), 'web.js'],
       sourceExts: [...sourceExts, 'svg'],
-      blacklistRE: blacklist([
-        '/webpack.config.js',
-        ...ignoreTopLevelFolders,
-        ignoreWebFiles,
-      ]),
+      // blacklistRE: blacklist([
+      //   '/webpack.config.js',
+      //   ...ignoreTopLevelFolders,
+      //   ignoreWebFiles,
+      // ]),
     },
   };
 })();

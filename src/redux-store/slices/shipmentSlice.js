@@ -130,13 +130,10 @@ export const {
  * @THUNK
  */
 
-export const fetchShipmentStatus = (id = null) => async (
-  dispatch,
-  getState,
-) => {
+export const fetchShipmentStatus = () => async (dispatch, getState) => {
   dispatch(requestShipmentStatus());
   try {
-    const {shipmentId} = selectCurrentShipment(getState());
+    const {shipmentId, id} = selectCurrentShipment(getState());
     const {data} = await shipmentService.checkShipmentStatus(id || shipmentId);
     dispatch(receiveShipmentStatusSuccess(data));
   } catch (e) {

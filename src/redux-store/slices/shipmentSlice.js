@@ -198,12 +198,12 @@ export const selectIsLoadingShipmentStatus = (state) =>
   state.shipment.loading.status;
 
 export const selectDriverPosition = createPositionCheckSelector(
-  (state) => state.shipment.driverPosition,
-  (d) => d,
+  (state) => state.shipment?.driverPosition,
+  (d) => d || {},
 );
 export const selectCurrentShipmentStatus = createStateCheckSelector(
   (state) => state.shipment?.shipmentStatus,
-  (s) => s,
+  (s) => s || {},
 );
 
 export const selectCurrentShipmentStatusString = createStateCheckSelector(

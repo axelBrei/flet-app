@@ -1,11 +1,9 @@
 import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
 import {capitallize} from 'helpers/stringHelper';
-import {receiveShipmentStatusSuccess} from 'redux-store/slices/shipmentSlice';
-import {
-  receiveCourrierDataSuccess,
-  receiveRegisterSuccess,
-} from './registerSlice';
+import {receiveRegisterSuccess} from './registerSlice';
+import {receiveChangeOnlineStatusSuccess} from 'redux-store/slices/driverSlice';
+import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
 
 const initialState = {
   userData: null,
@@ -60,8 +58,15 @@ export const loginAs = (email, pass) => async (dispatch) => {
   dispatch(requestLogin());
   try {
     const {data} = await LoginService.loginAs(email, pass);
-
-    data.shipment && dispatch(receiveShipmentStatusSuccess(data.shipment));
+    if (data.shipment) {
+      dispatch(
+        receiveNewShipmentSuccess({
+          shipment_id: data.shipment.id,
+          ...data.shipment,
+        }),
+      );
+    }
+    data?.isOnline && dispatch(receiveChangeOnlineStatusSuccess(true));
 
     dispatch(
       receiveLoginSuccess({

@@ -19,6 +19,7 @@ const {Navigator, Screen} = createStackNavigator();
 export default () => {
   const {isMobile} = useWindowDimension();
   const currentShipment = useSelector(selectCurrentShipment);
+  console.log(currentShipment);
   return (
     <Navigator
       screenOptions={navigationConfig({
@@ -32,7 +33,7 @@ export default () => {
           color: theme.fontColor,
         },
       })}>
-      {currentShipment.shipmentId ? (
+      {currentShipment.shipmentId || currentShipment.id ? (
         <>
           <Screen
             name={routes.shipmentScreen}

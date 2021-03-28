@@ -26,6 +26,8 @@ export const OnlineStatusCard = ({onPressButton}) => {
     ({datetime, ...rest}) => {
       if (datetime.isBefore(dayjs())) {
         setError('Debe ser un horario futuro');
+      } else {
+        setError(null);
       }
       setSelectedTime({...rest, date: datetime});
     },

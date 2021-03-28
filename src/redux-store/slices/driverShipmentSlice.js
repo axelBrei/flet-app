@@ -212,6 +212,12 @@ export const selectLoadingPendingShipmentAnswer = createSelector(
   (confirm, reject) => confirm || reject,
 );
 
+export const selectPendingShipmentAnswerError = createSelector(
+  selectConirmShipmentError,
+  selectDriverRejectShipmentError,
+  (confirm, reject) => confirm || reject,
+);
+
 export const selectPendingShipment = (state) =>
   state.driverShipment.pendingShipment;
 

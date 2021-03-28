@@ -68,7 +68,7 @@ export const NewTripModalContent = ({
   );
 
   const arrivalTime = useMemo(() => {
-    const time = dayjs(shipment?.startPoint.duration);
+    const time = dayjs(shipment?.startPoint?.duration);
     return `${time.format('HH:mm')} - ${time
       .add(10, 'minute')
       .format('HH:mm')}`;
@@ -76,9 +76,9 @@ export const NewTripModalContent = ({
 
   const destinationTime = useMemo(() => {
     const now = dayjs();
-    const arrivalTime = dayjs(shipment?.startPoint.duration);
+    const arrivalTime = dayjs(shipment?.startPoint?.duration);
     const pickupTravelTime = now.diff(arrivalTime);
-    const destinationTime = dayjs(shipment?.endPoint.duration).add(
+    const destinationTime = dayjs(shipment?.endPoint?.duration).add(
       pickupTravelTime,
       'millisecond',
     );
@@ -108,20 +108,20 @@ export const NewTripModalContent = ({
         <Title alternative>Paquete</Title>
         <RowWithBoldData
           label="Alto"
-          data={`${shipment?.package.height} Cm.`}
+          data={`${shipment?.package?.height} Cm.`}
         />
         <RowWithBoldData
           label="Ancho"
-          data={`${shipment?.package.height} Cm.`}
+          data={`${shipment?.package?.height} Cm.`}
         />
         <RowWithBoldData
           label="Largo"
-          data={`${shipment?.package.height} Cm.`}
+          data={`${shipment?.package?.height} Cm.`}
         />
         <RowWithBoldData
           numberOfLines={1}
           label="Desc."
-          data={shipment?.package.description}
+          data={shipment?.package?.description}
         />
       </IconCard>
       <IconCard

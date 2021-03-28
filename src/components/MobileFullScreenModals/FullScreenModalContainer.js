@@ -28,7 +28,7 @@ const Screen = styled.View`
   min-width: ${(props) =>
     Platform.select({
       web: () =>
-        props.theme.isMobile ? `${props.theme.screenWidth}px` : '550px',
+        props.theme.isMobile ? `${props.theme.screenWidth - 80}px` : '550px',
       native: () => '150px',
     })()};
   width: ${(props) => (props.theme.isMobile ? '100%' : '450px')};

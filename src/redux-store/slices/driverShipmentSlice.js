@@ -193,7 +193,7 @@ export const uploadConfirmationCode = (code) => async (dispatch, getState) => {
  */
 
 export const selectDriverShipmentData = createStateCheckSelector(
-  (state) => state.driverShipment.shipmentData,
+  (state) => state?.driverShipment?.shipmentData,
   (s) => s || {},
 );
 

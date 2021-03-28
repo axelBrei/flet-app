@@ -40,6 +40,7 @@ export default ({onPressAccept}) => {
 };
 
 const Container = styled.View`
-  width: 100%;
+  width: ${(props) =>
+    props.theme.isMobile ? `${props.theme.screenWidth}px` : '100%'};
   padding: 20px 20px 90px;
 `;

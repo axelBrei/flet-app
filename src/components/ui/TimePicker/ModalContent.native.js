@@ -79,7 +79,7 @@ export default ({onPressAccept}) => {
   );
 
   const minutes = useMemo(
-    () => new Array(59).fill(null).map((_, i) => (i + 1).toString()),
+    () => new Array(59).fill(null).map((_, i) => i.toString()),
     [],
   );
 

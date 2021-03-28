@@ -29,6 +29,11 @@ export const PasswordInput = ({hideIcon, ...props}) => {
       renderAccesory={renderAccesory}
       icon={!hideIcon && 'lock'}
       secureTextEntry={secureText}
+      disableCapitalize
+      keyboardType="default"
+      multiline={false}
+      autoCapitalize={'none'}
+      textContentType="password"
       {...props}
     />
   );

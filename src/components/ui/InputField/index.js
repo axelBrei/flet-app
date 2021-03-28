@@ -103,6 +103,7 @@ InputField.defaultProps = {
   unitString: null,
   value: '',
   disableCapitalize: false,
+  keyboardType: 'default',
 };
 InputField.propTypes = {
   onChangeText: PropTypes.func.isRequired,

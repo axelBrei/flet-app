@@ -84,13 +84,6 @@ export default () => {
         ),
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       })}>
-      <Screen
-        name={routes.shipmentStack}
-        component={ShipmentStack}
-        options={{
-          title: 'Inicio',
-        }}
-      />
       {userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.driverStack}
@@ -101,6 +94,13 @@ export default () => {
           }}
         />
       )}
+      <Screen
+        name={routes.shipmentStack}
+        component={ShipmentStack}
+        options={{
+          title: 'Inicio',
+        }}
+      />
       <Screen
         name={routes.lastShippmentsScreen}
         getComponent={() =>

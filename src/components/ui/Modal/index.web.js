@@ -28,11 +28,11 @@ export const Modal = ({isVisible, onBackdropPress, children, ...props}) => {
         <Backdrop
           headerHeight={headerHeight}
           isVisible={mounted}
-          onClick={onBackdropPress}>
-          <ModalContent {...props} style={[props.style, {opacity}]}>
-            {children}
-          </ModalContent>
-        </Backdrop>
+          onClick={onBackdropPress}
+        />
+        <ModalContent {...props} style={[props.style, {opacity}]}>
+          {children}
+        </ModalContent>
       </Container>
     </>
   );
@@ -45,6 +45,9 @@ const Container = styled(Animated.View)`
   bottom: 0;
   left: 0;
   right: 0;
+  width: ${(props) =>
+    props.fullscreen ? `${props.theme.screenWidth}px` : '100%'};
+  height: 100%;
   visibility: ${(props) => (props.isVisible ? 'visible' : 'hidden')};
   align-items: center;
   justify-content: ${(props) =>
@@ -74,7 +77,6 @@ const ModalContent = styled(Animated.View)`
   align-self: center;
   z-index: 999;
   border-radius: 20px;
-  padding: 5px;
   background-color: ${(props) => props.theme.colors.white};
   display: flex;
 `;

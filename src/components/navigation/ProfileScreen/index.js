@@ -34,6 +34,13 @@ const data = [
     ],
   },
   {
+    name: 'Facturación',
+    data: [
+      {name: 'Mi balance', redirectTo: null},
+      // {name: 'Horario predeterminado', redirectTo: null},
+    ],
+  },
+  {
     name: 'Navegacion',
     data: [
       {name: 'Mapa predeterminado', redirectTo: null},

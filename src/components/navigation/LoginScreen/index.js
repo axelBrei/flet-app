@@ -104,7 +104,6 @@ export const LoginScreen = ({}) => {
             }
           }
           onSubmitEditing={handleSubmit}
-          textContentType="password"
         />
       </InputsContainer>
       <ButtonsContainer>

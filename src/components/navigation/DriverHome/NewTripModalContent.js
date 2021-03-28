@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components';
 import {ActivityIndicator, Platform} from 'react-native';
 import {AppText} from 'components/ui/AppText';
@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux';
 import {
   selectLoadingPendingShipmentAnswer,
   selectPendingShipment,
+  selectPendingShipmentAnswerError,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {Title} from 'components/ui/Title';
@@ -19,6 +20,8 @@ import {IconCard} from 'components/ui/IconCard';
 import PackageImage from 'resources/images/open-box.svg';
 import DestinationImage from 'resources/images/destination-pin.svg';
 import {RowWithBoldData} from 'components/ui/RowWithBoldData';
+import {useModalContext} from 'components/Hooks/useModal';
+import dayjs from 'dayjs';
 
 const strings = {
   newTrip: '¡Nuevo viaje!',
@@ -41,8 +44,50 @@ export const NewTripModalContent = ({
   onPressAccept,
   onPressReject,
 }) => {
+  const [submited, setSubmited] = useState(false);
   const shipment = useSelector(selectPendingShipment);
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
+  const error = useSelector(selectPendingShipmentAnswerError);
+  const {closeModal} = useModalContext();
+
+  useEffect(() => {
+    if (submited && !loading) {
+      if (error) {
+      } else {
+        closeModal();
+      }
+    }
+  }, [submited, loading, error, closeModal]);
+
+  const onPressResponse = useCallback(
+    (action) => () => {
+      action?.();
+      setSubmited(true);
+    },
+    [],
+  );
+
+  const arrivalTime = useMemo(() => {
+    const time = dayjs(shipment?.startPoint.duration);
+    return `${time.format('HH:mm')} - ${time
+      .add(10, 'minute')
+      .format('HH:mm')}`;
+  }, [shipment]);
+
+  const destinationTime = useMemo(() => {
+    const now = dayjs();
+    const arrivalTime = dayjs(shipment?.startPoint.duration);
+    const pickupTravelTime = now.diff(arrivalTime);
+    const destinationTime = dayjs(shipment?.endPoint.duration).add(
+      pickupTravelTime,
+      'millisecond',
+    );
+
+    return `${destinationTime.format('HH:mm')} - ${destinationTime
+      .add(10, 'minute')
+      .format('HH:mm')}`;
+  }, [shipment]);
+
   return (
     <Container>
       <Title width="100%">¡Nuevo viaje!</Title>
@@ -51,7 +96,7 @@ export const NewTripModalContent = ({
           {getDistanceIfKm(distance)}
         </StaticInputField>
         <StaticInputField bold label="Llegas a las" style={{width: '45%'}}>
-          {shipment?.startPoint?.duration}
+          {arrivalTime}
         </StaticInputField>
       </Row>
       <IconCard
@@ -90,7 +135,7 @@ export const NewTripModalContent = ({
           label="Zona"
           data={shipment?.endPoint?.name.split(', ')[2]}
         />
-        <RowWithBoldData label="Llegada" data={shipment?.endPoint?.duration} />
+        <RowWithBoldData label="Llegada" data={destinationTime} />
       </IconCard>
       {loading ? (
         <ActivityIndicator
@@ -101,10 +146,14 @@ export const NewTripModalContent = ({
         />
       ) : (
         <Row>
-          <Button backgroundColor={theme.cancel} onPress={onPressReject}>
+          <Button
+            backgroundColor={theme.cancel}
+            onPress={onPressResponse(onPressReject)}>
             Cancelar
           </Button>
-          <Button backgroundColor={theme.online} onPress={onPressAccept}>
+          <Button
+            backgroundColor={theme.online}
+            onPress={onPressResponse(onPressAccept)}>
             Aceptar
           </Button>
         </Row>

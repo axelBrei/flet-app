@@ -18,10 +18,8 @@ export const CourrierConfirmed = (title) => () => {
 
   const arrivalTime = useMemo(
     () => [
-      dayjs().add(duration, 'second').format('HH:mm'),
-      dayjs()
-        .add(duration + 600, 'second')
-        .format('HH:mm'),
+      dayjs(duration).format('HH:mm'),
+      dayjs(duration).add(10, 'minute').format('HH:mm'),
     ],
     [duration],
   );

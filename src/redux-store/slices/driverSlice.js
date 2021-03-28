@@ -32,6 +32,7 @@ const slice = createSlice({
     },
     receiveChangeOnlineStatusSuccess: (state, action) => {
       state.loading.status = false;
+      state.isOnline = action.payload;
     },
     receiveChangeOnlineStatusFail: (state, action) => {
       state.loading.status = false;

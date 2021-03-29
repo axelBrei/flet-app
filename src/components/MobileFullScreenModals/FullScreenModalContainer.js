@@ -25,19 +25,30 @@ export const FullScreenModalContainer = ({title, children}) => {
 };
 
 const Screen = styled.View`
-  min-width: ${(props) =>
+  background-color: ${theme.white};
+  width: ${props =>
     Platform.select({
       web: () =>
-        props.theme.isMobile ? `${props.theme.screenWidth - 80}px` : '550px',
-      native: () => '150px',
+        props.theme.isMobile ? `${props.theme.screenWidth}px` : '550px',
+      native: () => '100%',
     })()};
-  width: ${(props) => (props.theme.isMobile ? '100%' : '450px')};
-  height: ${(props) =>
+  height: ${props =>
     Platform.select({
       native: '95%',
       web: (props.theme.isMobile ? props.theme.screenHeight - 104 : 550) + 'px',
     })};
   padding: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+
+  ${props =>
+    Platform.OS === 'web' &&
+    !props.theme.isMobile &&
+    css`
+      align-self: center;
+      max-width: 550px;
+      border-radius: 20px;
+    `}
 `;
 
 const TitleContainer = styled(View)`

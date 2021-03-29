@@ -1,10 +1,5 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useCallback,
-  useRef,
-} from 'react';
+import React, {createContext, useState, useContext, useCallback} from 'react';
+import {theme} from 'constants/theme';
 import {Modal} from 'components/ui/Modal';
 
 const ModalContext = createContext({});
@@ -40,14 +35,15 @@ export const useModal = (Content, contentProps, modalProps) => {
           isVisible={isVisible}
           onBackdropPress={!modalProps?.cancelable ? () => {} : closeModal}
           closeModal={closeModal}
-          style={
+          style={[
+            {backgroundColor: theme.white},
             modalProps?.fullscreen && {
               marginHorizontal: 0,
               marginTop: 35,
               marginBottom: 0,
               justifyContent: 'flex-end',
-            }
-          }
+            },
+          ]}
           {...modalProps}>
           <ModalContext.Provider
             value={{

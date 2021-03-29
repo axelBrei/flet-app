@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import {vehiculeSizeOptions} from 'constants/vehicleSizes';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
-export const CourrierConfirmed = (title) => () => {
+export const CourrierConfirmed = title => () => {
   const {courrier, duration, distance, status, ...shipmentStatus} = useSelector(
     selectCurrentShipmentStatus,
   );
@@ -34,7 +34,7 @@ export const CourrierConfirmed = (title) => () => {
       )}
       <Row>
         <LabeledImage
-          source={{uri: 'https://randomuser.me/api/portraits/med/men/75.jpg'}}
+          source={{uri: courrier.photoUrl}}
           label={courrier?.name}
         />
         <StaticInputField label="Llegará entre las:">
@@ -42,7 +42,7 @@ export const CourrierConfirmed = (title) => () => {
         </StaticInputField>
         <LabeledImage
           renderImage={() => {
-            const item = vehiculeSizeOptions.find((i) => i.id === 2);
+            const item = vehiculeSizeOptions.find(i => i.id === 2);
             return item?.renderIcon(50);
           }}
           label={`${

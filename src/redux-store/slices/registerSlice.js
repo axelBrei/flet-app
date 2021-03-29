@@ -27,7 +27,7 @@ const slice = createSlice({
   name: 'register',
   initialState,
   reducers: {
-    requestRegister: (state) => {
+    requestRegister: state => {
       state.loading.data = true;
       state.error.data = null;
     },
@@ -60,7 +60,7 @@ const slice = createSlice({
     },
   },
   extraReducers: {
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
@@ -116,12 +116,13 @@ export const registerUser = (personalData, isDriver) => async (
 export const registerDriverPersonalData = (
   {profile, dateOfBirth, ...personalData},
   token,
-) => async (dispatch) => {
+) => async dispatch => {
   dispatch(requestRegister());
   try {
     const {data} = await loginService.registerCourrierPersonalData(
       {
         ...personalData,
+        profile_image: profile,
         dateOfBirth: dateOfBirth?.format('DD/MM/YYYY'),
         document: parseInt(personalData.document),
       },
@@ -131,7 +132,7 @@ export const registerDriverPersonalData = (
       receiveCourrierDataSuccess({
         userToken: token,
         ...data,
-        profile,
+        profileImage: profile,
         ...personalData,
         dateOfBirth: dateOfBirth?.format('DD/MM/YYYY'),
       }),
@@ -142,7 +143,7 @@ export const registerDriverPersonalData = (
   }
 };
 
-export const registerDriverVehicleData = (vehicleData) => async (
+export const registerDriverVehicleData = vehicleData => async (
   dispatch,
   getState,
 ) => {
@@ -163,7 +164,7 @@ export const registerDriverVehicleData = (vehicleData) => async (
   }
 };
 
-export const registerDriverLegaleData = (legalData) => async (
+export const registerDriverLegaleData = legalData => async (
   dispatch,
   getState,
 ) => {
@@ -180,11 +181,11 @@ export const registerDriverLegaleData = (legalData) => async (
 /**
  * @SELECTORS
  */
-export const selectIsLoadingRegister = (state) => state.register.loading.data;
-export const selectRegisterError = (state) => state.register.error.data;
+export const selectIsLoadingRegister = state => state.register.loading.data;
+export const selectRegisterError = state => state.register.error.data;
 
-export const selectCommonRegisterData = (state) =>
+export const selectCommonRegisterData = state =>
   state.register.data?.common || {};
 
-export const selectRegisterDriverData = (state) =>
+export const selectRegisterDriverData = state =>
   state.register.data?.driverData || {};

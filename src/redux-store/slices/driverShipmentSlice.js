@@ -27,7 +27,7 @@ const slice = createSlice({
   name: 'driverShipment',
   initialState,
   reducers: {
-    requestFetchPendingShipment: (state) => {
+    requestFetchPendingShipment: state => {
       state.loading.fetch = true;
       state.error.fetch = null;
     },
@@ -39,7 +39,7 @@ const slice = createSlice({
       state.loading.fetch = false;
       state.error.fetch = action.payload;
     },
-    requestConfirmShipment: (state) => {
+    requestConfirmShipment: state => {
       state.loading.confirm = true;
       state.error.confirm = null;
     },
@@ -52,7 +52,7 @@ const slice = createSlice({
       state.loading.confirm = false;
       state.error.confirm = action.payload;
     },
-    requestRejectShipment: (state) => {
+    requestRejectShipment: state => {
       state.loading.reject = true;
       state.error.reject = null;
     },
@@ -64,7 +64,7 @@ const slice = createSlice({
       state.loading.reject = false;
       state.error.reject = action.payload;
     },
-    requestChangeShipmentStatus: (state) => {
+    requestChangeShipmentStatus: state => {
       state.loading.stateChange = true;
       state.error.stateChange = null;
     },
@@ -91,7 +91,7 @@ const slice = createSlice({
     },
   },
   extraReducers: {
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
@@ -121,7 +121,14 @@ export const {
  * @THUNK
  */
 
-export const fetchPendingShipments = () => async (dispatch) => {
+export const fetchCurrentShipment = () => async dispatch => {
+  try {
+    const {data} = await shipmentService.getCurrentShipment();
+    dispatch(receiveConfirmShipmentSucces(data));
+  } catch (e) {}
+};
+
+export const fetchPendingShipments = () => async dispatch => {
   dispatch(requestFetchPendingShipment());
   try {
     const {data} = await shipmentService.fetchPendingShipments();
@@ -175,7 +182,7 @@ export const markShipmentAsDelivered = () => async (dispatch, getState) => {
   }
 };
 
-export const uploadConfirmationCode = (code) => async (dispatch, getState) => {
+export const uploadConfirmationCode = code => async (dispatch, getState) => {
   dispatch(requestSubmitConfirmationCode());
   try {
     const {id} = selectDriverShipmentData(getState());
@@ -193,18 +200,18 @@ export const uploadConfirmationCode = (code) => async (dispatch, getState) => {
  */
 
 export const selectDriverShipmentData = createStateCheckSelector(
-  (state) => state?.driverShipment?.shipmentData,
-  (s) => s || {},
+  state => state?.driverShipment?.shipmentData,
+  s => s || {},
 );
 
-export const selectDriverRejectShipmentLoading = (state) =>
+export const selectDriverRejectShipmentLoading = state =>
   state.driverShipment.loading.reject;
-export const selectDriverRejectShipmentError = (state) =>
+export const selectDriverRejectShipmentError = state =>
   state.driverShipment.error.reject;
 
-export const selectConirmShipmentLoading = (state) =>
+export const selectConirmShipmentLoading = state =>
   state.driverShipment.loading.confirm;
-const selectConirmShipmentError = (state) => state.driverShipment.error.confirm;
+const selectConirmShipmentError = state => state.driverShipment.error.confirm;
 
 export const selectLoadingPendingShipmentAnswer = createSelector(
   selectConirmShipmentLoading,
@@ -218,12 +225,12 @@ export const selectPendingShipmentAnswerError = createSelector(
   (confirm, reject) => confirm || reject,
 );
 
-export const selectPendingShipment = (state) =>
+export const selectPendingShipment = state =>
   state.driverShipment.pendingShipment;
 
-export const selectSecureCodeError = (state) => state.driverShipment.error.code;
-export const selectIsLoadingSecureCode = (state) =>
+export const selectSecureCodeError = state => state.driverShipment.error.code;
+export const selectIsLoadingSecureCode = state =>
   state.driverShipment.loading.code;
 
-export const selectDriverIsLoadingShipmentStatus = (state) =>
+export const selectDriverIsLoadingShipmentStatus = state =>
   state.driverShipment.loading.stateChange;

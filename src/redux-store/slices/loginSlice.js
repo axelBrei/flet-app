@@ -4,6 +4,8 @@ import {capitallize} from 'helpers/stringHelper';
 import {receiveRegisterSuccess} from './registerSlice';
 import {receiveChangeOnlineStatusSuccess} from 'redux-store/slices/driverSlice';
 import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
+import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
+import dayjs from 'dayjs';
 
 const initialState = {
   userData: null,
@@ -19,7 +21,7 @@ const slice = createSlice({
   name: 'login',
   initialState,
   reducers: {
-    requestLogin: (state) => {
+    requestLogin: state => {
       state.loading.user = true;
       state.error.user = null;
     },
@@ -31,7 +33,7 @@ const slice = createSlice({
       state.loading.user = false;
       state.error.user = action.payload;
     },
-    logout: (state) => {
+    logout: state => {
       Object.assign(state, initialState);
     },
   },
@@ -54,10 +56,11 @@ export const {
 /**
  * @THUNK
  */
-export const loginAs = (email, pass) => async (dispatch) => {
+export const loginAs = (email, pass) => async dispatch => {
   dispatch(requestLogin());
   try {
     const {data} = await LoginService.loginAs(email, pass);
+    const {shipment, ...loginData} = data;
     if (data.shipment) {
       dispatch(
         receiveNewShipmentSuccess({
@@ -66,7 +69,12 @@ export const loginAs = (email, pass) => async (dispatch) => {
         }),
       );
     }
-    data?.isOnline && dispatch(receiveChangeOnlineStatusSuccess(true));
+    if (data?.courrier?.isOnline) {
+      const until = dayjs(data.courrier.onlineUntil);
+      dispatch(receiveChangeOnlineStatusSuccess(until.isAfter(dayjs())));
+    }
+
+    data?.isDriver && dispatch(fetchCurrentShipment());
 
     dispatch(
       receiveLoginSuccess({
@@ -82,23 +90,23 @@ export const loginAs = (email, pass) => async (dispatch) => {
 /**
  * @SELECTORS
  */
-export const selectLoadingLogin = (state) => state.login.loading.user;
-export const selectLoginError = (state) => state.login.error.user;
-export const selectUserData = (state) => state.login?.userData;
+export const selectLoadingLogin = state => state.login.loading.user;
+export const selectLoginError = state => state.login.error.user;
+export const selectUserData = state => state.login?.userData;
 
 export const selectUserName = createSelector(
-  (state) => state.login?.userData?.name,
-  (name) => (!!name ? capitallize(name) : ''),
+  state => state.login?.userData?.name,
+  name => (!!name ? capitallize(name) : ''),
 );
 export const selectUserLastName = createSelector(
-  (state) => state.login?.userData?.lastName,
-  (lastName) => (!!lastName ? capitallize(lastName) : ''),
+  state => state.login?.userData?.lastName,
+  lastName => (!!lastName ? capitallize(lastName) : ''),
 );
-export const selectUserEmail = (state) => state.login?.userData?.email;
-export const selectUserId = (state) => state.login?.userData?.id;
+export const selectUserEmail = state => state.login?.userData?.email;
+export const selectUserId = state => state.login?.userData?.id;
 export const selectUserPhoto = createSelector(
-  (state) => state.login?.userData?.photo,
-  (photo) => (photo ? {uri: photo} : null),
+  state => state.login?.userData?.photoUrl,
+  photo => (photo ? {uri: photo} : null),
 );
 
-export const selectIsDriver = (state) => state.login?.userData?.isDriver;
+export const selectIsDriver = state => state.login?.userData?.isDriver;

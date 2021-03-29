@@ -26,18 +26,19 @@ const store = configureStore({
   reducer: persistedReducer,
   devTools: true,
   middleware: getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [
-        FLUSH,
-        REHYDRATE,
-        PAUSE,
-        PERSIST,
-        PURGE,
-        REGISTER,
-        'shipment/receiveDriverPositionSuccess',
-        'shipment/receiveShipmentStatusSuccess',
-      ],
-    },
+    serializableCheck: false,
+    // serializableCheck: {
+    //   ignoredActions: [
+    //     FLUSH,
+    //     REHYDRATE,
+    //     PAUSE,
+    //     PERSIST,
+    //     PURGE,
+    //     REGISTER,
+    //     'shipment/receiveDriverPositionSuccess',
+    //     'shipment/receiveShipmentStatusSuccess',
+    //   ],
+    // },
   }),
 });
 

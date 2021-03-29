@@ -43,4 +43,5 @@ const Container = styled.View`
   width: ${(props) =>
     props.theme.isMobile ? `${props.theme.screenWidth}px` : '100%'};
   padding: 20px 20px 90px;
+  background-color: ${theme.white};
 `;

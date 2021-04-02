@@ -67,5 +67,5 @@ if (checkIsIOS()) {
 
 // PWA
 if (process.env.NODE_ENV !== 'development') {
-  require('service-worker.js').register();
+  require('./src/serviceWorkerConfig.web').register();
 }

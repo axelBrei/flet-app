@@ -18,6 +18,7 @@ const _routes = {
   newShipmentPackageDetailScreen: 'paquete',
   newShipmentDetailScreen: 'orden',
   newShipmentConfirmationScreen: 'confirmar',
+  paymentScreen: 'pagar',
   shipmentScreen: 'seguimiento',
   driverStack: 'courrier',
   driverHomeScreen: 'inicio-conductor',
@@ -58,13 +59,16 @@ export const linkingRoutes = {
           [_routes.newShipmentConfirmationScreen]: 'confirmar',
           [_routes.shipmentScreen]: 'seguimiento',
           [_routes.shipmentFinishedScreen]: 'envio-terminado',
+          [_routes.paymentScreen]: 'pagar',
         },
       },
       [_routes.driverStack]: {
         path: _routes.driverStack,
         screens: {
-          [nativeOnlyRoutes.driverHomeScreen]: 'inicio-conductor',
-          [nativeOnlyRoutes.driverShipmentScreen]: 'envio-conductor',
+          [nativeOnlyRoutes.driverHomeScreen]:
+            nativeOnlyRoutes.driverHomeScreen,
+          [nativeOnlyRoutes.driverShipmentScreen]:
+            nativeOnlyRoutes.driverShipmentScreen,
         },
       },
       [_routes.lastShippmentsScreen]: 'ultimosPedidos',

@@ -10,6 +10,7 @@ import {UserHeader} from 'components/navigation/ProfileScreen/UserHeader';
 import {MenuItem} from 'components/navigation/ProfileScreen/MenuItem';
 import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
+import PaymentButton from 'components/ui/PaymentButton';
 
 const data = [
   {
@@ -74,6 +75,7 @@ export default () => {
           stickySectionHeadersEnabled
         />
       </ContentContainer>
+
       {isMobile && <LogoutButton />}
     </ScreenComponent>
   );
@@ -90,7 +92,7 @@ const CenterContainer = styled.View`
   width: 100%;
   align-self: flex-start;
 
-  ${(props) =>
+  ${props =>
     Platform.OS === 'web' &&
     !props.theme.isMobile &&
     css`
@@ -103,7 +105,7 @@ const ContentContainer = styled.View`
 `;
 
 const SectionList = styled.SectionList`
-  ${(props) =>
+  ${props =>
     Platform.OS === 'web' &&
     !props.theme.isMobile &&
     css`

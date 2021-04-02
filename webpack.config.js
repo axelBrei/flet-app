@@ -7,7 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {GenerateSW, InjectManifest} = require('workbox-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname, './');
-const aliasPathJoin = (moduleFolders) =>
+const aliasPathJoin = moduleFolders =>
   path.join(
     process.cwd(),
     '..',
@@ -33,7 +33,7 @@ const babelLoaderConfiguration = {
   ],
   // Add every directory that needs to be compiled by Babel during the build.
   include: [
-    path.resolve(appDirectory, 'index.web.js'),
+    path.resolve(appDirectory, 'index.js'),
     path.resolve(appDirectory, 'src'),
     path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
     path.resolve(appDirectory, 'node_modules/react-native-vector-icons'),
@@ -81,7 +81,7 @@ const vectorIconsConfiguration = {
 // Try the environment variable, otherwise use root
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
-module.exports = (env) => ({
+module.exports = env => ({
   devtool: 'inline-source-map',
   devServer: {
     port: 3000,
@@ -95,7 +95,7 @@ module.exports = (env) => ({
     proxy: {
       // proxy all webpack dev-server requests starting with /observation to Spring Boot backend (localhost:8080)
       // "/observation": "http://localhost:8080",
-      changeOrigin: true,
+      // changeOrigin: true,
     },
   },
   entry: [
@@ -116,11 +116,11 @@ module.exports = (env) => ({
       !!dotenv.error
         ? {'process.env': JSON.stringify(process.env)}
         : {
-          'process.env': JSON.stringify({
-            ...process.env,
-            ...dotenv.parsed,
-          }),
-        },
+            'process.env': JSON.stringify({
+              ...process.env,
+              ...dotenv.parsed,
+            }),
+          },
     ),
     new webpack.DefinePlugin({
       'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
@@ -132,21 +132,21 @@ module.exports = (env) => ({
     // PRODUCTION ONLY PLUGINS
     ...(env && (!env.dev || env.prod)
       ? [
-        new CopyWebpackPlugin({
-          patterns: [
-            // {from: 'public/images', to: 'images'},
-            {from: path.resolve(appDirectory, './public')},
-          ],
-        }),
-        new InjectManifest({
-          swSrc: path.resolve(
-            appDirectory,
-            './src/serviceWorkerWorkbox.web.js',
-          ),
-          swDest: 'service-worker.js',
-          maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
-        }),
-      ]
+          new CopyWebpackPlugin({
+            patterns: [
+              // {from: 'public/images', to: 'images'},
+              {from: path.resolve(appDirectory, './public')},
+            ],
+          }),
+          new InjectManifest({
+            swSrc: path.resolve(
+              appDirectory,
+              './src/serviceWorkerWorkbox.web.js',
+            ),
+            swDest: 'service-worker.js',
+            maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
+          }),
+        ]
       : []),
   ],
   module: {
@@ -173,9 +173,7 @@ module.exports = (env) => ({
     // This will only alias the exact import "react-native"
     alias: {
       'styled-components': 'styled-components/native',
-      'react-native-modal': path.resolve(
-        './src/components/ui/Modal/index.web.js',
-      ),
+      'react-native-modal': path.resolve('./src/components/ui/Modal/index.js'),
       'react-native-vector-icons': 'react-native-vector-icons/dist',
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),

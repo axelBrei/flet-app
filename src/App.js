@@ -26,6 +26,7 @@ if (Platform.OS === 'android') {
   }
 }
 
+console.log(linkingConfig);
 const App = () => {
   const dispatch = store.dispatch;
   const {rem, width, height, isMobile} = useWindowDimension();
@@ -35,7 +36,7 @@ const App = () => {
   } catch (e) {}
 
   const onStateChange = useCallback(
-    (state) => dispatch(changeNavigationState(state)),
+    state => dispatch(changeNavigationState(state)),
     [dispatch],
   );
 
@@ -65,7 +66,7 @@ const App = () => {
             theme={{
               colors: theme,
               fonts,
-              scale: (size) => size * rem,
+              scale: size => size * rem,
               screenWidth: width,
               screenHeight: height,
               isMobile,

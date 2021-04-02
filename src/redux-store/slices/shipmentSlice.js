@@ -38,7 +38,7 @@ const slice = createSlice({
   name: 'shipment',
   initialState,
   reducers: {
-    requestCancelShipment: (state) => {
+    requestCancelShipment: state => {
       state.loading.cancel = true;
       state.error.cancel = null;
     },
@@ -50,7 +50,7 @@ const slice = createSlice({
       state.loading.cancel = false;
       state.error.cancel = action.payload;
     },
-    requestDriverPosition: (state) => {
+    requestDriverPosition: state => {
       state.loading.driverPosition = true;
       state.error.driverPosition = null;
     },
@@ -65,7 +65,7 @@ const slice = createSlice({
       state.loading.driverPosition = true;
       state.error.driverPosition = action.payload;
     },
-    requestShipmentStatus: (state) => {
+    requestShipmentStatus: state => {
       state.loading.status = true;
       state.error.status = null;
     },
@@ -85,7 +85,7 @@ const slice = createSlice({
       state.driverPosition = initialState.driverPosition;
       state.shipmentStatus = initialState.shipmentStatus;
     },
-    requestLastShipments: (state) => {
+    requestLastShipments: state => {
       state.loading.history = true;
       state.error.history = null;
     },
@@ -102,7 +102,7 @@ const slice = createSlice({
     'newShipment/receiveNewShipmentSuccess': (state, action) => {
       state.currentShipment = action.payload;
     },
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
@@ -164,15 +164,15 @@ export const fetchShipmentDriverPosition = () => async (dispatch, getState) => {
 export const cancelShipment = () => async (dispatch, getState) => {
   dispatch(requestCancelShipment());
   try {
-    const {shipmentId} = selectCurrentShipment(getState());
-    await shipmentService.cancelShipment(shipmentId);
+    const {shipmentId, shipment_id} = selectCurrentShipment(getState());
+    await shipmentService.cancelShipment(shipmentId || shipment_id);
     dispatch(receiveCancelShipmentSuccess());
   } catch (e) {
     dispatch(receiveCancelShipmentFail(e?.response?.data?.message || e));
   }
 };
 
-export const fetchLastShipments = () => async (dispatch) => {
+export const fetchLastShipments = () => async dispatch => {
   dispatch(requestLastShipments());
   try {
     const {data} = await shipmentService.getLastShipments();
@@ -187,29 +187,29 @@ export const fetchLastShipments = () => async (dispatch) => {
  */
 
 export const selectCurrentShipment = createSelector(
-  (state) => state.shipment.currentShipment,
-  (s) => s,
+  state => state.shipment.currentShipment,
+  s => s,
 );
 
-export const selectIsLoadingShipmentStatus = (state) =>
+export const selectIsLoadingShipmentStatus = state =>
   state.shipment.loading.status;
 
 export const selectDriverPosition = createPositionCheckSelector(
-  (state) => state.shipment?.driverPosition,
-  (d) => d || {},
+  state => state.shipment?.driverPosition,
+  d => d || {},
 );
 export const selectCurrentShipmentStatus = createStateCheckSelector(
-  (state) => state.shipment?.shipmentStatus,
-  (s) => s || {},
+  state => state.shipment?.shipmentStatus,
+  s => s || {},
 );
 
 export const selectCurrentShipmentStatusString = createStateCheckSelector(
-  (state) => state.shipment?.shipmentStatus,
-  (shipmentStatus) => shipmentStatus?.status,
+  state => state.shipment?.shipmentStatus,
+  shipmentStatus => shipmentStatus?.status,
 );
 
 // last shipments
-export const selectIsLoadingLastShipments = (state) =>
+export const selectIsLoadingLastShipments = state =>
   state.shipment.loading.history;
-export const selectLastShipmentsError = (state) => state.shipment.error.history;
-export const selectLastShipments = (state) => state.shipment.lastShipments;
+export const selectLastShipmentsError = state => state.shipment.error.history;
+export const selectLastShipments = state => state.shipment.lastShipments;

@@ -5,7 +5,7 @@
   "private": true,
   "proxy": "http://localhost:3000",
   "scripts": {
-    "start:web:dev": "webpack serve --progress --env=dev --color --mode development --config ./webpack.config.js",
+    "start:web:dev": "webpack serve --progress --env=dev --color --mode development --host 0.0.0.0 --config ./webpack.config.js",
     "start:web:prod": "webpack serve --progress --env=prod --color --mode production --config ./webpack.config.js",
     "start:android": "npx react-native run-android",
     "start:ios": "npx react-native run-ios",
@@ -53,6 +53,7 @@
     "react-native-svg-web": "^1.0.9",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "^0.15.0",
+    "react-native-webview": "^11.3.2",
     "react-redux": "^7.2.2",
     "redux-persist": "^6.0.0",
     "reselect": "^4.0.0",

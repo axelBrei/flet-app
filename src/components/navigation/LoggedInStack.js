@@ -16,7 +16,7 @@ import PageNotFound from 'components/navigation/PageNotFound';
 import {Icon} from 'components/ui/Icon';
 import ProfileScreen from 'components/navigation/ProfileScreen';
 
-const getIconForRoute = (routeName) => {
+const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
       return 'home';

@@ -53,7 +53,10 @@ const slice = createSlice({
     updateShipmentVehiculeData: (state, action) => {
       state.shipmentRequest.shipmentVehicule = action.payload;
     },
-    requestNewShipment: (state) => {
+    updateShipmentInsuranceData: (state, action) => {
+      state.shipmentRequest.confirmationScreen = action.payload;
+    },
+    requestNewShipment: state => {
       state.loading.newShipment = true;
       state.error.newShipment = null;
     },
@@ -65,8 +68,8 @@ const slice = createSlice({
       state.loading.newShipment = false;
       state.error.newShipment = null;
     },
-    requestAcceptShipment: (state) => {},
-    requestShipmentPrice: (state) => {
+    requestAcceptShipment: state => {},
+    requestShipmentPrice: state => {
       state.loading.price = true;
       state.error.price = null;
     },
@@ -78,12 +81,12 @@ const slice = createSlice({
       state.loading.price = false;
       state.error.price = action.payload;
     },
-    clearShipmentPrice: (state) => {
+    clearShipmentPrice: state => {
       state.shipmentPrice = initialState.shipmentPrice;
     },
   },
   extraReducers: {
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
@@ -102,19 +105,21 @@ export const {
   receiveShipmentPriceSuccess,
   receiveShipmentPriceFail,
   clearShipmentPrice,
+  updateShipmentInsuranceData,
 } = slice.actions;
 
 /**
  * @THUNK
  */
 
-export const fetchShipmentPrice = (confirmationInformation) => async (
+export const fetchShipmentPrice = confirmationInformation => async (
   dispatch,
   getState,
 ) => {
   dispatch(requestShipmentPrice());
   try {
     const {
+      confirmationScreen,
       shipmentDescription,
       shipmentVehicule: shipmentVehicle,
     } = selectNewShipmentData(getState());
@@ -135,22 +140,33 @@ export const fetchShipmentPrice = (confirmationInformation) => async (
         comments: '',
       },
       confirmationInformation: {
-        ...confirmationInformation,
-        paymentMethod: confirmationInformation?.paymentMethod?.title,
+        insurance:
+          confirmationInformation?.insurance || confirmationScreen.insurance,
+        paymentMethod: {
+          type: confirmationScreen.paymentMethod
+            ? confirmationScreen.paymentMethod.type
+            : confirmationInformation.paymentMethod.type,
+          ...confirmationInformation.paymentMethod,
+        },
+        // ...confirmationInformation,
+        // ...confirmationScreen,
+        // paymentMethod: confirmationInformation?.paymentMethod?.title,
       },
     });
     dispatch(receiveShipmentPriceSuccess(data));
   } catch (e) {
+    console.log(e);
     dispatch(receiveShipmentPriceFail(e?.response?.data?.message || e));
   }
 };
 
-export const createNewShipment = (confirmationInformation) => async (
+export const createNewShipment = confirmationInformation => async (
   dispatch,
   getState,
 ) => {
   dispatch(requestNewShipment());
   const {
+    confirmationScreen,
     shipmentDescription,
     shipmentVehicule: shipmentVehicle,
   } = selectNewShipmentData(getState());
@@ -169,8 +185,14 @@ export const createNewShipment = (confirmationInformation) => async (
         comments: '',
       },
       confirmationInformation: {
-        ...confirmationInformation,
-        paymentMethod: confirmationInformation?.paymentMethod?.title,
+        insurance:
+          confirmationInformation?.insurance || confirmationScreen.insurance,
+        paymentMethod: {
+          type: confirmationScreen.paymentMethod.type,
+          ...confirmationInformation.paymentMethod,
+        },
+        // ...confirmationInformation,
+        // paymentMethod: confirmationInformation?.paymentMethod?.title,
       },
     });
     dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
@@ -182,16 +204,14 @@ export const createNewShipment = (confirmationInformation) => async (
 /**
  * @SELECTORS
  */
-export const selectNewShipmentLoading = (state) =>
+export const selectNewShipmentLoading = state =>
   state.newShipment.loading.newShipment;
-export const selectNewShipmentError = (state) =>
+export const selectNewShipmentError = state =>
   state.newShipment.error.newShipment;
-export const selectNewShipmentData = (state) =>
-  state.newShipment.shipmentRequest;
+export const selectNewShipmentData = state => state.newShipment.shipmentRequest;
 
-export const selectLoadingShipmentPrice = (state) =>
+export const selectLoadingShipmentPrice = state =>
   state.newShipment.loading.price;
-export const selectShipmentPriceError = (state) =>
-  state.newShipment.error.price;
-export const selectNewShipmentPrice = (state) =>
+export const selectShipmentPriceError = state => state.newShipment.error.price;
+export const selectNewShipmentPrice = state =>
   state.newShipment.shipmentPrice?.price;

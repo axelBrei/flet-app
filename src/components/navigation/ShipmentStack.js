@@ -19,7 +19,7 @@ const {Navigator, Screen} = createStackNavigator();
 export default () => {
   const {isMobile} = useWindowDimension();
   const currentShipment = useSelector(selectCurrentShipment);
-  console.log(currentShipment);
+
   return (
     <Navigator
       screenOptions={navigationConfig({
@@ -87,6 +87,12 @@ export default () => {
             options={{
               title: '',
             }}
+          />
+          <Screen
+            name={routes.paymentScreen}
+            getComponent={() =>
+              require('components/navigation/PaymentScreen').default
+            }
           />
         </>
       )}

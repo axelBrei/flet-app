@@ -10,7 +10,7 @@ import {LogoutButton} from 'components/ui/LogoutButton';
 import {fonts} from 'constants/fonts';
 
 const {width} = Dimensions.get('screen');
-export const NavigationDrawer = (props) => {
+export const NavigationDrawer = props => {
   return (
     <>
       <DrawerContentScrollView {...props} style={styles.drawerContainer}>

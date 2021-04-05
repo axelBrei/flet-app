@@ -25,8 +25,6 @@ if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 }
-
-console.log(linkingConfig);
 const App = () => {
   const dispatch = store.dispatch;
   const {rem, width, height, isMobile} = useWindowDimension();

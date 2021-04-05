@@ -33,13 +33,14 @@ export const Loader = ({
     );
   }
   return (
-    <FloatingContainer>
-      {loading ? (
-        <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
-      ) : (
-        children
+    <>
+      {children}
+      {loading && (
+        <FloatingContainer>
+          <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
+        </FloatingContainer>
       )}
-    </FloatingContainer>
+    </>
   );
 };
 
@@ -79,7 +80,8 @@ const LoaderContainer = styled.View`
 `;
 
 const FloatingContainer = styled.View`
-  position: fixed;
+  position: absolute;
+  background-color: ${theme.backgroundColor};
   top: 0;
   left: 0;
   right: 0;

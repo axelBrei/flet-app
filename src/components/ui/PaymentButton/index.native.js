@@ -1,128 +1,226 @@
 import React, {useCallback, useState} from 'react';
 import styled from 'styled-components';
 import {WebView} from 'react-native-webview';
-import {AppText} from 'components/ui/AppText';
-import {useModal} from 'components/Hooks/useModal';
-import WebViewModal from 'components/MobileFullScreenModals/WebViewModal';
-import {Platform} from 'react-native';
+import Config from 'react-native-config';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
+import {useSelector} from 'react-redux';
+import {selectNewShipmentPrice} from 'redux-store/slices/newShipmentSlice';
+import {Loader} from 'components/ui/Loader';
 
-export default () => {
-  const {widthWithPadding} = useWindowDimension();
+export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
+  const [loading, setLoading] = useState(false);
+  const price = useSelector(selectNewShipmentPrice);
+
   const html = `
     <html>
       <head>
-        <meta name="viewport" content="width=device-width,shrink-to-fit=yes, initial-scale=1.0, maximum-scale=1.0"/>
+        <meta name='viewport' content='width=device-width,shrink-to-fit=yes, initial-scale=1.0, maximum-scale=1.0'/>
+        <link rel='preconnect' href='https://fonts.gstatic.com'>
+        <link href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap' rel='stylesheet'>
         <style>
-          body, html {
-            display: flex;
-            width: 100%;
-            height: 40px;
-            align-self: center;
-            align-content: center;
-            justify-content: center;
+          h1, input, p, select, form {
+          font-family: 'Poppins', sans-serif;
           }
-          
-          button.mercadopago-button {
-            width: ${widthWithPadding}px;
+          button {
             font-weight: bold;
             font-size: 16px;
             background-color: ${theme.primaryColor};
             color: #fff;
             border-radius: 20px;
+            border: 0;
+            padding: 10px 0;
+          }
+          form {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+          h1 {
+              margin: 0;
+              padding: 0;
+              font-weight: bold;
+              margin-bottom: 5px;
+              font-size: 20px;
+          }
+          input {
+            border: none;
+            border-radius: 20px;
+            background-color: ${theme.grayBackground};
+            padding: 15px 20px;
+            margin: 5px 0;
+            max-height: 40px;
+            font-size: 14px;
+          }
+          select {
+            border: none;
+            border-radius: 20px;
+            background-color: ${theme.grayBackground};
+            padding: 10px 20px;
+            font-size: 14px;
+            margin: 10px 0;
+            -webkit-appearance: none;
+          }
+          .row {
+              flex-wrap: nowrap;
+              flex-direction: row;
+              align-items: center;
+              justify-content: space-between;
+              flex-grow: 1;
           }
         </style>
       </head>
       <body>
-        <form action='app://callback' method='get' id='form' nativeID='form'></form>
+        <form id='form-checkout'>
+        <h1>Datos de la tarjeta</h1>
+         <input type='text' name='cardNumber' id='form-checkout__cardNumber' />
+         <div class='row'>
+           <input style='width: 49%' type='text' name='cardExpirationMonth' id='form-checkout__cardExpirationMonth' />
+           <input style='width: 49%' type='text' name='cardExpirationYear' id='form-checkout__cardExpirationYear' />
+         </div>
+         <input type='text' name='securityCode' id='form-checkout__securityCode' />
+         <select name='issuer' id='form-checkout__issuer'></select>
+         <h1 style='padding: 20px 0 0'>Datos de la personales</h1>
+         <input type='text' name='cardholderName' id='form-checkout__cardholderName'/>
+         <div class='row' >
+           <select style='width: 48%' name='identificationType' id='form-checkout__identificationType'></select>
+           <input style='width: 50%' type='text' name='identificationNumber' id='form-checkout__identificationNumber'/>
+         </div>
+         <select name='installments' id='form-checkout__installments'></select>
+         <button type='submit' id='form-checkout__submit'>Pagar</button>
+        </form>
+        <script src="https://sdk.mercadopago.com/js/v2"></script>
+        <script>
+          const mp = new window.MercadoPago('${Config.REACT_APP_MP_KEY}')
+          const cardForm = mp.cardForm({
+            amount: "${price}",
+            autoMount: true,
+            form: {
+              id: "form-checkout",
+              cardholderName: {
+                id: "form-checkout__cardholderName",
+                placeholder: "Titular de la tarjeta",
+              },
+              cardNumber: {
+                id: "form-checkout__cardNumber",
+                placeholder: "Número de la tarjeta",
+              },
+              cardExpirationMonth: {
+                id: "form-checkout__cardExpirationMonth",
+                placeholder: "Mes de vencimiento",
+              },
+              cardExpirationYear: {
+                id: "form-checkout__cardExpirationYear",
+                placeholder: "Año de vencimiento",
+              },
+              securityCode: {
+                id: "form-checkout__securityCode",
+                placeholder: "Código de seguridad",
+              },
+              installments: {
+                id: "form-checkout__installments",
+                placeholder: "Cuotas",
+              },
+              identificationType: {
+                id: "form-checkout__identificationType",
+                placeholder: "Tipo de documento",
+              },
+              identificationNumber: {
+                id: "form-checkout__identificationNumber",
+                placeholder: "Número de documento",
+              },
+              issuer: {
+                id: "form-checkout__issuer",
+                placeholder: "Banco emisor",
+              },
+            },
+            callbacks: {
+              onFormMounted: error => {
+                if (error) {
+                  cardForm.unmount();
+                  cardForm.mount();
+                }
+              },
+              onSubmit: event => {
+                event.preventDefault();
+          
+                const {
+                  paymentMethodId,
+                  issuerId,
+                  token,
+                  installments,
+                  identificationNumber,
+                  identificationType,
+                } = cardForm.getCardFormData();
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                  type: 'submit',
+                  value:{
+                    installments,
+                    docNumber: identificationNumber,
+                    docType: identificationType,
+                    issuerId,
+                    paymentMethodId,
+                    token
+                  }
+                }))
+              },
+              onFetching: () => {
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                  type: 'loading',
+                  value: true
+                }))
+                return () => {
+                  window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'loading',
+                    value: false
+                  }))
+                };
+              },
+            },
+          });    
+        </script>
       </body>    
     </html>
 `;
 
-  const injectJs = `
-      const form = document.getElementById('form');
-      const script = document.createElement('script');
-      // FROM
-      form.setAttribute('action', 'app://callback');
-      form.action = 'app://callback'
-      form.setAttribute('method', 'get');
-      // SCRIPT
-      script.type = 'text/javascript';
-      script.src = 'https://www.mercadopago.com.ar/integrations/v1/web-tokenize-checkout.js';
-      script.setAttribute(
-        'data-public-key',
-        'TEST-26dcc4a1-7a5b-4d63-9de5-e6d818994dfa',
-      );
-      script.setAttribute('data-transaction-amount', 1);
-      form.action = 'app://callback'
-      form.appendChild(script);
-      form.action = 'app://callback'
-      true; // note: this is required, or you'll sometimes get silent failures
-`;
-  const [open, setOpen] = useState(false);
-  const [firstLoad, setFirstLoad] = useState(Platform.OS === 'ios');
-  const onShouldStartLoadingWithRequest = useCallback(
-    req => {
-      console.log('on start load', req);
-      if (
-        !open &&
-        req.url.includes('https://www.mercadopago.com.ar/checkout')
-      ) {
-        setOpen(true);
+  const handleMessages = useCallback(
+    e => {
+      const data = JSON.parse(e?.nativeEvent?.data);
+      if (data.type === 'loading') {
+        return setLoading(data.value);
       }
-
-      if (req.url.includes('app://callback')) {
-        setOpen(false);
-        console.log(req.url);
-        // TODO parse data
-        return false;
+      if (data.type === 'submit') {
+        return onPaymentSubmited?.(data.value);
       }
-      return true;
+      if (data.type === 'console') {
+        return console.log(data.value);
+      }
     },
-    [open, setOpen, firstLoad],
+    [setLoading, onPaymentSubmited],
   );
 
-  const onLoadEnd = e => {
-    // console.log('load end', e);
-    firstLoad && setFirstLoad(false);
-  };
-
   return (
-    <WebView
-      javaScriptEnabled
-      domStorageEnabled
-      contentMode="desktop" // asi anda
-      source={{html}}
-      originWhitelist={['*']}
-      onLoadEnd={onLoadEnd}
-      onMessage={() => {}}
-      onShouldStartLoadWithRequest={onShouldStartLoadingWithRequest}
-      injectedJavaScript={injectJs}
-      containerStyle={[
-        {height: 50, width: '100%', backgroundColor: 'gray'},
-        open && {
-          position: 'absolute',
-          flex: 1,
-          top: 30,
-          left: 0,
-          bottom: 60,
-          right: 0,
-          borderRadius: 20,
-          zIndex: 200,
-          height: 'auto',
-          width: 'auto',
-        },
-      ]}
-      onNavigationStateChange={state => console.log('state change', state)}
-    />
+    <Container>
+      <Loader
+        unmount={false}
+        loading={loading || newShipmetnLoading}
+        size="large">
+        <WebView
+          javaScriptEnabled
+          domStorageEnabled
+          source={{html}}
+          originWhitelist={['*']}
+          onMessage={handleMessages}
+          style={{flex: 1}}
+        />
+      </Loader>
+    </Container>
   );
 };
 
 const Container = styled.View`
-  flex: 1;
   width: 100%;
-  height: 80px;
-  background-color: blue;
-  padding: 5px;
+  height: 100%;
+  flex-direction: column;
+  padding: 0 5px;
 `;

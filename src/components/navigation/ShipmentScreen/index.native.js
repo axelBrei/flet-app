@@ -55,10 +55,7 @@ export default ({route}) => {
   );
 
   return (
-    <Screen
-      style={{height, width}}
-      scrollable={false}
-      enableAvoidKeyboard={false}>
+    <Screen style={{width}} scrollable={false} enableAvoidKeyboard={false}>
       <Map
         style={
           // {width, height: height * 0.75}
@@ -85,6 +82,4 @@ const CardContainer = styled.View`
   border-top-left-radius: 20px;
   background-color: ${theme.white};
   box-shadow: 3px -3px 8px ${theme.shadowColor};
-  margin-bottom: 40px;
-  bottom: 25px;
 `;

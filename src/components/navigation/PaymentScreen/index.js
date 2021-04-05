@@ -8,6 +8,7 @@ import {
   selectNewShipmentError,
   selectNewShipmentLoading,
 } from 'redux-store/slices/newShipmentSlice';
+import Config from 'react-native-config';
 
 export default () => {
   const dispatch = useDispatch();
@@ -27,20 +28,20 @@ export default () => {
   }, []);
 
   return (
-    <Container>
+    <Container enableAvoidKeyboard={false}>
       <PaymentButton loading={loading} onPaymentSubmited={onPaymentSubmited} />
     </Container>
   );
 };
 
 const Container = styled(Screen)`
-  flex: 1;
   align-items: center;
-  padding: 60px 20px 20px;
-
+  padding: 20px 0;
   ${props =>
     !props.theme.isMobile &&
     css`
+      flex: 1;
+      padding: 60px 20px 20px;
       max-width: 414px;
-    `}
+    `};
 `;

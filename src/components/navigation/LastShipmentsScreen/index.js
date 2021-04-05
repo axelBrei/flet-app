@@ -39,7 +39,7 @@ export default () => {
 
   return (
     <Screen removeTWF scrollable={Platform.OS === 'web'}>
-      <Loader loading={isLoading && !refreshing}>
+      <Loader loading={isLoading && !refreshing} size="large">
         <Title padding={20}>Mis ultimos pedidos</Title>
         <List
           refreshControl={
@@ -68,5 +68,5 @@ export default () => {
 
 const List = styled(CommonList)`
   flex: 1;
-  min-height: ${(props) => props.theme.screenHeight - 100}px;
+  min-height: ${props => props.theme.screenHeight - 100}px;
 `;

@@ -21,7 +21,6 @@ import CarMarker from 'resources/assets/driver_car';
 import {
   changeOnlineStatus,
   selectPreviosPosition,
-  updatePosition,
 } from 'redux-store/slices/driverSlice';
 import {useUpdateCurrentPosition} from 'components/navigation/DriverHome/useUpdateCurrentPosition';
 import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFetchPendignShipment';

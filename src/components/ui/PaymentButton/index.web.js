@@ -1,20 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
-import webStyled from '../../../../node_modules/styled-components';
 import Config from 'react-native-config';
+import webStyled from '../../../../node_modules/styled-components';
 import {theme} from 'constants/theme';
 import {Title} from 'components/ui/Title';
 import {Loader} from 'components/ui/Loader';
-import {useUserData} from 'components/Hooks/useUserData';
-import {keysToCamelCase} from 'helpers/objectHelper';
 import {useSelector} from 'react-redux';
 import {selectNewShipmentPrice} from 'redux-store/slices/newShipmentSlice';
 
 export default ({onPaymentSubmited, loading}) => {
   const price = useSelector(selectNewShipmentPrice);
-  const mp = new window.MercadoPago(
-    'TEST-26dcc4a1-7a5b-4d63-9de5-e6d818994dfa',
-  );
+  const mp = new window.MercadoPago(Config.REACT_APP_MP_KEY);
 
   useEffect(() => {
     const cardForm = mp.cardForm({
@@ -66,9 +62,10 @@ export default ({onPaymentSubmited, loading}) => {
       },
       callbacks: {
         onFormMounted: error => {
-          if (error)
-            return console.warn('Form Mounted handling error: ', error);
-          console.log('Form mounted');
+          if (error) {
+            cardForm.unmount();
+            cardForm.mount();
+          }
         },
         onSubmit: event => {
           event.preventDefault();
@@ -91,30 +88,6 @@ export default ({onPaymentSubmited, loading}) => {
             paymentMethodId,
             token,
           });
-
-          // fetch('/process_payment', {
-          //   method: 'POST',
-          //   headers: {
-          //     'Content-Type': 'application/json',
-          //   },
-          //   body: JSON.stringify({
-          //     token,
-          //     issuer_id,
-          //     payment_method_id,
-          //     transaction_amount: Number(amount),
-          //     installments: 1, // Number(installments),
-          //     description: 'Viaje FletApp', // 'Descripción del producto',
-          //     payer: {
-          //       first_name: name,
-          //       last_name: lastName,
-          //       email,
-          //       identification: {
-          //         type: identificationType,
-          //         number: identificationNumber,
-          //       },
-          //     },
-          //   }),
-          // });
         },
       },
     });
@@ -190,7 +163,6 @@ export default ({onPaymentSubmited, loading}) => {
 const Container = styled.View`
   display: flex;
   align-items: center;
-  flex: 1;
   justify-content: center;
 `;
 
@@ -203,7 +175,7 @@ const Row = styled.View`
 
 const Form = webStyled.form`
   display: flex;
-  margin: 60px 20px;
+  margin: 0 20px;
   flex-direction: column;
   ${props => !props.theme.screenWidth < 800 && 'max-width: 414px'}
 `;

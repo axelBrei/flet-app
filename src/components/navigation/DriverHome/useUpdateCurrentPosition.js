@@ -16,7 +16,7 @@ export const useUpdateCurrentPosition = () => {
   const isFocused = useIsFocused();
 
   const [currentPosition, setCurrentPosition] = useState(null);
-  const debouncedPosition = useDebounce(currentPosition, 1000);
+  const debouncedPosition = useDebounce(currentPosition, 3000);
 
   useEffect(() => {
     debouncedPosition && dispatch(updatePosition(debouncedPosition));
@@ -31,7 +31,7 @@ export const useUpdateCurrentPosition = () => {
         ]);
       }
       if (status) {
-        trackUserPosition((p) => setCurrentPosition(p?.coords));
+        trackUserPosition(p => setCurrentPosition(p?.coords));
       }
     };
 

@@ -13,15 +13,15 @@ export const api = axios.create({
     'Access-Control-Allow-Headers':
       'Origin, X-Requested-With, Content-Type, Accept',
   },
-  timeout: 4000,
+  timeout: 10000,
   timeoutErrorMessage:
     'El pedido tardó demasiado, por favor intentá nuevamente',
-  transformResponse: (data) => {
+  transformResponse: data => {
     const parsedData = JSON.parse(data);
 
     return keysToCamelCase(parsedData);
   },
-  transformRequest: (data) => {
+  transformRequest: data => {
     if (data?.keepCase) {
       delete data.keepCase;
       return JSON.stringify(data);
@@ -30,8 +30,8 @@ export const api = axios.create({
   },
 });
 
-export const configureAuthInterceptor = (store) => {
-  api.interceptors.request.use((config) => {
+export const configureAuthInterceptor = store => {
+  api.interceptors.request.use(config => {
     const {login, register} = store.getState();
     const token = login?.userData?.userToken || register.userToken;
     if (token) {
@@ -43,8 +43,8 @@ export const configureAuthInterceptor = (store) => {
   });
 
   api.interceptors.response.use(
-    (res) => res,
-    async (err) => {
+    res => res,
+    async err => {
       if (err?.response?.status === 401) {
         const {email, pass} = store.getState().login.userData;
         try {

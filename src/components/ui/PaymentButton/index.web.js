@@ -121,95 +121,91 @@ export default ({onPaymentSubmited, loading}) => {
   }, []);
 
   return (
-    <>
-      <Container nativeID="mp-container">
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
-        <Loader
-          loading={loading}
-          unmount={false}
-          size={24}
-          message="Estamos enviando tu pago">
-          <Form id="form-checkout">
-            <Title>Datos de la tarjeta</Title>
+    <Container nativeID="mp-container">
+      <script src="https://sdk.mercadopago.com/js/v2"></script>
+      <Loader
+        loading={loading}
+        unmount={false}
+        size="small"
+        message="Estamos enviando tu pago">
+        <Form id="form-checkout">
+          <Title>Datos de la tarjeta</Title>
+          <Input type="text" name="cardNumber" id="form-checkout__cardNumber" />
+          <Row>
+            <Input
+              flex
+              type="text"
+              name="cardExpirationMonth"
+              id="form-checkout__cardExpirationMonth"
+            />
+            <Input
+              flex
+              type="text"
+              name="cardExpirationYear"
+              id="form-checkout__cardExpirationYear"
+            />
+          </Row>
+          <Input
+            type="text"
+            name="securityCode"
+            id="form-checkout__securityCode"
+          />
+          <Row>
+            <Select flex name="issuer" id="form-checkout__issuer" />
+            <Select flex name="installments" id="form-checkout__installments" />
+          </Row>
+          <Title padding="20px 0 0">Datos de la personales</Title>
+          <Input
+            type="text"
+            name="cardholderName"
+            id="form-checkout__cardholderName"
+          />
+          <Input
+            hidden
+            type="email"
+            name="cardholderEmail"
+            id="form-checkout__cardholderEmail"
+          />
+          <Row>
+            <Select
+              name="identificationType"
+              id="form-checkout__identificationType"
+            />
             <Input
               type="text"
-              name="cardNumber"
-              id="form-checkout__cardNumber"
+              name="identificationNumber"
+              id="form-checkout__identificationNumber"
+              flex
             />
-            <Row>
-              <Input
-                type="text"
-                name="cardExpirationMonth"
-                id="form-checkout__cardExpirationMonth"
-              />
-              <Input
-                type="text"
-                name="cardExpirationYear"
-                id="form-checkout__cardExpirationYear"
-              />
-            </Row>
-            <Input
-              type="text"
-              name="securityCode"
-              id="form-checkout__securityCode"
-            />
-            <Row>
-              <Select flex name="issuer" id="form-checkout__issuer" />
-              <Select
-                flex
-                name="installments"
-                id="form-checkout__installments"
-              />
-            </Row>
-            <Title padding="20px 0 0">Datos de la personales</Title>
-            <Input
-              type="text"
-              name="cardholderName"
-              id="form-checkout__cardholderName"
-            />
-            <Input
-              hidden
-              type="email"
-              name="cardholderEmail"
-              id="form-checkout__cardholderEmail"
-            />
-            <Row>
-              <Select
-                name="identificationType"
-                id="form-checkout__identificationType"
-              />
-              <Input
-                type="text"
-                name="identificationNumber"
-                id="form-checkout__identificationNumber"
-              />
-            </Row>
-            <PayButton type="submit" id="form-checkout__submit">
-              Pagar
-            </PayButton>
-          </Form>
-        </Loader>
-      </Container>
-    </>
+          </Row>
+          <PayButton type="submit" id="form-checkout__submit">
+            Pagar
+          </PayButton>
+        </Form>
+      </Loader>
+    </Container>
   );
 };
 
 const Container = styled.View`
   display: flex;
   align-items: center;
+  flex: 1;
   justify-content: center;
 `;
 
 const Row = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const Form = webStyled.form`
   display: flex;
-  flex: 1;
+  margin: 60px 20px;
   flex-direction: column;
+  ${props => !props.theme.screenWidth < 800 && 'max-width: 414px'}
 `;
 
 const Input = webStyled.input`
@@ -218,8 +214,9 @@ const Input = webStyled.input`
   background-color: ${theme.grayBackground};
   padding: 15px 20px;
   margin: 5px;
-  flex: 1;
+  max-height: 40px;
   
+  flex: ${props => (props.flex ? 1 : 'initial')};
   ${props => !props.theme.isMobile < 800 && 'max-width: 414px'}
 `;
 

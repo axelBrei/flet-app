@@ -27,18 +27,13 @@ export default () => {
   }, []);
 
   return (
-    <Screen>
-      <Container>
-        <PaymentButton
-          loading={loading}
-          onPaymentSubmited={onPaymentSubmited}
-        />
-      </Container>
-    </Screen>
+    <Container>
+      <PaymentButton loading={loading} onPaymentSubmited={onPaymentSubmited} />
+    </Container>
   );
 };
 
-const Container = styled.View`
+const Container = styled(Screen)`
   flex: 1;
   align-items: center;
   padding: 60px 20px 20px;

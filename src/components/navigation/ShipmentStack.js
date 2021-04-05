@@ -39,12 +39,15 @@ export default () => {
             name={routes.shipmentScreen}
             component={ShipmentScreen}
             options={{
-              headerShown: !isMobile,
+              headerShown: false,
             }}
           />
           <Screen
             name={routes.shipmentFinishedScreen}
             component={ShipmentFinishedScreen}
+            options={{
+              headerShown: false,
+            }}
           />
         </>
       ) : (

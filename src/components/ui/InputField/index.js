@@ -32,7 +32,7 @@ const InputField = ({
   }));
 
   const _onFocus = useCallback(
-    (e) => {
+    e => {
       if (typeof onFocus === 'function' && onFocus()) {
         e.preventDefault?.();
         inputRef.current?.blur();
@@ -78,7 +78,7 @@ const InputField = ({
         {!icon && !!props.value && (
           <AnimatedLabel label={label} valuePresent={props.value} />
         )}
-        <Loader size={20} animating={loading} color={theme.primaryColor} />
+        <Loader size="small" animating={loading} color={theme.primaryColor} />
         {clearable && props.value !== '' && (
           <ClearIcon
             name="close-circle"
@@ -142,11 +142,11 @@ const Input = styled(TextInput)`
   font-family: ${({theme}) => theme.fonts.regular};
   z-index: 2;
   flex: 1;
-  color: ${(props) => props.theme.colors.fontColor};
+  color: ${props => props.theme.colors.fontColor};
   padding: 15px 0 15px 5px;
   font-size: 14px;
   overflow: hidden;
-  ${(props) =>
+  ${props =>
     props.theme.screenWidth < 800 &&
     Platform.OS === 'web' &&
     css`
@@ -155,10 +155,10 @@ const Input = styled(TextInput)`
 `;
 
 const ClearIcon = styled(Icon)`
-  color: ${(props) => props.theme.colors.fontColor};
+  color: ${props => props.theme.colors.fontColor};
   flex-shrink: 1;
   text-align: right;
-  margin-right: ${(props) => (props.isAlone ? 0 : '10px')};
+  margin-right: ${props => (props.isAlone ? 0 : '10px')};
 `;
 
 const Loader = styled(ActivityIndicator)`
@@ -167,7 +167,7 @@ const Loader = styled(ActivityIndicator)`
 
 const UnitText = styled(AppText)`
   font-size: 14px;
-  ${(props) =>
+  ${props =>
     props.theme.screenWidth < 800 &&
     Platform.OS === 'web' &&
     css`

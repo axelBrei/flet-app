@@ -65,7 +65,7 @@ export const loginAs = (email, pass) => async dispatch => {
       dispatch(
         receiveNewShipmentSuccess({
           shipment_id: data.shipment.id,
-          ...data.shipment,
+          ...shipment,
         }),
       );
     }
@@ -78,7 +78,7 @@ export const loginAs = (email, pass) => async dispatch => {
 
     dispatch(
       receiveLoginSuccess({
-        ...data,
+        ...loginData,
         email,
         pass,
       }),

@@ -18,7 +18,7 @@ const {
   DELIVERED,
 } = SHIPMENT_STATE;
 
-const getStatusColor = (status) => {
+const getStatusColor = status => {
   if (status === FINISHED) {
     return theme.online;
   }
@@ -31,7 +31,7 @@ const getStatusColor = (status) => {
   return theme.start;
 };
 
-const getStatusText = (status) => {
+const getStatusText = status => {
   if (status === FINISHED) return 'Terminado';
   if (status === CANCELLED) return 'Cancelado';
   if ([PENDING_COURRIER, COURRIER_CONFIRMED, ON_PROCESS].includes(status)) {
@@ -80,10 +80,8 @@ export const LastShipmentItem = ({
 const Container = styled.View`
   padding: 0 20px 10px;
   margin: 10px 0;
-  border-bottom-width: 0.5px;
-  border-color: ${theme.lightGray};
 
-  ${(props) =>
+  ${props =>
     Platform.OS === 'web' &&
     !props.theme.isMobile &&
     css`

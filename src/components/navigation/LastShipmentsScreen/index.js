@@ -47,11 +47,12 @@ export default () => {
 
   return (
     <Screen removeTWF scrollable={Platform.OS === 'web'}>
-      {/*<Loader loading={isLoading && !refreshing} size="large">*/}
       <Title padding={20}>Mis ultimos pedidos</Title>
       <List
         defaultPageSize={10}
+        loading={isLoading}
         pagination={pagination}
+        ItemSeparatorComponent={() => <Divider />}
         fetchDataFunction={fetchNewPage}
         showsVerticalScrollIndicator={Platform.OS === 'web'}
         renderItem={renderItem}
@@ -63,7 +64,6 @@ export default () => {
           }
         }
       />
-      {/*</Loader>*/}
     </Screen>
   );
 };
@@ -71,4 +71,10 @@ export default () => {
 const List = styled(PaginatedList)`
   flex: 1;
   min-height: ${props => props.theme.screenHeight - 100}px;
+`;
+
+const Divider = styled.View`
+  height: 1px;
+  width: 100%;
+  background-color: ${theme.lightGray};
 `;

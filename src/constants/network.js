@@ -48,8 +48,10 @@ export const configureAuthInterceptor = store => {
 
   api.interceptors.response.use(
     res => {
-      console.log('res', res);
-      return res;
+      return {
+        ...res,
+        data: res && res.data ? keysToCamelCase(res.data) : {},
+      };
     },
     async err => {
       if (err?.response?.status === 401) {

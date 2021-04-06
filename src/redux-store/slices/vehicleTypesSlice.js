@@ -15,7 +15,7 @@ const slice = createSlice({
   name: 'vehicleTypes',
   initialState,
   reducers: {
-    requestVehicleTypes: (state) => {
+    requestVehicleTypes: state => {
       state.loading.types = true;
       state.error.types = null;
     },
@@ -41,13 +41,14 @@ export const {
  * @THUNK
  */
 
-export const fetchVehicleTypes = () => async (dispatch) => {
+export const fetchVehicleTypes = () => async dispatch => {
   dispatch(requestVehicleTypes());
 
   try {
     const {data} = await vehiclesTypesService.fetchVehivleTypes();
     dispatch(receiveVehicleTypesSuccess(data?.results));
   } catch (e) {
+    console.log(e);
     dispatch(receiveVehicleTypesFail(e?.response?.message || e));
   }
 };
@@ -55,11 +56,10 @@ export const fetchVehicleTypes = () => async (dispatch) => {
 /*
  * @SELECTORS
  */
-export const selectLoadingVehicleTypes = (state) =>
+export const selectLoadingVehicleTypes = state =>
   state.vehicleTypes.loading.types;
-export const selectVehicleTypesError = (state) =>
-  state.vehicleTypes.error.types;
+export const selectVehicleTypesError = state => state.vehicleTypes.error.types;
 export const selectVehicleTypes = createSelector(
-  (state) => state.vehicleTypes.vehicleTypes || [],
-  (types) => Object.values(types).reduce((acc, curr) => [...acc, curr], []),
+  state => state.vehicleTypes.vehicleTypes || [],
+  types => Object.values(types).reduce((acc, curr) => [...acc, curr], []),
 );

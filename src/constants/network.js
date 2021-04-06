@@ -21,13 +21,6 @@ export const api = axios.create({
 
     return keysToCamelCase(parsedData);
   },
-  transformRequest: data => {
-    if (data?.keepCase) {
-      delete data.keepCase;
-      return JSON.stringify(data);
-    }
-    return data ? JSON.stringify(keysToSnakeCase(data)) : '';
-  },
 });
 
 export const configureAuthInterceptor = store => {
@@ -39,11 +32,25 @@ export const configureAuthInterceptor = store => {
         Authorization: `Bearer ${token}`,
       });
     }
-    return config;
+    const {data} = config;
+    if (data?.values?.()) {
+      return config;
+    }
+    return {
+      ...config,
+      data: data
+        ? data?.keepCase
+          ? data
+          : JSON.stringify(keysToSnakeCase(data))
+        : null,
+    };
   });
 
   api.interceptors.response.use(
-    res => res,
+    res => {
+      console.log('res', res);
+      return res;
+    },
     async err => {
       if (err?.response?.status === 401) {
         const {email, pass} = store.getState().login.userData;

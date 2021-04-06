@@ -28,7 +28,7 @@ export const FIELDS = {
   PHONE: 'number',
   DOCUMENT: 'document',
   DATE_OF_BIRTH: 'dateOfBirth',
-  BANK: 'bankNumber',
+  // BANK: 'bankNumber',
   PROFILE_PIC: 'profile',
 };
 
@@ -42,12 +42,12 @@ export const initialValues = (values, isDriver) => ({
     [FIELDS.DOCUMENT]: values?.[FIELDS.DOCUMENT]?.toString() || '',
     [FIELDS.DATE_OF_BIRTH]:
       dayjs(values?.[FIELDS.DATE_OF_BIRTH], 'DD/MM/YYYY') || null,
-    [FIELDS.BANK]: values?.[FIELDS.BANK]?.toString() || '',
+    // [FIELDS.BANK]: values?.[FIELDS.BANK]?.toString() || '',
     [FIELDS.PROFILE_PIC]: values?.[FIELDS.PROFILE_PIC] || null,
   }),
 });
 
-const validationSchema = (isDriver) =>
+const validationSchema = isDriver =>
   yup.object({
     [FIELDS.COUNTRY_CODE]: yup.number().nullable().required(requiredField),
     [FIELDS.AREA_CODE]: yup.number().nullable().required(requiredField),
@@ -67,11 +67,11 @@ const validationSchema = (isDriver) =>
         // .maxLength(8, maximumFieldLength)
         .required(requiredField),
       [FIELDS.DATE_OF_BIRTH]: yup.string().nullable().required(requiredField),
-      [FIELDS.BANK]: yup
-        .number()
-        .nullable()
-        // .length(22, specifycLength)
-        .required(requiredField),
+      // [FIELDS.BANK]: yup
+      //   .number()
+      //   .nullable()
+      //   // .length(22, specifycLength)
+      //   .required(requiredField),
       [FIELDS.PROFILE_PIC]: yup.object().nullable().required(requiredField),
     }),
   });

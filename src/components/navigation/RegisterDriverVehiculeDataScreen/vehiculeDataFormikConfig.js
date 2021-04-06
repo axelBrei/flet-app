@@ -29,10 +29,6 @@ export const FIELDS = {
   COLOR: 'carColor',
   LICENSE_FRONT: 'licenseFront',
   LICENSE_BACK: 'licenseBack',
-  HEIGHT: 'height',
-  WIDTH: 'width',
-  LENGTH: 'length',
-  WEIGHT: 'weight',
   VEHICLE_TYPE: 'type',
 };
 
@@ -41,10 +37,6 @@ export const initialValues = {
   [FIELDS.MODEL]: '',
   [FIELDS.YEAR]: '',
   [FIELDS.COLOR]: '',
-  [FIELDS.HEIGHT]: '',
-  [FIELDS.WIDTH]: '',
-  [FIELDS.LENGTH]: '',
-  [FIELDS.WEIGHT]: '',
   [FIELDS.LICENSE_FRONT]: null,
   [FIELDS.LICENSE_BACK]: null,
   [FIELDS.VEHICLE_TYPE]: null,
@@ -65,20 +57,16 @@ const validationSchema = yup.object({
     .test(
       'check-max-year',
       `El año debe ser menor a ${dayjs().year()}`,
-      (val) => val <= dayjs().year(),
+      val => val <= dayjs().year(),
     )
     .required(requiredField),
   [FIELDS.COLOR]: yup.string().required(requiredField),
-  [FIELDS.HEIGHT]: yup.string().required(requiredField),
-  [FIELDS.WIDTH]: yup.number().required(requiredField),
-  [FIELDS.LENGTH]: yup.number().required(requiredField),
-  [FIELDS.WEIGHT]: yup.number().required(requiredField),
   [FIELDS.LICENSE_FRONT]: yup.object().nullable().required(requiredField),
   [FIELDS.LICENSE_BACK]: yup.object().nullable().required(requiredField),
   [FIELDS.VEHICLE_TYPE]: yup.object().nullable().required(requiredField),
 });
 
-export const vehiculeDataFormikConfig = (onSubmit) => ({
+export const vehiculeDataFormikConfig = onSubmit => ({
   onSubmit,
   initialValues,
   validationSchema,

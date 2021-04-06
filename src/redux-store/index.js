@@ -27,6 +27,7 @@ const store = configureStore({
   devTools: true,
   middleware: getDefaultMiddleware({
     serializableCheck: false,
+    immutableCheck: ['register/receiveCourrierVehicleDataSuccess'],
     // serializableCheck: {
     //   ignoredActions: [
     //     FLUSH,

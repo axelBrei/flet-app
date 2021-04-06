@@ -18,14 +18,18 @@ const SelectImage = ({
   const inputRef = React.useRef(null);
 
   useEffect(() => {
-    PermissionManager.checkPermissions(PermissionManager.camera);
+    try {
+      PermissionManager.checkPermissions([PermissionManager.camera]);
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   const fileOnChange = useCallback(
-    (event) => {
+    event => {
       const image = event.target.files[0];
       onSelectImage({
-        ...image,
+        original: image,
         filename: image.name,
         size: image.size,
         mime: image.type,
@@ -37,14 +41,14 @@ const SelectImage = ({
   );
 
   const cleanImage = useCallback(
-    (t) => {
+    t => {
       t === '' && onSelectImage(null);
     },
     [onSelectImage],
   );
 
   const _onFocus = useCallback(
-    (e) => {
+    e => {
       inputRef.current?.click();
       return true;
     },

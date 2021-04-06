@@ -16,7 +16,6 @@ const _routes = {
   profileScreen: 'perfil',
   plannedShippments: 'planeados',
   newShipmentPackageDetailScreen: 'paquete',
-  newShipmentDetailScreen: 'orden',
   newShipmentConfirmationScreen: 'confirmar',
   paymentScreen: 'pagar',
   shipmentScreen: 'seguimiento',
@@ -55,7 +54,6 @@ export const linkingRoutes = {
         screens: {
           [_routes.homeScreen]: 'inicio',
           [_routes.newShipmentPackageDetailScreen]: 'paquete',
-          [_routes.newShipmentDetailScreen]: 'orden',
           [_routes.newShipmentConfirmationScreen]: 'confirmar',
           [_routes.shipmentScreen]: 'seguimiento',
           [_routes.shipmentFinishedScreen]: 'envio-terminado',

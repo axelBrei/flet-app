@@ -20,32 +20,26 @@ const {requiredField, onlyNumbers} = strings.validations;
 export const FIELDS = {
   DESCRIPTION: 'description',
   VALUE: 'value',
-  HEIGHT: 'height',
-  WIDTH: 'width',
-  LENGTH: 'length',
-  WEIGHT: 'weight',
+  SIZE: 'vehiculeSize',
+  EXTRA_HELP: 'extraHelp',
 };
 
-const initialValues = {
+const initialValues = values => ({
   [FIELDS.DESCRIPTION]: '',
   [FIELDS.VALUE]: null,
-  [FIELDS.HEIGHT]: null,
-  [FIELDS.WIDTH]: null,
-  [FIELDS.LENGTH]: null,
-  [FIELDS.WEIGHT]: null,
-};
+  [FIELDS.SIZE]: values?.[FIELDS.SIZE] || null,
+  [FIELDS.EXTRA_HELP]: values?.[FIELDS.EXTRA_HELP] || false,
+});
 
 const validationSchema = yup.object({
   [FIELDS.DESCRIPTION]: yup.string().required(requiredField),
   [FIELDS.VALUE]: yup.number(onlyNumbers).nullable().required(requiredField),
-  [FIELDS.HEIGHT]: yup.number(onlyNumbers).nullable().required(requiredField),
-  [FIELDS.WIDTH]: yup.number(onlyNumbers).nullable().required(requiredField),
-  [FIELDS.LENGTH]: yup.number(onlyNumbers).nullable().required(requiredField),
-  [FIELDS.WEIGHT]: yup.number(onlyNumbers).nullable().required(requiredField),
+  [FIELDS.SIZE]: yup.object().nullable().required(requiredField),
+  [FIELDS.EXTRA_HELP]: yup.bool(),
 });
 
-export const formikConfig = (onSubmit) => ({
-  initialValues,
+export const formikConfig = (onSubmit, values = null) => ({
+  initialValues: initialValues(values),
   validationSchema,
   onSubmit,
 });

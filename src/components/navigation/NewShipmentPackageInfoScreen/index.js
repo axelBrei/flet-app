@@ -20,9 +20,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   selectNewShipmentData,
   updateShipmentDescription,
+  updateShipmentVehiculeData,
 } from 'redux-store/slices/newShipmentSlice';
 import {routes} from 'constants/config/routes';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {vehiculeSizeOptions} from 'constants/vehicleSizes';
+import {VehiculeSizeItem} from 'components/navigation/NewShipmentPackageInfoScreen/VehiculeSizeItem';
+import {VehicleDimensions} from 'components/navigation/NewShipmentPackageInfoScreen/VehicleDimensions';
+import {WarningMessage} from 'components/ui/WarningMessage';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -32,16 +37,20 @@ export default ({navigation}) => {
   } = useSelector(selectNewShipmentData);
 
   const onSubmit = useCallback(
-    (values) => {
-      const {[FIELDS.WEIGHT]: weight, ...rest} = values;
+    values => {
       dispatch(
         updateShipmentDescription({
-          ...rest,
+          [FIELDS.DESCRIPTION]: values[FIELDS.DESCRIPTION],
           [FIELDS.VALUE]: parseInt(values[FIELDS.VALUE]),
-          [FIELDS.WEIGHT]: parseInt(values[FIELDS.WEIGHT]),
         }),
       );
-      navigation.navigate(routes.newShipmentDetailScreen);
+      dispatch(
+        updateShipmentVehiculeData({
+          [FIELDS.SIZE]: values[FIELDS.SIZE],
+          [FIELDS.EXTRA_HELP]: values[FIELDS.EXTRA_HELP],
+        }),
+      );
+      navigation.navigate(routes.newShipmentConfirmationScreen);
     },
     [dispatch],
   );
@@ -53,7 +62,21 @@ export default ({navigation}) => {
     handleSubmit,
     _setFieldValue,
     _setFieldTouched,
-  } = useFormikCustom(formikConfig(onSubmit));
+  } = useFormikCustom(
+    formikConfig(onSubmit, {[FIELDS.SIZE]: vehiculeSizeOptions[0]}),
+  );
+
+  const renderVehiculeSize = useCallback(
+    (item, idx) => (
+      <VehiculeSizeItem
+        key={idx}
+        selected={values[FIELDS.SIZE]?.id === item.id}
+        onPress={_setFieldValue(FIELDS.SIZE)}
+        {...item}
+      />
+    ),
+    [values, _setFieldValue],
+  );
 
   return (
     <ScreenComponent
@@ -84,52 +107,17 @@ export default ({navigation}) => {
           error={touched[FIELDS.VALUE] && errors[FIELDS.VALUE]}
           keyboardType="numeric"
         />
-        <IconCard
-          renderImage={(size) => <OpenBoxImage height={size} width={size} />}>
-          <Input
-            label="Alto"
-            unitString="(Cm)"
-            value={values[FIELDS.HEIGHT]}
-            onChangeText={_setFieldValue(FIELDS.HEIGHT)}
-            onFocus={_setFieldTouched(FIELDS.HEIGHT)}
-            error={touched[FIELDS.HEIGHT] && errors[FIELDS.HEIGHT]}
-            keyboardType="numeric"
-          />
-          <Input
-            label="Ancho"
-            unitString="(Cm)"
-            value={values[FIELDS.WIDTH]}
-            onChangeText={_setFieldValue(FIELDS.WIDTH)}
-            onFocus={_setFieldTouched(FIELDS.WIDTH)}
-            error={touched[FIELDS.WIDTH] && errors[FIELDS.WIDTH]}
-            keyboardType="numeric"
-          />
-          <Input
-            label="Largo"
-            unitString="(Cm)"
-            value={values[FIELDS.LENGTH]}
-            onChangeText={_setFieldValue(FIELDS.LENGTH)}
-            onFocus={_setFieldTouched(FIELDS.LENGTH)}
-            error={touched[FIELDS.LENGTH] && errors[FIELDS.LENGTH]}
-            keyboardType="numeric"
-          />
-        </IconCard>
-        <IconCard
-          reverse
-          renderImage={(size) => <WeightImage height={size} width={size} />}>
-          <Input
-            label="¿Cuanto pesa?"
-            unitString="(Kg)"
-            value={values[FIELDS.WEIGHT]}
-            onChangeText={_setFieldValue(FIELDS.WEIGHT)}
-            onFocus={_setFieldTouched(FIELDS.WEIGHT)}
-            error={touched[FIELDS.WEIGHT] && errors[FIELDS.WEIGHT]}
-            keyboardType="numeric"
-          />
-          <WeightDisclaimer>
-            Necesitamos saber el peso para decirle al conductor
-          </WeightDisclaimer>
-        </IconCard>
+        <Title textAlign="left" width="100%" padding="10px 0">
+          ¿Qué vehículo necesitás?
+        </Title>
+        <GridList>{vehiculeSizeOptions.map(renderVehiculeSize)}</GridList>
+        <VehicleDimensions {...values[FIELDS.SIZE]} />
+        <WarningMessage
+          message={
+            'Tené en cuenta que si el paquete no entra en el vehículo seleccionado se te cobrará una extra por el cambio  de vehículo.'
+          }
+        />
+
         <Button label="Continuar" onPress={handleSubmit} />
       </CenteredContainer>
       <StyledMap markers={[startPoint, endPoint]} accesible={false} />
@@ -160,8 +148,8 @@ const CenteredContainer = styled.View`
 `;
 
 const StyledMap = styled(Map)`
-  height: ${(props) => props.theme.screenHeight * 0.25}px;
-  width: ${(props) => props.theme.screenWidth - 40}px;
+  height: ${props => props.theme.screenHeight * 0.25}px;
+  width: ${props => props.theme.screenWidth - 40}px;
   border-radius: 20px;
   margin-bottom: 15px;
   ${({theme}) =>
@@ -174,11 +162,13 @@ const StyledMap = styled(Map)`
     `}
 `;
 
-const WeightDisclaimer = styled(AppText)`
-  color: ${theme.white};
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 5px;
+const GridList = styled(View)`
+  width: 100%;
+  margin-left: 20px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 `;
 
 const Button = styled(MainButton)`

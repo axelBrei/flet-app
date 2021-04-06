@@ -123,16 +123,12 @@ export const fetchShipmentPrice = confirmationInformation => async (
       shipmentDescription,
       shipmentVehicule: shipmentVehicle,
     } = selectNewShipmentData(getState());
-    const {height, width, length, ...rest} = shipmentDescription.package;
     const {data} = await shipmentService.getNewShipmentPrice({
       shipmentDescription: {
         ...shipmentDescription,
         package: {
           ...shipmentDescription.package,
-          level:
-            shipmentDescription.package.height *
-            shipmentDescription.package.width *
-            shipmentDescription.package.length,
+          type: shipmentVehicle?.vehiculeSize?.id,
         },
       },
       shipmentVehicle: {
@@ -171,13 +167,12 @@ export const createNewShipment = confirmationInformation => async (
     shipmentVehicule: shipmentVehicle,
   } = selectNewShipmentData(getState());
   try {
-    const {height, width, length, ...rest} = shipmentDescription.package;
     const {data} = await shipmentService.createNewShipment({
       shipmentDescription: {
         ...shipmentDescription,
         package: {
           ...shipmentDescription.package,
-          level: height * width * length,
+          type: shipmentVehicle?.vehiculeSize?.id,
         },
       },
       shipmentVehicle: {
@@ -188,15 +183,17 @@ export const createNewShipment = confirmationInformation => async (
         insurance:
           confirmationInformation?.insurance || confirmationScreen.insurance,
         paymentMethod: {
-          type: confirmationScreen.paymentMethod.type,
           ...confirmationInformation.paymentMethod,
+          type: (
+            confirmationScreen?.paymentMethod ||
+            confirmationInformation.paymentMethod
+          )?.type,
         },
-        // ...confirmationInformation,
-        // paymentMethod: confirmationInformation?.paymentMethod?.title,
       },
     });
     dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
   } catch (e) {
+    console.log(e);
     dispatch(receiveNewShipmentFail(e?.response?.data));
   }
 };

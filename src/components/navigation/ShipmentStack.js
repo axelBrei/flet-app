@@ -6,7 +6,6 @@ import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 import HomeScreen from 'components/navigation/HomeScreen/index';
-import NewShipmentDetailsScreen from 'components/navigation/NewShipmentDetailsScreen';
 import NewShipmentConfirmationScreen from 'components/navigation/NewShipmentConfirmationScreen';
 import ShipmentScreen from 'components/navigation/ShipmentScreen';
 import {useSelector} from 'react-redux';
@@ -63,18 +62,6 @@ export default () => {
           <Screen
             name={routes.newShipmentPackageDetailScreen}
             component={NewShipmentPackageDescriptionScreen}
-            options={{
-              title: '',
-              headerTitle: 'Nuevo Pedido',
-              headerStyle: {
-                backgroundColor: theme.white,
-                shadowColor: 'transparent',
-              },
-            }}
-          />
-          <Screen
-            name={routes.newShipmentDetailScreen}
-            component={NewShipmentDetailsScreen}
             options={{
               title: '',
               headerTitle: 'Nuevo Pedido',

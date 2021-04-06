@@ -31,6 +31,8 @@ export const VehiculeSizeItem = ({
 const ItemContainer = styled(View)`
   width: ${({theme}) =>
     theme.isMobile ? `${theme.screenWidth / 2 - 20}px` : '170px'};
+  align-items: center;
+  justify-content: center;
   margin-top: 15px;
 `;
 

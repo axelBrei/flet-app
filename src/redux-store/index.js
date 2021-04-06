@@ -17,6 +17,7 @@ export const persistConfig = {
   storage: AsyncStorage,
   blacklist: [
     'geocoding',
+    'shipment',
     process.env.NODE_ENV !== 'development' && 'navigation',
   ],
 };

@@ -10,7 +10,10 @@ import {
 
 const initialState = {
   currentShipment: {},
-  lastShipments: [],
+  lastShipments: {
+    results: [],
+    pagination: {},
+  },
   driverPosition: {
     latitude: 0,
     longitude: 0,
@@ -91,7 +94,10 @@ const slice = createSlice({
     },
     receiveLastShipmentsSuccess: (state, action) => {
       state.loading.history = false;
-      state.lastShipments = action.payload;
+      state.lastShipments = {
+        pagination: action.payload.pagination,
+        results: [...state.lastShipments.results, ...action.payload.results],
+      };
     },
     receiveLastShipmentsFail: (state, action) => {
       state.loading.history = false;
@@ -172,10 +178,10 @@ export const cancelShipment = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchLastShipments = () => async dispatch => {
+export const fetchLastShipments = (page, pageSize) => async dispatch => {
   dispatch(requestLastShipments());
   try {
-    const {data} = await shipmentService.getLastShipments();
+    const {data} = await shipmentService.getLastShipments(page, pageSize);
     dispatch(receiveLastShipmentsSuccess(data));
   } catch (e) {
     dispatch(receiveLastShipmentsFail(e?.response?.data?.message || e));
@@ -213,4 +219,7 @@ export const selectCurrentShipmentStatusString = createStateCheckSelector(
 export const selectIsLoadingLastShipments = state =>
   state.shipment.loading.history;
 export const selectLastShipmentsError = state => state.shipment.error.history;
-export const selectLastShipments = state => state.shipment.lastShipments;
+export const selectLastShipmentsPagination = state =>
+  state.shipment.lastShipments.pagination;
+export const selectLastShipments = state =>
+  state.shipment.lastShipments.results;

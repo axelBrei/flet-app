@@ -104,6 +104,8 @@ export const selectUserLastName = createSelector(
 );
 export const selectUserEmail = state => state.login?.userData?.email;
 export const selectUserId = state => state.login?.userData?.id;
+export const selectUserToken = state => state.login?.userData?.userToken;
+
 export const selectUserPhoto = createSelector(
   state => state.login?.userData?.photoUrl,
   photo => (photo ? {uri: photo} : null),

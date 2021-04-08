@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchPendingShipments} from 'redux-store/slices/driverShipmentSlice';
 import {selectOnlineStatus} from 'redux-store/slices/driverSlice';
 import {useIsFocused} from '@react-navigation/native';
+import {useInterval} from 'components/Hooks/useInterval';
 
 const FETCH_INTERVAL = 6 * 1000;
 export const useFetcingPendingShipment = () => {

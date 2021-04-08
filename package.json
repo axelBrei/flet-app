@@ -14,9 +14,11 @@
     "pull-web-enviorment": "chmod +x ./pullEnviorment.sh && ./pullEnviorment.sh",
     "build:web:prod": "webpack --mode production --env=prod",
     "cleanAndroid": "cd android && rm -rf app/build && ./gradlew clean && cd ..",
-    "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors"
+    "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors",
+    "postinstall": "node ./node_modules/@darron1217/react-native-background-geolocation/scripts/postlink.js"
   },
   "dependencies": {
+    "@darron1217/react-native-background-geolocation": "^0.6.6",
     "@mapbox/polyline": "^1.1.1",
     "@miblanchard/react-native-slider": "^1.5.0",
     "@react-google-maps/api": "^2.0.2",

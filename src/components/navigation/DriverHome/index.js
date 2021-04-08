@@ -27,7 +27,6 @@ import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFet
 import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCard';
 import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {useUserData} from 'components/Hooks/useUserData';
-import {err} from 'react-native-svg/lib/typescript/xml';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -102,7 +101,7 @@ export default ({navigation}) => {
         dispatch(rejectShipment());
       },
     },
-    {cancelable: false},
+    {cancelable: false, fullscreen: false},
   );
 
   useEffect(() => {

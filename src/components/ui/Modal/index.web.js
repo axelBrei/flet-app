@@ -13,7 +13,7 @@ export const Modal = ({isVisible, children, ...props}) => {
       transparent>
       <Container fullscreen={isMobile && props.fullscreen}>
         <Backdrop onClick={props.closeModal} />
-        {children}
+        <Content>{children}</Content>
       </Container>
     </ModalLib>
   );
@@ -39,4 +39,8 @@ const Backdrop = styled.View`
   background-color: ${props => props.theme.colors.backdropColor};
   transition: visibility 300ms linear, opacity 300ms linear;
   cursor: initial;
+`;
+
+const Content = styled.View`
+  background-color: white;
 `;

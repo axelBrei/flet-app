@@ -31,7 +31,7 @@ const strings = {
   reject: 'Rechazar',
 };
 
-const getDistanceIfKm = (distance) => {
+const getDistanceIfKm = distance => {
   if (distance > 999) {
     return `${(distance / 1000).toString().substring(0, 4)} Km.`;
   }
@@ -60,7 +60,7 @@ export const NewTripModalContent = ({
   }, [submited, loading, error, closeModal]);
 
   const onPressResponse = useCallback(
-    (action) => () => {
+    action => () => {
       action?.();
       setSubmited(true);
     },
@@ -102,22 +102,10 @@ export const NewTripModalContent = ({
       <IconCard
         reverse
         reduced
-        renderImage={(size) => (
+        renderImage={size => (
           <PackageImage height={size - 20} width={size - 20} />
         )}>
         <Title alternative>Paquete</Title>
-        <RowWithBoldData
-          label="Alto"
-          data={`${shipment?.package?.height} Cm.`}
-        />
-        <RowWithBoldData
-          label="Ancho"
-          data={`${shipment?.package?.height} Cm.`}
-        />
-        <RowWithBoldData
-          label="Largo"
-          data={`${shipment?.package?.height} Cm.`}
-        />
         <RowWithBoldData
           numberOfLines={1}
           label="Desc."
@@ -127,7 +115,7 @@ export const NewTripModalContent = ({
       <IconCard
         reverse
         reduced
-        renderImage={(size) => (
+        renderImage={size => (
           <DestinationImage height={size - 25} width={size - 25} />
         )}>
         <Title alternative>Destino</Title>
@@ -193,7 +181,7 @@ const ButtonsContainer = styled(Container)`
 `;
 
 const Button = styled(MainButton)`
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${props => props.backgroundColor};
   padding: 10px;
   width: 45%;
   margin-top: 10px;

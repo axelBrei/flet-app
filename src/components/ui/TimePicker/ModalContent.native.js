@@ -46,8 +46,8 @@ const CommonList = ({data, renderItem, ...props}) => {
 
 export default ({onPressAccept}) => {
   const {closeModal} = useModalContext();
-  const [hour, setHour] = useState(12);
-  const [minute, setMinute] = useState(30);
+  const [hour, setHour] = useState(1);
+  const [minute, setMinute] = useState(0);
 
   const onHoursViewAbilityItemsChange = useRef(({viewableItems}) => {
     let {item, index} = viewableItems[2] || {};
@@ -55,6 +55,7 @@ export default ({onPressAccept}) => {
     if (!item) {
       res = index < 2 ? '1' : '24';
     }
+    console.log(res);
     res && setHour(res);
   });
 

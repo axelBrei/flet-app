@@ -1,6 +1,7 @@
 import React, {createContext, useState, useContext, useCallback} from 'react';
 import {theme} from 'constants/theme';
 import {Modal} from 'components/ui/Modal';
+import {Platform} from 'react-native';
 
 const ModalContext = createContext({});
 export const useModal = (Content, contentProps, modalProps) => {
@@ -36,7 +37,7 @@ export const useModal = (Content, contentProps, modalProps) => {
           onBackdropPress={!modalProps?.cancelable ? () => {} : closeModal}
           closeModal={closeModal}
           style={[
-            {backgroundColor: theme.white},
+            Platform.OS === 'web' && {backgroundColor: theme.white},
             modalProps?.fullscreen && {
               marginHorizontal: 0,
               marginTop: 35,

@@ -9,20 +9,26 @@ import HomeScreen from 'components/navigation/HomeScreen/index';
 import NewShipmentConfirmationScreen from 'components/navigation/NewShipmentConfirmationScreen';
 import ShipmentScreen from 'components/navigation/ShipmentScreen';
 import {useSelector} from 'react-redux';
-import {selectCurrentShipment} from 'redux-store/slices/shipmentSlice';
+import {
+  selectCurrentShipment,
+  selectCurrentShipmentStatus,
+} from 'redux-store/slices/shipmentSlice';
 import ShipmentFinishedScreen from 'components/navigation/ShipmentFinishedScreen';
 import NewShipmentPackageDescriptionScreen from 'components/navigation/NewShipmentPackageInfoScreen';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
 const {Navigator, Screen} = createStackNavigator();
+const shipmentStates = [
+  SHIPMENT_STATE.PENDING_COURRIER,
+  SHIPMENT_STATE.COURRIER_CONFIRMED,
+  SHIPMENT_STATE.ON_PROCESS,
+  SHIPMENT_STATE.DELIVERED,
+];
 
-export default ({navigation}) => {
+export default () => {
   const {isMobile} = useWindowDimension();
   const currentShipment = useSelector(selectCurrentShipment);
-
-  useEffect(() => {
-    const {status} = currentShipment;
-    console.log(status);
-  }, [currentShipment]);
+  const shipmentStatus = useSelector(selectCurrentShipmentStatus);
 
   return (
     <Navigator
@@ -37,7 +43,8 @@ export default ({navigation}) => {
           color: theme.fontColor,
         },
       })}>
-      {currentShipment.shipmentId || currentShipment.id ? (
+      {(currentShipment.shipmentId || currentShipment.id) &&
+      shipmentStates.includes(shipmentStatus.status) ? (
         <>
           <Screen
             name={routes.shipmentScreen}

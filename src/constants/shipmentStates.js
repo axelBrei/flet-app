@@ -17,6 +17,7 @@ export const SHIPMENT_STATE_ORDER = [
   SHIPMENT_STATE.PENDING_PAYMENT,
   SHIPMENT_STATE.PAYMENT_ERROR,
   SHIPMENT_STATE.PAYMENT_ERROR,
+  SHIPMENT_STATE.CANCELLED,
   // PROPROTARY STATES
   SHIPMENT_STATE.NEW,
   SHIPMENT_STATE.PENDING_COURRIER,
@@ -24,15 +25,12 @@ export const SHIPMENT_STATE_ORDER = [
   SHIPMENT_STATE.ON_PROCESS,
   SHIPMENT_STATE.DELIVERED,
   SHIPMENT_STATE.FINISHED,
-  SHIPMENT_STATE.CANCELLED,
 ];
 
-/*
- *  New ->
- *
- *  Conductor confirmado/yendo a buscar el paquete
- *  Conductor levanto el paquete
- *  Conductor entrego el paquete
- *  Entregado
- *  Cancelado -> Solamente antes de que el conductor llegue a buscar el paquete o 5 minutos.
- */
+export const isCurrentShipment = status => {
+  const cancelIds = SHIPMENT_STATE_ORDER.findIndex(
+    i => i === SHIPMENT_STATE.PENDING_COURRIER,
+  );
+  const currId = SHIPMENT_STATE_ORDER.findIndex(i => i === status);
+  return currId < cancelIds;
+};

@@ -27,18 +27,23 @@ const slice = createSlice({
   name: 'driverShipment',
   initialState,
   reducers: {
+    // FETCH PENDING
     requestFetchPendingShipment: state => {
       state.loading.fetch = true;
       state.error.fetch = null;
     },
     receiveFetchPendingShipmentSuccess: (state, action) => {
       state.loading.fetch = false;
+      state.error.confirm = null;
+      state.error.reject = null;
       state.pendingShipment = action.payload;
     },
     receiveFetchPendingShipmentFail: (state, action) => {
       state.loading.fetch = false;
       state.error.fetch = action.payload;
+      state.shipmentData = null;
     },
+    // CONFIRM
     requestConfirmShipment: state => {
       state.loading.confirm = true;
       state.error.confirm = null;
@@ -52,6 +57,7 @@ const slice = createSlice({
       state.loading.confirm = false;
       state.error.confirm = action.payload;
     },
+    // REJECT
     requestRejectShipment: state => {
       state.loading.reject = true;
       state.error.reject = null;
@@ -64,6 +70,7 @@ const slice = createSlice({
       state.loading.reject = false;
       state.error.reject = action.payload;
     },
+    // CHANGE STATUS
     requestChangeShipmentStatus: state => {
       state.loading.stateChange = true;
       state.error.stateChange = null;
@@ -76,6 +83,7 @@ const slice = createSlice({
       state.loading.stateChange = false;
       state.error.stateChange = action.payload;
     },
+    // SUBMIT SECURITY CODE
     requestSubmitConfirmationCode: (state, action) => {
       state.loading.code = true;
       state.error.code = null;
@@ -125,7 +133,9 @@ export const fetchCurrentShipment = () => async dispatch => {
   try {
     const {data} = await shipmentService.getCurrentShipment();
     dispatch(receiveConfirmShipmentSucces(data));
-  } catch (e) {}
+  } catch (e) {
+    dispatch(receiveFetchPendingShipmentFail(e?.response?.data?.message || e));
+  }
 };
 
 export const fetchPendingShipments = () => async dispatch => {
@@ -227,6 +237,8 @@ export const selectPendingShipmentAnswerError = createSelector(
 
 export const selectPendingShipment = state =>
   state.driverShipment.pendingShipment;
+export const selectPendingShipmentError = state =>
+  state.driverShipment.error.fetch;
 
 export const selectSecureCodeError = state => state.driverShipment.error.code;
 export const selectIsLoadingSecureCode = state =>

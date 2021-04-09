@@ -43,8 +43,8 @@ export default () => {
           color: theme.fontColor,
         },
       })}>
-      {(currentShipment.shipmentId || currentShipment.id) &&
-      shipmentStates.includes(shipmentStatus.status) ? (
+      {currentShipment.shipmentId ||
+      (currentShipment.id && shipmentStates.includes(shipmentStatus.status)) ? (
         <>
           <Screen
             name={routes.shipmentScreen}

@@ -7,6 +7,11 @@ import {
   createPositionCheckSelector,
   createStateCheckSelector,
 } from 'redux-store/customSelectors';
+import {
+  isCurrentShipment,
+  SHIPMENT_STATE,
+  SHIPMENT_STATE_ORDER,
+} from 'constants/shipmentStates';
 
 const initialState = {
   currentShipment: {},
@@ -107,6 +112,7 @@ const slice = createSlice({
   extraReducers: {
     'newShipment/receiveNewShipmentSuccess': (state, action) => {
       state.currentShipment = action.payload;
+      state.shipmentStatus = null;
     },
     'login/logout': state => {
       Object.assign(state, initialState);
@@ -141,7 +147,12 @@ export const fetchShipmentStatus = () => async (dispatch, getState) => {
   try {
     const {shipmentId, id} = selectCurrentShipment(getState());
     const {data} = await shipmentService.checkShipmentStatus(id || shipmentId);
-    dispatch(receiveShipmentStatusSuccess(data));
+
+    if (isCurrentShipment(data.status)) {
+      dispatch(cleanShipments());
+    } else {
+      dispatch(receiveShipmentStatusSuccess(data));
+    }
   } catch (e) {
     dispatch(receiveShipmentStatusFail(e?.response?.data?.message || e));
   }

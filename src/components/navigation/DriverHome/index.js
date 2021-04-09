@@ -10,6 +10,7 @@ import {
   selectDriverShipmentData,
   selectPendingShipment,
   selectPendingShipmentAnswerError,
+  selectPendingShipmentError,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {getRotatedMarker} from 'components/ui/Map/helper';
@@ -34,6 +35,7 @@ export default ({navigation}) => {
   const isOnline = useSelector(selectOnlineStatus);
   const previosPosition = useSelector(selectPreviosPosition);
   const pendingShipment = useSelector(selectPendingShipment);
+  const pendingShipmentError = useSelector(selectPendingShipmentError);
   const currentShipment = useSelector(selectDriverShipmentData);
   const error = useSelector(selectPendingShipmentAnswerError);
   const [debouncedCurrentPosition, setLocation] = useState({});
@@ -105,12 +107,12 @@ export default ({navigation}) => {
   );
 
   useEffect(() => {
-    if (!error && pendingShipment) {
+    if (!error && !pendingShipmentError && pendingShipment) {
       open();
-    } else if (error) {
+    } else if (error || pendingShipmentError) {
       close();
     }
-  }, [pendingShipment, error]);
+  }, [pendingShipment, error, pendingShipmentError]);
 
   const onChangeOnlineStatus = useCallback((newOnlineStatus, time) => {
     dispatch(changeOnlineStatus(newOnlineStatus, time.until));

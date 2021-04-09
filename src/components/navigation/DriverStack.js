@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
@@ -9,35 +9,39 @@ import DriverNewShipmentScreen from 'components/navigation/DriverNewShipmentScre
 import DriverDeliveryConfirmation from 'components/navigation/ShipmentDeliveryConfirmationScreen';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {useSelector} from 'react-redux';
-import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
+import {
+  selectDriverShipmentData,
+  selectPendingShipmentError,
+} from 'redux-store/slices/driverShipmentSlice';
 
 const {Navigator, Screen} = createStackNavigator();
 
 const {COURRIER_CONFIRMED, ON_PROCESS, DELIVERED} = SHIPMENT_STATE;
-export const DriverStack = () => {
+export const DriverStack = ({navigation}) => {
   const {isMobile} = useWindowDimension();
   const {status} = useSelector(selectDriverShipmentData) || {};
+  const currentShipmentError = useSelector(selectPendingShipmentError);
 
   return (
     <Navigator
       screenOptions={navigationConfig({
         headerLeft: () => null,
       })}>
-      {!(
-        status || [ON_PROCESS, COURRIER_CONFIRMED, DELIVERED].includes(status)
-      ) && (
-        <Screen
-          name={routes.driverHomeScreen}
-          component={DriverHomeScreen}
-          options={{headerTransparent: true, headerShown: false}}
-        />
-      )}
-      {[COURRIER_CONFIRMED, ON_PROCESS].includes(status) && (
+      {!currentShipmentError &&
+      [COURRIER_CONFIRMED, ON_PROCESS].includes(status) ? (
         <Screen
           name={routes.driverShipmentScreen}
           component={DriverNewShipmentScreen}
           options={{headerTransparent: true, headerShown: false}}
         />
+      ) : (
+        status !== DELIVERED && (
+          <Screen
+            name={routes.driverHomeScreen}
+            component={DriverHomeScreen}
+            options={{headerTransparent: true, headerShown: false}}
+          />
+        )
       )}
       {status === DELIVERED && (
         <Screen

@@ -27,7 +27,9 @@ export const Loader = ({
 
   if (unmount) {
     return loading ? (
-      <ComponentContainer>{renderLoader()}</ComponentContainer>
+      <ComponentContainer style={props.style}>
+        {renderLoader()}
+      </ComponentContainer>
     ) : (
       children
     );
@@ -36,7 +38,7 @@ export const Loader = ({
     <>
       {children}
       {loading && (
-        <FloatingContainer>
+        <FloatingContainer style={props.style}>
           <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
         </FloatingContainer>
       )}

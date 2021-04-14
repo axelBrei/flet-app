@@ -13,7 +13,7 @@ export const Modal = ({isVisible, children, ...props}) => {
       transparent>
       <Container fullscreen={isMobile && props.fullscreen}>
         <Backdrop onClick={props.closeModal} />
-        <Content>{children}</Content>
+        <Content style={props.contentStyle}>{children}</Content>
       </Container>
     </ModalLib>
   );

@@ -12,6 +12,7 @@ import courrierReducer from 'redux-store/slices/driverSlice';
 import shipmentReducer from 'redux-store/slices/shipmentSlice';
 import vehicleTypesreducer from 'redux-store/slices/vehicleTypesSlice';
 import insuranceReducer from 'redux-store/slices/insuranceSlice';
+import personalDataReducer from 'redux-store/slices/personalData';
 
 const reducers = {
   login: loginSlice,
@@ -30,6 +31,7 @@ const reducers = {
   courrier: courrierReducer,
   insurance: insuranceReducer,
   vehicleTypes: vehicleTypesreducer,
+  personalData: personalDataReducer,
 };
 
 let extraReducers = {};

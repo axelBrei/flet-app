@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import styled, {css} from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {LogoutButton} from 'components/ui/LogoutButton';
@@ -10,7 +10,8 @@ import {UserHeader} from 'components/navigation/ProfileScreen/UserHeader';
 import {MenuItem} from 'components/navigation/ProfileScreen/MenuItem';
 import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
-import PaymentButton from 'components/ui/PaymentButton';
+import TelephoneModal from 'components/navigation/ProfileScreen/ModalContents/TelephoneModal';
+import {PersonalDataModal} from 'components/navigation/ProfileScreen/ModalContents/PersonalDataModal';
 
 const data = [
   {
@@ -18,11 +19,11 @@ const data = [
     data: [
       {
         name: 'Datos personales',
-        redirectTo: null,
+        modal: PersonalDataModal,
       },
       {
         name: 'Teléfonos',
-        redirectTo: null,
+        modal: TelephoneModal,
       },
       {
         name: 'Mis vehiculos',
@@ -53,8 +54,9 @@ const data = [
 export default () => {
   const {isMobile} = useWindowDimension();
   const {isDriver} = useUserData();
+  const [selectedModal, setSelectedModal] = useState();
 
-  const renderItem = ({item, separators}) => <MenuItem {...item} />;
+  const renderItem = ({item}) => <MenuItem {...item} />;
   const renderHeader = ({section}) => (
     <SectionHeader>{section.name}</SectionHeader>
   );
@@ -75,7 +77,6 @@ export default () => {
           stickySectionHeadersEnabled
         />
       </ContentContainer>
-
       {isMobile && <LogoutButton />}
     </ScreenComponent>
   );

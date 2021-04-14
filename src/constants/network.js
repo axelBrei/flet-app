@@ -17,6 +17,9 @@ export const api = axios.create({
   timeoutErrorMessage:
     'El pedido tardó demasiado, por favor intentá nuevamente',
   transformResponse: data => {
+    if (data.length === 0) {
+      return {};
+    }
     const parsedData = JSON.parse(data);
 
     return keysToCamelCase(parsedData);
@@ -42,7 +45,7 @@ export const configureAuthInterceptor = store => {
         ? data?.keepCase
           ? data
           : JSON.stringify(keysToSnakeCase(data))
-        : null,
+        : {},
     };
   });
 

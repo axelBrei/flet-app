@@ -10,9 +10,9 @@ export const ProfitCard = () => {
   const balance = useSelector(selectCourrierBalance);
 
   const totalEarned =
-    balance?.card.balance - balance?.card.fee - balance?.cash.fee;
-  const netProfit = balance?.card.balance + balance?.cash.balance;
-  const totalFee = balance?.card.fee + balance?.cash.fee;
+    balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
+  const netProfit = balance?.card?.balance + balance?.cash?.balance;
+  const totalFee = balance?.card?.fee + balance?.cash?.fee;
   return (
     <BalanceCard>
       <CenteredColumn>
@@ -25,7 +25,7 @@ export const ProfitCard = () => {
           <PaymentValue>${netProfit}</PaymentValue>
         </CenteredColumn>
         <CenteredColumn style={{flex: 1}} displayBorder comission>
-          <AppText>Ganancia neta</AppText>
+          <AppText>Comisiones</AppText>
           <PaymentValue comission>${totalFee}</PaymentValue>
         </CenteredColumn>
       </Row>
@@ -35,8 +35,10 @@ export const ProfitCard = () => {
 
 const BalanceCard = styled.View`
   margin: 20px 0;
+  padding: 20px 0;
   border-radius: 20px;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
+  background-color: ${theme.backgroundColor};
 `;
 
 const TotalEarned = styled(AppText)`

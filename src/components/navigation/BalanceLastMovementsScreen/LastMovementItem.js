@@ -8,7 +8,7 @@ import {theme} from 'constants/theme';
 export const LastMovementItem = ({item}) => {
   return (
     <StyledRow>
-      <AppText>{dayjs(item.dateCreated).format('DD/MM/YYYY - hh:mm')}</AppText>
+      <AppText>{dayjs(item.createdAt).format('DD/MM/YYYY - hh:mm')}</AppText>
       <AppText>${item.transactionAmount}</AppText>
     </StyledRow>
   );

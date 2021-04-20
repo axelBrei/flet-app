@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {FlatList} from 'react-native';
 import {AppText} from 'components/ui/AppText';
 import {Icon} from 'components/ui/Icon';
@@ -40,6 +40,13 @@ export const BalanceOptionsList = () => {
 
 const Container = styled.View`
   padding: 20px 0;
+
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      align-self: center;
+      width: max(414px, 80%);
+    `};
 `;
 
 const ButtonContainer = styled.TouchableOpacity`

@@ -39,14 +39,6 @@ const data = [
     ],
   },
   {
-    name: 'Facturación',
-    driverOnly: true,
-    data: [
-      {name: 'Mi balance', redirectTo: null},
-      // {name: 'Horario predeterminado', redirectTo: null},
-    ],
-  },
-  {
     name: 'Navegacion',
     driverOnly: true,
     data: [

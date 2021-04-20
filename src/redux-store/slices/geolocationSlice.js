@@ -12,8 +12,12 @@ const slice = createSlice({
   name: 'geolocation',
   initialState,
   reducers: {
-    addLastAddresses: (state, action) => {
-      state.lastAddresses = [...state.lastAddresses, action.payload].slice(-3);
+    _addLastAddresses: (state, action) => {
+      if (!state.lastAddresses.find(i => i.name === action.payload.name)) {
+        state.lastAddresses = [...state.lastAddresses, action.payload].slice(
+          -3,
+        );
+      }
     },
   },
   extraReducers: {
@@ -24,7 +28,14 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-export const {addLastAddresses} = slice.actions;
+export const {_addLastAddresses} = slice.actions;
+
+export const addLastAddresses = selectedAddress => (dispatch, getState) => {
+  const {address} = getState().personalData.address;
+  if (!address.find(a => a.name === selectedAddress.name)) {
+    dispatch(_addLastAddresses(selectedAddress));
+  }
+};
 
 /**
  * @SELECTORS

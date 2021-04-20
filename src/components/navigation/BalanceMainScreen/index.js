@@ -35,14 +35,18 @@ export default () => {
     dispatch(fetchBalance());
   }, []);
 
-  const profit = balance?.card.balance - balance?.card.fee - balance?.cash.fee;
+  const profit =
+    balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
   return (
     <Screen>
       <Loader size="large" loading={isLoading} message="Cargando balance">
         <ScreenContainer>
           <ProfitCard />
           {profit > 0 && (
-            <MainButton fontSize={16} onPress={toggle}>
+            <MainButton
+              style={{alignSelf: 'center', width: '100%'}}
+              fontSize={16}
+              onPress={toggle}>
               Cobrar ${profit}
             </MainButton>
           )}
@@ -56,4 +60,12 @@ export default () => {
 
 const ScreenContainer = styled.View`
   padding: 20px;
+
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      width: 100%;
+      align-self: center;
+      max-width: max(414px, 60%);
+    `};
 `;

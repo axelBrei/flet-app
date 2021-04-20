@@ -1,5 +1,7 @@
 import {Platform, Dimensions} from 'react-native';
 import {combineReducers} from '@reduxjs/toolkit';
+import {persistReducer} from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerSlice from 'redux-store/slices/registerSlice';
 import loginSlice from 'redux-store/slices/loginSlice';
 import navigationReducer from 'redux-store/slices/navigationSlice';
@@ -10,17 +12,28 @@ import courrierReducer from 'redux-store/slices/driverSlice';
 import shipmentReducer from 'redux-store/slices/shipmentSlice';
 import vehicleTypesreducer from 'redux-store/slices/vehicleTypesSlice';
 import insuranceReducer from 'redux-store/slices/insuranceSlice';
+import personalDataReducer from 'redux-store/slices/personalData';
+import balanceSlice from 'redux-store/slices/balanceSlice';
 
 const reducers = {
   login: loginSlice,
   navigation: navigationReducer,
   register: registerSlice,
   newShipment: newShipmentReducer,
-  shipment: shipmentReducer,
+  shipment: persistReducer(
+    {
+      key: 'shipment',
+      storage: AsyncStorage,
+      blacklist: ['lastShipments'],
+    },
+    shipmentReducer,
+  ),
   geolocation: geocodingReducer,
   courrier: courrierReducer,
   insurance: insuranceReducer,
   vehicleTypes: vehicleTypesreducer,
+  personalData: personalDataReducer,
+  ...balanceSlice,
 };
 
 let extraReducers = {};

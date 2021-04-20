@@ -25,30 +25,31 @@ import {useDispatch, useSelector} from 'react-redux';
 import {IconCard} from 'components/ui/IconCard';
 import {theme} from 'constants/theme';
 import {VehicleCapacityCard} from 'components/navigation/RegisterDriverVehiculeDataScreen/VehicleCapacityCard';
+import {Dropdown} from 'components/ui/Dropdown';
+import {
+  fetchVehicleTypes,
+  selectLoadingVehicleTypes,
+  selectVehicleTypes,
+} from 'redux-store/slices/vehicleTypesSlice';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingRegister);
   const error = useSelector(selectRegisterError);
+  const vehicleTypes = useSelector(selectVehicleTypes);
+  const loadingTypes = useSelector(selectLoadingVehicleTypes);
+
+  useEffect(() => {
+    dispatch(fetchVehicleTypes());
+  }, []);
 
   const onSubmit = useCallback(
-    (values) => {
-      const {
-        [FIELDS.HEIGHT]: h,
-        [FIELDS.WIDTH]: w,
-        [FIELDS.LENGTH]: l,
-        [FIELDS.WEIGHT]: weight,
-        ...rest
-      } = values;
+    values => {
+      const {[FIELDS.VEHICLE_TYPE]: type, ...rest} = values;
       dispatch(
         registerDriverVehicleData({
+          type: type.id,
           ...rest,
-          dimensions: {
-            height: parseInt(h),
-            width: parseInt(w),
-            length: parseInt(l),
-            weight: parseInt(weight),
-          },
         }),
       );
     },
@@ -103,12 +104,17 @@ export default ({navigation}) => {
           onChangeText={_setFieldValue(FIELDS.COLOR)}
           error={touched[FIELDS.COLOR] && errors[FIELDS.COLOR]}
         />
-        <VehicleCapacityCard
-          values={values}
-          touched={touched}
-          setFieldValue={_setFieldValue}
-          setFieldTouched={_setFieldTouched}
-          errors={errors}
+        <Dropdown
+          loading={loadingTypes}
+          label="Tipo de vehiculo"
+          value={values[FIELDS.VEHICLE_TYPE]}
+          onItemPress={_setFieldValue(FIELDS.VEHICLE_TYPE)}
+          onFocus={_setFieldTouched(FIELDS.VEHICLE_TYPE)}
+          data={vehicleTypes}
+          error={
+            error ||
+            (touched[FIELDS.VEHICLE_TYPE] && errors[FIELDS.VEHICLE_TYPE])
+          }
         />
         <ImagesContainer>
           <SelectImage

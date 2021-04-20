@@ -28,7 +28,8 @@ const checkShipmentStatus = async shipmentId =>
 const getNewShipmentPrice = async shipmentData =>
   await api.post('shipment/price', shipmentData);
 
-const getLastShipments = async () => await api.get('shipment/history');
+const getLastShipments = async (page, pageSize) =>
+  await api.get(`shipment/history?page=${page}&page_size=${pageSize}`);
 
 const getCurrentShipment = async () => await api.get('shipment/current');
 

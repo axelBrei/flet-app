@@ -10,11 +10,13 @@ const paymentMethodsList = [
   {
     id: 0,
     title: 'Efectivo',
+    type: 'CASH',
     imageUrl: 'https://image.flaticon.com/icons/png/128/4343/4343031.png',
   },
   {
     id: 1,
     title: 'Tarjeta crédito/débito',
+    type: 'CARD',
     imageUrl: 'https://image.flaticon.com/icons/png/128/4342/4342816.png',
   },
 ];
@@ -23,7 +25,7 @@ export default ({selectedMethod, onChangeSelectedMethod}) => {
   const {closeModal} = useModalContext();
 
   const onPressItem = useCallback(
-    (item) => () => {
+    item => () => {
       onChangeSelectedMethod(item);
       closeModal?.();
     },

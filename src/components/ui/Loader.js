@@ -2,14 +2,12 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 import {ActivityIndicator, View, Platform} from 'react-native';
 import {AppText} from 'components/ui/AppText';
-import {Container} from 'components/ui/Container';
 import {theme} from 'constants/theme';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import PropTypes from 'prop-types';
 
 export const Loader = ({
   children,
-  onPlace,
   unmount,
   message,
   loading,
@@ -22,54 +20,56 @@ export const Loader = ({
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <ActivityIndicator
-        size={Platform.OS === 'ios' ? 'large' : scaleDp(size || 50)}
-        animating
-        color={theme.primaryColor}
-      />
+      <ActivityIndicator size={size} animating color={theme.primaryColor} />
       {message && <Message>{message}</Message>}
     </View>
   );
 
-  const Wrapper = onPlace ? ComponentContainer : React.Fragment;
-  if (unmount && loading) {
-    return <ComponentContainer>{renderLoader()}</ComponentContainer>;
+  if (unmount) {
+    return loading ? (
+      <ComponentContainer style={props.style}>
+        {renderLoader()}
+      </ComponentContainer>
+    ) : (
+      children
+    );
   }
   return (
-    <Wrapper
-      {...(onPlace && {
-        style: [props.style],
-      })}>
+    <>
+      {children}
       {loading && (
-        <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
+        <FloatingContainer style={props.style}>
+          <LoaderContainer unmount={unmount}>{renderLoader()}</LoaderContainer>
+        </FloatingContainer>
       )}
-      {!loading && children}
-    </Wrapper>
+    </>
   );
 };
 
 Loader.defaultProps = {
   loading: false,
+  size: 'small',
   unmount: true, // unmount children while loading,
-  onPlace: false, // place loader in same place that children
+  children: <></>,
 };
 Loader.propTypes = {
+  size: PropTypes.string,
   unmount: PropTypes.bool,
   loading: PropTypes.bool,
-  onPlace: PropTypes.bool.isRequired,
   message: PropTypes.string,
 };
 
 const ComponentContainer = styled.View`
-  height: ${({theme}) => theme.screenHeight}px;
+  flex: 1;
   align-items: center;
   justify-content: center;
 `;
 
-const LoaderContainer = styled(Container)`
+const LoaderContainer = styled.View`
+  flex: 1;
   align-items: center;
   justify-content: center;
-  ${(props) =>
+  ${props =>
     props.unmount &&
     css`
       height: ${({theme}) => theme.screenHeight}px;
@@ -79,6 +79,18 @@ const LoaderContainer = styled(Container)`
       right: 0;
       z-index: 100;
     `}
+`;
+
+const FloatingContainer = styled.View`
+  position: absolute;
+  background-color: ${theme.backgroundColor};
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  width: auto;
+  z-index: 100;
 `;
 
 const Message = styled(AppText)`

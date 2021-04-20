@@ -8,8 +8,7 @@ import {AppText} from 'components/ui/AppText';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useNavigation} from 'components/Hooks/useNavigation';
 
-export const CustomHeaderBackButton = (props) => {
-  const {isMobile} = useWindowDimension();
+export const CustomHeaderBackButton = props => {
   const navigation = useNavigation();
 
   const onPress = props.canGoBack ? props?.onPress : navigation.goBack;
@@ -22,11 +21,11 @@ export const CustomHeaderBackButton = (props) => {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginLeft: scaleDp(10),
+        marginLeft: 12,
       }}>
       <Icon
         color={props.tintColor}
-        size={scaleDp(isMobile ? 20 : 16)}
+        size={20}
         name={Platform.OS !== 'android' ? 'chevron-left' : 'arrow-left'}
       />
       {props.labelVisible && (

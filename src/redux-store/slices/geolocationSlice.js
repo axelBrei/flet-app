@@ -5,79 +5,39 @@ import geolocationService from 'services/geolocationService';
 import {capitallize} from 'helpers/stringHelper';
 
 const initialState = {
-  directions: null,
-  loading: {
-    directions: false,
-  },
-  error: {
-    directions: null,
-  },
+  lastAddresses: [],
 };
 
 const slice = createSlice({
   name: 'geolocation',
   initialState,
   reducers: {
-    requestDirections: (state) => {
-      state.loading.directions = true;
-      state.error.directions = null;
-      state.directions = null;
-    },
-    receiveDirectionsSuccess: (state, action) => {
-      state.loading.directions = false;
-      state.directions = action.payload;
-    },
-    receiveDirectionsFail: (state, action) => {
-      state.loading.directions = true;
-      state.error.directions = action.payload;
+    _addLastAddresses: (state, action) => {
+      if (!state.lastAddresses.find(i => i.name === action.payload.name)) {
+        state.lastAddresses = [...state.lastAddresses, action.payload].slice(
+          -3,
+        );
+      }
     },
   },
   extraReducers: {
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
 });
 
 export default slice.reducer;
+export const {_addLastAddresses} = slice.actions;
 
-export const {
-  requestDirections,
-  receiveDirectionsSuccess,
-  receiveDirectionsFail,
-} = slice.actions;
-
-/**
- * @THUNK
- */
-
-export const getDirectionsFromCurrentLocation = ({
-  latitude = null,
-  longitude = null,
-}) => async (dispatch) => {
-  try {
-    if (!latitude || !longitude) return;
-    dispatch(requestDirections());
-    const {coords: currentCoords, ...rest} = await getCurrentPosition();
-    const {data} = await geolocationService.getDirections(
-      `${currentCoords.latitude},${currentCoords.longitude}`,
-      `${latitude},${longitude}`,
-    );
-    const directions = decodeDirections(
-      data?.routes[0]?.overview_polyline?.points,
-    ).map(([latitude, longitude]) => ({latitude, longitude}));
-    return dispatch(receiveDirectionsSuccess(directions));
-  } catch (e) {
-    return dispatch(receiveDirectionsFail(e?.response?.data));
+export const addLastAddresses = selectedAddress => (dispatch, getState) => {
+  const {address} = getState().personalData.address;
+  if (!address.find(a => a.name === selectedAddress.name)) {
+    dispatch(_addLastAddresses(selectedAddress));
   }
 };
 
 /**
  * @SELECTORS
  */
-export const selectLoadingDirections = (state) =>
-  state.geolocation.loading.directions;
-export const selectDirectionsError = (state) =>
-  state.geolocation.error.directions;
-export const selectCurrentDirections = (state) =>
-  state.geolocation.directions || [];
+export const selectLastAddresses = state => state.geolocation.lastAddresses;

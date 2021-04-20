@@ -1,5 +1,4 @@
 import {View, Platform} from 'react-native';
-import {scaleDp} from 'helpers/responsiveHelper';
 import React from 'react';
 
 export const getRotatedMarker = Platform.select({

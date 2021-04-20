@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {AppText} from 'components/ui/AppText';
@@ -14,9 +14,17 @@ export default ({navigation}) => {
   const dispatch = useDispatch();
   const {width, isMobile} = useWindowDimension();
 
+  useEffect(() => {
+    () => {
+      dispatch(cleanShipments());
+    };
+  }, []);
+
   const onPressButton = useCallback(() => {
     dispatch(cleanShipments());
   }, [navigation]);
+
+  // TODO: show shipment preview
 
   return (
     <Screen alignItems={isMobile ? 'center' : 'flex-start'}>

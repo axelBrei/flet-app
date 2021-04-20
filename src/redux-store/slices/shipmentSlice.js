@@ -7,10 +7,18 @@ import {
   createPositionCheckSelector,
   createStateCheckSelector,
 } from 'redux-store/customSelectors';
+import {
+  isCurrentShipment,
+  SHIPMENT_STATE,
+  SHIPMENT_STATE_ORDER,
+} from 'constants/shipmentStates';
 
 const initialState = {
   currentShipment: {},
-  lastShipments: [],
+  lastShipments: {
+    results: [],
+    pagination: {},
+  },
   driverPosition: {
     latitude: 0,
     longitude: 0,
@@ -38,7 +46,7 @@ const slice = createSlice({
   name: 'shipment',
   initialState,
   reducers: {
-    requestCancelShipment: (state) => {
+    requestCancelShipment: state => {
       state.loading.cancel = true;
       state.error.cancel = null;
     },
@@ -50,7 +58,7 @@ const slice = createSlice({
       state.loading.cancel = false;
       state.error.cancel = action.payload;
     },
-    requestDriverPosition: (state) => {
+    requestDriverPosition: state => {
       state.loading.driverPosition = true;
       state.error.driverPosition = null;
     },
@@ -65,7 +73,7 @@ const slice = createSlice({
       state.loading.driverPosition = true;
       state.error.driverPosition = action.payload;
     },
-    requestShipmentStatus: (state) => {
+    requestShipmentStatus: state => {
       state.loading.status = true;
       state.error.status = null;
     },
@@ -85,13 +93,16 @@ const slice = createSlice({
       state.driverPosition = initialState.driverPosition;
       state.shipmentStatus = initialState.shipmentStatus;
     },
-    requestLastShipments: (state) => {
+    requestLastShipments: state => {
       state.loading.history = true;
       state.error.history = null;
     },
     receiveLastShipmentsSuccess: (state, action) => {
       state.loading.history = false;
-      state.lastShipments = action.payload;
+      state.lastShipments = {
+        pagination: action.payload.pagination,
+        results: [...state.lastShipments.results, ...action.payload.results],
+      };
     },
     receiveLastShipmentsFail: (state, action) => {
       state.loading.history = false;
@@ -101,8 +112,9 @@ const slice = createSlice({
   extraReducers: {
     'newShipment/receiveNewShipmentSuccess': (state, action) => {
       state.currentShipment = action.payload;
+      state.shipmentStatus = null;
     },
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
@@ -135,7 +147,12 @@ export const fetchShipmentStatus = () => async (dispatch, getState) => {
   try {
     const {shipmentId, id} = selectCurrentShipment(getState());
     const {data} = await shipmentService.checkShipmentStatus(id || shipmentId);
-    dispatch(receiveShipmentStatusSuccess(data));
+
+    if (isCurrentShipment(data.status)) {
+      dispatch(cleanShipments());
+    } else {
+      dispatch(receiveShipmentStatusSuccess(data));
+    }
   } catch (e) {
     dispatch(receiveShipmentStatusFail(e?.response?.data?.message || e));
   }
@@ -164,18 +181,18 @@ export const fetchShipmentDriverPosition = () => async (dispatch, getState) => {
 export const cancelShipment = () => async (dispatch, getState) => {
   dispatch(requestCancelShipment());
   try {
-    const {shipmentId} = selectCurrentShipment(getState());
-    await shipmentService.cancelShipment(shipmentId);
+    const {shipmentId, shipment_id} = selectCurrentShipment(getState());
+    await shipmentService.cancelShipment(shipmentId || shipment_id);
     dispatch(receiveCancelShipmentSuccess());
   } catch (e) {
     dispatch(receiveCancelShipmentFail(e?.response?.data?.message || e));
   }
 };
 
-export const fetchLastShipments = () => async (dispatch) => {
+export const fetchLastShipments = (page, pageSize) => async dispatch => {
   dispatch(requestLastShipments());
   try {
-    const {data} = await shipmentService.getLastShipments();
+    const {data} = await shipmentService.getLastShipments(page, pageSize);
     dispatch(receiveLastShipmentsSuccess(data));
   } catch (e) {
     dispatch(receiveLastShipmentsFail(e?.response?.data?.message || e));
@@ -187,29 +204,33 @@ export const fetchLastShipments = () => async (dispatch) => {
  */
 
 export const selectCurrentShipment = createSelector(
-  (state) => state.shipment.currentShipment,
-  (s) => s,
+  state => state.shipment.currentShipment,
+  s => s,
 );
 
-export const selectIsLoadingShipmentStatus = (state) =>
+export const selectIsLoadingShipmentStatus = state =>
   state.shipment.loading.status;
 
 export const selectDriverPosition = createPositionCheckSelector(
-  (state) => state.shipment?.driverPosition,
-  (d) => d || {},
+  state => state.shipment?.driverPosition,
+  d => d || {},
 );
 export const selectCurrentShipmentStatus = createStateCheckSelector(
-  (state) => state.shipment?.shipmentStatus,
-  (s) => s || {},
+  state => state.shipment?.shipmentStatus,
+  selectCurrentShipment,
+  (s, currentShipment) => s || currentShipment || {},
 );
 
 export const selectCurrentShipmentStatusString = createStateCheckSelector(
-  (state) => state.shipment?.shipmentStatus,
-  (shipmentStatus) => shipmentStatus?.status,
+  state => state.shipment?.shipmentStatus,
+  shipmentStatus => shipmentStatus?.status,
 );
 
 // last shipments
-export const selectIsLoadingLastShipments = (state) =>
+export const selectIsLoadingLastShipments = state =>
   state.shipment.loading.history;
-export const selectLastShipmentsError = (state) => state.shipment.error.history;
-export const selectLastShipments = (state) => state.shipment.lastShipments;
+export const selectLastShipmentsError = state => state.shipment.error.history;
+export const selectLastShipmentsPagination = state =>
+  state.shipment.lastShipments.pagination;
+export const selectLastShipments = state =>
+  state.shipment.lastShipments.results;

@@ -22,7 +22,7 @@ export const Footer = () => {
     [],
   );
 
-  const openUrl = useCallback((url) => () => window.open(url, '_blank'), []);
+  const openUrl = useCallback(url => () => window.open(url, '_blank'), []);
   return (
     <ComponentContainer>
       <AppLogo size={12} color={theme.white} />
@@ -44,6 +44,7 @@ export const Footer = () => {
         <Container dir="row">
           {socialMedias.map(({name, url}) => (
             <IconButton
+              key={name}
               onPress={openUrl(url)}
               icon={name}
               size={20}

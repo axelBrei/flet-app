@@ -4,15 +4,15 @@ import {View, Animated, Platform} from 'react-native';
 import {theme} from 'constants/theme';
 
 export const AnimatedError = ({error, errorFontSize}) => {
-  const fontSize = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
   const position = useRef(new Animated.ValueXY({x: 0, y: -2})).current;
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fontSize, {
+      Animated.timing(opacity, {
         useNativeDriver: true,
         duration: 150,
-        toValue: 8,
+        toValue: error ? 1 : 0,
       }),
       Animated.timing(position, {
         useNativeDriver: true,
@@ -23,7 +23,7 @@ export const AnimatedError = ({error, errorFontSize}) => {
         },
       }),
     ]).start();
-  }, []);
+  }, [error]);
 
   return (
     <Container>
@@ -32,6 +32,7 @@ export const AnimatedError = ({error, errorFontSize}) => {
           width: '100%',
           color: theme.error,
           fontSize: errorFontSize || 8,
+          opacity,
           transform: [{translateX: position.x}, {translateY: position.y}],
         }}>
         {error}

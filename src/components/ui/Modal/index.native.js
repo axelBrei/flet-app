@@ -28,6 +28,7 @@ const Content = styled(View)`
   justify-content: center;
   border-radius: 8px;
   height: auto;
-  background-color: ${(props) => props.theme.colors.white};
+  width: auto;
+  background-color: ${props => props.theme.colors.white};
 `;
 //   padding: ${(props) => props.theme.scale(5)}px;

@@ -18,6 +18,7 @@ import {
   clearShipmentPrice,
   selectNewShipmentPrice,
   selectShipmentPriceError,
+  updateShipmentInsuranceData,
 } from 'redux-store/slices/newShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {CardContainer} from 'components/ui/CardContainer';
@@ -27,6 +28,7 @@ import {InsuranceCard} from 'components/navigation/NewShipmentConfirmationScreen
 import {PaymentMethodCard} from 'components/navigation/NewShipmentConfirmationScreen/PaymentMethodCard';
 import {MainButton} from 'components/ui/MainButton';
 import {ShipmentPrice} from 'components/navigation/NewShipmentConfirmationScreen/ShipmentPrice';
+import {routes} from 'constants/config/routes';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -42,8 +44,13 @@ export default ({navigation}) => {
   }, []);
 
   const onSubmit = useCallback(
-    (values) => {
-      dispatch(createNewShipment(values));
+    values => {
+      if (values[FIELDS.PAYMENT_METHOD]?.type === 'CARD') {
+        navigation.navigate(routes.paymentScreen);
+        dispatch(updateShipmentInsuranceData(values));
+      } else {
+        dispatch(createNewShipment(values));
+      }
     },
     [dispatch],
   );
@@ -59,8 +66,16 @@ export default ({navigation}) => {
   } = useFormikCustom(formikConfig(onSubmit));
 
   const onChangeInsurance = useCallback(
-    (val) => {
-      dispatch(fetchShipmentPrice({...values, [FIELDS.INSURANCE]: val}));
+    val => {
+      dispatch(
+        fetchShipmentPrice({
+          [FIELDS.PAYMENT_METHOD]: {
+            ...values,
+            type: 'CASH',
+          },
+          [FIELDS.INSURANCE]: val,
+        }),
+      );
       _setFieldValue(FIELDS.INSURANCE)(val);
     },
     [_setFieldValue, values],
@@ -137,7 +152,7 @@ const ShipmentInformationContainer = styled.View`
 
 const FormContainer = styled.View`
   background-color: ${theme.backgroundColor};
-  max-width: ${(props) => (props.theme.isMobile ? '100%' : '414px')};
+  max-width: ${props => (props.theme.isMobile ? '100%' : '414px')};
   align-items: center;
   width: 100%;
 `;

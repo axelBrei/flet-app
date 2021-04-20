@@ -9,8 +9,8 @@ import {useModalContext} from 'components/Hooks/useModal';
 
 export default ({onPressAccept}) => {
   const {closeModal} = useModalContext();
-  const [hour, setHour] = useState(12);
-  const [minute, setMinute] = useState(30);
+  const [hour, setHour] = useState('');
+  const [minute, setMinute] = useState('');
 
   const _onPressAccept = useCallback(() => {
     onPressAccept({hour, minute});
@@ -40,7 +40,7 @@ export default ({onPressAccept}) => {
 };
 
 const Container = styled.View`
-  width: ${(props) =>
+  width: ${props =>
     props.theme.isMobile ? `${props.theme.screenWidth}px` : '100%'};
   padding: 20px 20px 90px;
   background-color: ${theme.white};

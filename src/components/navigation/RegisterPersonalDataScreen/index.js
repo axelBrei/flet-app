@@ -16,6 +16,7 @@ import {
   selectIsLoadingRegister,
   selectRegisterError,
   selectRegisterDriverData,
+  registerDriverPersonalData,
 } from 'redux-store/slices/registerSlice';
 import {routes} from 'constants/config/routes';
 
@@ -27,8 +28,10 @@ export default ({navigation}) => {
   const savedData = useSelector(selectRegisterDriverData);
 
   const onSubmit = useCallback(
-    (values) => {
-      dispatch(registerUser(values, params?.driver));
+    values => {
+      dispatch(
+        (params.driver ? registerDriverPersonalData : registerUser)?.(values),
+      );
     },
     [dispatch, params],
   );

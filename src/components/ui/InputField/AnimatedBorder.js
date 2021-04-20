@@ -1,7 +1,6 @@
 import React, {useRef, useEffect, useMemo} from 'react';
 import {Animated, Platform} from 'react-native';
 import {theme} from 'constants/theme';
-import {scaleDp} from 'helpers/responsiveHelper';
 
 export const AnimatedBorder = ({focused, error}) => {
   const borderHeight = useRef(new Animated.Value(1)).current;

@@ -14,14 +14,14 @@ const defaultOptions = Platform.select({
   },
 });
 
-export const getCurrentPosition = async (options) =>
+export const getCurrentPosition = async options =>
   new Promise((resolve, reject) => {
     Platform.select({
       native: () => Geolocation.getCurrentPosition(resolve, reject, options),
       web: () => {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            (v) => {
+            v => {
               resolve({
                 coords: {
                   latitude: v.coords.latitude,
@@ -42,17 +42,26 @@ export const getCurrentPosition = async (options) =>
     })();
   });
 
+export const clearWebWatcher = watchNum =>
+  Platform.select({
+    native: () => {},
+    web: () => {
+      navigator.geolocation.clearWatch(watchNum);
+    },
+  })();
+
 export const trackUserPosition = Platform.select({
   web: (callback, error = () => {}, options = {}) => {
     if (!navigator.geolocation) {
       return error(new Error('Geolocation not available'));
     }
     const watchNumber = navigator.geolocation.watchPosition(
-      (v) => {
+      v => {
         if (!v.coords) {
           getCurrentPosition(options).then(callback).catch(error);
         }
         callback({
+          watchNumber,
           coords: {
             latitude: v.coords.latitude,
             longitude: v.coords.longitude,
@@ -113,7 +122,7 @@ export const getBearingFromCoords = (startCoords = {}, endCoords = {}) => {
   return (toDegrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
 };
 
-export const openMapsOnDevice = (location) => {
+export const openMapsOnDevice = location => {
   const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
   const latLng = `${location.latitude},${location.longitude}`;
   const label = 'Custom Label';

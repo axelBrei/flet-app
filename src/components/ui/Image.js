@@ -53,7 +53,7 @@ export const CustomImage = ({
 
   return (
     <ImageContainer classname={classname} {...props}>
-      {loading ? <Loader loading={true} size={20} /> : renderImage()}
+      {loading ? <Loader loading={true} size="small" /> : renderImage()}
     </ImageContainer>
   );
 };

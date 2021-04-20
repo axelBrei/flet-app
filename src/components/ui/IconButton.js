@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {Icon} from 'components/ui/Icon';
 import {TouchableOpacity} from 'react-native';
 import {theme} from 'constants/theme';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import PropTypes from 'prop-types';
 
 export const IconButton = ({
@@ -19,10 +18,10 @@ export const IconButton = ({
   const buttonStyle = useMemo(() => {
     if (inverted) {
       return {
-        color: theme.accentColor,
+        color: props.color || theme.primaryDarkColor,
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: props.borderColor || theme.accentColor,
+        borderColor: props.borderColor || theme.primaryDarkColor,
       };
     }
     if (alternative) {
@@ -43,7 +42,7 @@ export const IconButton = ({
       {...props}>
       <Icon
         name={icon}
-        size={scaleDp(size)}
+        size={size}
         color={props.iconColor || buttonStyle?.color || theme.white}
       />
     </ButtonContainer>
@@ -51,7 +50,7 @@ export const IconButton = ({
 };
 
 IconButton.defaultProps = {
-  color: theme.accentColor,
+  color: theme.primaryDarkColor,
   onPress: () => {},
   size: 18,
   alternative: false,
@@ -67,11 +66,11 @@ IconButton.propTypes = {
 };
 
 const ButtonContainer = styled(TouchableOpacity)`
-  padding: ${(props) => props.padding || scaleDpTheme(8)};
-  border-radius: ${(props) =>
+  padding: ${props => props.padding || 8}px;
+  border-radius: ${props =>
     (typeof props.radius === 'string' ? `${props.radius}px` : props.radius) ||
-    scaleDpTheme(10)};
-  background-color: ${(props) => props?.backgroundColor || theme.accentColor};
-  border-width: ${(props) => scaleDp(props?.borderWidth || 0)}px;
-  border-color: ${(props) => props.borderColor || theme.accentColor};
+    '10px'};
+  background-color: ${props => props?.backgroundColor || theme.primaryColor};
+  border-width: ${props => props?.borderWidth || 0}px;
+  border-color: ${props => props.borderColor || theme.primaryColor};
 `;

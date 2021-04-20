@@ -14,9 +14,9 @@ import {DriverStack} from 'components/navigation/DriverStack';
 import {Platform} from 'react-native';
 import PageNotFound from 'components/navigation/PageNotFound';
 import {Icon} from 'components/ui/Icon';
-import ProfileScreen from 'components/navigation/ProfileScreen';
+import ProfileStack from 'components/navigation/ProfileStack';
 
-const getIconForRoute = (routeName) => {
+const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
       return 'home';
@@ -24,7 +24,9 @@ const getIconForRoute = (routeName) => {
       return 'handshake';
     case 'ultimospedidos':
       return 'truck';
-    case 'perfil':
+    case routes.balanceStack:
+      return 'wallet';
+    case routes.profileStack:
       return 'account';
     default:
       return 'account-question';
@@ -101,19 +103,33 @@ export default () => {
           title: 'Inicio',
         }}
       />
+      {userData?.isDriver ? (
+        <Screen
+          name={routes.balanceStack}
+          getComponent={() =>
+            require('components/navigation/BalanceStack').default
+          }
+          options={{
+            title: 'Balance',
+          }}
+        />
+      ) : (
+        <Screen
+          name={routes.lastShippmentsScreen}
+          getComponent={() =>
+            require('components/navigation/LastShipmentsScreen').default
+          }
+          options={{
+            title: 'Mis pedidos',
+            headerShown: false,
+          }}
+        />
+      )}
       <Screen
-        name={routes.lastShippmentsScreen}
+        name={routes.profileStack}
         getComponent={() =>
-          require('components/navigation/LastShipmentsScreen').default
+          require('components/navigation/ProfileStack').default
         }
-        options={{
-          title: 'Mis pedidos',
-          headerShown: false,
-        }}
-      />
-      <Screen
-        name={routes.profileScreen}
-        component={ProfileScreen}
         options={{
           title: 'Mi perfil',
         }}

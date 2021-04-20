@@ -6,13 +6,13 @@ import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {Row} from 'components/ui/Row';
 import dayjs from 'dayjs';
 
-export const ShipmentStagesDescriptor = (point) => () => {
+export const ShipmentStagesDescriptor = point => () => {
   const arrivalTime = useMemo(() => {
-    const time = dayjs(point.duration);
+    const time = dayjs(point?.duration);
     return `${time.format('HH:mm')} - ${time
       .add(10, 'minute')
       .format('HH:mm')}`;
-  }, [point.duration]);
+  }, [point]);
 
   return (
     <>
@@ -22,7 +22,7 @@ export const ShipmentStagesDescriptor = (point) => () => {
       </StaticInputField>
       <Row>
         <StaticInputField style={{width: '45%'}} label="Distancia">
-          {Math.round(point.distance / 1000)} Km
+          {Math.round(point?.distance / 1000)} Km
         </StaticInputField>
         <StaticInputField style={{width: '45%'}} label="Llegas a las">
           {arrivalTime} Hs.

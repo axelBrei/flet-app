@@ -5,7 +5,7 @@
   "private": true,
   "proxy": "http://localhost:3000",
   "scripts": {
-    "start:web:dev": "webpack serve --progress --env=dev --color --mode development --config ./webpack.config.js",
+    "start:web:dev": "webpack serve --progress --env=dev --color --mode development --host 0.0.0.0 --config ./webpack.config.js",
     "start:web:prod": "webpack serve --progress --env=prod --color --mode production --config ./webpack.config.js",
     "start:android": "npx react-native run-android",
     "start:ios": "npx react-native run-ios",
@@ -14,9 +14,11 @@
     "pull-web-enviorment": "chmod +x ./pullEnviorment.sh && ./pullEnviorment.sh",
     "build:web:prod": "webpack --mode production --env=prod",
     "cleanAndroid": "cd android && rm -rf app/build && ./gradlew clean && cd ..",
-    "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors"
+    "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors",
+    "postinstall": "node ./node_modules/@darron1217/react-native-background-geolocation/scripts/postlink.js"
   },
   "dependencies": {
+    "@darron1217/react-native-background-geolocation": "^0.6.6",
     "@mapbox/polyline": "^1.1.1",
     "@miblanchard/react-native-slider": "^1.5.0",
     "@react-google-maps/api": "^2.0.2",
@@ -33,6 +35,7 @@
     "dayjs": "^1.9.6",
     "dotenv-webpack": "^7.0.2",
     "fbjs": "^3.0.0",
+    "form-data": "^2.3.3",
     "formik": "^2.2.5",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
@@ -53,6 +56,7 @@
     "react-native-svg-web": "^1.0.9",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "^0.15.0",
+    "react-native-webview": "^11.3.2",
     "react-redux": "^7.2.2",
     "redux-persist": "^6.0.0",
     "reselect": "^4.0.0",

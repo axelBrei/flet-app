@@ -45,8 +45,8 @@ export const VehicleSizes = () => {
         justifyContent="space-between"
         width="100%">
         {list.map(({title, Icon}) => (
-          <Hoverable>
-            {(isHovered) => (
+          <Hoverable key={title}>
+            {isHovered => (
               <VehicleItemContainer hover={isHovered}>
                 <Icon height={scaleDp(50)} width={scaleDp(50)} />
                 <AppText>{title}</AppText>
@@ -74,5 +74,5 @@ const VehicleItemContainer = styled(Container)`
   min-width: 150px;
   min-height: 150px;
   transition: all 100ms linear;
-  transform: scale(${(props) => (props.hover ? 1.1 : 1)});
+  transform: scale(${props => (props.hover ? 1.1 : 1)});
 `;

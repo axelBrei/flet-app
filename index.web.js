@@ -2,7 +2,6 @@ import React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './src/App';
 import {name as appName} from './package.json';
-import {register} from 'serviceWorkerConfig.web';
 import WebFont from 'webfontloader';
 
 Object.assign(process.env, {
@@ -68,5 +67,5 @@ if (checkIsIOS()) {
 
 // PWA
 if (process.env.NODE_ENV !== 'development') {
-  register();
+  require('./src/serviceWorkerConfig.web').register();
 }

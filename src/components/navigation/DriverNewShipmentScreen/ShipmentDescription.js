@@ -45,7 +45,9 @@ export const ShipmentDescription = () => {
   return (
     <Container>
       <Component />
-      {status === SHIPMENT_STATE.COURRIER_CONFIRMED && (
+      {[SHIPMENT_STATE.COURRIER_CONFIRMED, SHIPMENT_STATE.ON_PROCESS].includes(
+        status,
+      ) && (
         <MainButton fontSize={13} inverted onPress={onPressOpenMaps}>
           Abrir app de mapas
         </MainButton>

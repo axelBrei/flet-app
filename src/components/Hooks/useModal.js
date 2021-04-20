@@ -1,9 +1,14 @@
 import React, {createContext, useState, useContext, useCallback} from 'react';
 import {theme} from 'constants/theme';
 import {Modal} from 'components/ui/Modal';
+import {Platform} from 'react-native';
 
 const ModalContext = createContext({});
-export const useModal = (Content, contentProps, modalProps) => {
+export const useModal = (
+  Content,
+  {contentStyle = {borderRadius: 20}, ...contentProps},
+  modalProps,
+) => {
   const [extraParams, setExtraParams] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -35,16 +40,18 @@ export const useModal = (Content, contentProps, modalProps) => {
           isVisible={isVisible}
           onBackdropPress={!modalProps?.cancelable ? () => {} : closeModal}
           closeModal={closeModal}
+          contentStyle={contentStyle || props.contentStyle}
+          {...modalProps}
           style={[
-            {backgroundColor: theme.white},
+            Platform.OS === 'web' && {backgroundColor: theme.white},
+            contentStyle,
             modalProps?.fullscreen && {
               marginHorizontal: 0,
               marginTop: 35,
               marginBottom: 0,
               justifyContent: 'flex-end',
             },
-          ]}
-          {...modalProps}>
+          ]}>
           <ModalContext.Provider
             value={{
               closeModal,

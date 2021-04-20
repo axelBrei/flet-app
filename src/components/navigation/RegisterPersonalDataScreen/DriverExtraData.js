@@ -31,14 +31,6 @@ export const DriverExtraData = ({
       error={touched[FIELDS.DATE_OF_BIRTH] && errors[FIELDS.DATE_OF_BIRTH]}
       onSelectDay={setFieldValue(FIELDS.DATE_OF_BIRTH)}
     />
-    <InputField
-      label="CBU para depositar"
-      keyboardType="numeric"
-      value={values[FIELDS.BANK]}
-      onBlur={setFieldTouched(FIELDS.BANK)}
-      error={touched[FIELDS.BANK] && errors[FIELDS.BANK]}
-      onChangeText={setFieldValue(FIELDS.BANK)}
-    />
     <SelectImage
       label="Foto tuya de frente"
       value={values[FIELDS.PROFILE_PIC]}

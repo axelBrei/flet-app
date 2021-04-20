@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components';
 import {ActivityIndicator, Platform} from 'react-native';
 import {AppText} from 'components/ui/AppText';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {MainButton} from 'components/ui/MainButton';
 import {TextLink} from 'components/ui/TextLink';
 import {theme} from 'constants/theme';
@@ -31,7 +30,7 @@ const strings = {
   reject: 'Rechazar',
 };
 
-const getDistanceIfKm = (distance) => {
+const getDistanceIfKm = distance => {
   if (distance > 999) {
     return `${(distance / 1000).toString().substring(0, 4)} Km.`;
   }
@@ -60,7 +59,7 @@ export const NewTripModalContent = ({
   }, [submited, loading, error, closeModal]);
 
   const onPressResponse = useCallback(
-    (action) => () => {
+    action => () => {
       action?.();
       setSubmited(true);
     },
@@ -102,22 +101,10 @@ export const NewTripModalContent = ({
       <IconCard
         reverse
         reduced
-        renderImage={(size) => (
+        renderImage={size => (
           <PackageImage height={size - 20} width={size - 20} />
         )}>
         <Title alternative>Paquete</Title>
-        <RowWithBoldData
-          label="Alto"
-          data={`${shipment?.package?.height} Cm.`}
-        />
-        <RowWithBoldData
-          label="Ancho"
-          data={`${shipment?.package?.height} Cm.`}
-        />
-        <RowWithBoldData
-          label="Largo"
-          data={`${shipment?.package?.height} Cm.`}
-        />
         <RowWithBoldData
           numberOfLines={1}
           label="Desc."
@@ -127,7 +114,7 @@ export const NewTripModalContent = ({
       <IconCard
         reverse
         reduced
-        renderImage={(size) => (
+        renderImage={size => (
           <DestinationImage height={size - 25} width={size - 25} />
         )}>
         <Title alternative>Destino</Title>
@@ -179,21 +166,8 @@ const Row = styled.View`
   margin: 10px 0;
 `;
 
-const ContentContainer = styled(Container)`
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: ${scaleDpTheme(10)};
-`;
-
-const ButtonsContainer = styled(Container)`
-  margin-top: ${scaleDpTheme(10)};
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
-
 const Button = styled(MainButton)`
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${props => props.backgroundColor};
   padding: 10px;
   width: 45%;
   margin-top: 10px;

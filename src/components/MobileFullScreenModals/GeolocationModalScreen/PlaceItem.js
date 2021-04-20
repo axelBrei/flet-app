@@ -26,7 +26,7 @@ const Text = styled(AppText)`
 
 const Button = styled(TouchableOpacity)`
   min-width: 100%;
-  padding: 0 20px 10px;
+  padding: 15px 20px;
   border-bottom-width: 0.5px;
   border-color: ${theme.lightGray};
 `;

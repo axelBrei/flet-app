@@ -23,7 +23,7 @@ export default ({closeModal, onPressItem, selectedInsurance}) => {
   }, []);
 
   const _onPressItem = useCallback(
-    (item) => () => {
+    item => () => {
       onPressItem(item);
       closeModal();
     },
@@ -36,7 +36,7 @@ export default ({closeModal, onPressItem, selectedInsurance}) => {
         selected={selectedInsurance?.id === item?.id}
         index={index}
         {...item}
-        onPress={(value) => _onPressItem({...item, value})}
+        onPress={value => _onPressItem({...item, value})}
       />
     ),
     [selectedInsurance, _onPressItem],
@@ -44,7 +44,7 @@ export default ({closeModal, onPressItem, selectedInsurance}) => {
 
   return (
     <FullScreenModalContainer title="Seleccioná una opcion:">
-      <Loader loading={isLoading}>
+      <Loader loading={isLoading} size="large">
         <FlatList
           keyExtractor={(_, i) => i.toString()}
           data={list}

@@ -46,6 +46,7 @@ export const Benefits = () => {
           {benefits.map(({title, Icon}) => {
             return (
               <Container
+                key={title}
                 dir="row"
                 alignItems="flex-start"
                 justifyContent="flex-start"

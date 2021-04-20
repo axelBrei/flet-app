@@ -17,6 +17,7 @@ export const persistConfig = {
   storage: AsyncStorage,
   blacklist: [
     'geocoding',
+    'shipment',
     process.env.NODE_ENV !== 'development' && 'navigation',
   ],
 };
@@ -27,6 +28,7 @@ const store = configureStore({
   devTools: true,
   middleware: getDefaultMiddleware({
     serializableCheck: false,
+    immutableCheck: ['register/receiveCourrierVehicleDataSuccess'],
     // serializableCheck: {
     //   ignoredActions: [
     //     FLUSH,

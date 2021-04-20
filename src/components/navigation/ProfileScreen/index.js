@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+import {routes} from 'constants/config/routes';
 import styled, {css} from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import {LogoutButton} from 'components/ui/LogoutButton';
@@ -10,6 +11,9 @@ import {UserHeader} from 'components/navigation/ProfileScreen/UserHeader';
 import {MenuItem} from 'components/navigation/ProfileScreen/MenuItem';
 import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
+import TelephoneModal from 'components/navigation/ProfileScreen/ModalContents/TelephoneModal';
+import {PersonalDataModal} from 'components/navigation/ProfileScreen/ModalContents/PersonalDataModal';
+import {useNavigation} from '@react-navigation/native';
 
 const data = [
   {
@@ -17,31 +21,26 @@ const data = [
     data: [
       {
         name: 'Datos personales',
-        redirectTo: null,
+        modal: PersonalDataModal,
       },
       {
         name: 'Teléfonos',
-        redirectTo: null,
+        modal: TelephoneModal,
       },
       {
         name: 'Mis vehiculos',
         redirectTo: null,
+        driverOnly: true,
       },
       {
         name: 'Mis direcciones',
-        redirectTo: null,
+        redirectTo: routes.userAddressUpdateScreen,
       },
-    ],
-  },
-  {
-    name: 'Facturación',
-    data: [
-      {name: 'Mi balance', redirectTo: null},
-      // {name: 'Horario predeterminado', redirectTo: null},
     ],
   },
   {
     name: 'Navegacion',
+    driverOnly: true,
     data: [
       {name: 'Mapa predeterminado', redirectTo: null},
       // {name: 'Horario predeterminado', redirectTo: null},
@@ -50,12 +49,35 @@ const data = [
 ];
 
 export default () => {
+  const navigation = useNavigation();
   const {isMobile} = useWindowDimension();
   const {isDriver} = useUserData();
 
-  const renderItem = ({item, separators}) => <MenuItem {...item} />;
+  const onPressItem = useCallback(
+    ({redirectTo}) => redirectTo && navigation.navigate(redirectTo),
+    [navigation],
+  );
+
+  const renderItem = ({item}) => (
+    <MenuItem {...item} onPressItem={onPressItem} />
+  );
   const renderHeader = ({section}) => (
     <SectionHeader>{section.name}</SectionHeader>
+  );
+
+  const filteredList = data.reduce(
+    (acc, curr) => [
+      ...acc,
+      ...(!isDriver && curr.driverOnly
+        ? []
+        : [
+            {
+              ...curr,
+              data: curr.data.filter(i => isDriver || !i.driverOnly),
+            },
+          ]),
+    ],
+    [],
   );
 
   return (
@@ -67,7 +89,7 @@ export default () => {
       <ContentContainer>
         <SectionList
           keyExtractor={(_, i) => i.toString()}
-          sections={data}
+          sections={filteredList}
           renderItem={renderItem}
           renderSectionHeader={renderHeader}
           ItemSeparatorComponent={SeparatorComponent}
@@ -90,7 +112,7 @@ const CenterContainer = styled.View`
   width: 100%;
   align-self: flex-start;
 
-  ${(props) =>
+  ${props =>
     Platform.OS === 'web' &&
     !props.theme.isMobile &&
     css`
@@ -103,7 +125,7 @@ const ContentContainer = styled.View`
 `;
 
 const SectionList = styled.SectionList`
-  ${(props) =>
+  ${props =>
     Platform.OS === 'web' &&
     !props.theme.isMobile &&
     css`

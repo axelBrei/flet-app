@@ -1,21 +1,25 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import {Screen} from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 import {Loader} from 'components/ui/Loader';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
+import {useFocusEffect} from '@react-navigation/native';
 import {decodeDirections, trackUserPosition} from 'helpers/locationHelper';
-import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
-import {theme} from 'constants/theme';
-import {Container} from 'components/ui/Container';
+import {
+  fetchCurrentShipment,
+  selectDriverShipmentData,
+  selectPendingShipmentError,
+} from 'redux-store/slices/driverShipmentSlice';
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
 import {updatePosition} from 'redux-store/slices/driverSlice';
 import {ShipmentDescription} from 'components/navigation/DriverNewShipmentScreen/ShipmentDescription';
+import {Alert} from 'react-native';
 
 export default ({}) => {
   const dispatch = useDispatch();
+  const currentShipmentError = useSelector(selectPendingShipmentError);
   const [directions, setDirections] = useState([]);
   const {loading: loadingPermissions, status, check} = usePermission(
     [PERMISSIONS.location],
@@ -23,11 +27,15 @@ export default ({}) => {
   );
   const shipment = useSelector(selectDriverShipmentData);
 
-  const {
-    markersList,
-    loadingMakers,
-    loadingMessage,
-  } = useMarkerList((position) => dispatch(updatePosition(position)));
+  useEffect(() => {
+    return () => {
+      currentShipmentError && Alert.alert('El cliente canceló el envio');
+    };
+  }, [currentShipmentError]);
+
+  const {markersList, loadingMakers, loadingMessage} = useMarkerList(position =>
+    dispatch(updatePosition(position)),
+  );
 
   useEffect(() => {
     if (shipment?.polyline && directions.length === 0) {
@@ -40,6 +48,17 @@ export default ({}) => {
       check();
     }
   }, [loadingPermissions, status, check]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const num = setInterval(() => {
+        dispatch(fetchCurrentShipment());
+      }, 6000);
+      return () => {
+        clearInterval(num);
+      };
+    }, []),
+  );
 
   return (
     <ScreenComponent>

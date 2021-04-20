@@ -33,7 +33,7 @@ export const Screen = ({
     return styled(
       Platform.OS !== 'web' && !removeTWF ? TouchableWithoutFeedback : View,
     )`
-      background-color: ${(props) => props.theme.colors.white};
+      background-color: ${props => props.theme.colors.white};
       height: 100%;
       width: 100%;
     `;

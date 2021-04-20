@@ -6,22 +6,28 @@ const loginAs = async (email, password) =>
     password,
   });
 
-const registerNewUser = async (user) => await api.put('user', user);
+const registerNewUser = async user => await api.put('user', user);
 
 const registerCourrierPersonalData = async (personalData, token) =>
   await api.put('courrier', personalData, {
     headers: {
+      'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
+    },
+    timeout: 10000,
+  });
+
+const registerCourrierVehicleData = async vehicleData =>
+  await api.put('courrier/vehicle', vehicleData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
     },
   });
 
-const registerCourrierVehicleData = async (vehicleData) =>
-  await api.put('courrier/vehicle', vehicleData);
-
-const registerCourrierLegalData = async (legalData) =>
-  await api.put('courrier/legal', legalData, {
+const registerCourrierLegalData = async form =>
+  await api.put('courrier/legal', form, {
     headers: {
-      // 'Content-Type': 'form/data',
+      'Content-Type': 'multipart/form-data',
     },
   });
 

@@ -20,9 +20,7 @@ const SelectImage = ({
   useEffect(() => {
     try {
       PermissionManager.checkPermissions([PermissionManager.camera]);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   }, []);
 
   const fileOnChange = useCallback(

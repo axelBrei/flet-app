@@ -6,7 +6,7 @@ import {TransitionPresets} from '@react-navigation/stack';
 
 const {width} = Dimensions.get('screen');
 const isMobile = width <= 800 || Platform.OS !== 'web';
-export const navigationConfig = (props = {}) => ({
+export const navigationConfig = ({title, ...props} = {}) => ({
   headerBackTitleVisible: false,
   animationEnabled: isMobile,
   ...(isMobile && TransitionPresets.SlideFromRightIOS),
@@ -16,14 +16,17 @@ export const navigationConfig = (props = {}) => ({
   },
   ...Platform.select({
     web: {
-      headerTitleStyle: {display: 'none'},
-      headerLeft: (props) => <CustomHeaderBackButton {...props} />,
-      title: '',
-    },
-    native: {
-      headerTintColor: theme.fontColor,
+      headerLeft: props => <CustomHeaderBackButton {...props} />,
     },
   }),
+  ...(isMobile
+    ? {
+        headerTintColor: theme.white,
+      }
+    : {
+        headerTitleStyle: {display: 'none'},
+        title: '',
+      }),
   cardStyle: {
     backgroundColor: 'white',
   },

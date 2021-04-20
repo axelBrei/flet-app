@@ -63,7 +63,6 @@ export const configureAuthInterceptor = store => {
           await store.dispatch(loginAs(email, pass));
           await api.request(err.config);
         } catch (e) {
-          console.log('relogin fail', e);
           Promise.reject(err);
         }
       }

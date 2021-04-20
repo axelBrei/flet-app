@@ -21,7 +21,6 @@ export const NewPhoneForm = ({onSubmit}) => {
   const error = useSelector(selectUpdateTelephonesError);
 
   const onSubmitForm = useCallback(values => {
-    console.log(values);
     dispatch(fetchAddTelephone(values));
   }, []);
 

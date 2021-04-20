@@ -65,13 +65,14 @@ const calculateREMforWeb = ({width, height}) => {
   return remValue * (width > 1300 ? 1.23 : 1);
 };
 
-export const calcRem = (dim) =>
+export const calcRem = dim =>
   dim.width >= 750 ? calculateREMforWeb(dim) : calculateREMforDevice(dim);
 
-export const scaleDp = (dp) => {
-  const dim = Dimensions.get('window');
-  const rem = calcRem(dim);
-  return Math.round(100 * dp * (rem || 1)) / 100;
-};
+export const scaleDp = dp => dp;
+// {
+//   const dim = Dimensions.get('window');
+//   const rem = calcRem(dim);
+//   return Math.round(100 * dp * (rem || 1)) / 100;
+// };
 
-export const scaleDpTheme = (size) => `${scaleDp(size)}px`;
+export const scaleDpTheme = size => `${size}px`; //`${scaleDp(size)}px`;

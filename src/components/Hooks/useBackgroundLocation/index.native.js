@@ -62,12 +62,8 @@ export default (
       postTemplate: config.body,
     });
 
-    BackgroundGeolocation.on('start', () => console.log('start'));
-    BackgroundGeolocation.on('stop', () => console.log('stop'));
-
     BackgroundGeolocation.on('location', location => {
       BackgroundGeolocation.startTask(taskKey => {
-        console.log('location', location);
         onLocationObtained?.(location).then(t => {
           BackgroundGeolocation.endTask(taskKey);
         });

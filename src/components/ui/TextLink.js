@@ -5,9 +5,9 @@ import {theme} from 'constants/theme';
 
 export const TextLink = styled(AppText)`
   text-decoration: underline;
-  font-size: ${(props) => scaleDp(props.fontSize)}px;
-  color: ${(props) => props.color || theme.fontColor};
-  text-decoration-color: ${(props) => props.color || theme.fontColor};
+  font-size: ${props => props.fontSize}px;
+  color: ${props => props.color || theme.fontColor};
+  text-decoration-color: ${props => props.color || theme.fontColor};
 `;
 
 TextLink.defaultProps = {

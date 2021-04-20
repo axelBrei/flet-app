@@ -16,7 +16,6 @@ export default () => {
   const error = useSelector(selectNewShipmentError);
 
   const onPaymentSubmited = useCallback(paymentMethod => {
-    console.log(paymentMethod);
     dispatch(
       createNewShipment({
         paymentMethod: {

@@ -58,7 +58,6 @@ export const updatePersonalData = updateData => async (dispatch, getState) => {
     await personalDataService.updatePersonalData(updateData);
     dispatch(receiveUpdatePersonalDataSuccess(updateData));
   } catch (e) {
-    console.log({...e});
     dispatch(receiveUpdatePersonalDataFail(e.response?.data?.message || e));
   }
 };

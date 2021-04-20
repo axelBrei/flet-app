@@ -67,7 +67,6 @@ export default ({navigation}) => {
 
   const onChangeInsurance = useCallback(
     val => {
-      console.log(val);
       dispatch(
         fetchShipmentPrice({
           [FIELDS.PAYMENT_METHOD]: {

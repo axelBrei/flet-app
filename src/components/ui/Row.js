@@ -9,5 +9,10 @@ export const Row = styled.View`
 `;
 
 export const CenteredRow = styled(Row)`
-  justify-content: center;
+  justify-content: center !important;
+  align-items: center;
+`;
+
+export const Column = styled.View`
+  flex-direction: column;
 `;

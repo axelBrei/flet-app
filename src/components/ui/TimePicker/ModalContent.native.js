@@ -55,7 +55,6 @@ export default ({onPressAccept}) => {
     if (!item) {
       res = index < 2 ? '1' : '24';
     }
-    console.log(res);
     res && setHour(res);
   });
 

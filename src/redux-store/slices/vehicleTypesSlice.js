@@ -48,7 +48,6 @@ export const fetchVehicleTypes = () => async dispatch => {
     const {data} = await vehiclesTypesService.fetchVehivleTypes();
     dispatch(receiveVehicleTypesSuccess(data?.results));
   } catch (e) {
-    console.log(e);
     dispatch(receiveVehicleTypesFail(e?.response?.message || e));
   }
 };

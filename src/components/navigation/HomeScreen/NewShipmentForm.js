@@ -21,13 +21,18 @@ import {
 import {useModal} from 'components/Hooks/useModal';
 import GeolocationFilterModal from 'components/MobileFullScreenModals/GeolocationModalScreen';
 import {Title} from 'components/ui/Title';
+import {fetchUserAddresses} from 'redux-store/slices/personalData/addressSlice';
 
 export const NewShipmentForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchUserAddresses());
+  }, []);
+
   const onSubmit = useCallback(
-    (values) => {
+    values => {
       dispatch(updateNewShipmentLocations(values));
       navigation.navigate(routes.newShipmentPackageDetailScreen);
     },
@@ -55,6 +60,7 @@ export const NewShipmentForm = () => {
     {
       onPressItem: onSelectPoint,
       values: values,
+      allowFavorites: true,
     },
     {
       avoidKeyboard: false,
@@ -63,7 +69,7 @@ export const NewShipmentForm = () => {
   );
 
   const toggleModal = useCallback(
-    (field) => () => {
+    field => () => {
       toggle({field});
       _setFieldTouched(field);
       return true;
@@ -72,7 +78,7 @@ export const NewShipmentForm = () => {
   );
 
   const clearInput = useCallback(
-    (fieldName) => (t) => {
+    fieldName => t => {
       if (t === '') {
         _setFieldValue(fieldName)(null);
       }
@@ -111,7 +117,7 @@ export const NewShipmentForm = () => {
 
 NewShipmentForm.defaultProps = {
   open: () => {},
-  close: (cb) => {
+  close: cb => {
     cb && cb();
   },
   onSelectStartPoint: () => {},

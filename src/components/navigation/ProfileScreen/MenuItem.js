@@ -15,7 +15,7 @@ export const MenuItem = ({name, onPressItem, ...props}) => {
   );
 
   const onPress = useCallback(() => {
-    onPressItem?.();
+    onPressItem?.({name, ...props});
     open();
   }, [open]);
 

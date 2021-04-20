@@ -144,7 +144,6 @@ export const registerDriverPersonalData = (
       }),
     );
   } catch (e) {
-    console.log(e);
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -178,7 +177,6 @@ export const registerDriverVehicleData = vehicleData => async (
     await loginService.registerCourrierVehicleData(form);
     dispatch(receiveCourrierVehicleDataSuccess(vehicleData));
   } catch (e) {
-    console.log(e);
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -208,7 +206,6 @@ export const registerDriverLegaleData = legalData => async (
     await loginService.registerCourrierLegalData(form);
     dispatch(receiveCourrierLegaldataSuccess());
   } catch (e) {
-    console.log(e);
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };

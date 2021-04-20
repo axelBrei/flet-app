@@ -12,7 +12,6 @@ export default ({uri, closeModal}) => {
 
   const onShouldStartLoadWithRequest = request => {
     if (firstLoad) return true;
-    console.log('alerta', request);
     return true;
   };
 
@@ -41,14 +40,6 @@ export default ({uri, closeModal}) => {
         renderLoading={() => <Loader loading />}
         onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
         source={{uri}}
-        onError={e => console.log('error', e)}
-        onHttpError={() => console.log('httpError')}
-        onMessage={() => console.log('message')}
-        onNavigationStateChange={e => console.log('navigation state change', e)}
-        onContentProcessDidTerminate={() =>
-          console.log('content process terminate')
-        }
-        onRenderProcessGone={() => console.log('render process gone')}
       />
 
       <IconButton name="close" size={22} onPress={closeModal}>

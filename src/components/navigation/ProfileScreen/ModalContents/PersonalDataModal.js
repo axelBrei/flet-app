@@ -17,7 +17,7 @@ import {AnimatedError} from 'components/ui/AnimatedError';
 
 const FIELDS = {
   NAME: 'name',
-  LAST_NAME: 'last_name',
+  LAST_NAME: 'lastName',
   EMAIL: 'email',
 };
 const defaultSchema = yup.string().required();
@@ -66,7 +66,6 @@ export const PersonalDataModal = ({closeModal}) => {
   });
 
   useEffect(() => {
-    console.log(submited, isLoading, error);
     if (submited && !isLoading && !error) {
       closeModal();
     }

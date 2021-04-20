@@ -11,40 +11,46 @@ import {scaleDp} from 'helpers/responsiveHelper';
 import {getRotatedMarker} from 'components/ui/Map/helper';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import useBackgroundLocation from 'components/Hooks/useBackgroundLocation/index';
+import {updatePosition} from 'redux-store/slices/driverSlice';
+import {useIsFocused} from '@react-navigation/native';
 
-export const useMarkerList = (updatePosition) => {
+export const useMarkerList = updatePosition => {
+  const isFocused = useIsFocused();
   const [lastUserPosition, setLastUserPosition] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directionsMakers, setDirectionsMakers] = useState(null);
   const [currentPositionMarker, setCurrenPositionMarker] = useState(null);
   const shipment = useSelector(selectDriverShipmentData);
+  const courrierVehicle = useSelector(
+    s => s.login.userData?.courrier?.vehicle[0],
+  );
 
-  useEffect(() => {
-    const get = async () => {
-      const pos = await getCurrentPosition();
-      updatePosition(pos.coords);
-    };
-    get();
-  }, []);
-
-  useEffect(() => {
-    return trackUserPosition(
-      (position) => {
-        if (position.coords.latitude !== currentLocation?.latitude) {
-          setLastUserPosition(currentLocation);
-          setCurrentLocation(position.coords);
+  const {enable, disable} = useBackgroundLocation(
+    loc =>
+      new Promise(resolve => {
+        setCurrentLocation(loc);
+        if (loc?.latitude && Platform.OS === 'web') {
           updatePosition(position.coords);
         }
+        resolve();
+      }),
+    {
+      interval: 10 * 1000,
+      fastestInterval: 5 * 1000,
+      activitiesInterval: 10 * 1000,
+      url: 'courrier/position',
+      body: {
+        latitude: '@latitude',
+        longitude: '@longitude',
+        vehicle_id: courrierVehicle?.id,
       },
-      async (e) => {
-        const pos = await getCurrentPosition();
-        setLastUserPosition(currentLocation || pos.coords);
-        setCurrentLocation(pos.coords);
-        updatePosition(pos.coords);
-      },
-      {useSignificantChanges: true}, // avoids refresh every second
-    );
-  }, [currentLocation]);
+    },
+  );
+
+  useEffect(() => {
+    isFocused ? enable() : disable();
+  }, [isFocused]);
 
   const orientation = useMemo(() => {
     if (currentLocation) {

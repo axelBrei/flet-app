@@ -6,7 +6,7 @@ import {Platform} from 'react-native';
 const ModalContext = createContext({});
 export const useModal = (
   Content,
-  {contentStyle, ...contentProps},
+  {contentStyle = {borderRadius: 20}, ...contentProps},
   modalProps,
 ) => {
   const [extraParams, setExtraParams] = useState(null);

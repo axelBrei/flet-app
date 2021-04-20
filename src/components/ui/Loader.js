@@ -50,6 +50,7 @@ Loader.defaultProps = {
   loading: false,
   size: 'small',
   unmount: true, // unmount children while loading,
+  children: <></>,
 };
 Loader.propTypes = {
   size: PropTypes.string,

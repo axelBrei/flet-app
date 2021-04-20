@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
@@ -29,7 +29,6 @@ export default () => {
   const {isMobile} = useWindowDimension();
   const currentShipment = useSelector(selectCurrentShipment);
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
-
   return (
     <Navigator
       screenOptions={navigationConfig({

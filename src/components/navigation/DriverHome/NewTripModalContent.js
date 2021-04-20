@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components';
 import {ActivityIndicator, Platform} from 'react-native';
 import {AppText} from 'components/ui/AppText';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {MainButton} from 'components/ui/MainButton';
 import {TextLink} from 'components/ui/TextLink';
 import {theme} from 'constants/theme';
@@ -165,19 +164,6 @@ const Row = styled.View`
   justify-content: space-between;
   width: 100%;
   margin: 10px 0;
-`;
-
-const ContentContainer = styled(Container)`
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: ${scaleDpTheme(10)};
-`;
-
-const ButtonsContainer = styled(Container)`
-  margin-top: ${scaleDpTheme(10)};
-  align-items: center;
-  justify-content: center;
-  width: 100%;
 `;
 
 const Button = styled(MainButton)`

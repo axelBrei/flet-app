@@ -151,7 +151,6 @@ export const fetchShipmentPrice = confirmationInformation => async (
     });
     dispatch(receiveShipmentPriceSuccess(data));
   } catch (e) {
-    console.log(e);
     dispatch(receiveShipmentPriceFail(e?.response?.data?.message || e));
   }
 };
@@ -193,7 +192,6 @@ export const createNewShipment = confirmationInformation => async (
     });
     dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
   } catch (e) {
-    console.log(e);
     dispatch(receiveNewShipmentFail(e?.response?.data));
   }
 };

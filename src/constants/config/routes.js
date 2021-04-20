@@ -13,7 +13,9 @@ const _routes = {
   shipmentStack: 'envio',
   homeScreen: 'inicio',
   lastShippmentsScreen: 'ultimosPedidos',
+  profileStack: 'usuario',
   profileScreen: 'perfil',
+  userAddressUpdateScreen: 'direcciones',
   plannedShippments: 'planeados',
   newShipmentPackageDetailScreen: 'paquete',
   newShipmentConfirmationScreen: 'confirmar',
@@ -23,6 +25,9 @@ const _routes = {
   driverHomeScreen: 'inicio-conductor',
   driverShipmentScreen: 'envio-conductor',
   shipmentFinishedScreen: 'envio-terminado',
+  balanceStack: 'balance',
+  balanceMainScreen: 'menu',
+  balanceLastMovements: 'movimientos',
 };
 
 const nativeOnlyRoutes = {
@@ -60,6 +65,13 @@ export const linkingRoutes = {
           [_routes.paymentScreen]: 'pagar',
         },
       },
+      [_routes.balanceStack]: {
+        path: _routes.balanceStack,
+        screens: {
+          [_routes.balanceMainScreen]: 'menu',
+          [_routes.balanceLastMovements]: _routes.balanceLastMovements,
+        },
+      },
       [_routes.driverStack]: {
         path: _routes.driverStack,
         screens: {
@@ -69,8 +81,14 @@ export const linkingRoutes = {
             nativeOnlyRoutes.driverShipmentScreen,
         },
       },
+      [_routes.profileStack]: {
+        path: _routes.profileStack,
+        screens: {
+          [_routes.profileScreen]: 'perfil',
+          [_routes.userAddressUpdateScreen]: 'direcciones',
+        },
+      },
       [_routes.lastShippmentsScreen]: 'ultimosPedidos',
-      [_routes.profileScreen]: 'perfil',
       [_routes.plannedShippments]: 'planeados',
     },
   },
@@ -96,6 +114,7 @@ export const getRoutesFromLinking = (obj = linkingRoutes, prefix = null) =>
     {},
   );
 
+console.log(getRoutesFromLinking());
 const allRoutes = {
   // ...(Platform.OS === 'web' ? getRoutesFromLinking() : _routes),
   ..._routes,

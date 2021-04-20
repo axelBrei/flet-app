@@ -29,7 +29,7 @@ const data = [
       },
       {
         name: 'Mis vehiculos',
-        redirectTo: null,
+        redirectTo: routes.profileVehicleStack,
         driverOnly: true,
       },
       {

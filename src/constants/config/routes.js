@@ -15,6 +15,9 @@ const _routes = {
   lastShippmentsScreen: 'ultimosPedidos',
   profileStack: 'usuario',
   profileScreen: 'perfil',
+  profileVehicleStack: 'vehicles',
+  profilevehicleListScreen: 'list',
+  vehicleDetailScreen: 'detalle',
   userAddressUpdateScreen: 'direcciones',
   plannedShippments: 'planeados',
   newShipmentPackageDetailScreen: 'paquete',
@@ -86,6 +89,13 @@ export const linkingRoutes = {
         screens: {
           [_routes.profileScreen]: 'perfil',
           [_routes.userAddressUpdateScreen]: 'direcciones',
+          [_routes.profileVehicleStack]: {
+            path: _routes.profileVehicleStack,
+            screens: {
+              [_routes.profilevehicleListScreen]: 'list',
+              [_routes.vehicleDetailScreen]: _routes.vehicleDetailScreen,
+            },
+          },
         },
       },
       [_routes.lastShippmentsScreen]: 'ultimosPedidos',

@@ -8,7 +8,7 @@
     "start:web:dev": "webpack serve --progress --env=dev --color --mode development --host 0.0.0.0 --config ./webpack.config.js",
     "start:web:prod": "webpack serve --progress --env=prod --color --mode production --config ./webpack.config.js",
     "start:android": "npx react-native run-android",
-    "start:ios": "npx react-native run-ios",
+    "start:ios": "npx react-native run-ios --simulator=\"iPhone 11\"",
     "start": "react-native start",
     "lint": "eslint .",
     "pull-web-enviorment": "chmod +x ./pullEnviorment.sh && ./pullEnviorment.sh",

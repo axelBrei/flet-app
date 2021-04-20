@@ -40,6 +40,13 @@ export default () => {
           require('components/navigation/UserAddressUpdateScreen').default
         }
       />
+      <Screen
+        name={routes.profileVehicleStack}
+        options={{headerShown: false}}
+        getComponent={() =>
+          require('components/navigation/CourrierVehiclesStack').default
+        }
+      />
     </Navigator>
   );
 };

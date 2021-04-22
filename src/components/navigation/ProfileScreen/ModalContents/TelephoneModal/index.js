@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {CommonList} from 'components/ui/CommonList';
 import {MainButton} from 'components/ui/MainButton';
 import {useDispatch, useSelector} from 'react-redux';
@@ -72,6 +72,12 @@ const Container = styled.View`
   height: ${({newPhoneMode}) => (newPhoneMode ? 300 : 450)}px;
   padding: 20px;
   border-radius: 10px;
+
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      min-width: 414px;
+    `}
 `;
 
 const List = styled(CommonList)`

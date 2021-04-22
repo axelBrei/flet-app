@@ -106,7 +106,7 @@ InputField.defaultProps = {
   keyboardType: 'default',
 };
 InputField.propTypes = {
-  onChangeText: PropTypes.func.isRequired,
+  onChangeText: PropTypes.func,
   keyboardType: PropTypes.oneOf([
     'default',
     'number-pad',

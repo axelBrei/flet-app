@@ -23,7 +23,7 @@ export default ({
   }, [value]);
 
   const onDayPress = useCallback(
-    (toggleModal) => (date) => {
+    toggleModal => date => {
       setCurrentDate(date);
       toggleModal();
       onSelectDay(date);
@@ -50,7 +50,7 @@ export default ({
   const onFocusInput = useCallback(() => {}, [toggle]);
 
   const onCleanInput = useCallback(
-    (t) => {
+    t => {
       if (t === '') {
         setCurrentDate(null);
       }
@@ -82,13 +82,13 @@ export default ({
 const InputContainer = styled(Pressable)`
   flex-direction: row;
   width: 100%;
-  min-width: ${(props) => props.theme.scale(150)}px;
-  padding-bottom: ${(props) => props.theme.scale(2)}px;
-  padding-top: ${(props) => props.theme.scale(3)}px;
+  min-width: ${props => props.theme.scale(150)}px;
+  padding-bottom: ${props => props.theme.scale(2)}px;
+  padding-top: ${props => props.theme.scale(3)}px;
 `;
 
 const ModalContainer = styled(View)`
-  background-color: ${(props) => props.theme.colors.white};
+  background-color: ${props => props.theme.colors.white};
   border-radius: 20px;
   padding: 20px;
   align-items: center;

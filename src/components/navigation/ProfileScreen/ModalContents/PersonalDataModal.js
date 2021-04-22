@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import InputField from 'components/ui/InputField';
 import {Title} from 'components/ui/Title';
 import {AppText} from 'components/ui/AppText';
@@ -116,6 +116,11 @@ export const PersonalDataModal = ({closeModal}) => {
 const Container = styled.View`
   padding: 20px;
   align-items: center;
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      min-width: 414px;
+    `}
 `;
 
 const InputsContainer = styled.View`

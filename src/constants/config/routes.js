@@ -124,7 +124,6 @@ export const getRoutesFromLinking = (obj = linkingRoutes, prefix = null) =>
     {},
   );
 
-console.log(getRoutesFromLinking());
 const allRoutes = {
   // ...(Platform.OS === 'web' ? getRoutesFromLinking() : _routes),
   ..._routes,

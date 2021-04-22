@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import {Screen} from 'components/ui/Screen';
 import Motorbike from 'resources/images/scooter';
@@ -13,6 +13,8 @@ import {AppText} from 'components/ui/AppText';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {ImageItem} from 'components/navigation/VehicleDetailScreen/ImageItem';
 import {Carousel} from 'components/ui/Carrousel';
+import {Platform} from 'react-native';
+import {PLATFORMS, usePlatformEffect} from 'components/Hooks/usePlatformEffect';
 
 const iconMapping = {
   1: Motorbike,
@@ -21,11 +23,19 @@ const iconMapping = {
   4: Truck,
 };
 
-export default ({route}) => {
+export default ({route, navigation}) => {
   const {vehicle} = route?.params || {};
   const {isMobile} = useWindowDimension();
 
-  const Image = iconMapping[vehicle?.type?.id];
+  usePlatformEffect(
+    () => {
+      vehicle === undefined && history.back();
+    },
+    [vehicle],
+    PLATFORMS.WEB,
+  );
+
+  const Image = iconMapping[vehicle?.type?.id] || React.Fragment;
   return (
     <Screen removeTWF scrollable={!isMobile || vehicle?.insuranceUrl}>
       <Header>

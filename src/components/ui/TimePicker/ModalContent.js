@@ -6,35 +6,54 @@ import {Row} from 'components/ui/Row';
 import {MainButton} from 'components/ui/MainButton';
 import {Title} from 'components/ui/Title';
 import {useModalContext} from 'components/Hooks/useModal';
+import {useFormikCustom} from 'components/Hooks/useFormikCustom';
+import * as yup from 'yup';
 
-export default ({onPressAccept}) => {
+const minString = 'Debe ser mayor a ${min}';
+const maxString = 'Debe ser mayor a ${max}';
+export default ({onPressAccept, initialValue}) => {
   const {closeModal} = useModalContext();
-  const [hour, setHour] = useState('');
-  const [minute, setMinute] = useState('');
 
-  const _onPressAccept = useCallback(() => {
-    onPressAccept({hour, minute});
-    closeModal();
-  }, [onPressAccept, hour, minute]);
+  const _onPressAccept = useCallback(
+    values => {
+      onPressAccept(values);
+      closeModal();
+    },
+    [onPressAccept],
+  );
+
+  const {values, errors, handleSubmit, _setFieldValue} = useFormikCustom({
+    onSubmit: _onPressAccept,
+    initialValues: {
+      hour: initialValue?.hour || '',
+      minute: initialValue?.minute || '',
+    },
+    validationSchema: yup.object({
+      hour: yup.number().min(0, minString).max(24, maxString),
+      minute: yup.number().min(0, minString).max(59, maxString),
+    }),
+  });
 
   return (
     <Container>
       <Title>Seleccioná un horario</Title>
       <Row>
         <InputField
-          style={{width: '49%'}}
-          onChangeText={setHour}
           label="Hora"
-          value={hour}
+          style={{width: '49%'}}
+          onChangeText={_setFieldValue('hour')}
+          value={values.hour}
+          error={errors.hour}
         />
         <InputField
-          style={{width: '49%'}}
-          onChangeText={setMinute}
           label="Minutos"
-          value={minute}
+          style={{width: '49%'}}
+          onChangeText={_setFieldValue('minute')}
+          value={values.minute}
+          error={errors.minute}
         />
       </Row>
-      <MainButton onPress={_onPressAccept}>Aceptar</MainButton>
+      <MainButton onPress={handleSubmit}>Aceptar</MainButton>
     </Container>
   );
 };

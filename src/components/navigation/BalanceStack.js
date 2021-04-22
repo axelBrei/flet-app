@@ -8,10 +8,7 @@ import {theme} from 'constants/theme';
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
   return (
-    <Navigator
-      screenOptions={navigationConfig({
-        headerTintColor: theme.white,
-      })}>
+    <Navigator screenOptions={navigationConfig({})}>
       <Screen
         name={routes.balanceMainScreen}
         component={BalanceMainScreen}

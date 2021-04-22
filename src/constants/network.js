@@ -41,11 +41,7 @@ export const configureAuthInterceptor = store => {
     }
     return {
       ...config,
-      data: data
-        ? data?.keepCase
-          ? data
-          : JSON.stringify(keysToSnakeCase(data))
-        : {},
+      data: data ? (data.keepCase ? data : keysToSnakeCase(data)) : undefined,
     };
   });
 

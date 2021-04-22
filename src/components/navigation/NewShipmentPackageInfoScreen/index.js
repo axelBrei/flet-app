@@ -28,6 +28,7 @@ import {vehiculeSizeOptions} from 'constants/vehicleSizes';
 import {VehiculeSizeItem} from 'components/navigation/NewShipmentPackageInfoScreen/VehiculeSizeItem';
 import {VehicleDimensions} from 'components/navigation/NewShipmentPackageInfoScreen/VehicleDimensions';
 import {WarningMessage} from 'components/ui/WarningMessage';
+import {DriverHelpCard} from 'components/navigation/NewShipmentPackageInfoScreen/DriverHelpCard';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -117,7 +118,10 @@ export default ({navigation}) => {
             'Tené en cuenta que si el paquete no entra en el vehículo seleccionado se te cobrará una extra por el cambio  de vehículo.'
           }
         />
-
+        <DriverHelpCard
+          onChangeValue={_setFieldValue(FIELDS.EXTRA_HELP)}
+          value={values[FIELDS.EXTRA_HELP]}
+        />
         <Button label="Continuar" onPress={handleSubmit} />
       </CenteredContainer>
       <StyledMap markers={[startPoint, endPoint]} accesible={false} />

@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   cancelShipment,
   selectCurrentShipmentStatus,
+  selectIsLoadingCancelShipment,
 } from 'redux-store/slices/shipmentSlice';
 import {getCardContentComponent} from 'components/navigation/ShipmentScreen/shipmentHelper';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
@@ -18,6 +19,7 @@ export const ShipmentDetailCard = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
+  const isLoadingCancel = useSelector(selectIsLoadingCancelShipment);
 
   useEffect(() => {
     if (shipmentStatus?.status === SHIPMENT_STATE.FINISHED) {
@@ -51,6 +53,7 @@ export const ShipmentDetailCard = () => {
         />
         {shipmentStatus?.status !== SHIPMENT_STATE.DELIVERED && (
           <LabelIconButton
+            loading={isLoadingCancel}
             onPress={onPressCancel}
             icon="close"
             label="Cancelar"

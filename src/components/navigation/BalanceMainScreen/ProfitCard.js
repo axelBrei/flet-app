@@ -39,6 +39,7 @@ const BalanceCard = styled.View`
   border-radius: 20px;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
   background-color: ${theme.backgroundColor};
+  elevation: 4;
 `;
 
 const TotalEarned = styled(AppText)`

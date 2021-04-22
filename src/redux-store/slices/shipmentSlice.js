@@ -234,3 +234,6 @@ export const selectLastShipmentsPagination = state =>
   state.shipment.lastShipments.pagination;
 export const selectLastShipments = state =>
   state.shipment.lastShipments.results;
+
+export const selectIsLoadingCancelShipment = state =>
+  state.shipment.loading.cancel;

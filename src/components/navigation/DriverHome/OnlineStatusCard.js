@@ -90,8 +90,7 @@ const Row = styled.View`
 `;
 
 const Button = styled(MainButton)`
-  background-color: ${(props) =>
-    props.isOnline ? theme.cancel : theme.online};
+  background-color: ${props => (props.isOnline ? theme.cancel : theme.online)};
   max-width: 374px;
   width: 100%;
 `;

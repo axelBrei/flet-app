@@ -91,7 +91,7 @@ export default ({navigation}) => {
     ];
   }, [debouncedCurrentPosition, previosPosition]);
 
-  const {Modal, toggle, open, close} = useModal(
+  const {Modal, isModalVisible, open, close} = useModal(
     NewTripModalContent,
     {
       distance: pendingShipment?.startPoint?.distance,
@@ -107,12 +107,12 @@ export default ({navigation}) => {
   );
 
   useEffect(() => {
-    if (!error && !pendingShipmentError && pendingShipment) {
+    if (!error && !pendingShipmentError && pendingShipment && !isModalVisible) {
       open();
-    } else if (error || pendingShipmentError) {
+    } else if (error && isModalVisible) {
       close();
     }
-  }, [pendingShipment, error, pendingShipmentError]);
+  }, [pendingShipment, error, pendingShipmentError, isModalVisible]);
 
   const onChangeOnlineStatus = useCallback((newOnlineStatus, time) => {
     dispatch(changeOnlineStatus(newOnlineStatus, time.until));

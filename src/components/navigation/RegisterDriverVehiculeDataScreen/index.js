@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Screen} from 'components/ui/Screen';
 import styled, {css} from 'styled-components';
-import {AppText} from 'components/ui/AppText';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDp} from 'helpers/responsiveHelper';
 import InputField from 'components/ui/InputField';
 import {
   vehiculeDataFormikConfig,
@@ -12,8 +11,6 @@ import {Container} from 'components/ui/Container';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import SelectImage from 'components/ui/SelectImage/index';
 import {MainButton} from 'components/ui/MainButton';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import CarImage from 'resources/images/car.svg';
 import {routes} from 'constants/config/routes';
 import {Row} from 'components/ui/Row';
 import {
@@ -22,9 +19,6 @@ import {
   selectRegisterError,
 } from 'redux-store/slices/registerSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import {IconCard} from 'components/ui/IconCard';
-import {theme} from 'constants/theme';
-import {VehicleCapacityCard} from 'components/navigation/RegisterDriverVehiculeDataScreen/VehicleCapacityCard';
 import {Dropdown} from 'components/ui/Dropdown';
 import {
   fetchVehicleTypes,

@@ -12,6 +12,9 @@ const deleteTelephone = async phoneId =>
 
 const getUserAddresses = async () => await api.get('user/address');
 
+const updatePassword = async (oldPassword, newPassword) =>
+  await api.post('user/password', {oldPassword, newPassword});
+
 const addUserAddres = async addressData =>
   await api.put('user/address', addressData);
 
@@ -20,6 +23,7 @@ const deleteUserAddress = async addres_id =>
 
 export default {
   updatePersonalData,
+  updatePassword,
   getTelephones,
   addTelephone,
   deleteTelephone,

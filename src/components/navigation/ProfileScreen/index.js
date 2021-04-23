@@ -14,6 +14,7 @@ import {theme} from 'constants/theme';
 import TelephoneModal from 'components/navigation/ProfileScreen/ModalContents/TelephoneModal';
 import {PersonalDataModal} from 'components/navigation/ProfileScreen/ModalContents/PersonalDataModal';
 import {useNavigation} from '@react-navigation/native';
+import {ChangePasswordModal} from 'components/navigation/ProfileScreen/ModalContents/ChangePasswordModal';
 
 const data = [
   {
@@ -22,6 +23,10 @@ const data = [
       {
         name: 'Datos personales',
         modal: PersonalDataModal,
+      },
+      {
+        name: 'Cambiar contraseña',
+        modal: ChangePasswordModal,
       },
       {
         name: 'Teléfonos',

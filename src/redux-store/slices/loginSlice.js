@@ -6,7 +6,10 @@ import {receiveChangeOnlineStatusSuccess} from 'redux-store/slices/driverSlice';
 import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
 import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
-import {receiveUpdatePersonalDataSuccess} from 'redux-store/slices/personalData/personalData';
+import {
+  receiveUpdatePasswordSuccess,
+  receiveUpdatePersonalDataSuccess,
+} from 'redux-store/slices/personalData/personalData';
 
 const initialState = {
   userData: null,
@@ -47,6 +50,9 @@ const slice = createSlice({
       state.userData.lastName =
         action.payload?.lastName || state.userData.lastName;
       state.userData.email = action.payload?.email || state.userData.email;
+    },
+    [receiveUpdatePasswordSuccess]: (state, action) => {
+      state.userData.pass = action.payload;
     },
   },
 });
@@ -112,6 +118,7 @@ export const selectUserLastName = createSelector(
 export const selectUserEmail = state => state.login?.userData?.email;
 export const selectUserId = state => state.login?.userData?.id;
 export const selectUserToken = state => state.login?.userData?.userToken;
+export const selectUserPassword = state => state.login?.userData?.pass;
 
 export const selectUserPhoto = createSelector(
   state => state.login?.userData?.photoUrl,

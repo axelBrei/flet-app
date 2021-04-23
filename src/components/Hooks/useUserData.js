@@ -5,6 +5,7 @@ import {
   selectUserId,
   selectUserLastName,
   selectUserName,
+  selectUserPassword,
   selectUserPhoto,
   selectUserToken,
 } from 'redux-store/slices/loginSlice';
@@ -17,6 +18,7 @@ export const useUserData = () => {
   const email = useSelector(selectUserEmail);
   const picture = useSelector(selectUserPhoto);
   const isDriver = useSelector(selectIsDriver);
+  const password = useSelector(selectUserPassword);
   const courrier = useSelector(state => state.login.userData?.courrier);
 
   return {
@@ -28,5 +30,6 @@ export const useUserData = () => {
     picture,
     isDriver,
     courrier,
+    password,
   };
 };

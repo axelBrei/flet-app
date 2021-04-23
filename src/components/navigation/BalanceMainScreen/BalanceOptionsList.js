@@ -11,10 +11,10 @@ import {useNavigation} from '@react-navigation/native';
 const OPTIONS = [
   {title: 'Últimos movimientos', navigateTo: routes.balanceLastMovements},
   {title: 'Pagos pendientes'},
-  {title: 'Modificar cuenta de pago'},
+  {title: 'Modificar cuenta de pago', actionName: 'openCbuModal'},
 ];
 
-export const BalanceOptionsList = () => {
+export const BalanceOptionsList = props => {
   const navigation = useNavigation();
   return (
     <Container>
@@ -24,9 +24,11 @@ export const BalanceOptionsList = () => {
         keyExtractor={(_, i) => i.toString()}
         renderItem={({item}) => (
           <ButtonContainer
-            onPress={() =>
-              item.navigateTo && navigation.navigate(item.navigateTo)
-            }>
+            onPress={() => {
+              console.log(props);
+              props[item?.actionName]?.();
+              item.navigateTo && navigation.navigate(item.navigateTo);
+            }}>
             <Row>
               <AppText>{item.title}</AppText>
               <Icon size={20} name="chevron-right" />

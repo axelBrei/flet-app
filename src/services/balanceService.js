@@ -7,7 +7,11 @@ const cashout = async () =>
     type: 'total',
   });
 
+const changeBankNumber = async bankNumber =>
+  await api.post('courrier/bank', {bankNumber});
+
 export default {
   getCourrierBalance,
   cashout,
+  changeBankNumber,
 };

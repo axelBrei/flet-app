@@ -8,10 +8,12 @@ const initialState = {
   loading: {
     balance: false,
     cashout: false,
+    bankNumber: false,
   },
   error: {
     balance: null,
     cashout: null,
+    bankNumber: null,
   },
 };
 
@@ -43,6 +45,17 @@ const slice = createSlice({
       state.loading.cashout = false;
       state.error.cashout = action.payload;
     },
+    requestChangeCbu: state => {
+      state.loading.bankNumber = true;
+      state.error.bankNumber = null;
+    },
+    receiveChangeCbuSuccess: (state, action) => {
+      state.loading.bankNumber = false;
+    },
+    receiveChangeCbuFail: (state, action) => {
+      state.loading.bankNumber = false;
+      state.error.bankNumber = action.payload;
+    },
   },
 });
 
@@ -54,6 +67,9 @@ const {
   requestCashout,
   receiveCashoutSuccess,
   receiveCashoutFail,
+  requestChangeCbu,
+  receiveChangeCbuSuccess,
+  receiveChangeCbuFail,
 } = slice.actions;
 
 // THUNK
@@ -78,6 +94,16 @@ export const fetchCashout = () => async dispatch => {
   }
 };
 
+export const fetchChangeBankNumber = number => async dispatch => {
+  dispatch(requestChangeCbu());
+  try {
+    const {} = await balanceService.changeBankNumber(number);
+    dispatch(receiveChangeCbuSuccess(number));
+  } catch (e) {
+    dispatch(receiveChangeCbuFail(e?.response?.data?.message || e));
+  }
+};
+
 // SELECTORS
 export const selectIsLoadingBalance = state =>
   state[slice.name].loading.balance;
@@ -87,3 +113,7 @@ export const selectCourrierBalance = state => state[slice.name].data.balance;
 export const selectIsLoadingCashout = state =>
   state[slice.name].loading.cashout;
 export const selectCashoutError = state => state[slice.name].error.cashout;
+
+export const selectIsLoadingUpdateCbu = state =>
+  state[slice.name].loading.bankNumber;
+export const selectUpdateCbuError = state => state[slice.name].error.bankNumber;

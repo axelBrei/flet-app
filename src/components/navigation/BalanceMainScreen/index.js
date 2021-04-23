@@ -18,8 +18,11 @@ import {CommonList} from 'components/ui/CommonList';
 import {BalanceOptionsList} from 'components/navigation/BalanceMainScreen/BalanceOptionsList';
 import {useModal} from 'components/Hooks/useModal';
 import {CashoutModalContent} from 'components/navigation/BalanceMainScreen/CashoutModalContent';
+import {ChangeBankNumberModalContent} from 'components/navigation/BalanceMainScreen/ChangeBankNumberModalContent';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export default () => {
+  const {isMobile, widthWithPadding} = useWindowDimension();
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingBalance);
   const error = useSelector(selectBalanceError);
@@ -29,6 +32,18 @@ export default () => {
     CashoutModalContent,
     {},
     {cancelable: false},
+  );
+
+  const {Modal: CbuModal, open: openCbuModal} = useModal(
+    ChangeBankNumberModalContent,
+    {
+      contentStyle: {
+        borderRadius: 20,
+        width: isMobile ? widthWithPadding : '50%',
+        maxWidth: isMobile ? '100%' : 500,
+      },
+    },
+    {cancellable: true},
   );
 
   useEffect(() => {
@@ -50,9 +65,10 @@ export default () => {
               Cobrar ${profit}
             </MainButton>
           )}
-          <BalanceOptionsList />
+          <BalanceOptionsList openCbuModal={openCbuModal} />
         </ScreenContainer>
         <Modal />
+        <CbuModal />
       </Loader>
     </Screen>
   );

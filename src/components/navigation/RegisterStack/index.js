@@ -14,11 +14,12 @@ const {Navigator, Screen} = createStackNavigator();
 export default ({route}) => {
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
+
   return (
-    <ScreenComponent scrollable>
+    <ScreenComponent>
       <Container>
         <Navigator
-          // initialRouteName={routes.registerDriverVehiculeScreen}
+          initialRouteName={routes.registerDriverLegalsScreen}
           screenOptions={navigationConfig({
             title: '',
             headerShown: false,

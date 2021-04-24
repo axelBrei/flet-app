@@ -1,4 +1,5 @@
 import {api} from 'constants/network';
+import {appendToForm} from 'helpers/networkHelper';
 
 const updatePersonalData = async updatedData =>
   await api.post('user/email', updatedData);
@@ -21,6 +22,12 @@ const addUserAddres = async addressData =>
 const deleteUserAddress = async addres_id =>
   await api.delete('user/address', {params: {addres_id}});
 
+const updateProfilePicture = async form =>
+  await api.put('/user/picture', form, {
+    headers: {'Content-Type': `multipart/form-data`},
+    timeout: 20000,
+  });
+
 export default {
   updatePersonalData,
   updatePassword,
@@ -30,4 +37,5 @@ export default {
   getUserAddresses,
   addUserAddres,
   deleteUserAddress,
+  updateProfilePicture,
 };

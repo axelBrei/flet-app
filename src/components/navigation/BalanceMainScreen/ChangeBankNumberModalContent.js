@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import InputField from 'components/ui/InputField';
 import {MainButton} from 'components/ui/MainButton';
-import {useAnimatedSucccesContent} from 'components/Hooks/useAnimatedSuccesContent';
+import {useAnimatedOperationResult} from 'components/Hooks/useAnimatedSuccesContent';
 import {Title} from 'components/ui/Title';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -46,17 +46,14 @@ export const ChangeBankNumberModalContent = ({closeModal}) => {
     onSubmit,
   });
 
-  const {SuccessContent, isSuccesful} = useAnimatedSucccesContent(
-    [submited, !isLoading],
-    error
+  const {OperationResultContent} = useAnimatedOperationResult({
+    successConditions: [submited, !isLoading],
+    title: error
       ? 'Ocurrió un error al querer modificar el CBU'
       : 'CBU modificado con éxito!',
-    !error && 'Ya podés retirar el dinero de tu cuenta',
-    error && 'close',
-    {iconColor: theme.error},
-  );
-
-  console.log(isSuccesful);
+    message: !error && 'Ya podés retirar el dinero de tu cuenta',
+    isErrorContent: !!error,
+  });
 
   useEffect(() => {
     if (submited && !isLoading && !error) {
@@ -72,6 +69,7 @@ export const ChangeBankNumberModalContent = ({closeModal}) => {
       <Title padding="0 0 20">Modifica tu CBU</Title>
       <InputField
         label="Nuevo CBU"
+        keyboardType="numeric"
         value={values.number}
         onChangeText={_setFieldValue('number')}
         onBlur={_setFieldTouched('number')}
@@ -81,7 +79,7 @@ export const ChangeBankNumberModalContent = ({closeModal}) => {
       <MainButton loading={isLoading} onPress={handleSubmit}>
         Confirmar
       </MainButton>
-      <SuccessContent />
+      <OperationResultContent />
     </Container>
   );
 };

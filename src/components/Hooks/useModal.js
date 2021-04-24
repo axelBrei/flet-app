@@ -35,7 +35,6 @@ export const useModal = (
 
   const renderModal = useCallback(
     ({...props}) => {
-      console.log(contentStyle);
       return (
         <Modal
           isVisible={isVisible}

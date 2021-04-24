@@ -13,14 +13,13 @@ import {
   selectIsLoadingUpdatePassword,
   selectUpdatePasswordError,
 } from 'redux-store/slices/personalData/personalData';
-import {useAnimatedSucccesContent} from 'components/Hooks/useAnimatedSuccesContent';
+import {useAnimatedOperationResult} from 'components/Hooks/useAnimatedSuccesContent';
 
 export const ChangePasswordModal = ({closeModal}) => {
   const dispatch = useDispatch();
   const {password} = useUserData();
   const isLoading = useSelector(selectIsLoadingUpdatePassword);
   const error = useSelector(selectUpdatePasswordError);
-  const [isChangeSucces, setIsChangeSucces] = useState();
 
   const onSubmit = useCallback(val => {
     dispatch(fetchChangePassword(val.oldPassword, val.newPassword));
@@ -33,7 +32,7 @@ export const ChangePasswordModal = ({closeModal}) => {
     _setFieldValue,
     _setFieldTouched,
     handleSubmit,
-    isSubmitting,
+    submited,
   } = useFormikCustom({
     initialValues: {
       oldPassword: '',
@@ -55,16 +54,20 @@ export const ChangePasswordModal = ({closeModal}) => {
   });
 
   useEffect(() => {
-    if (isSubmitting && !isLoading && !error) {
+    if (submited && !isLoading && !error) {
       setTimeout(closeModal, 2500);
     }
-  }, [isSubmitting, isLoading, error]);
+  }, [submited, isLoading, error]);
 
-  const {SuccessContent} = useAnimatedSucccesContent(
-    [isSubmitting, !isLoading, !error],
-    null,
-    'Se ha moficado la contraseña!',
-  );
+  const {OperationResultContent} = useAnimatedOperationResult({
+    successConditions: [submited, !isLoading],
+    title: error ? 'Oh no!' : 'Exito!',
+    message: error
+      ? 'Ocurrió un problema para modificar la contraseña. Intentá de nuevo mas tarde'
+      : 'Se ha moficado la contraseña!',
+    isErrorContent: !!error,
+  });
+
   return (
     <Container>
       <Title>Cambiar contraseña</Title>
@@ -101,7 +104,7 @@ export const ChangePasswordModal = ({closeModal}) => {
       <MainButton loading={isLoading} onPress={handleSubmit}>
         Confirmar
       </MainButton>
-      <SuccessContent />
+      <OperationResultContent />
     </Container>
   );
 };

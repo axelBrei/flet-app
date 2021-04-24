@@ -26,7 +26,7 @@ export default ({onPressAccept, initialValue}) => {
     onSubmit: _onPressAccept,
     initialValues: {
       hour: initialValue?.hour || '',
-      minute: initialValue?.minute || '',
+      minute: initialValue?.minute || '30',
     },
     validationSchema: yup.object({
       hour: yup.number().min(0, minString).max(24, maxString),
@@ -39,6 +39,7 @@ export default ({onPressAccept, initialValue}) => {
       <Title>Seleccioná un horario</Title>
       <Row>
         <InputField
+          keyboardType="numeric"
           label="Hora"
           style={{width: '49%'}}
           onChangeText={_setFieldValue('hour')}
@@ -46,6 +47,7 @@ export default ({onPressAccept, initialValue}) => {
           error={errors.hour}
         />
         <InputField
+          keyboardType="numeric"
           label="Minutos"
           style={{width: '49%'}}
           onChangeText={_setFieldValue('minute')}

@@ -13,7 +13,6 @@ export const ImageItem = ({uri}) => {
 
   const onPressEdit = useCallback(() => {}, []);
 
-  console.log(loading);
   return (
     <Container>
       <Loader unmount={false} loading={isMobile && loading} size="large">

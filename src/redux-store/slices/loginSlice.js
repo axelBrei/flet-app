@@ -7,6 +7,7 @@ import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
 import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
 import {
+  receiveChangeProfilePictureSuccess,
   receiveUpdatePasswordSuccess,
   receiveUpdatePersonalDataSuccess,
 } from 'redux-store/slices/personalData/personalData';
@@ -53,6 +54,9 @@ const slice = createSlice({
     },
     [receiveUpdatePasswordSuccess]: (state, action) => {
       state.userData.pass = action.payload;
+    },
+    [receiveChangeProfilePictureSuccess]: (state, action) => {
+      state.userData.photoUrl = action.payload;
     },
   },
 });

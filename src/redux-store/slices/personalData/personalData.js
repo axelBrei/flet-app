@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import personalDataService from 'services/personalDataService';
+import {appendToForm} from 'helpers/networkHelper';
 
 const initialState = {
   data: {
@@ -11,11 +12,13 @@ const initialState = {
     data: false,
     update: false,
     password: false,
+    picture: false,
   },
   error: {
     data: null,
     update: null,
     password: null,
+    picture: null,
   },
 };
 
@@ -46,6 +49,17 @@ const slice = createSlice({
       state.loading.password = false;
       state.error.password = action.payload;
     },
+    requestChangeProfilePicture: state => {
+      state.loading.picture = true;
+      state.error.picture = null;
+    },
+    receiveChangeProfilePictureSuccess: (state, action) => {
+      state.loading.picture = false;
+    },
+    receiveChangeProfilePictureFail: (state, action) => {
+      state.loading.picture = false;
+      state.error.picture = action.payload;
+    },
   },
   extraReducers: {
     'login/receiveLoginSuccess': (state, action) => {
@@ -66,6 +80,9 @@ export const {
   requestUpdatePassword,
   receiveUpdatePasswordSuccess,
   receiveUpdatePasswordFail,
+  requestChangeProfilePicture,
+  receiveChangeProfilePictureSuccess,
+  receiveChangeProfilePictureFail,
 } = slice.actions;
 
 // THUNK
@@ -92,6 +109,18 @@ export const fetchChangePassword = (
   }
 };
 
+export const fetchChangeProfilePicture = image => async dispatch => {
+  dispatch(requestChangeProfilePicture());
+  try {
+    const form = new FormData();
+    form.append('image', image.original, image.filename);
+    const {data} = await personalDataService.updateProfilePicture(form);
+    dispatch(receiveChangeProfilePictureSuccess(data.photoUrl));
+  } catch (e) {
+    dispatch(receiveChangeProfilePictureFail(e.response?.data?.message || e));
+  }
+};
+
 // SELECTORS
 export const selectLoadingUpadteUserData = state =>
   state.personalData.userData.loading.update;
@@ -99,7 +128,14 @@ export const selectUpdateUserDataError = state =>
   state.personalData.userData.error.update;
 export const selectUserData = state => state.personalData.userData.data;
 
+//PASSWORD
 export const selectIsLoadingUpdatePassword = state =>
   state.personalData.userData.loading.password;
 export const selectUpdatePasswordError = state =>
   state.personalData.userData.error.password;
+
+// PROFILE PIC
+export const selectIsLoadingUpdateProfilePicture = state =>
+  state.personalData.userData.loading.picture;
+export const selectUpdateProfilePictureError = state =>
+  state.personalData.userData.error.picture;

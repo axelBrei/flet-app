@@ -10,8 +10,10 @@ import {
 } from 'redux-store/slices/driverShipmentSlice';
 import {keysToCamelCase} from 'helpers/objectHelper';
 
-export const handleNewToken = token => {
-  api.post('user/token', {token});
+export const handleNewToken = async token => {
+  try {
+    await api.post('user/token', {token});
+  } catch (e) {}
 };
 
 export const useNotificationHandler = () => {
@@ -24,7 +26,6 @@ export const useNotificationHandler = () => {
       if (data.shipment) {
         data.shipment = keysToCamelCase(JSON.parse(data.shipment));
       }
-      console.log('new shipment', data.shipment);
       switch (type) {
         case NOTIFICATION_TYPES.SHIPMENT_UPDATE: {
           dispatch(receiveNewShipmentSuccess(data?.shipment));

@@ -54,17 +54,17 @@ export default ({navigation}) => {
     values,
     errors,
     touched,
-    submited,
+    isSubmitting,
     _setFieldValue,
     _setFieldTouched,
     handleSubmit,
   } = useFormikCustom(vehiculeDataFormikConfig(onSubmit));
 
   useEffect(() => {
-    if (submited && !isLoading && !error) {
+    if (isSubmitting && !isLoading && !error) {
       navigation.navigate(routes.registerDriverLegalsScreen);
     }
-  }, [submited, isLoading, error]);
+  }, [isSubmitting, isLoading, error]);
 
   return (
     <Screen scrollable>
@@ -103,7 +103,7 @@ export default ({navigation}) => {
           label="Tipo de vehiculo"
           value={values[FIELDS.VEHICLE_TYPE]}
           onItemPress={_setFieldValue(FIELDS.VEHICLE_TYPE)}
-          onFocus={_setFieldTouched(FIELDS.VEHICLE_TYPE)}
+          onBlur={_setFieldTouched(FIELDS.VEHICLE_TYPE)}
           data={vehicleTypes}
           error={
             error ||

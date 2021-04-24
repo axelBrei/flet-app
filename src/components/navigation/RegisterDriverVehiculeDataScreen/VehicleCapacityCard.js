@@ -15,6 +15,7 @@ export const VehicleCapacityCard = ({...props}) => {
   const {Modal, open} = useModal(VehicleCapacityModalContent, props, {
     fullscreen: true,
     cancelable: true,
+    avoidKeyboard: true,
   });
   return (
     <>

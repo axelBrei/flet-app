@@ -25,7 +25,6 @@ export const BalanceOptionsList = props => {
         renderItem={({item}) => (
           <ButtonContainer
             onPress={() => {
-              console.log(props);
               props[item?.actionName]?.();
               item.navigateTo && navigation.navigate(item.navigateTo);
             }}>

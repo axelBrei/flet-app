@@ -17,7 +17,12 @@ export const MenuItem = ({name, onPressItem, ...props}) => {
         maxWidth: isMobile ? '100%' : 500,
       },
     },
-    {fullscreen: false, cancelable: true, style: {borderRadius: 20}},
+    {
+      fullscreen: false,
+      cancelable: true,
+      avoidKeyboard: true,
+      style: {borderRadius: 20},
+    },
   );
 
   const onPress = useCallback(() => {

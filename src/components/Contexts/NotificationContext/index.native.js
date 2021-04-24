@@ -17,7 +17,6 @@ export default ({children}) => {
 
   const getToken = useCallback(async () => {
     const token = await messaging().getToken();
-    console.log(token);
     handleNewToken(token);
   }, []);
 
@@ -54,13 +53,13 @@ export default ({children}) => {
       );
       getInitialNotification();
 
-      const refreshTokenHandler = messaging().onTokenRefresh(handleNewToken);
+      // const refreshTokenHandler = messaging().onTokenRefresh(handleNewToken);
 
       return () => {
         unsubscribeOnMessage();
         backgroundMessageHandler?.();
         notificationOpenAppHandler?.();
-        refreshTokenHandler?.();
+        // refreshTokenHandler?.();
       };
     }
   }, [permissionGranted, userData, handleNotification]);

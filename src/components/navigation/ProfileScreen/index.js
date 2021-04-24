@@ -15,6 +15,7 @@ import TelephoneModal from 'components/navigation/ProfileScreen/ModalContents/Te
 import {PersonalDataModal} from 'components/navigation/ProfileScreen/ModalContents/PersonalDataModal';
 import {useNavigation} from '@react-navigation/native';
 import {ChangePasswordModal} from 'components/navigation/ProfileScreen/ModalContents/ChangePasswordModal';
+import {MapPreferencesModalContent} from 'components/navigation/ProfileScreen/ModalContents/MapPreferencesModalContent';
 
 const data = [
   {
@@ -47,7 +48,7 @@ const data = [
     name: 'Navegacion',
     driverOnly: true,
     data: [
-      {name: 'Mapa predeterminado', redirectTo: null},
+      {name: 'Mapa predeterminado', modal: MapPreferencesModalContent},
       // {name: 'Horario predeterminado', redirectTo: null},
     ],
   },

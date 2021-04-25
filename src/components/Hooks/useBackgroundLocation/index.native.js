@@ -15,6 +15,7 @@ interface BackgroundLocationConfig {
   url: String;
   body: Object;
   autoStart: Boolean;
+  stopOnUnfocus: Boolean;
 }
 
 export default (
@@ -34,6 +35,7 @@ export default (
       vehicle_id: 1,
     },
     autoStart: false,
+    stopOnUnfocus: false,
   },
 ) => {
   const {userToken} = useUserData();
@@ -102,8 +104,10 @@ export default (
       });
 
     return () => {
-      BackgroundGeolocation.stop();
-      BackgroundGeolocation.removeAllListeners();
+      if (config.stopOnUnfocus) {
+        BackgroundGeolocation.stop();
+        BackgroundGeolocation.removeAllListeners();
+      }
     };
   }, []);
 

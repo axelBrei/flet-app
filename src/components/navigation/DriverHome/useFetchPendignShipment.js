@@ -1,11 +1,12 @@
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchPendingShipments,
+  selectDriverShipmentData,
   selectPendingShipment,
 } from 'redux-store/slices/driverShipmentSlice';
 import {selectOnlineStatus} from 'redux-store/slices/driverSlice';
-import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {useInterval} from 'components/Hooks/useInterval';
 
 const FETCH_INTERVAL = 6 * 1000;
@@ -14,17 +15,34 @@ export const useFetcingPendingShipment = () => {
   const dispatch = useDispatch();
   const isOnline = useSelector(selectOnlineStatus);
   const isFocused = useIsFocused();
-  const pendingShipment = useSelector(selectPendingShipment);
+  const currentShipment = useSelector(selectDriverShipmentData);
+
+  const start = useCallback(() => {
+    interval.current = setInterval(() => {
+      !currentShipment?.id && dispatch(fetchPendingShipments());
+    }, FETCH_INTERVAL);
+  }, [interval, currentShipment]);
 
   useEffect(() => {
-    if (isOnline && isFocused && !pendingShipment) {
-      interval.current = setInterval(() => {
-        dispatch(fetchPendingShipments());
-      }, FETCH_INTERVAL);
-    } else if ((!isFocused && interval) || pendingShipment) {
-      clearInterval(interval);
+    if (currentShipment?.id && interval.current) {
+      clearInterval(interval.current);
     }
+  }, [currentShipment, interval]);
 
-    return () => interval.current && clearInterval(interval);
-  }, [pendingShipment, isOnline, isFocused]);
+  useFocusEffect(
+    useCallback(() => {
+      if (isOnline) {
+        start();
+      } else if (interval.current) {
+        clearInterval(interval.current);
+      }
+      return () => clearInterval(interval.current);
+    }, [isOnline, interval]),
+  );
+  // useEffect(() => {
+  //
+  //   if (!isOnline || !isFocused) {
+  //     clearInterval(interval.current);
+  //   }
+  // }, [isOnline, isFocused]);
 };

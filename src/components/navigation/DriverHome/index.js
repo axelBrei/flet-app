@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   confirmShipment,
   rejectShipment,
-  selectDriverShipmentData,
   selectPendingShipment,
   selectPendingShipmentAnswerError,
   selectPendingShipmentError,
@@ -28,15 +27,16 @@ import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFet
 import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCard';
 import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {useUserData} from 'components/Hooks/useUserData';
+import {useIsFocused} from '@react-navigation/native';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const {courrier} = useUserData();
   const isOnline = useSelector(selectOnlineStatus);
   const previosPosition = useSelector(selectPreviosPosition);
   const pendingShipment = useSelector(selectPendingShipment);
   const pendingShipmentError = useSelector(selectPendingShipmentError);
-  const currentShipment = useSelector(selectDriverShipmentData);
   const error = useSelector(selectPendingShipmentAnswerError);
   const [debouncedCurrentPosition, setLocation] = useState({});
 
@@ -63,8 +63,12 @@ export default ({navigation}) => {
   );
 
   useEffect(() => {
-    (isOnline ? enable : disable)();
-  }, [isOnline, enable, disable]);
+    if (isOnline) {
+      enable();
+    } else if (isFocused) {
+      disable();
+    }
+  }, [isOnline, isFocused]);
 
   useFetcingPendingShipment();
 

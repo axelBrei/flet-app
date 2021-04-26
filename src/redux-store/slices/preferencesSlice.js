@@ -51,6 +51,7 @@ export const openMap = ({latitude, longitude}) => (dispatch, getState) => {
 
 export const selectPreferenceMapProvider = state =>
   state[slice.name].maps.preference;
+export const selectPreferenceMapUrls = state => state[slice.name].maps.urls;
 const selectMapPreference = state => {
   const {preference, urls} = state[slice.name].maps;
   return urls[preference];

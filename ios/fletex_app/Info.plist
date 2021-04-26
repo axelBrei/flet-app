@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+      <string>googlechromes</string>
+      <string>comgooglemaps</string>
+      <string>waze</string>
+  </array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -57,7 +63,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Necesitamos poder acceder al microfono para poder escuchar el audio de los reclamos</string>
 	<key>NSMotionUsageDescription</key>
-	<string>App requires motion tracking</string>
+	<string>Necesitamos tu ubicación en segundo plano para poder mostrarle tu posición al cliente</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Necesitamos acceder a la galería para poder corroborar tus documentos</string>
 	<key>UIAppFonts</key>

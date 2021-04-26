@@ -1,16 +1,17 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   changeMapDirectionsPreference,
   selectPreferenceMapProvider,
+  selectPreferenceMapUrls,
 } from 'redux-store/slices/preferencesSlice';
 import {Title} from 'components/ui/Title';
 import {AppText} from 'components/ui/AppText';
 import {CustomImage} from 'components/ui/Image';
 import {Column} from 'components/ui/Row';
 import {theme} from 'constants/theme';
-import {Platform} from 'react-native';
+import {Platform, Linking} from 'react-native';
 
 const mapOptions = [
   {
@@ -32,28 +33,55 @@ const mapOptions = [
         {
           title: 'Google',
           key: 'google',
+          testUrl: 'comgooglemaps://?center={{latitude}},{{longitude}}',
           icon: 'https://img.icons8.com/color/2x/google-maps.png',
         },
       ]
     : []),
 ];
 
+const getUrl = url =>
+  url.replace(
+    '{{latitude}},{{longitude}}',
+    '-34.59784330312339,-58.424820872669194',
+  );
+
 export const MapPreferencesModalContent = ({closeModal}) => {
   const dispatch = useDispatch();
+  const mapsUrls = useSelector(selectPreferenceMapUrls);
   const selectedPreference = useSelector(selectPreferenceMapProvider);
+  const [list, setList] = useState([]);
+
+  const poblateList = useCallback(async () => {
+    const canOpenUrls = await Promise.all(
+      mapOptions.map(async item => {
+        const url = getUrl(item.testUrl || mapsUrls[item.key]);
+        try {
+          return await Linking.canOpenURL(url);
+        } catch (e) {
+          console.log(e);
+          return Promise.resolve();
+        }
+      }),
+    );
+    setList(mapOptions.filter((_, index) => canOpenUrls[index]));
+  }, [mapsUrls]);
+
+  useEffect(() => {
+    poblateList();
+  }, [poblateList]);
 
   const onPressSelectMap = useCallback(mapKey => {
     dispatch(changeMapDirectionsPreference(mapKey));
     closeModal();
   }, []);
 
-  console.log(selectedPreference);
   return (
     <Container>
       <Title>Seleccioná la app de mapas</Title>
       <List
         keyExtractor={i => i.key}
-        data={mapOptions}
+        data={list}
         renderItem={({item}) => (
           <ButtonContainer
             onPress={() => onPressSelectMap(item.key)}

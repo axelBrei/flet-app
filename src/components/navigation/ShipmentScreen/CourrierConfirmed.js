@@ -34,7 +34,7 @@ export const CourrierConfirmed = title => () => {
       )}
       <Row>
         <LabeledImage
-          source={{uri: courrier.photoUrl}}
+          source={{uri: courrier?.photoUrl}}
           label={courrier?.name}
         />
         <StaticInputField label="Llegará entre las:">

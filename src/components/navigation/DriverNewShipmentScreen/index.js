@@ -29,9 +29,11 @@ export default ({}) => {
 
   useEffect(() => {
     return () => {
-      currentShipmentError && Alert.alert('El cliente canceló el envio');
+      currentShipmentError &&
+        !shipment &&
+        Alert.alert('El cliente canceló el envio');
     };
-  }, [currentShipmentError]);
+  }, [currentShipmentError, shipment]);
 
   const {markersList, loadingMakers, loadingMessage} = useMarkerList(position =>
     dispatch(updatePosition(position)),

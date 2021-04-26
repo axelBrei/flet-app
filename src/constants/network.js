@@ -5,7 +5,7 @@ import {loginAs} from 'redux-store/slices/loginSlice';
 import {Platform} from 'react-native';
 
 export const api = axios.create({
-  baseURL: Config.REACT_APP_BASE_URL + '/',
+  baseURL: 'https://62c8b63bdedc.sa.ngrok.io/', //Config.REACT_APP_BASE_URL + '/',
   headers: {
     AccesToken: Config.REACT_APP_ACCESS_TOKEN,
     'Content-Type': 'application/json',

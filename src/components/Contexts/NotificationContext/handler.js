@@ -23,6 +23,7 @@ export const useNotificationHandler = () => {
   return useCallback(
     (appOpenedByNotification = false) => notification => {
       const {type, ...data} = notification?.data || {};
+      console.log('New notification', notification);
       if (data.shipment) {
         data.shipment = keysToCamelCase(JSON.parse(data.shipment));
       }

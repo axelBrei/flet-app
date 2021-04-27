@@ -52,11 +52,15 @@ export const OperationResult = ({visible, onHideOperationResult, ...props}) => {
       </Animated.View>
       {(props.title || props.message) && (
         <TextContainer>
-          {props.title && (
+          {props.title ? (
             <Title textAlign="center">{props.title || 'Exito!'}</Title>
+          ) : (
+            <></>
           )}
-          {props.message && (
+          {props.message ? (
             <AppText textAlign="center">{props.message}</AppText>
+          ) : (
+            <></>
           )}
         </TextContainer>
       )}

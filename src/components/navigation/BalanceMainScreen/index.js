@@ -28,11 +28,7 @@ export default () => {
   const error = useSelector(selectBalanceError);
   const balance = useSelector(selectCourrierBalance);
 
-  const {Modal, toggle} = useModal(
-    CashoutModalContent,
-    {},
-    {cancelable: false},
-  );
+  const {Modal, toggle} = useModal(CashoutModalContent, {}, {cancelable: true});
 
   const {Modal: CbuModal, open: openCbuModal} = useModal(
     ChangeBankNumberModalContent,
@@ -43,7 +39,7 @@ export default () => {
         maxWidth: isMobile ? '100%' : 500,
       },
     },
-    {cancellable: true, avoidKeyboard: true},
+    {cancelable: true, avoidKeyboard: true},
   );
 
   useEffect(() => {

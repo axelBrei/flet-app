@@ -14,9 +14,11 @@ import * as yup from 'yup';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {strings} from 'constants/strings';
 import {theme} from 'constants/theme';
+import {selectUserData} from 'redux-store/slices/loginSlice';
 
 export const ChangeBankNumberModalContent = ({closeModal}) => {
   const dispatch = useDispatch();
+  const userData = useSelector(selectUserData);
   const isLoading = useSelector(selectIsLoadingUpdateCbu);
   const error = useSelector(selectUpdateCbuError);
   const [submited, setSubmited] = useState(false);
@@ -35,11 +37,15 @@ export const ChangeBankNumberModalContent = ({closeModal}) => {
     handleSubmit,
   } = useFormikCustom({
     initialValues: {
-      number: '',
+      number: userData?.courrier?.bankNumber || '',
     },
     validationSchema: yup.object({
       number: yup
         .string()
+        .notOneOf(
+          [userData?.courrier?.bankNumber],
+          'Debe ser diferente al actual',
+        )
         .length(22, strings.validations.specifycLength)
         .required(strings.validations.requiredField),
     }),
@@ -51,7 +57,11 @@ export const ChangeBankNumberModalContent = ({closeModal}) => {
     title: error
       ? 'Ocurrió un error al querer modificar el CBU'
       : 'CBU modificado con éxito!',
-    message: !error && 'Ya podés retirar el dinero de tu cuenta',
+    message:
+      !error &&
+      (userData?.courrier?.bankNumber
+        ? 'A partir de ahora depositaremos tus ganancias en esta cuenta.'
+        : 'Ya podés retirar el dinero de tu cuenta'),
     isErrorContent: !!error,
   });
 
@@ -68,7 +78,7 @@ export const ChangeBankNumberModalContent = ({closeModal}) => {
     <Container>
       <Title padding="0 0 20">Modifica tu CBU</Title>
       <InputField
-        label="Nuevo CBU"
+        label="CBU"
         keyboardType="numeric"
         value={values.number}
         onChangeText={_setFieldValue('number')}

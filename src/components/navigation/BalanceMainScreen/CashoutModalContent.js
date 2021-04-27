@@ -14,6 +14,7 @@ import {MainButton} from 'components/ui/MainButton';
 import {AppText} from 'components/ui/AppText';
 import {theme} from 'constants/theme';
 import {AnimatedError} from 'components/ui/AnimatedError';
+import {useAnimatedOperationResult} from 'components/Hooks/useAnimatedSuccesContent';
 
 export const CashoutModalContent = ({closeModal}) => {
   const dispatch = useDispatch();
@@ -35,7 +36,19 @@ export const CashoutModalContent = ({closeModal}) => {
     setPressed(true);
   }, []);
 
-  const totalEarned = card.balance - card.fee - cash.fee;
+  const {OperationResultContent} = useAnimatedOperationResult({
+    successConditions: [pressed, !isLoading],
+    title: error
+      ? 'Ocurrió un error al querer hacer el retiro'
+      : 'Retiro de fondos exitoso!',
+    message: error
+      ? ''
+      : 'Verás el dinero acreditado en tu cuenta en los próximos 4 días habiles.',
+    isErrorContent: !!error,
+  });
+
+  const totalEarned = card?.balance - card?.fee - cash?.fee || '';
+  console.log(card, cash);
   return (
     <Container>
       <Title>Retiro de fondos</Title>
@@ -55,7 +68,6 @@ export const CashoutModalContent = ({closeModal}) => {
         </Row>
         <TotalValue>Total: ${totalEarned}</TotalValue>
       </DataContainer>
-      <ErrorMessage>{error || ' '}</ErrorMessage>
       <MainButton loading={isLoading} onPress={onPressCashout}>
         Retirar
       </MainButton>
@@ -65,6 +77,7 @@ export const CashoutModalContent = ({closeModal}) => {
         onPress={closeModal}>
         Cancelar
       </CancelButton>
+      <OperationResultContent />
     </Container>
   );
 };

@@ -66,7 +66,7 @@ export default (
 
     BackgroundGeolocation.on('location', location => {
       BackgroundGeolocation.startTask(taskKey => {
-        onLocationObtained?.(location).then(t => {
+        onLocationObtained?.(location)?.then(t => {
           BackgroundGeolocation.endTask(taskKey);
         });
       });

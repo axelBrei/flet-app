@@ -4,16 +4,26 @@ import balanceService from 'services/balanceService';
 const initialState = {
   data: {
     balance: {},
+    pendingPayments: {
+      pagination: {
+        page: 1,
+        pageSize: 20,
+      },
+      results: [],
+    },
   },
   loading: {
     balance: false,
     cashout: false,
     bankNumber: false,
+    pending: false,
+    pendingPage: false,
   },
   error: {
     balance: null,
     cashout: null,
     bankNumber: null,
+    pending: null,
   },
 };
 
@@ -56,6 +66,27 @@ const slice = createSlice({
       state.loading.bankNumber = false;
       state.error.bankNumber = action.payload;
     },
+    requestBalancePendingPayments: (state, action) => {
+      state.loading[action.payload === 1 ? 'pending' : 'pendingPage'] = true;
+      state.data.pendingPayments.pagination.page = action.payload;
+      state.error.pending = null;
+    },
+    receiveBalancePendingPaymentsSuccess: (state, action) => {
+      state.loading[
+        action.payload.pagination.page === 1 ? 'pending' : 'pendingPage'
+      ] = false;
+      state.data.pendingPayments = action.payload;
+    },
+    receiveBalancePendingPaymentsFail: (state, action) => {
+      state.loading[
+        state.data.pendingPayments.pagination.page === 1
+          ? 'pending'
+          : 'pendingPage'
+      ] = false;
+      if (state.pendingPayments.pagination.page === 1) {
+        state.error.pending = action.payload;
+      }
+    },
   },
 });
 
@@ -70,6 +101,9 @@ const {
   requestChangeCbu,
   receiveChangeCbuSuccess,
   receiveChangeCbuFail,
+  requestBalancePendingPayments,
+  receiveBalancePendingPaymentsSuccess,
+  receiveBalancePendingPaymentsFail,
 } = slice.actions;
 
 // THUNK
@@ -104,6 +138,22 @@ export const fetchChangeBankNumber = number => async dispatch => {
   }
 };
 
+export const fetchPendingPayments = (
+  page = 1,
+  pageSize = 20,
+) => async dispatch => {
+  dispatch(requestBalancePendingPayments(page));
+  try {
+    const {data} = await balanceService.getPendingPayments(page, pageSize);
+    dispatch(receiveBalancePendingPaymentsSuccess(data));
+  } catch (e) {
+    console.log(e);
+    dispatch(
+      receiveBalancePendingPaymentsFail(e?.response?.data?.message || e),
+    );
+  }
+};
+
 // SELECTORS
 export const selectIsLoadingBalance = state =>
   state[slice.name].loading.balance;
@@ -117,3 +167,12 @@ export const selectCashoutError = state => state[slice.name].error.cashout;
 export const selectIsLoadingUpdateCbu = state =>
   state[slice.name].loading.bankNumber;
 export const selectUpdateCbuError = state => state[slice.name].error.bankNumber;
+
+export const selectIsLoadingBalancePendingPayments = state =>
+  state[slice.name].loading.pending;
+export const selectIsLoadingPageBalancePendingPayments = state =>
+  state[slice.name].loading.pendingPage;
+export const selectBalancePendingPaymentsError = state =>
+  state[slice.name].error.pending;
+export const selectBalancePendingPayments = state =>
+  state[slice.name].data.pendingPayments;

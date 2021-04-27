@@ -1,10 +1,5 @@
-import React, {useCallback, useEffect, useRef} from 'react';
-import styled from 'styled-components';
-import {Animated} from 'react-native';
-import {AppText} from 'components/ui/AppText';
-import {Icon} from 'components/ui/Icon';
+import React from 'react';
 import {theme as appTheme} from 'constants/theme';
-import {Title} from 'components/ui/Title';
 import {OperationResult} from 'components/ui/OperationResult';
 
 interface SuccessContentOptions {
@@ -23,6 +18,7 @@ export const useAnimatedOperationResult = ({
   message,
   icon,
   theme,
+  ...props
 }: SuccessContentOptions) => {
   const isSuccesful =
     successConditions.length > 0 && successConditions.every(i => !!i);
@@ -33,6 +29,8 @@ export const useAnimatedOperationResult = ({
         <OperationResult
           title={title}
           message={message}
+          buttonText={props.buttonText}
+          onHideOperationResult={props.onHideOperationResult}
           icon={
             isErrorContent
               ? 'close-circle-outline'
@@ -44,7 +42,6 @@ export const useAnimatedOperationResult = ({
             ...theme,
           }}
           visible
-          onHideOperationResult={() => {}}
         />
       ) : null,
   };

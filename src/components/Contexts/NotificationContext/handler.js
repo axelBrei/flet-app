@@ -21,7 +21,7 @@ export const useNotificationHandler = () => {
   const dispatch = useDispatch();
 
   return useCallback(
-    (appOpenedByNotification = false) => notification => {
+    (appOpenedByNotification = false) => async notification => {
       const {type, ...data} = notification?.data || {};
       console.log('New notification', notification);
       if (data.shipment) {

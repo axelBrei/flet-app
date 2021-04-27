@@ -63,9 +63,9 @@ export default () => {
           )}
           <BalanceOptionsList openCbuModal={openCbuModal} />
         </ScreenContainer>
-        <Modal />
-        <CbuModal />
       </Loader>
+      <Modal />
+      <CbuModal />
     </Screen>
   );
 };

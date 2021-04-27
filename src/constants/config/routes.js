@@ -31,6 +31,7 @@ const _routes = {
   balanceStack: 'balance',
   balanceMainScreen: 'menu',
   balanceLastMovements: 'movimientos',
+  balancePendingMovementsScreen: 'pendiente',
 };
 
 const nativeOnlyRoutes = {
@@ -73,6 +74,8 @@ export const linkingRoutes = {
         screens: {
           [_routes.balanceMainScreen]: 'menu',
           [_routes.balanceLastMovements]: _routes.balanceLastMovements,
+          [_routes.balancePendingMovementsScreen]:
+            _routes.balancePendingMovementsScreen,
         },
       },
       [_routes.driverStack]: {

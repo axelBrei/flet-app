@@ -23,14 +23,6 @@ export const CashoutModalContent = ({closeModal}) => {
   const error = useSelector(selectCashoutError);
   const [pressed, setPressed] = useState(false);
 
-  useEffect(() => {
-    if (pressed && !isLoading && !error) {
-      closeModal();
-      setTimeout(() => dispatch(fetchBalance()), 200);
-      setPressed(false);
-    }
-  }, [pressed, isLoading, error]);
-
   const onPressCashout = useCallback(() => {
     dispatch(fetchCashout());
     setPressed(true);
@@ -45,10 +37,15 @@ export const CashoutModalContent = ({closeModal}) => {
       ? ''
       : 'Verás el dinero acreditado en tu cuenta en los próximos 4 días habiles.',
     isErrorContent: !!error,
+    buttonText: 'Aceptar',
+    onHideOperationResult: () => {
+      dispatch(fetchBalance());
+      setPressed(false);
+      closeModal();
+    },
   });
 
   const totalEarned = card?.balance - card?.fee - cash?.fee || '';
-  console.log(card, cash);
   return (
     <Container>
       <Title>Retiro de fondos</Title>

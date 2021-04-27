@@ -21,6 +21,13 @@ export default () => {
           require('components/navigation/BalanceLastMovementsScreen').default
         }
       />
+      <Screen
+        name={routes.balancePendingMovementsScreen}
+        options={{title: 'Pagos pendientes'}}
+        getComponent={() =>
+          require('components/navigation/BalancePendingPaymentsScreen').default
+        }
+      />
     </Navigator>
   );
 };

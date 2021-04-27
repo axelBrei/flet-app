@@ -14,7 +14,7 @@ export default () => {
   const {lastMovements} = useSelector(selectCourrierBalance);
 
   const list = useMemo(() => {
-    return lastMovements.reduce((acc, curr, i, arr) => {
+    return lastMovements?.reduce((acc, curr, i, arr) => {
       const date = dayjs(curr.createdAt).format('DD/MM/YYYY');
       const item = acc.find(item => item.title === date);
       if (item) {
@@ -27,7 +27,7 @@ export default () => {
       }
       return acc;
     }, []);
-  }, []);
+  }, [lastMovements]);
 
   const renderHeader = useCallback(({section}) => {
     const total = section.data.reduce(

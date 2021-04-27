@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const OPTIONS = [
   {title: 'Últimos movimientos', navigateTo: routes.balanceLastMovements},
-  {title: 'Pagos pendientes'},
+  {title: 'Pagos pendientes', navigateTo: routes.balancePendingMovementsScreen},
   {title: 'Modificar cuenta de pago', actionName: 'openCbuModal'},
 ];
 

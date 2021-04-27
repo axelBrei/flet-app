@@ -9,10 +9,10 @@ import {
   selectIsLoadingBalancePendingPayments,
   selectIsLoadingPageBalancePendingPayments,
 } from 'redux-store/slices/balanceSlice';
-import dayjs from 'dayjs';
 import {PaginatedList} from 'components/ui/PaginatedList';
 import {PendingPaymentItem} from 'components/navigation/BalancePendingPaymentsScreen/PendingPaymentItem';
 import {Loader} from 'components/ui/Loader';
+import {EmptyPaymentList} from 'components/navigation/BalancePendingPaymentsScreen/EmptyPaymentsList';
 
 export default () => {
   const dispatch = useDispatch();
@@ -28,16 +28,17 @@ export default () => {
   const fetchPage = useCallback((page, pageSize) => {
     dispatch(fetchPendingPayments(page, pageSize));
   }, []);
-
   return (
     <Screen removeTWF>
       <Loader loading={isLoading} message="Cargando pagos pendientes" unmount>
         <PaginatedList
           pagination={pagination}
-          data={result}
+          data={error ? [] : result}
+          contentContainerStyle={(error || result.length === 0) && {flex: 1}}
           loading={isLoadingPage}
           defaultPageSize={20}
           fetchDataFunction={fetchPage}
+          ListEmptyComponent={<EmptyPaymentList error={error} />}
           getItemLayout={(data, index) => ({
             length: 100,
             offset: 100 * index,

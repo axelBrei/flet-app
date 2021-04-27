@@ -25,7 +25,8 @@ echo -e "Current build version: $PACKAGE_TEST_VERSION \n"
 
 PACKAGE_TEST_VERSION=$(($PACKAGE_TEST_VERSION+1))
 echo -e "${GREEN}New version: $PACKAGE_TEST_VERSION${END_COLOR}"
-sed -i -e "s/\"testing-version\": [0-9]*/\"testing-version\": ${PACKAGE_TEST_VERSION}/g" ./package.json
+#"testing-version": "7"
+sed -i -e "s/\"testing-version\": [0-9]*/\"testing-version\": ${PACKAGE_TEST_VERSION}/g" package.json
 
 git clean -fd package.json-e
 

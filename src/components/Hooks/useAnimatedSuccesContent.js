@@ -9,6 +9,8 @@ interface SuccessContentOptions {
   icon: String;
   theme: Object;
   isErrorContent: Boolean;
+  onHideOperationResult: Function;
+  buttonText: String;
 }
 
 export const useAnimatedOperationResult = ({
@@ -18,6 +20,8 @@ export const useAnimatedOperationResult = ({
   message,
   icon,
   theme,
+  buttonText,
+  onHideOperationResult,
   ...props
 }: SuccessContentOptions) => {
   const isSuccesful =
@@ -29,8 +33,8 @@ export const useAnimatedOperationResult = ({
         <OperationResult
           title={title}
           message={message}
-          buttonText={props.buttonText}
-          onHideOperationResult={props.onHideOperationResult}
+          buttonText={buttonText}
+          onHideOperationResult={onHideOperationResult}
           icon={
             isErrorContent
               ? 'close-circle-outline'

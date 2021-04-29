@@ -34,7 +34,7 @@ export default () => {
         <PaginatedList
           pagination={pagination}
           data={error ? [] : result}
-          contentContainerStyle={(error || result.length === 0) && {flex: 1}}
+          contentContainerStyle={(error || result?.length === 0) && {flex: 1}}
           loading={isLoadingPage}
           defaultPageSize={20}
           fetchDataFunction={fetchPage}

@@ -21,10 +21,6 @@ export default ({}) => {
   const dispatch = useDispatch();
   const currentShipmentError = useSelector(selectPendingShipmentError);
   const [directions, setDirections] = useState([]);
-  const {loading: loadingPermissions, status, check} = usePermission(
-    [PERMISSIONS.location],
-    true,
-  );
   const shipment = useSelector(selectDriverShipmentData);
 
   useEffect(() => {
@@ -45,12 +41,6 @@ export default ({}) => {
     }
   }, [directions, shipment]);
 
-  useEffect(() => {
-    if (status !== 'granted') {
-      check();
-    }
-  }, [loadingPermissions, status, check]);
-
   useFocusEffect(
     useCallback(() => {
       const num = setInterval(() => {
@@ -64,10 +54,7 @@ export default ({}) => {
 
   return (
     <ScreenComponent>
-      <Loader
-        unmount={false}
-        loading={loadingPermissions || loadingMakers}
-        message={loadingMessage}>
+      <Loader unmount={false} loading={loadingMakers} message={loadingMessage}>
         <Map
           style={{
             flex: 1,

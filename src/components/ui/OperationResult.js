@@ -126,6 +126,6 @@ const TextContainer = styled.View`
 `;
 
 const ButtonContainer = styled.View`
-  flex: 1;
+  margin-top: 25px;
   justify-content: flex-end;
 `;

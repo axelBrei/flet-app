@@ -53,12 +53,6 @@ export const ChangePasswordModal = ({closeModal}) => {
     onSubmit,
   });
 
-  useEffect(() => {
-    if (submited && !isLoading && !error) {
-      setTimeout(closeModal, 2500);
-    }
-  }, [submited, isLoading, error]);
-
   const {OperationResultContent} = useAnimatedOperationResult({
     successConditions: [submited, !isLoading],
     title: error ? 'Oh no!' : 'Exito!',
@@ -66,6 +60,11 @@ export const ChangePasswordModal = ({closeModal}) => {
       ? 'Ocurrió un problema para modificar la contraseña. Intentá de nuevo mas tarde'
       : 'Se ha moficado la contraseña!',
     isErrorContent: !!error,
+    onHideOperationResult: closeModal,
+    buttonText: 'Aceptar',
+    theme: {
+      iconSize: 120,
+    },
   });
 
   return (

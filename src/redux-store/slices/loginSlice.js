@@ -2,7 +2,10 @@ import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
 import {capitallize} from 'helpers/stringHelper';
 import {receiveRegisterSuccess} from './registerSlice';
-import {receiveChangeOnlineStatusSuccess} from 'redux-store/slices/driverSlice';
+import {
+  changeOnlineStatus,
+  receiveChangeOnlineStatusSuccess,
+} from 'redux-store/slices/driverSlice';
 import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
 import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
@@ -103,6 +106,11 @@ export const loginAs = (email, pass) => async dispatch => {
   } catch (e) {
     return dispatch(receiveLoginFail(e?.response?.data || e));
   }
+};
+
+export const fetchLogout = () => async dispatch => {
+  await dispatch(changeOnlineStatus(false));
+  dispatch(logout());
 };
 /**
  * @SELECTORS

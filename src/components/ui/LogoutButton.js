@@ -3,18 +3,18 @@ import {View} from 'react-native';
 import styled from 'styled-components';
 import {useDispatch} from 'react-redux';
 import {theme} from 'constants/theme';
-import {logout} from 'redux-store/slices/loginSlice';
+import {fetchLogout} from 'redux-store/slices/loginSlice';
 import {MainButton} from 'components/ui/MainButton';
 
 export const LogoutButton = () => {
   const dispatch = useDispatch();
 
-  const onPressLogout = useCallback(() => dispatch(logout()), [dispatch]);
+  const onPressLogout = useCallback(() => dispatch(fetchLogout()), [dispatch]);
 
   return (
     <View nativeID="buttonContainer">
       <Button inverted onPress={onPressLogout} color={theme.error}>
-        Cerrar sesion
+        Cerrar sesión
       </Button>
     </View>
   );

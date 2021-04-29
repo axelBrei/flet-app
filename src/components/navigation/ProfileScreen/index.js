@@ -33,11 +33,11 @@ const data = [
         name: 'Teléfonos',
         modal: TelephoneModal,
       },
-      {
-        name: 'Mis vehiculos',
-        redirectTo: routes.profileVehicleStack,
-        driverOnly: true,
-      },
+      // {
+      //   name: 'Mis vehiculos',
+      //   redirectTo: routes.profileVehicleStack,
+      //   driverOnly: true,
+      // },
       {
         name: 'Mis direcciones',
         redirectTo: routes.userAddressUpdateScreen,
@@ -64,12 +64,8 @@ export default () => {
     [navigation],
   );
 
-  const renderItem = ({item}) => (
-    <MenuItem {...item} onPressItem={onPressItem} />
-  );
-  const renderHeader = ({section}) => (
-    <SectionHeader>{section.name}</SectionHeader>
-  );
+  const renderItem = item => <MenuItem {...item} onPressItem={onPressItem} />;
+  const renderHeader = name => <SectionHeader>{name}</SectionHeader>;
 
   const filteredList = data.reduce(
     (acc, curr) => [
@@ -93,14 +89,17 @@ export default () => {
         {!isDriver && <MainButton label="Maneja con nosotros" inverted />}
       </CenterContainer>
       <ContentContainer>
-        <SectionList
-          keyExtractor={(_, i) => i.toString()}
-          sections={filteredList}
-          renderItem={renderItem}
-          renderSectionHeader={renderHeader}
-          ItemSeparatorComponent={SeparatorComponent}
-          stickySectionHeadersEnabled
-        />
+        {filteredList.map((item, index) => (
+          <React.Fragment key={index.toString()}>
+            {renderHeader(item.name)}
+            {item.data.map((subItem, subIndex) => (
+              <React.Fragment key={subIndex.toString()}>
+                {renderItem(subItem)}
+                <SeparatorComponent />
+              </React.Fragment>
+            ))}
+          </React.Fragment>
+        ))}
       </ContentContainer>
       {isMobile && <LogoutButton />}
     </ScreenComponent>
@@ -128,15 +127,6 @@ const CenterContainer = styled.View`
 
 const ContentContainer = styled.View`
   padding: 20px;
-`;
-
-const SectionList = styled.SectionList`
-  ${props =>
-    Platform.OS === 'web' &&
-    !props.theme.isMobile &&
-    css`
-      max-width: 50%;
-    `}
 `;
 
 const SectionHeader = styled(Title)`

@@ -15,12 +15,10 @@ export default () => {
       screenOptions={navigationConfig({
         headerTransparent: !isMobile,
         headerBackTitle: 'Volver',
-        headerTintColor: isMobile ? theme.white : theme.primaryDarkColor,
         headerBackTitleVisible: !isMobile,
         headerTitleStyle: {
           fontSize: 20,
           fontWeight: 'bold',
-          color: theme.white,
         },
       })}>
       <Screen

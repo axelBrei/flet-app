@@ -15,13 +15,14 @@ import {Platform} from 'react-native';
 import PageNotFound from 'components/navigation/PageNotFound';
 import {Icon} from 'components/ui/Icon';
 import ProfileStack from 'components/navigation/ProfileStack';
+import {AppText} from 'components/ui/AppText';
 
 const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
-      return 'home';
+      return 'package-variant';
     case 'courrier':
-      return 'handshake';
+      return 'truck-fast';
     case 'ultimospedidos':
       return 'truck';
     case routes.balanceStack:
@@ -31,6 +32,13 @@ const getIconForRoute = routeName => {
     default:
       return 'account-question';
   }
+};
+
+const titlesMappings = {
+  courrier: '',
+  envio: '',
+  balance: '',
+  usuario: '',
 };
 
 export default () => {
@@ -68,15 +76,19 @@ export default () => {
         inactiveTintColor: theme.fontColor,
         keyboardHidesTabBar: true,
         style: {
-          paddingVertical: 10,
-
+          paddingVertical: 5,
           ...Platform.select({
             web: {height: 75, paddingBottom: 15},
           }),
         },
       }}
-      screenOptions={({route}) => ({
+      screenOptions={({navigation, route}) => ({
         headerShown: false,
+        tabBarLabel: props => (
+          <AppText fontSize={11} color={props.color}>
+            {route.params.title}
+          </AppText>
+        ),
         tabBarIcon: ({focused, color, size}) => (
           <Icon
             name={getIconForRoute(route?.name)}
@@ -90,17 +102,17 @@ export default () => {
         <Screen
           name={routes.driverStack}
           component={DriverStack}
+          initialParams={{title: 'Conducir'}}
           options={{
             headerShown: false,
-            title: 'Trabajo',
           }}
         />
       )}
       <Screen
         name={routes.shipmentStack}
         component={ShipmentStack}
-        options={{
-          title: 'Inicio',
+        initialParams={{
+          title: userData?.isDriver ? 'Enviar' : 'Inicio',
         }}
       />
       {userData?.isDriver ? (
@@ -109,7 +121,7 @@ export default () => {
           getComponent={() =>
             require('components/navigation/BalanceStack').default
           }
-          options={{
+          initialParams={{
             title: 'Balance',
           }}
         />
@@ -119,8 +131,8 @@ export default () => {
           getComponent={() =>
             require('components/navigation/LastShipmentsScreen').default
           }
+          initialParams={{title: 'Mis pedidos'}}
           options={{
-            title: 'Mis pedidos',
             headerShown: false,
           }}
         />
@@ -130,25 +142,10 @@ export default () => {
         getComponent={() =>
           require('components/navigation/ProfileStack').default
         }
-        options={{
-          title: 'Mi perfil',
+        initialParams={{
+          title: 'Mi cuenta',
         }}
       />
     </Navigator>
   );
 };
-
-// <Screen
-//   name={routes.profileScreen}
-//   component={HomeScreen}
-//   options={{
-//     title: 'Mi cuenta',
-//   }}
-// />
-// <Screen
-//   name={routes.plannedShippments}
-//   component={HomeScreen}
-//   options={{
-//     title: 'Viajes planeados',
-//   }}
-// />

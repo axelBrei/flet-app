@@ -59,7 +59,6 @@ export const MapPreferencesModalContent = ({closeModal}) => {
         try {
           return await Linking.canOpenURL(url);
         } catch (e) {
-          console.log(e);
           return Promise.resolve();
         }
       }),

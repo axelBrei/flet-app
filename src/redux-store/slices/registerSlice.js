@@ -140,7 +140,6 @@ export const registerDriverPersonalData = (
       }),
     );
   } catch (e) {
-    console.log({...e});
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -159,14 +158,12 @@ export const registerDriverVehicleData = vehicleData => async (
     Object.keys(snakeCaseObj).forEach(key => {
       form.append(key, snakeCaseObj[key]);
     });
-    console.log(licenseBack, licenseFront);
     form.append('courrier_id', courrier_id);
     appendToForm(form, 'license_front', licenseFront);
     appendToForm(form, 'license_back', licenseBack);
     await loginService.registerCourrierVehicleData(form);
     dispatch(receiveCourrierVehicleDataSuccess(vehicleData));
   } catch (e) {
-    console.log({...e});
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };
@@ -190,7 +187,6 @@ export const registerDriverLegaleData = legalData => async (
     await loginService.registerCourrierLegalData(form);
     dispatch(receiveCourrierLegaldataSuccess());
   } catch (e) {
-    console.log({...e});
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
 };

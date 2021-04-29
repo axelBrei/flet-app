@@ -52,7 +52,6 @@ export const useMarkerList = updatePosition => {
   );
 
   useEffect(() => {
-    console.log(shipment);
     shipment && enable();
   }, [shipment]);
 

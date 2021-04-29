@@ -147,7 +147,6 @@ export const fetchPendingPayments = (
     const {data} = await balanceService.getPendingPayments(page, pageSize);
     dispatch(receiveBalancePendingPaymentsSuccess(data));
   } catch (e) {
-    console.log(e);
     dispatch(
       receiveBalancePendingPaymentsFail(e?.response?.data?.message || e),
     );

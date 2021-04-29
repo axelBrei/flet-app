@@ -49,7 +49,6 @@ export default ({navigation}) => {
     handleSubmit,
   } = useFormikCustom(legalDriverDataFormikConfig(onSubmit));
 
-  console.log(isSubmited, isLoading, error);
   useEffect(() => {
     if (isSubmited && !isLoading && !error) {
       setIsSubmited(false);

@@ -4,12 +4,16 @@ import {PERMISSIONS as PERMISSIONS_BASE} from 'components/Permissions/permission
 import {Platform} from 'react-native';
 
 export const PERMISSIONS = PERMISSIONS_BASE;
-export const usePermission = (permissions = [], onlyMobile) => {
+export const usePermission = (
+  permissions = [],
+  onlyMobile,
+  checkOnMount = true,
+) => {
   const [loadingPermission, setLoadingPermission] = useState(true);
   const [status, setStatus] = useState(false);
   const [error, setError] = useState(null);
 
-  const checkPermissions = useCallback(async (_permissions) => {
+  const checkPermissions = useCallback(async _permissions => {
     if (onlyMobile && Platform.OS === 'web') return;
     try {
       const res = await PermissionManager.checkPermissions(_permissions);
@@ -24,7 +28,7 @@ export const usePermission = (permissions = [], onlyMobile) => {
 
   useEffect(() => {
     if (onlyMobile && Platform.OS === 'web') setLoadingPermission(false);
-    else checkPermissions(permissions);
+    else if (checkOnMount) checkPermissions(permissions);
   }, [permissions, checkPermissions]);
 
   return {

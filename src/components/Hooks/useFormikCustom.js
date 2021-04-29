@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useFormik} from 'formik';
 
-export const useFormikCustom = (formikConfig) => {
+export const useFormikCustom = formikConfig => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submited, setSubmited] = useState(false);
   const {setFieldTouched, setFieldValue, ...formikProps} = useFormik(
@@ -19,7 +19,7 @@ export const useFormikCustom = (formikConfig) => {
   }, [formikProps.isSubmitting]);
 
   const _setFieldTouched = useCallback(
-    (field) => () => {
+    field => () => {
       setFieldTouched(field, true, true);
       return false;
     },
@@ -27,7 +27,8 @@ export const useFormikCustom = (formikConfig) => {
   );
 
   const _setFieldValue = useCallback(
-    (field) => (value) => {
+    field => value => {
+      setSubmited(false);
       setFieldValue(field, value, true);
     },
     [setFieldValue],

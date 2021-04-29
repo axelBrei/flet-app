@@ -24,7 +24,7 @@ export const Dropdown = ({visible, data, ...props}) => {
   );
 
   const onPressItem = useCallback(
-    (item) => {
+    item => {
       setDropdownOpen(false);
       props.onItemPress(item);
       setValue(item);
@@ -33,7 +33,7 @@ export const Dropdown = ({visible, data, ...props}) => {
   );
 
   const onChangeText = useCallback(
-    (v) => {
+    v => {
       props.onChangeText(v);
       setValue({
         name: v,
@@ -51,7 +51,11 @@ export const Dropdown = ({visible, data, ...props}) => {
         onLayout={measureInput}
         error={null}
         renderAccesory={() => (
-          <TouchableOpacity onPress={() => setDropdownOpen(!dropdownOpen)}>
+          <TouchableOpacity
+            onPress={() => {
+              setDropdownOpen(!dropdownOpen);
+              props.onBlur?.();
+            }}>
             <Icon
               name={dropdownOpen ? 'chevron-up' : 'chevron-down'}
               size={22}
@@ -60,7 +64,7 @@ export const Dropdown = ({visible, data, ...props}) => {
         )}
         onFocus={() => {
           setDropdownOpen(true);
-          props.onFocus?.();
+          // props.onFocus?.();
           return true;
         }}
       />

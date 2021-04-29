@@ -53,7 +53,7 @@ export default ({navigation}) => {
   }, [submited, loading, error]);
 
   return (
-    <ScreenComponent>
+    <ScreenComponent scrollable>
       <StyledRow>
         <InputField
           style={{width: '49%'}}

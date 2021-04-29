@@ -25,8 +25,10 @@ const babelLoaderConfiguration = {
   test: /\.(js)$/,
   exclude: [
     new RegExp(
-      'node_modules[/\\\\](?!react-native-swipe-gestures|react-native-gesture-handler|react-native-calendars)',
+      'node_modules[/\\\\](?!react-native-swipe-gestures|react-native-flipper|rn-redux-middleware-flipper|react-native-gesture-handler|react-native-calendars)',
     ),
+    /^@react-native-firebase\/.*/,
+    /^react-native-splash-screen\/.*/,
     path.resolve('./src/resources/fonts'),
     path.resolve('./android'),
     path.resolve('./ios'),

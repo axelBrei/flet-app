@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Screen} from 'components/ui/Screen';
 import styled, {css} from 'styled-components';
-import {AppText} from 'components/ui/AppText';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import {scaleDp} from 'helpers/responsiveHelper';
 import InputField from 'components/ui/InputField';
 import {
   vehiculeDataFormikConfig,
@@ -12,8 +11,6 @@ import {Container} from 'components/ui/Container';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import SelectImage from 'components/ui/SelectImage/index';
 import {MainButton} from 'components/ui/MainButton';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import CarImage from 'resources/images/car.svg';
 import {routes} from 'constants/config/routes';
 import {Row} from 'components/ui/Row';
 import {
@@ -22,9 +19,6 @@ import {
   selectRegisterError,
 } from 'redux-store/slices/registerSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import {IconCard} from 'components/ui/IconCard';
-import {theme} from 'constants/theme';
-import {VehicleCapacityCard} from 'components/navigation/RegisterDriverVehiculeDataScreen/VehicleCapacityCard';
 import {Dropdown} from 'components/ui/Dropdown';
 import {
   fetchVehicleTypes,
@@ -60,17 +54,17 @@ export default ({navigation}) => {
     values,
     errors,
     touched,
-    submited,
+    isSubmitting,
     _setFieldValue,
     _setFieldTouched,
     handleSubmit,
   } = useFormikCustom(vehiculeDataFormikConfig(onSubmit));
 
   useEffect(() => {
-    if (submited && !isLoading && !error) {
+    if (isSubmitting && !isLoading && !error) {
       navigation.navigate(routes.registerDriverLegalsScreen);
     }
-  }, [submited, isLoading, error]);
+  }, [isSubmitting, isLoading, error]);
 
   return (
     <Screen scrollable>
@@ -109,7 +103,7 @@ export default ({navigation}) => {
           label="Tipo de vehiculo"
           value={values[FIELDS.VEHICLE_TYPE]}
           onItemPress={_setFieldValue(FIELDS.VEHICLE_TYPE)}
-          onFocus={_setFieldTouched(FIELDS.VEHICLE_TYPE)}
+          onBlur={_setFieldTouched(FIELDS.VEHICLE_TYPE)}
           data={vehicleTypes}
           error={
             error ||

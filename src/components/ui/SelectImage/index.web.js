@@ -13,6 +13,7 @@ const SelectImage = ({
   value,
   onSelectImage,
   onFocus,
+  externalRef,
   ...props
 }) => {
   const inputRef = React.useRef(null);
@@ -52,6 +53,10 @@ const SelectImage = ({
     },
     [inputRef],
   );
+
+  React.useImperativeHandle(externalRef, () => ({
+    selectImage: _onFocus,
+  }));
 
   return (
     <>
@@ -94,4 +99,7 @@ SelectImage.propTypes = {
   acceptTypes: PropTypes.string,
   maxFiles: PropTypes.number,
 };
-export default SelectImage;
+
+export default React.forwardRef((props, ref) => (
+  <SelectImage externalRef={ref} {...props} />
+));

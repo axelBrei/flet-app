@@ -15,6 +15,9 @@ const _routes = {
   lastShippmentsScreen: 'ultimosPedidos',
   profileStack: 'usuario',
   profileScreen: 'perfil',
+  profileVehicleStack: 'vehicles',
+  profilevehicleListScreen: 'list',
+  vehicleDetailScreen: 'detalle',
   userAddressUpdateScreen: 'direcciones',
   plannedShippments: 'planeados',
   newShipmentPackageDetailScreen: 'paquete',
@@ -28,6 +31,7 @@ const _routes = {
   balanceStack: 'balance',
   balanceMainScreen: 'menu',
   balanceLastMovements: 'movimientos',
+  balancePendingMovementsScreen: 'pendiente',
 };
 
 const nativeOnlyRoutes = {
@@ -70,6 +74,8 @@ export const linkingRoutes = {
         screens: {
           [_routes.balanceMainScreen]: 'menu',
           [_routes.balanceLastMovements]: _routes.balanceLastMovements,
+          [_routes.balancePendingMovementsScreen]:
+            _routes.balancePendingMovementsScreen,
         },
       },
       [_routes.driverStack]: {
@@ -86,6 +92,13 @@ export const linkingRoutes = {
         screens: {
           [_routes.profileScreen]: 'perfil',
           [_routes.userAddressUpdateScreen]: 'direcciones',
+          [_routes.profileVehicleStack]: {
+            path: _routes.profileVehicleStack,
+            screens: {
+              [_routes.profilevehicleListScreen]: 'list',
+              [_routes.vehicleDetailScreen]: _routes.vehicleDetailScreen,
+            },
+          },
         },
       },
       [_routes.lastShippmentsScreen]: 'ultimosPedidos',
@@ -114,7 +127,6 @@ export const getRoutesFromLinking = (obj = linkingRoutes, prefix = null) =>
     {},
   );
 
-console.log(getRoutesFromLinking());
 const allRoutes = {
   // ...(Platform.OS === 'web' ? getRoutesFromLinking() : _routes),
   ..._routes,

@@ -192,9 +192,6 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
       if (data.type === 'submit') {
         return onPaymentSubmited?.(data.value);
       }
-      if (data.type === 'console') {
-        return console.log(data.value);
-      }
     },
     [setLoading, onPaymentSubmited],
   );

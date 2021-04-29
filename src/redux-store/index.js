@@ -11,6 +11,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import specifyPlatformMiddlewares from 'redux-store/PlatfomSpecifycMiddlewares';
 
 export const persistConfig = {
   key: 'root',
@@ -23,10 +24,8 @@ export const persistConfig = {
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = configureStore({
-  reducer: persistedReducer,
-  devTools: true,
-  middleware: getDefaultMiddleware({
+const middlewares = [
+  ...getDefaultMiddleware({
     serializableCheck: false,
     immutableCheck: ['register/receiveCourrierVehicleDataSuccess'],
     // serializableCheck: {
@@ -42,6 +41,13 @@ const store = configureStore({
     //   ],
     // },
   }),
+  ...specifyPlatformMiddlewares,
+];
+
+const store = configureStore({
+  reducer: persistedReducer,
+  devTools: true,
+  middleware: middlewares,
 });
 
 export const persistor = persistStore(store);

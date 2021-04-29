@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   confirmShipment,
   rejectShipment,
-  selectDriverShipmentData,
   selectPendingShipment,
   selectPendingShipmentAnswerError,
   selectPendingShipmentError,
@@ -15,7 +14,7 @@ import {
 import {Loader} from 'components/ui/Loader';
 import {getRotatedMarker} from 'components/ui/Map/helper';
 import {getBearingFromCoords} from 'helpers/locationHelper';
-import {Platform} from 'react-native';
+import {Platform, Alert} from 'react-native';
 import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {
@@ -28,19 +27,20 @@ import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFet
 import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCard';
 import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {useUserData} from 'components/Hooks/useUserData';
+import {useIsFocused} from '@react-navigation/native';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const {courrier} = useUserData();
   const isOnline = useSelector(selectOnlineStatus);
   const previosPosition = useSelector(selectPreviosPosition);
   const pendingShipment = useSelector(selectPendingShipment);
   const pendingShipmentError = useSelector(selectPendingShipmentError);
-  const currentShipment = useSelector(selectDriverShipmentData);
   const error = useSelector(selectPendingShipmentAnswerError);
   const [debouncedCurrentPosition, setLocation] = useState({});
 
-  const {enable, disable} = useBackgroundLocation(
+  const {enable, disable, hasLocationPermission} = useBackgroundLocation(
     loc =>
       new Promise(resolve => {
         setLocation(loc);
@@ -63,8 +63,14 @@ export default ({navigation}) => {
   );
 
   useEffect(() => {
-    (isOnline ? enable : disable)();
-  }, [isOnline, enable, disable]);
+    if (isOnline) {
+      if (!enable()) {
+        dispatch(changeOnlineStatus(false));
+      }
+    } else if (isFocused) {
+      disable();
+    }
+  }, [isOnline, isFocused]);
 
   useFetcingPendingShipment();
 
@@ -91,7 +97,7 @@ export default ({navigation}) => {
     ];
   }, [debouncedCurrentPosition, previosPosition]);
 
-  const {Modal, toggle, open, close} = useModal(
+  const {Modal, isModalVisible, open, close} = useModal(
     NewTripModalContent,
     {
       distance: pendingShipment?.startPoint?.distance,
@@ -107,16 +113,28 @@ export default ({navigation}) => {
   );
 
   useEffect(() => {
-    if (!error && !pendingShipmentError && pendingShipment) {
+    if (!error && !pendingShipmentError && pendingShipment && !isModalVisible) {
       open();
-    } else if (error || pendingShipmentError) {
+    } else if (error && isModalVisible) {
       close();
     }
-  }, [pendingShipment, error, pendingShipmentError]);
+  }, [pendingShipment, error, pendingShipmentError, isModalVisible]);
 
-  const onChangeOnlineStatus = useCallback((newOnlineStatus, time) => {
-    dispatch(changeOnlineStatus(newOnlineStatus, time.until));
-  }, []);
+  const onChangeOnlineStatus = useCallback(
+    (newOnlineStatus, time) => {
+      if (!courrier.enabled) {
+        Alert.alert(
+          'Ya casi!',
+          'Todavía estamos analizando tu perfil.\nNosotros te avisaremos cuando puedas empezar a realizar envíos',
+        );
+        return;
+      }
+      if (hasLocationPermission()) {
+        dispatch(changeOnlineStatus(newOnlineStatus, time.until));
+      }
+    },
+    [hasLocationPermission],
+  );
 
   return (
     <Screen>

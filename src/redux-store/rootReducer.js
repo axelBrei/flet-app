@@ -14,6 +14,7 @@ import vehicleTypesreducer from 'redux-store/slices/vehicleTypesSlice';
 import insuranceReducer from 'redux-store/slices/insuranceSlice';
 import personalDataReducer from 'redux-store/slices/personalData';
 import balanceSlice from 'redux-store/slices/balanceSlice';
+import preferencesSlice from 'redux-store/slices/preferencesSlice';
 
 const reducers = {
   login: loginSlice,
@@ -34,6 +35,7 @@ const reducers = {
   vehicleTypes: vehicleTypesreducer,
   personalData: personalDataReducer,
   ...balanceSlice,
+  ...preferencesSlice, //PERSISTED
 };
 
 let extraReducers = {};

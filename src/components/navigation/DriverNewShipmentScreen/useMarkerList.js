@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import {View, Platform} from 'react-native';
 import EndpointMarker from 'resources/assets/endpoint_marker.svg';
 import ENDPOINT_MARKER_PNG from 'resources/assets/endpoint_marker.png';
@@ -13,7 +13,7 @@ import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import useBackgroundLocation from 'components/Hooks/useBackgroundLocation/index';
 import {updatePosition} from 'redux-store/slices/driverSlice';
-import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 export const useMarkerList = updatePosition => {
   const isFocused = useIsFocused();
@@ -36,10 +36,13 @@ export const useMarkerList = updatePosition => {
         resolve();
       }),
     {
+      autoStart: true,
+      stopOnUnfocus: true,
       interval: 10 * 1000,
       fastestInterval: 5 * 1000,
       activitiesInterval: 10 * 1000,
       url: 'courrier/position',
+
       body: {
         latitude: '@latitude',
         longitude: '@longitude',
@@ -49,8 +52,8 @@ export const useMarkerList = updatePosition => {
   );
 
   useEffect(() => {
-    isFocused ? enable() : disable();
-  }, [isFocused]);
+    shipment && enable();
+  }, [shipment]);
 
   const orientation = useMemo(() => {
     if (currentLocation) {

@@ -8,6 +8,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   SafeAreaView,
+  useColorScheme,
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
@@ -27,6 +28,7 @@ export const Screen = ({
   ...props
 }) => {
   const {lockBody, unlockBody} = useBodyLock();
+  const colorScheme = useColorScheme();
   const route = useRoute();
   const {isMobile, width} = useWindowDimension();
   const ViewComponent = React.useMemo(() => {
@@ -66,13 +68,22 @@ export const Screen = ({
 
   return (
     <>
-      <StatusBar backgroundColor={theme.primaryDarkColor} />
+      <StatusBar
+        backgroundColor={theme.primaryDarkColor}
+        barStyle={
+          colorScheme
+            ? colorScheme === 'light'
+              ? 'dark-content'
+              : 'light-content'
+            : 'default'
+        }
+      />
       <NativeSafeAreaView
         {...(Platform.OS !== 'web' && {
           style: {
             height: '100%',
             width,
-            backgroundColor: theme.white,
+            backgroundColor: theme.backgroundColor,
           },
         })}>
         <KeyboardAvoidingView
@@ -91,6 +102,7 @@ export const Screen = ({
               showsVerticalScrollIndicator={false}
               classname={classname}
               contentContainerStyle={props.contentContainerStyle}
+              refreshControl={props.refreshControl}
               style={[
                 {backgroundColor: theme.white},
                 !scrollable && {

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "527406759056",
+    "project_id": "fletapp-dev",
+    "storage_bucket": "fletapp-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527406759056:android:0193dcdaa31fb65f3e6c15",
+        "android_client_info": {
+          "package_name": "com.fletex_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527406759056-7mnbu365odondqqnohtptp7k35fcngfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWJz4DRqv5PRAZI2Q_wn-jWa_AjLgWG70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527406759056-7mnbu365odondqqnohtptp7k35fcngfe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

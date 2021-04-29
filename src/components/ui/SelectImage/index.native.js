@@ -25,8 +25,25 @@ const SelectImage = ({
   value,
   onFocus,
   onSelectImage,
+  externalRef,
   ...props
 }) => {
+  const processImage = useCallback(
+    image => {
+      const original = {
+        name: image.filename || `${new Date().valueOf()}`,
+        uri: image.path,
+        type: image.mime,
+      };
+      onSelectImage({
+        original,
+        filename: original.name,
+        ...image,
+      });
+    },
+    [onSelectImage],
+  );
+
   const onPressCamera = useCallback(async () => {
     if (
       !(await PermissionManager.checkPermissions([
@@ -41,7 +58,7 @@ const SelectImage = ({
       cropping: true,
       ...defaultProps,
     });
-    onSelectImage(image);
+    processImage(image);
   }, [onSelectImage, maxFiles]);
 
   const onPressGalery = useCallback(async () => {
@@ -58,10 +75,10 @@ const SelectImage = ({
       cropping: true,
       ...defaultProps,
     });
-    onSelectImage(image);
+    processImage(image);
   }, [onSelectImage, maxFiles]);
 
-  const _onFocus = useCallback((e) => {
+  const _onFocus = useCallback(e => {
     Alert.alert(
       'Elegí una fuente',
       'Elegi de donde querés selccionar la foto',
@@ -80,11 +97,17 @@ const SelectImage = ({
     return true;
   }, []);
 
-  const onClear = useCallback((t) => {
+  const onClear = useCallback(t => {
     if (t === '') {
       onSelectImage(null);
     }
   }, []);
+
+  React.useImperativeHandle(externalRef, () => ({
+    selectImage: () => {
+      _onFocus();
+    },
+  }));
 
   return (
     <InputField
@@ -106,4 +129,6 @@ SelectImage.defaultProps = {
   maxFiles: 1,
 };
 
-export default SelectImage;
+export default React.forwardRef((props, ref) => (
+  <SelectImage externalRef={ref} {...props} />
+));

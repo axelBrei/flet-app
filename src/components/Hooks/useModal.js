@@ -42,6 +42,7 @@ export const useModal = (
           closeModal={closeModal}
           contentStyle={contentStyle || props.contentStyle}
           {...modalProps}
+          avoidKeyboard={modalProps.avoidKeyboard || props.avoidKeyboard}
           style={[
             Platform.OS === 'web' && {backgroundColor: theme.white},
             contentStyle,

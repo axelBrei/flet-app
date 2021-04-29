@@ -8,10 +8,7 @@ import {theme} from 'constants/theme';
 const {Navigator, Screen} = createStackNavigator();
 export default () => {
   return (
-    <Navigator
-      screenOptions={navigationConfig({
-        headerTintColor: theme.white,
-      })}>
+    <Navigator screenOptions={navigationConfig({})}>
       <Screen
         name={routes.balanceMainScreen}
         component={BalanceMainScreen}
@@ -22,6 +19,13 @@ export default () => {
         options={{title: 'Últimos movimientos'}}
         getComponent={() =>
           require('components/navigation/BalanceLastMovementsScreen').default
+        }
+      />
+      <Screen
+        name={routes.balancePendingMovementsScreen}
+        options={{title: 'Pagos pendientes'}}
+        getComponent={() =>
+          require('components/navigation/BalancePendingPaymentsScreen').default
         }
       />
     </Navigator>

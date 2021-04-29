@@ -3,6 +3,8 @@ import {Alert} from 'react-native';
 import BackgroundGeolocation from '@darron1217/react-native-background-geolocation';
 import Config from 'react-native-config';
 import {useUserData} from 'components/Hooks/useUserData';
+import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
+import {permissionStatus} from 'components/Permissions/permissionStatus';
 
 interface BackgroundLocationConfig {
   interval: Number;
@@ -15,6 +17,7 @@ interface BackgroundLocationConfig {
   url: String;
   body: Object;
   autoStart: Boolean;
+  stopOnUnfocus: Boolean;
 }
 
 export default (
@@ -34,9 +37,46 @@ export default (
       vehicle_id: 1,
     },
     autoStart: false,
+    stopOnUnfocus: false,
   },
 ) => {
   const {userToken} = useUserData();
+  const {loading, status, error, check} = usePermission(
+    [PERMISSIONS.backgroundLocation],
+    true,
+    false,
+  );
+
+  const enable = useCallback(
+    (checkPermission = true) => {
+      if (status) {
+        BackgroundGeolocation.checkStatus(status => {
+          if (!status.isRunning) {
+            BackgroundGeolocation.start();
+          }
+        });
+      } else if (checkPermission) {
+        check();
+      }
+      return status;
+    },
+    [status],
+  );
+
+  const disable = useCallback(() => {
+    BackgroundGeolocation.checkStatus(status => {
+      if (status.isRunning) {
+        BackgroundGeolocation.stop();
+      }
+    });
+  }, []);
+
+  const hasPermission = useCallback(() => {
+    if (!status) {
+      check();
+    }
+    return status;
+  }, [status]);
 
   useEffect(() => {
     BackgroundGeolocation.configure({
@@ -64,14 +104,14 @@ export default (
 
     BackgroundGeolocation.on('location', location => {
       BackgroundGeolocation.startTask(taskKey => {
-        onLocationObtained?.(location).then(t => {
+        onLocationObtained?.(location)?.then(t => {
           BackgroundGeolocation.endTask(taskKey);
         });
       });
     });
 
-    BackgroundGeolocation.on('authorization', status => {
-      if (status !== BackgroundGeolocation.AUTHORIZED) {
+    BackgroundGeolocation.on('authorization', permissionStatus => {
+      if (permissionStatus !== BackgroundGeolocation.AUTHORIZED) {
         // we need to set delay or otherwise alert may not be shown
         setTimeout(
           () =>
@@ -94,37 +134,25 @@ export default (
       }
     });
 
-    config.autoStart &&
-      BackgroundGeolocation.checkStatus(status => {
-        if (!status.isRunning) {
-          BackgroundGeolocation.start();
-        }
-      });
-
     return () => {
-      BackgroundGeolocation.stop();
-      BackgroundGeolocation.removeAllListeners();
+      if (config.stopOnUnfocus) {
+        BackgroundGeolocation.stop();
+        BackgroundGeolocation.removeAllListeners();
+      }
     };
   }, []);
 
-  const enable = useCallback(() => {
-    BackgroundGeolocation.checkStatus(status => {
-      if (!status.isRunning) {
-        BackgroundGeolocation.start();
+  useEffect(() => {
+    if (!loading) {
+      if (!error && status) {
+        config.autoStart && enable(false);
       }
-    });
-  }, []);
-
-  const disable = useCallback(() => {
-    BackgroundGeolocation.checkStatus(status => {
-      if (status.isRunning) {
-        BackgroundGeolocation.stop();
-      }
-    });
-  }, []);
+    }
+  }, [status, loading, config]);
 
   return {
     enable,
     disable,
+    hasLocationPermission: hasPermission,
   };
 };

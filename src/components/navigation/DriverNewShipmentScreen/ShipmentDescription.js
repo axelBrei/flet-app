@@ -14,6 +14,7 @@ import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {ShipmentStagesDescriptor} from 'components/navigation/DriverNewShipmentScreen/ShipmentStagesDescriptor';
 import {openMapsOnDevice} from 'helpers/locationHelper';
 import {selectDriverIsLoadingShipmentStatus} from 'redux-store/slices/driverShipmentSlice';
+import {openMap} from 'redux-store/slices/preferencesSlice';
 
 export const ShipmentDescription = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export const ShipmentDescription = () => {
   }, [status]);
 
   const onPressOpenMaps = useCallback(() => {
-    openMapsOnDevice(destination);
+    dispatch(openMap(destination));
   }, [destination]);
 
   const onPressButton = useCallback(() => {

@@ -46,6 +46,7 @@ export const CustomImage = ({
           source={source}
           defaultSource={defaultSource}
           style={{height: '100%', width: '100%'}}
+          resizeMode={props.resizeMode}
         />
       ),
     [source, error, defaultIcon, defaultSource],

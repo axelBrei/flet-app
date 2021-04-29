@@ -15,12 +15,10 @@ export default () => {
       screenOptions={navigationConfig({
         headerTransparent: !isMobile,
         headerBackTitle: 'Volver',
-        headerTintColor: isMobile ? theme.white : theme.primaryDarkColor,
         headerBackTitleVisible: !isMobile,
         headerTitleStyle: {
           fontSize: 20,
           fontWeight: 'bold',
-          color: theme.white,
         },
       })}>
       <Screen
@@ -38,6 +36,13 @@ export default () => {
         }}
         getComponent={() =>
           require('components/navigation/UserAddressUpdateScreen').default
+        }
+      />
+      <Screen
+        name={routes.profileVehicleStack}
+        options={{headerShown: false}}
+        getComponent={() =>
+          require('components/navigation/CourrierVehiclesStack').default
         }
       />
     </Navigator>

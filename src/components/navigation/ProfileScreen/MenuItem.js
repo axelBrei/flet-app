@@ -7,11 +7,22 @@ import {useModal} from 'components/Hooks/useModal';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const MenuItem = ({name, onPressItem, ...props}) => {
-  const {isMobile} = useWindowDimension();
+  const {isMobile, widthWithPadding} = useWindowDimension();
   const {Modal, open} = useModal(
     props.modal,
-    {},
-    {fullscreen: false, cancelable: true, style: {borderRadius: 20}},
+    {
+      contentStyle: {
+        borderRadius: 20,
+        width: isMobile ? widthWithPadding : '50%',
+        maxWidth: isMobile ? '100%' : 500,
+      },
+    },
+    {
+      fullscreen: false,
+      cancelable: true,
+      avoidKeyboard: true,
+      style: {borderRadius: 20},
+    },
   );
 
   const onPress = useCallback(() => {
@@ -27,15 +38,7 @@ export const MenuItem = ({name, onPressItem, ...props}) => {
         </AppText>
         <Icon name="chevron-right" size={20} color={theme.fontColor} />
       </Container>
-      {props.modal && (
-        <Modal
-          contentStyle={{
-            borderRadius: 20,
-            width: isMobile ? '100%' : '50%',
-            maxWidth: 500,
-          }}
-        />
-      )}
+      {props.modal && <Modal />}
     </>
   );
 };

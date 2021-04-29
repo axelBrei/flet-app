@@ -11,10 +11,8 @@ export const Modal = ({children, swipeToClose = true, ...props}) => {
       useNativeDriver
       deviceHeight={height}
       deviceWidth={width}
-      animationIn={swipeToClose && 'slideInUp'}
-      animationOut={swipeToClose && 'slideOutDown'}
       propagateSwipe={swipeToClose}
-      swipeDirection={swipeToClose && 'down'}
+      swipeDirection={swipeToClose ? 'down' : null}
       onSwipeComplete={swipeToClose ? props.closeModal : () => {}}
       avoidKeyboard={props.avoidKeyboard}
       {...props}>

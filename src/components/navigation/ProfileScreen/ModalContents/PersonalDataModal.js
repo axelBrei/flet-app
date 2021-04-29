@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import InputField from 'components/ui/InputField';
 import {Title} from 'components/ui/Title';
 import {AppText} from 'components/ui/AppText';
@@ -14,6 +14,7 @@ import {
   updatePersonalData,
 } from 'redux-store/slices/personalData/personalData';
 import {AnimatedError} from 'components/ui/AnimatedError';
+import {useAnimatedOperationResult} from 'components/Hooks/useAnimatedSuccesContent';
 
 const FIELDS = {
   NAME: 'name',
@@ -65,11 +66,19 @@ export const PersonalDataModal = ({closeModal}) => {
     onSubmit,
   });
 
-  useEffect(() => {
-    if (submited && !isLoading && !error) {
-      closeModal();
-    }
-  }, [submited, isLoading, error]);
+  const {OperationResultContent} = useAnimatedOperationResult({
+    successConditions: [submited, !isLoading],
+    isErrorContent: error,
+    title: error
+      ? 'Ha ocurrido un error'
+      : 'Se han modificado tus datos con éxito',
+    message: error,
+    onHideOperationResult: closeModal,
+    buttonText: 'Aceptar',
+    theme: {
+      iconSize: 120,
+    },
+  });
 
   return (
     <Container>
@@ -109,6 +118,7 @@ export const PersonalDataModal = ({closeModal}) => {
         </ErrorContainer>
       </InputsContainer>
       <MainButton loading={isLoading} label="Guardar" onPress={handleSubmit} />
+      <OperationResultContent />
     </Container>
   );
 };
@@ -116,6 +126,11 @@ export const PersonalDataModal = ({closeModal}) => {
 const Container = styled.View`
   padding: 20px;
   align-items: center;
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      min-width: 414px;
+    `}
 `;
 
 const InputsContainer = styled.View`

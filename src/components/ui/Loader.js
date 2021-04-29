@@ -20,7 +20,11 @@ export const Loader = ({
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <ActivityIndicator size={size} animating color={theme.primaryColor} />
+      <ActivityIndicator
+        size={size}
+        animating
+        color={props.color || theme.primaryColor}
+      />
       {message && <Message>{message}</Message>}
     </View>
   );

@@ -8,6 +8,7 @@ import {initialValues as vehiculeDataInitialValues} from 'components/navigation/
 import {initialValues as legalDataInitialValues} from 'components/navigation/RegisterDriverLegalDataScreen/legalDriverDataFormikConfig';
 import {receiveLoginSuccess} from 'redux-store/slices/loginSlice';
 import {keysToSnakeCase} from 'helpers/objectHelper';
+import {appendToForm} from 'helpers/networkHelper';
 
 const initialState = {
   userToken: null,
@@ -125,12 +126,7 @@ export const registerDriverPersonalData = (
     form.append('phone.country_code', personalData.countryCode);
     form.append('phone.area_code', personalData.areaCode);
     form.append('phone.number', personalData.number);
-
-    if (Platform.OS == 'web') {
-      form.append('file', profile.original, profile.filename);
-    } else {
-      form.append('file', profile);
-    }
+    appendToForm(form, 'file', profile);
 
     const {data} = await loginService.registerCourrierPersonalData(form, token);
     delete profile.original;
@@ -163,28 +159,13 @@ export const registerDriverVehicleData = vehicleData => async (
       form.append(key, snakeCaseObj[key]);
     });
     form.append('courrier_id', courrier_id);
-    if (Platform.OS == 'web') {
-      form.append(
-        'license_front',
-        licenseFront.original,
-        licenseFront.filename,
-      );
-      form.append('license_back', licenseBack.original, licenseBack.filename);
-    } else {
-      form.append('license_front', licenseFront);
-      form.append('license_back', licenseBack);
-    }
+    appendToForm(form, 'license_front', licenseFront);
+    appendToForm(form, 'license_back', licenseBack);
     await loginService.registerCourrierVehicleData(form);
     dispatch(receiveCourrierVehicleDataSuccess(vehicleData));
   } catch (e) {
     dispatch(receiveRegisterFail(e?.response?.message || e));
   }
-};
-
-const appendToForm = (form, fieldname, image) => {
-  Platform.OS === 'web'
-    ? form.append(fieldname, image.original, image.fieldname)
-    : form.append(fieldname, image);
 };
 
 export const registerDriverLegaleData = legalData => async (

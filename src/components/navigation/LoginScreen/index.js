@@ -24,6 +24,7 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {openMapsOnDevice} from 'helpers/locationHelper';
 import LoginImage from 'resources/images/login.svg';
 import {PasswordInput} from 'components/navigation/LoginScreen/PasswordInput';
+import {openMap} from 'redux-store/slices/preferencesSlice';
 
 export const LoginScreen = ({}) => {
   const {widthWithPadding, height, isMobile} = useWindowDimension();
@@ -32,13 +33,19 @@ export const LoginScreen = ({}) => {
   const error = useSelector(selectLoginError);
 
   const onPressForgetPassword = () => {
-    openMapsOnDevice({
-      latitude: -34.61943940808439,
-      longitude: -58.454993291653814,
-    });
+    dispatch(
+      openMap({
+        latitude: -34.61943940808439,
+        longitude: -58.454993291653814,
+      }),
+    );
+    // openMapsOnDevice({
+    //   latitude: -34.61943940808439,
+    //   longitude: -58.454993291653814,
+    // });
   };
 
-  const onSubmit = (values) => {
+  const onSubmit = values => {
     dispatch(loginAs(values[FIELDS.USERNAME], values[FIELDS.PASSWORD]));
   };
 
@@ -122,7 +129,7 @@ export const LoginScreen = ({}) => {
 export default LoginScreen;
 
 const ScreenComponent = styled(Screen)`
-  height: ${(props) => props.theme.screenHeight}px;
+  height: ${props => props.theme.screenHeight}px;
   align-items: center;
   padding: 60px 20px 0;
 `;
@@ -149,7 +156,7 @@ const Button = styled(MainButton)`
 const Link = styled(TextLink)`
   text-decoration: none;
   font-size: 14px;
-  color: ${(props) =>
+  color: ${props =>
     props.alternate ? theme.primaryColor : theme.primaryDarkColor};
   font-weight: bold;
 `;

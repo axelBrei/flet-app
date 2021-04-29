@@ -138,13 +138,18 @@ export const fetchCurrentShipment = () => async dispatch => {
   }
 };
 
-export const fetchPendingShipments = () => async dispatch => {
+export const fetchPendingShipments = () => async (dispatch, getState) => {
   dispatch(requestFetchPendingShipment());
   try {
     const {data} = await shipmentService.fetchPendingShipments();
     dispatch(receiveFetchPendingShipmentSuccess(data));
   } catch (e) {
-    dispatch(receiveFetchPendingShipmentFail(e?.response?.data?.message || e));
+    const shipmentData = selectDriverShipmentData(getState());
+    if (!shipmentData) {
+      dispatch(
+        receiveFetchPendingShipmentFail(e?.response?.data?.message || e),
+      );
+    }
   }
 };
 
@@ -213,6 +218,8 @@ export const selectDriverShipmentData = createStateCheckSelector(
   state => state?.driverShipment?.shipmentData,
   s => s || {},
 );
+export const selectShipmentPrice = state =>
+  state.driverShipment?.shipmentData?.price;
 
 export const selectDriverRejectShipmentLoading = state =>
   state.driverShipment.loading.reject;

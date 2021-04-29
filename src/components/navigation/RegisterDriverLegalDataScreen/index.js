@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Screen} from 'components/ui/Screen';
 import {
   legalDriverDataFormikConfig,
@@ -18,6 +18,7 @@ import {routes} from 'constants/config/routes';
 import IdCardImage from 'resources/images/id-card.svg';
 import DriverLicenceImage from 'resources/images/driver-license.svg';
 import {
+  receiveRegisterFail,
   registerDriverLegaleData,
   selectIsLoadingRegister,
   selectRegisterError,
@@ -30,9 +31,11 @@ export default ({navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingRegister);
   const error = useSelector(selectRegisterError);
+  const [isSubmited, setIsSubmited] = useState(false);
 
   const onSubmit = useCallback(
-    (values) => {
+    values => {
+      setIsSubmited(true);
       dispatch(registerDriverLegaleData(values));
     },
     [navigation, dispatch],
@@ -41,23 +44,23 @@ export default ({navigation}) => {
   const {
     values,
     errors,
-    submited,
     touched,
     _setFieldValue,
     handleSubmit,
   } = useFormikCustom(legalDriverDataFormikConfig(onSubmit));
 
   useEffect(() => {
-    if (submited && !isLoading && !error) {
+    if (isSubmited && !isLoading && !error) {
+      setIsSubmited(false);
       navigation.navigate(routes.registerDriverCompleteScreen);
     }
-  }, [submited, isLoading, error]);
+  }, [isSubmited, isLoading, error]);
 
   return (
     <Screen scrollable>
       <ScreenContainer>
         <IconCard
-          renderImage={(size) => <IdCardImage height={size} width={size} />}>
+          renderImage={size => <IdCardImage height={size} width={size} />}>
           <AppText padding={5} bold color={theme.white}>
             DNI
           </AppText>
@@ -80,7 +83,7 @@ export default ({navigation}) => {
         </IconCard>
         <IconCard
           reverse
-          renderImage={(size) => (
+          renderImage={size => (
             <DriverLicenceImage height={size} width={size} />
           )}>
           <AppText padding={5} bold color={theme.white}>
@@ -141,11 +144,11 @@ export default ({navigation}) => {
   );
 };
 
-const ScreenContainer = styled(Container)`
-  padding: 0 20px 20px;
-  align-self: center;
+const ScreenContainer = styled.View`
+  padding: 0 20px 10px;
   align-items: center;
   width: 100%;
+  min-height: ${({theme}) => theme.screenHeight}px;
 
   ${({theme}) =>
     !theme.isMobile &&
@@ -157,7 +160,7 @@ const ScreenContainer = styled(Container)`
 `;
 
 const Title = styled(AppText)`
-  padding-top: ${(props) => scaleDp(props.theme.isMobile ? 60 : 10)}px;
-  padding-bottom: ${(props) => scaleDp(props.theme.isMobile ? 90 : 10)}px;
+  padding-top: ${props => scaleDp(props.theme.isMobile ? 60 : 10)}px;
+  padding-bottom: ${props => scaleDp(props.theme.isMobile ? 90 : 10)}px;
   text-align: center;
 `;

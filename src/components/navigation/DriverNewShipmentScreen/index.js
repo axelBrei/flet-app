@@ -21,17 +21,15 @@ export default ({}) => {
   const dispatch = useDispatch();
   const currentShipmentError = useSelector(selectPendingShipmentError);
   const [directions, setDirections] = useState([]);
-  const {loading: loadingPermissions, status, check} = usePermission(
-    [PERMISSIONS.location],
-    true,
-  );
   const shipment = useSelector(selectDriverShipmentData);
 
   useEffect(() => {
     return () => {
-      currentShipmentError && Alert.alert('El cliente canceló el envio');
+      currentShipmentError &&
+        !shipment &&
+        Alert.alert('El cliente canceló el envio');
     };
-  }, [currentShipmentError]);
+  }, [currentShipmentError, shipment]);
 
   const {markersList, loadingMakers, loadingMessage} = useMarkerList(position =>
     dispatch(updatePosition(position)),
@@ -42,12 +40,6 @@ export default ({}) => {
       setDirections(decodeDirections(shipment.polyline));
     }
   }, [directions, shipment]);
-
-  useEffect(() => {
-    if (status !== 'granted') {
-      check();
-    }
-  }, [loadingPermissions, status, check]);
 
   useFocusEffect(
     useCallback(() => {
@@ -62,10 +54,7 @@ export default ({}) => {
 
   return (
     <ScreenComponent>
-      <Loader
-        unmount={false}
-        loading={loadingPermissions || loadingMakers}
-        message={loadingMessage}>
+      <Loader unmount={false} loading={loadingMakers} message={loadingMessage}>
         <Map
           style={{
             flex: 1,

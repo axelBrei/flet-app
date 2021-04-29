@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Row} from 'components/ui/Row';
+import {Column, Row} from 'components/ui/Row';
 import {AppText} from 'components/ui/AppText';
 import dayjs from 'dayjs';
 import {theme} from 'constants/theme';
@@ -8,14 +8,20 @@ import {theme} from 'constants/theme';
 export const LastMovementItem = ({item}) => {
   return (
     <StyledRow>
-      <AppText>{dayjs(item.createdAt).format('DD/MM/YYYY - hh:mm')}</AppText>
-      <AppText>${item.transactionAmount}</AppText>
+      <Text>Hora: {dayjs(item.createdAt).format('hh:mm')}</Text>
+      <Text>${item.transactionAmount}</Text>
     </StyledRow>
   );
 };
 
 const StyledRow = styled(Row)`
   padding: 10px 20px;
+  height: 55px;
   border-bottom-width: 1px;
   border-color: ${theme.grayBackground};
+`;
+
+const Text = styled(AppText)`
+  font-size: 16px;
+  font-weight: 500;
 `;

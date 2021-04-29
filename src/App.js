@@ -16,6 +16,7 @@ import {fonts} from 'constants/fonts';
 import {configureAuthInterceptor} from 'constants/network';
 import BodyLockProvider from 'components/Contexts/BodyLockContext/index';
 import {useHeaderHeight} from '@react-navigation/stack';
+import NotificationProvider from 'components/Contexts/NotificationContext';
 
 axios.defaults.withCredentials = false;
 configureAuthInterceptor(store);
@@ -71,7 +72,9 @@ const App = () => {
               headerHeight: headerHeight,
             }}>
             <BodyLockProvider>
-              <MainNavigator />
+              <NotificationProvider>
+                <MainNavigator />
+              </NotificationProvider>
             </BodyLockProvider>
           </ThemeProvider>
         </NavigationContainer>

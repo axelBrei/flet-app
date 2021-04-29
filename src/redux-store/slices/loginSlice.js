@@ -2,11 +2,18 @@ import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
 import {capitallize} from 'helpers/stringHelper';
 import {receiveRegisterSuccess} from './registerSlice';
-import {receiveChangeOnlineStatusSuccess} from 'redux-store/slices/driverSlice';
+import {
+  changeOnlineStatus,
+  receiveChangeOnlineStatusSuccess,
+} from 'redux-store/slices/driverSlice';
 import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
 import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
-import {receiveUpdatePersonalDataSuccess} from 'redux-store/slices/personalData/personalData';
+import {
+  receiveChangeProfilePictureSuccess,
+  receiveUpdatePasswordSuccess,
+  receiveUpdatePersonalDataSuccess,
+} from 'redux-store/slices/personalData/personalData';
 
 const initialState = {
   userData: null,
@@ -47,6 +54,12 @@ const slice = createSlice({
       state.userData.lastName =
         action.payload?.lastName || state.userData.lastName;
       state.userData.email = action.payload?.email || state.userData.email;
+    },
+    [receiveUpdatePasswordSuccess]: (state, action) => {
+      state.userData.pass = action.payload;
+    },
+    [receiveChangeProfilePictureSuccess]: (state, action) => {
+      state.userData.photoUrl = action.payload;
     },
   },
 });
@@ -94,6 +107,11 @@ export const loginAs = (email, pass) => async dispatch => {
     return dispatch(receiveLoginFail(e?.response?.data || e));
   }
 };
+
+export const fetchLogout = () => async dispatch => {
+  await dispatch(changeOnlineStatus(false));
+  dispatch(logout());
+};
 /**
  * @SELECTORS
  */
@@ -112,6 +130,7 @@ export const selectUserLastName = createSelector(
 export const selectUserEmail = state => state.login?.userData?.email;
 export const selectUserId = state => state.login?.userData?.id;
 export const selectUserToken = state => state.login?.userData?.userToken;
+export const selectUserPassword = state => state.login?.userData?.pass;
 
 export const selectUserPhoto = createSelector(
   state => state.login?.userData?.photoUrl,

@@ -2,6 +2,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import {keysToCamelCase, keysToSnakeCase} from 'helpers/objectHelper.js';
 import {loginAs} from 'redux-store/slices/loginSlice';
+import {Platform} from 'react-native';
 
 export const api = axios.create({
   baseURL: Config.REACT_APP_BASE_URL + '/',
@@ -36,16 +37,12 @@ export const configureAuthInterceptor = store => {
       });
     }
     const {data} = config;
-    if (data?.values?.()) {
+    if (data?._parts || data?.values?.()) {
       return config;
     }
     return {
       ...config,
-      data: data
-        ? data?.keepCase
-          ? data
-          : JSON.stringify(keysToSnakeCase(data))
-        : {},
+      data: data ? (data.keepCase ? data : keysToSnakeCase(data)) : undefined,
     };
   });
 

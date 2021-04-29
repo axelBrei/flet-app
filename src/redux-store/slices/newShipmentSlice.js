@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import shipmentService from 'services/shipmentService';
+import {keysToSnakeCase} from 'helpers/objectHelper';
 
 const initialState = {
   shipmentPrice: {
@@ -155,7 +156,7 @@ export const fetchShipmentPrice = confirmationInformation => async (
   }
 };
 
-export const createNewShipment = confirmationInformation => async (
+export const createNewShipment = (confirmationInformation = {}) => async (
   dispatch,
   getState,
 ) => {
@@ -166,7 +167,7 @@ export const createNewShipment = confirmationInformation => async (
     shipmentVehicule: shipmentVehicle,
   } = selectNewShipmentData(getState());
   try {
-    const {data} = await shipmentService.createNewShipment({
+    const body = {
       shipmentDescription: {
         ...shipmentDescription,
         package: {
@@ -184,12 +185,13 @@ export const createNewShipment = confirmationInformation => async (
         paymentMethod: {
           ...confirmationInformation.paymentMethod,
           type: (
-            confirmationScreen?.paymentMethod ||
-            confirmationInformation.paymentMethod
+            confirmationInformation.paymentMethod ||
+            confirmationScreen?.paymentMethod
           )?.type,
         },
       },
-    });
+    };
+    const {data} = await shipmentService.createNewShipment(body);
     dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
   } catch (e) {
     dispatch(receiveNewShipmentFail(e?.response?.data));

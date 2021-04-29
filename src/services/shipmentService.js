@@ -16,6 +16,7 @@ const updateShipmentToDelivered = async shipmentId =>
 
 const uploadConfirmationCode = async (shipmentId, securityCode) =>
   await api.post('shipment/delivered/confirm', {shipmentId, securityCode});
+
 const createNewShipment = async shipmentData =>
   await api.put('shipment', shipmentData);
 

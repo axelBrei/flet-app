@@ -35,7 +35,6 @@ export const ShipmentDetailCard = () => {
 
   const onPressCancel = useCallback(() => {
     dispatch(cancelShipment());
-    navigation.popToTop();
   }, [navigation]);
 
   const Component = getCardContentComponent(

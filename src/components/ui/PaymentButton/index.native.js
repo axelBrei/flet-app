@@ -9,7 +9,7 @@ import {selectNewShipmentPrice} from 'redux-store/slices/newShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 
 export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const price = useSelector(selectNewShipmentPrice);
 
   const html = `
@@ -139,7 +139,12 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
                 if (error) {
                   cardForm.unmount();
                   cardForm.mount();
+                  return;
                 }
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'loading',
+                    value: false
+                  }))
               },
               onSubmit: event => {
                 event.preventDefault();
@@ -165,16 +170,16 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
                 }))
               },
               onFetching: () => {
-                window.ReactNativeWebView.postMessage(JSON.stringify({
-                  type: 'loading',
-                  value: true
-                }))
-                return () => {
-                  window.ReactNativeWebView.postMessage(JSON.stringify({
-                    type: 'loading',
-                    value: false
-                  }))
-                };
+                // window.ReactNativeWebView.postMessage(JSON.stringify({
+                //   type: 'loading',
+                //   value: true
+                // }))
+                // return () => {
+                //   window.ReactNativeWebView.postMessage(JSON.stringify({
+                //     type: 'loading',
+                //     value: false
+                //   }))
+                // };
               },
             },
           });    

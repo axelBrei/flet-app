@@ -86,7 +86,7 @@ export default ({navigation}) => {
         web: CAR_MARKER,
         native: CarMarker,
       }),
-      orientation,
+      debouncedCurrentPosition.bearing || orientation,
       40,
     );
     return [

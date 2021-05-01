@@ -35,6 +35,8 @@
 		CF31C671260EA07500997C52 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 696EC8C7E07C4F7BBB18C0C9 /* Poppins-Thin.ttf */; };
 		CF31C672260EA07500997C52 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CC3E12BB3D844039164DEF6 /* Poppins-ThinItalic.ttf */; };
 		CF39EE2E262F84C00060C393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF39EE2D262F84C00060C393 /* GoogleService-Info.plist */; };
+		CF8F771B263C40E300107BF3 /* BackgroundLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8F771A263C40E300107BF3 /* BackgroundLocation.swift */; };
+		CFE1B613263C50F000686A85 /* BackgroundLocationBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = CFE1B612263C50F000686A85 /* BackgroundLocationBridge.m */; };
 		DDDB46D9D5A306EA4AB09F7F /* libPods-fletex_app-fletex_appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA657E6908B55839F8593C19 /* libPods-fletex_app-fletex_appTests.a */; };
 /* End PBXBuildFile section */
 
@@ -115,7 +117,11 @@
 		CF29E0CF26310EDB00DA91BA /* exportOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
 		CF387D3F2630B4B600AC8D86 /* fletex_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = fletex_app.entitlements; path = fletex_app/fletex_app.entitlements; sourceTree = "<group>"; };
 		CF39EE2D262F84C00060C393 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "fletex_app/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CF8F7719263C40E300107BF3 /* BackrgoundLocation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BackrgoundLocation-Bridging-Header.h"; sourceTree = "<group>"; };
+		CF8F771A263C40E300107BF3 /* BackgroundLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundLocation.swift; sourceTree = "<group>"; };
 		CFB06BCE848D489F8B011AA1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/resources/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		CFE1B612263C50F000686A85 /* BackgroundLocationBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundLocationBridge.m; sourceTree = "<group>"; };
+		CFE1B61A263C533C00686A85 /* fletex_app-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fletex_app-Bridging-Header.h"; sourceTree = "<group>"; };
 		D5CCAAD45BDB43C8AC1C1DDB /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/resources/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		DAEFBE9F82404718BDCE4AAD /* PlayfairDisplay-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PlayfairDisplay-SemiBoldItalic.ttf"; path = "../src/resources/fonts/PlayfairDisplay-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		DBF5B5DA0AB932145F02626F /* Pods-fletex_app-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-fletex_app-tvOSTests/Pods-fletex_app-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -175,6 +181,7 @@
 		13B07FAE1A68108700A75B9A /* fletex_app */ = {
 			isa = PBXGroup;
 			children = (
+				CF8F770F263C3E2B00107BF3 /* Modules */,
 				CF29E0CF26310EDB00DA91BA /* exportOptions.plist */,
 				CF387D3F2630B4B600AC8D86 /* fletex_app.entitlements */,
 				CF39EE2D262F84C00060C393 /* GoogleService-Info.plist */,
@@ -304,6 +311,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CF8F770F263C3E2B00107BF3 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				CF8F771A263C40E300107BF3 /* BackgroundLocation.swift */,
+				CF8F7719263C40E300107BF3 /* BackrgoundLocation-Bridging-Header.h */,
+				CFE1B612263C50F000686A85 /* BackgroundLocationBridge.m */,
+				CFE1B61A263C533C00686A85 /* fletex_app-Bridging-Header.h */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
 		E9CB5C493268652FC97D85E9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,7 +398,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = BLMRKTJ696;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -697,8 +715,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF8F771B263C40E300107BF3 /* BackgroundLocation.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				CFE1B613263C50F000686A85 /* BackgroundLocationBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +737,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 88F92C5E083C13A899509B4C /* Pods-fletex_app-fletex_appTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -740,6 +761,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0E19A197D236421691C495B0 /* Pods-fletex_app-fletex_appTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = fletex_appTests/Info.plist;
@@ -763,11 +785,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = fletex_app/fletex_app.entitlements;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = BLMRKTJ696;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = fletex_app/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
@@ -777,6 +800,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.fletapp;
 				PRODUCT_NAME = fletex_app;
+				SWIFT_OBJC_BRIDGING_HEADER = "Modules/fletex_app-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -790,10 +814,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = fletex_app/fletex_app.entitlements;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = BLMRKTJ696;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = fletex_app/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
@@ -803,6 +828,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.fletapp;
 				PRODUCT_NAME = fletex_app;
+				SWIFT_OBJC_BRIDGING_HEADER = "Modules/fletex_app-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -11,7 +11,7 @@ import {scaleDp} from 'helpers/responsiveHelper';
 import {getRotatedMarker} from 'components/ui/Map/helper';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
-import useBackgroundLocation from 'components/Hooks/useBackgroundLocation/index';
+import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {updatePosition} from 'redux-store/slices/driverSlice';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 

@@ -24,6 +24,7 @@ target 'fletex_app' do
 
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
+  # Native location module
 
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-maps', path: rn_maps_path

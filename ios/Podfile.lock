@@ -687,7 +687,7 @@ SPEC CHECKSUMS:
   "@darron1217_react-native-background-geolocation": c95c3a183a938b39c4d7c8bea3b9cbe4b03e8766
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  DoubleConversion: cde416483dac037923206447da6e1454df403714
+  DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
   FBReactNativeSpec: 7333f49cfb030cade1177b1ba317b49d43740ecd
   Firebase: fffddd0bab8677d07376538365faa93ff3889b39
@@ -703,7 +703,7 @@ SPEC CHECKSUMS:
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   Flipper-RSocket: 602921fee03edacf18f5d6f3d3594ba477f456e5
   FlipperKit: 8a20b5c5fcf9436cac58551dc049867247f64b00
-  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   GoogleDataTransport: cd9db2180fcecd8da1b561aea31e3e56cf834aa7
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
@@ -764,6 +764,6 @@ SPEC CHECKSUMS:
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 610448ff30b1841613014f18a1194e6912d00afe
+PODFILE CHECKSUM: 131e71cc39a349a28098b2d9d49117653f2fc64e
 
 COCOAPODS: 1.10.1

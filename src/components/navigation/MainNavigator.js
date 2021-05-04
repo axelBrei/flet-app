@@ -39,6 +39,26 @@ const renderPublicRoutes = (width, isMobile) => (
       }}
     />
     <Screen
+      name={routes.recoverPasswordScreen}
+      options={{
+        headerShown: true,
+        headerTitle: () => <AppLogo color={theme.primaryColor} />,
+      }}
+      getComponent={() =>
+        require('components/navigation/RecoverPasswordScreen').default
+      }
+    />
+    <Screen
+      name={routes.recoverPasswordResultScreen}
+      options={{
+        headerShown: true,
+        headerTitle: () => <AppLogo color={theme.primaryColor} />,
+      }}
+      getComponent={() =>
+        require('components/navigation/RecoverPasswordResultScreen').default
+      }
+    />
+    <Screen
       name={routes.registerStack}
       component={RegisterStack}
       options={{
@@ -71,6 +91,10 @@ export default () => {
       screenOptions={navigationConfig({
         title: '',
         headerShown: width <= 800,
+        headerTitleAlign: 'center',
+        headerTitleStyle: {
+          alignSelf: 'center',
+        },
         cardStyle: {
           backgroundColor: theme.white,
           paddingBottom: Platform.select({

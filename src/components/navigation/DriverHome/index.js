@@ -19,6 +19,7 @@ import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {
   changeOnlineStatus,
+  selectCurrentPosition,
   selectOnlineStatus,
   selectPreviosPosition,
   updatePosition,
@@ -28,6 +29,7 @@ import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCar
 import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {useUserData} from 'components/Hooks/useUserData';
 import {useIsFocused} from '@react-navigation/native';
+import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -38,39 +40,8 @@ export default ({navigation}) => {
   const pendingShipment = useSelector(selectPendingShipment);
   const pendingShipmentError = useSelector(selectPendingShipmentError);
   const error = useSelector(selectPendingShipmentAnswerError);
-  const [debouncedCurrentPosition, setLocation] = useState({});
-
-  const {enable, disable, hasLocationPermission} = useBackgroundLocation(
-    loc =>
-      new Promise(resolve => {
-        setLocation(loc);
-        if (loc?.latitude && Platform.OS === 'web') {
-          dispatch(updatePosition(loc));
-        }
-        resolve();
-      }),
-    {
-      interval: 10 * 1000,
-      fastestInterval: 5 * 1000,
-      activitiesInterval: 10 * 1000,
-      url: 'courrier/position',
-      body: {
-        latitude: '@latitude',
-        longitude: '@longitude',
-        vehicle_id: courrier.vehicle?.[0]?.id,
-      },
-    },
-  );
-
-  useEffect(() => {
-    if (isOnline) {
-      if (!enable()) {
-        dispatch(changeOnlineStatus(false));
-      }
-    } else if (isFocused) {
-      disable();
-    }
-  }, [isOnline, isFocused]);
+  const debouncedCurrentPosition = useSelector(selectCurrentPosition);
+  const {check, status} = usePermission([PERMISSIONS.backgroundLocation]);
 
   useFetcingPendingShipment();
 
@@ -129,11 +100,13 @@ export default ({navigation}) => {
         );
         return;
       }
-      if (hasLocationPermission()) {
+      if (status) {
         dispatch(changeOnlineStatus(newOnlineStatus, time.until));
+      } else {
+        check();
       }
     },
-    [hasLocationPermission],
+    [status, check, courrier],
   );
 
   return (

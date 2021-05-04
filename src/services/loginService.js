@@ -31,10 +31,13 @@ const registerCourrierLegalData = async form =>
     },
   });
 
+const recoverPassword = async data => await api.post('recover-password', data);
+
 export default {
   loginAs,
   registerNewUser,
   registerCourrierPersonalData,
   registerCourrierVehicleData,
   registerCourrierLegalData,
+  recoverPassword,
 };

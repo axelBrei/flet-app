@@ -123,6 +123,7 @@ export const {
   requestSubmitConfirmationCode,
   receiveSubmitConfirmationCodeSucess,
   receiveSubmitConfirmationCodeFail,
+  updateDriverLocation,
 } = slice.actions;
 
 /**

@@ -32,6 +32,8 @@ const _routes = {
   balanceMainScreen: 'menu',
   balanceLastMovements: 'movimientos',
   balancePendingMovementsScreen: 'pendiente',
+  recoverPasswordScreen: 'recuperar',
+  recoverPasswordResultScreen: 'resultado-recupero',
 };
 
 const nativeOnlyRoutes = {
@@ -44,6 +46,8 @@ const nativeOnlyRoutes = {
 export const linkingRoutes = {
   [_routes.landingScreen]: 'landing',
   [_routes.loginScreen]: 'login',
+  [_routes.recoverPasswordScreen]: _routes.recoverPasswordScreen,
+  [_routes.recoverPasswordResultScreen]: _routes.recoverPasswordResultScreen,
   [_routes.registerStack]: {
     path: _routes.registerStack,
     screens: {

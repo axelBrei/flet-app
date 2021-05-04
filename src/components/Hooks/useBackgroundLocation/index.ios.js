@@ -1,9 +1,7 @@
 import {NativeModules, NativeEventEmitter} from 'react-native';
 import {useUserData} from 'components/Hooks/useUserData';
-import {useCallback, useEffect} from 'react';
-import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, usePermission} from 'components/Hooks/usePermission';
-import BackgroundGeolocation from '@darron1217/react-native-background-geolocation';
 import Config from 'react-native-config';
 
 const {LocationTrackingModule} = NativeModules;
@@ -21,6 +19,7 @@ interface BackgroundLocationConfig {
   autoStart: Boolean;
   stopOnUnfocus: Boolean;
 }
+
 const emitter = new NativeEventEmitter(LocationTrackingModule);
 export default (
   onLocationObtained = () => new Promise(resolve => resolve('test')),
@@ -43,31 +42,25 @@ export default (
   },
 ) => {
   const {courrier, userToken} = useUserData();
+  const [listening, setListening] = useState(false);
   const {loading, status, error, check} = usePermission(
     [PERMISSIONS.backgroundLocation],
     true,
     false,
   );
 
-  useEffect(() => {
-    LocationTrackingModule.configure({
-      vehicle_id: courrier?.vehicle?.[0]?.id,
-      url: `${Config.REACT_APP_BASE_URL}/${config.url}`,
-      AccesToken: Config.REACT_APP_ACCESS_TOKEN,
-      Authorization: `Bearer ${userToken}`,
-    });
-  }, [courrier]);
-
-  useEffect(() => {
-    const subscription = emitter?.addListener('onLocation', body => {
-      onLocationObtained?.(body);
-    });
-    return subscription.remove;
-  }, []);
-
   const enable = useCallback(
     (checkPermission = true) => {
+      console.log(loading, status, LocationTrackingModule);
       if (status) {
+        emitter?.addListener('onLocation', body => {
+          console.log('new location', body);
+          onLocationObtained?.(body);
+        });
+        emitter.addListener('error', error => {
+          console.log('location error', error);
+        });
+        setListening(true);
         LocationTrackingModule.startTracking();
       } else if (checkPermission) {
         check();
@@ -78,15 +71,36 @@ export default (
   );
 
   const disable = useCallback(() => {
+    try {
+      emitter.removeAllListeners();
+      setListening(false);
+    } catch (e) {}
     LocationTrackingModule.stopTracking();
   }, []);
 
   const hasPermission = useCallback(() => {
-    if (!status) {
+    if (!loading && !status) {
       check();
     }
     return status;
-  }, [status]);
+  }, [loading, status]);
+
+  useEffect(() => {
+    LocationTrackingModule.configure({
+      vehicle_id: config.body.vehicle_id, //courrier?.vehicle?.[0]?.id,
+      url: `${Config.REACT_APP_BASE_URL}/${config.url}`,
+      AccessToken: Config.REACT_APP_ACCESS_TOKEN,
+      Authorization: `Bearer ${userToken}`,
+    });
+    if (config.autoStart) {
+      enable();
+    }
+    return () => {
+      if (listening) {
+        emitter.removeAllListeners();
+      }
+    };
+  }, [courrier, enable]);
 
   return {
     enable,

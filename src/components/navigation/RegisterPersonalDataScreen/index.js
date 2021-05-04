@@ -30,7 +30,7 @@ export default ({navigation}) => {
   const onSubmit = useCallback(
     values => {
       dispatch(
-        (params.driver ? registerDriverPersonalData : registerUser)?.(values),
+        (params?.driver ? registerDriverPersonalData : registerUser)?.(values),
       );
     },
     [dispatch, params],
@@ -48,9 +48,13 @@ export default ({navigation}) => {
 
   useEffect(() => {
     if (submited && !loading && !error) {
-      navigation.navigate(routes.registerDriverVehiculeScreen);
+      navigation.navigate(
+        params?.driver
+          ? routes.registerDriverVehiculeScreen
+          : routes.loginScreen,
+      );
     }
-  }, [submited, loading, error]);
+  }, [submited, loading, error, params]);
 
   return (
     <ScreenComponent scrollable>

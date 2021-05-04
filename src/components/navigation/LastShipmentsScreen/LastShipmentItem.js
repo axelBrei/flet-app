@@ -65,10 +65,10 @@ export const LastShipmentItem = ({
         Descripción del paquete: <AppText bold>{p?.description}</AppText>
       </AppText>
       <AppText>
-        Desde: <AppText bold>{startPoint?.name.split(',')?.[0]}</AppText>
+        Desde: <AppText bold>{startPoint?.name?.split(',')?.[0]}</AppText>
       </AppText>
       <AppText>
-        Hasta: <AppText bold>{endPoint?.name.split(',')?.[0]}</AppText>
+        Hasta: <AppText bold>{endPoint?.name?.split(',')?.[0]}</AppText>
       </AppText>
       <AppText textAlign="right">
         Valor total: <PriceText>${price}</PriceText>

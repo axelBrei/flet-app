@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import {View, ActivityIndicator, FlatList, RefreshControl} from 'react-native';
 import PropTypes from 'prop-types';
 import {theme} from 'constants/theme';
-import {fetchLastShipments} from 'redux-store/slices/shipmentSlice';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {MainButton} from 'components/ui/MainButton';
+import {Platform} from 'react-native';
 
 export const PaginatedList = ({
   fetchDataFunction,
@@ -52,6 +52,20 @@ export const PaginatedList = ({
             }}
           />
         }
+        ListFooterComponentStyle={{
+          flex: 1,
+          width: '100%',
+          alignItems: 'center',
+        }}
+        ListFooterComponent={
+          Platform.OS === 'web' &&
+          !fetching &&
+          page <= pagination.pageCount && (
+            <ButtonContainer>
+              <MainButton onPress={onEndReached}>Cargar más</MainButton>
+            </ButtonContainer>
+          )
+        }
       />
       {fetching && (
         <FooterContainer style={footerStyle}>
@@ -70,4 +84,10 @@ PaginatedList.propTypes = {
 const FooterContainer = styled.View`
   padding: 20px 0;
   justify-content: center;
+`;
+
+const ButtonContainer = styled.View`
+  width: 100%;
+  flex: 1;
+  align-self: center;
 `;

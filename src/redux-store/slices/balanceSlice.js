@@ -174,4 +174,4 @@ export const selectIsLoadingPageBalancePendingPayments = state =>
 export const selectBalancePendingPaymentsError = state =>
   state[slice.name].error.pending;
 export const selectBalancePendingPayments = state =>
-  state[slice.name].data.pendingPayments;
+  state[slice.name].data?.pendingPayments || {};

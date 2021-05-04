@@ -6,6 +6,7 @@ const initialState = {
   currentPosition: {
     latitude: null,
     longitude: null,
+    bearing: 0,
   },
   previousPosition: {
     latitude: null,
@@ -39,7 +40,7 @@ const slice = createSlice({
       state.error.status = action.payload.error;
       state.isOnline = !action.payload.status;
     },
-    requestUpdatePosition: (state) => {
+    requestUpdatePosition: state => {
       state.loading.position = true;
       state.error.position = null;
     },
@@ -54,7 +55,7 @@ const slice = createSlice({
     },
   },
   extraReducers: {
-    'login/logout': (state) => {
+    'login/logout': state => {
       Object.assign(state, initialState);
     },
   },
@@ -75,7 +76,7 @@ export const {
  * @THUNK
  */
 
-export const changeOnlineStatus = (isOnline, until) => async (dispatch) => {
+export const changeOnlineStatus = (isOnline, until) => async dispatch => {
   dispatch(requestChangeOnlineStatus(isOnline));
   try {
     await courrierService.changeOnlineStatus({until, isOnline});
@@ -90,7 +91,7 @@ export const changeOnlineStatus = (isOnline, until) => async (dispatch) => {
   }
 };
 
-export const updatePosition = (position) => async (dispatch, getState) => {
+export const updatePosition = position => async (dispatch, getState) => {
   const vehicleList = getState().login.userData?.courrier?.vehicle;
   if (!vehicleList || vehicleList?.length === 0) {
     return;
@@ -114,12 +115,11 @@ export const updatePosition = (position) => async (dispatch, getState) => {
  * @SELECTORS
  */
 
-export const selectOnlineStatusLoading = (state) =>
-  state.courrier.loading.status;
-export const selectOnlineStatusError = (state) => state.courrier.error.status;
-export const selectOnlineStatus = (state) => state.courrier.isOnline;
+export const selectOnlineStatusLoading = state => state.courrier.loading.status;
+export const selectOnlineStatusError = state => state.courrier.error.status;
+export const selectOnlineStatus = state => state.courrier.isOnline;
 
-export const selectPositionLoading = (state) => state.courrier.loading.position;
-export const selectPositionError = (state) => state.courrier.error.position;
-export const selectCurrentPosition = (state) => state.courrier.currentPosition;
-export const selectPreviosPosition = (state) => state.courrier.previousPosition;
+export const selectPositionLoading = state => state.courrier.loading.position;
+export const selectPositionError = state => state.courrier.error.position;
+export const selectCurrentPosition = state => state.courrier.currentPosition;
+export const selectPreviosPosition = state => state.courrier.previousPosition;

@@ -31,9 +31,7 @@ export default ({}) => {
     };
   }, [currentShipmentError, shipment]);
 
-  const {markersList, loadingMakers, loadingMessage} = useMarkerList(position =>
-    dispatch(updatePosition(position)),
-  );
+  const {markersList, loadingMakers, loadingMessage} = useMarkerList();
 
   useEffect(() => {
     if (shipment?.polyline && directions.length === 0) {

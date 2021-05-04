@@ -21,7 +21,7 @@ const Map = ({
 }) => {
   const [isMapReady, setIsMapReady] = useState(false);
   const mapRef = useRef(null);
-  const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
+  const filteredMarkers = useMemo(() => markers.filter(m => !!m), [markers]);
 
   const fitToMarkers = useCallback(() => {
     let options = {animated: true};
@@ -30,6 +30,12 @@ const Map = ({
       filteredMarkers.map((_, i) => `${i}`),
       options,
     );
+    if (filteredMarkers.length === 1) {
+      mapRef.current?.setCamera({
+        ...mapRef.current?.getCamera(),
+        zoom: 16,
+      });
+    }
   }, [mapRef, filteredMarkers, edgePadding]);
 
   useEffect(() => {
@@ -83,7 +89,7 @@ const Map = ({
 
   const renderDirections = useCallback(() => {
     if (isMapReady && directions) {
-      const dirs = directions.map((i) => ({
+      const dirs = directions.map(i => ({
         latitude: i[0],
         longitude: i[1],
       }));

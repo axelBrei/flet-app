@@ -19,7 +19,6 @@ export default ({route}) => {
     <ScreenComponent>
       <Container>
         <Navigator
-          initialRouteName={routes.registerDriverLegalsScreen}
           screenOptions={navigationConfig({
             title: '',
             headerShown: false,

@@ -11,7 +11,13 @@ import {useNavigation} from 'components/Hooks/useNavigation';
 export const CustomHeaderBackButton = props => {
   const navigation = useNavigation();
 
-  const onPress = props.canGoBack ? props?.onPress : navigation.goBack;
+  const onPress = () => {
+    if (Platform.OS === 'web' && props.canGoBack) {
+      history.back();
+      return;
+    }
+    (props.canGoBack ? props?.onPress : navigation.goBack)();
+  };
 
   return (
     <TouchableOpacity

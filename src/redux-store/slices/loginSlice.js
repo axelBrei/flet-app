@@ -19,9 +19,11 @@ const initialState = {
   userData: null,
   loading: {
     user: false,
+    recover: false,
   },
   error: {
     user: null,
+    recover: null,
   },
 };
 
@@ -40,6 +42,18 @@ const slice = createSlice({
     receiveLoginFail: (state, action) => {
       state.loading.user = false;
       state.error.user = action.payload;
+    },
+    requestRecoverPassword: state => {
+      state.loading.recover = true;
+      state.error.recover = null;
+    },
+    receiveRecoverPasswordSuccess: (state, action) => {
+      state.loading.recover = false;
+      state.error.recover = null;
+    },
+    receiveRecoverPasswordFail: (state, action) => {
+      state.loading.recover = false;
+      state.error.recover = action.payload;
     },
     logout: state => {
       Object.assign(state, initialState);
@@ -70,6 +84,9 @@ export const {
   requestLogin,
   receiveLoginSuccess,
   receiveLoginFail,
+  requestRecoverPassword,
+  receiveRecoverPasswordSuccess,
+  receiveRecoverPasswordFail,
   logout,
 } = slice.actions;
 
@@ -104,13 +121,23 @@ export const loginAs = (email, pass) => async dispatch => {
       }),
     );
   } catch (e) {
-    return dispatch(receiveLoginFail(e?.response?.data || e));
+    return dispatch(receiveLoginFail(e?.response?.data?.message || e));
   }
 };
 
 export const fetchLogout = () => async dispatch => {
   await dispatch(changeOnlineStatus(false));
   dispatch(logout());
+};
+
+export const fetchRecoverPassword = data => async dispatch => {
+  dispatch(requestRecoverPassword());
+  try {
+    await LoginService.recoverPassword(data);
+    dispatch(receiveRecoverPasswordSuccess());
+  } catch (e) {
+    dispatch(receiveRecoverPasswordFail(e?.response?.data?.message || e));
+  }
 };
 /**
  * @SELECTORS
@@ -138,3 +165,7 @@ export const selectUserPhoto = createSelector(
 );
 
 export const selectIsDriver = state => state.login?.userData?.isDriver;
+
+export const selectIsLoadingRecoverPassowrd = state =>
+  state.login.loading.recover;
+export const selectRecoverPassowrdError = state => state.login.error.recover;

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import styled, {css} from 'styled-components';
-import {RefreshControl} from 'react-native';
+import {Platform} from 'react-native';
 import {Screen} from 'components/ui/Screen';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -15,7 +15,6 @@ import {PaginatedList} from 'components/ui/PaginatedList';
 import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
 import {LastShipmentItem} from 'components/navigation/LastShipmentsScreen/LastShipmentItem';
-import {Platform} from 'react-native';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export default () => {

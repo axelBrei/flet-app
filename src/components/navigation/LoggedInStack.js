@@ -75,6 +75,7 @@ export default () => {
         activeTintColor: theme.primaryDarkColor,
         inactiveTintColor: theme.fontColor,
         keyboardHidesTabBar: true,
+
         style: {
           paddingVertical: 5,
           ...Platform.select({
@@ -95,6 +96,11 @@ export default () => {
             size={32}
             color={focused ? theme.primaryDarkColor : theme.fontColor}
           />
+        ),
+        drawerLabel: props => (
+          <AppText {...props} fontSize={16}>
+            {route.params.title}
+          </AppText>
         ),
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       })}>

@@ -37,6 +37,8 @@ export const LoginScreen = ({navigation}) => {
     navigation.navigate(routes.recoverPasswordScreen);
   };
 
+  const onPressRegister = () => navigation.navigate(routes.registerStack);
+
   const onSubmit = values => {
     dispatch(loginAs(values[FIELDS.USERNAME], values[FIELDS.PASSWORD]));
   };
@@ -102,7 +104,10 @@ export const LoginScreen = ({navigation}) => {
         </Loader>
       </ButtonsContainer>
       <AppText>
-        ¿Todavia no tenes cuenta? <Link alternate>Crear cuenta</Link>
+        ¿Todavia no tenes cuenta?{' '}
+        <Link alternate onPress={onPressRegister}>
+          Crear cuenta
+        </Link>
       </AppText>
     </ScreenComponent>
   );

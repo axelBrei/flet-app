@@ -10,7 +10,11 @@ export default ({label, value, onChangeValue, ...props}) => {
   const [isTomorrowDate, setIsTomorrowDate] = useState(false);
   const {Modal, toggle} = useModal(
     ModalContent,
-    {},
+    {
+      contentStyle: {
+        borderRadius: 20,
+      },
+    },
     {
       fullscreen: true,
       cancelable: true,

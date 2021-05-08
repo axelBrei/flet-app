@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
@@ -21,6 +21,7 @@ import {
   updatePosition,
 } from 'redux-store/slices/driverSlice';
 import {Platform} from 'react-native';
+import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -63,6 +64,7 @@ export const DriverStack = ({navigation}) => {
 
   return (
     <Navigator
+      initialRouteName={!courrier.enabled && routes.disabledCourrierHomeScreen}
       screenOptions={navigationConfig({
         headerLeft: () => null,
       })}>
@@ -92,6 +94,21 @@ export const DriverStack = ({navigation}) => {
           }}
         />
       )}
+      <Screen
+        name={routes.disabledCourrierHomeScreen}
+        options={{title: '¡Ya casi!'}}
+        getComponent={() =>
+          require('components/navigation/DisabledCourrierHomeScreen').default
+        }
+      />
+      <Screen
+        name={routes.disabledCourrierSolveRejectionScreen}
+        options={{title: 'Detalle', headerLeft: CustomHeaderBackButton}}
+        getComponent={() =>
+          require('components/navigation/DisabledCourrierSolveRejectionScreen')
+            .default
+        }
+      />
     </Navigator>
   );
 };

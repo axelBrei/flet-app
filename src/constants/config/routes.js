@@ -26,6 +26,8 @@ const _routes = {
   shipmentScreen: 'seguimiento',
   driverStack: 'courrier',
   driverHomeScreen: 'inicio-conductor',
+  disabledCourrierHomeScreen: 'deshabilitado',
+  disabledCourrierSolveRejectionScreen: 'resolver',
   driverShipmentScreen: 'envio-conductor',
   shipmentFinishedScreen: 'envio-terminado',
   balanceStack: 'balance',
@@ -89,6 +91,10 @@ export const linkingRoutes = {
             nativeOnlyRoutes.driverHomeScreen,
           [nativeOnlyRoutes.driverShipmentScreen]:
             nativeOnlyRoutes.driverShipmentScreen,
+          [_routes.disabledCourrierHomeScreen]:
+            _routes.disabledCourrierHomeScreen,
+          [_routes.disabledCourrierSolveRejectionScreen]:
+            _routes.disabledCourrierSolveRejectionScreen,
         },
       },
       [_routes.profileStack]: {

@@ -40,7 +40,11 @@ export const CustomImage = ({
   const renderImage = useCallback(
     () =>
       (!source || error) && defaultIcon ? (
-        <Icon name={defaultIcon} size={iconSize || 25} color={theme.disabled} />
+        <Icon
+          name={defaultIcon}
+          size={iconSize || 25}
+          color={props.iconColor || theme.disabled}
+        />
       ) : (
         <Img
           source={source}

@@ -38,6 +38,7 @@ export const configureAuthInterceptor = store => {
     }
     const {data} = config;
     if (data?._parts || data?.values?.()) {
+      console.log('entra aca');
       return config;
     }
     return {

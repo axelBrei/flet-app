@@ -107,7 +107,9 @@ export default () => {
       {userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.driverStack}
-          component={DriverStack}
+          getComponent={() =>
+            require('components/navigation/DriverStack').DriverStack
+          }
           initialParams={{title: 'Conducir'}}
           options={{
             headerShown: false,

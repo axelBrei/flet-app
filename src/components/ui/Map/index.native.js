@@ -17,6 +17,7 @@ const Map = ({
   directions,
   showsMyLocationButton,
   accesible,
+  externalRef,
   ...props
 }) => {
   const [isMapReady, setIsMapReady] = useState(false);
@@ -42,7 +43,7 @@ const Map = ({
     if (filteredMarkers.length >= minMarkerAnimation) {
       fitToMarkers();
     }
-  }, [filteredMarkers, mapRef]);
+  }, [filteredMarkers, minMarkerAnimation]);
 
   useEffect(() => {
     if (directions) {
@@ -103,6 +104,11 @@ const Map = ({
     }
   }, [directions, isMapReady]);
 
+  React.useImperativeHandle(externalRef, () => ({
+    fitToMarkers,
+    centerOnUserLocation,
+  }));
+
   return (
     <>
       <MapView
@@ -154,7 +160,9 @@ Map.defaultProps = {
   edgePadding: null,
 };
 
-export default Map;
+export default React.forwardRef((props, ref) => (
+  <Map externalRef={ref} {...props} />
+));
 
 const styles = StyleSheet.create({
   map: {

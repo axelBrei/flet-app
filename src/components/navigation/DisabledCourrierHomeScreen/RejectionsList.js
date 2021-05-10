@@ -2,16 +2,19 @@ import React, {useCallback} from 'react';
 import {CommonList} from 'components/ui/CommonList';
 import styled from 'styled-components';
 import {useSelector} from 'react-redux';
-import {selectCourrierRejections} from 'redux-store/slices/driverSlice';
+import {
+  selectCourrierRejections,
+  selectIsLoadingCourrierRejections,
+} from 'redux-store/slices/driverSlice';
 import {AppText} from 'components/ui/AppText';
-import {REJECTION_FIELDS_MAPPINGS} from 'constants/rejectedFieldsMappings';
 import {RejectionItem} from 'components/navigation/DisabledCourrierHomeScreen/RejectionItem';
 import {EmptyListComponent} from 'components/navigation/DisabledCourrierHomeScreen/EmptyListComponent';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
 
-export const RejectionsList = () => {
+export const RejectionsList = ({refreshing}) => {
   const navigation = useNavigation();
+  const isLoading = useSelector(selectIsLoadingCourrierRejections);
   const rejections = useSelector(selectCourrierRejections);
 
   const onPressItem = useCallback(
@@ -25,7 +28,7 @@ export const RejectionsList = () => {
 
   return (
     <Container>
-      {rejections.length > 0 && (
+      {rejections?.length > 0 && (
         <AppText>
           Detectamos algunos errores en la informacion que subiste
         </AppText>
@@ -34,7 +37,7 @@ export const RejectionsList = () => {
       <CommonList
         data={rejections}
         contentContainerStyle={
-          rejections.length === 0 && {
+          (rejections?.length === 0 || isLoading) && {
             flex: 1,
             height: '100%',
             alignItems: 'center',

@@ -72,7 +72,7 @@ export const Screen = ({
         backgroundColor={theme.primaryDarkColor}
         barStyle={
           colorScheme
-            ? colorScheme === 'light'
+            ? colorScheme !== 'light'
               ? 'dark-content'
               : 'light-content'
             : 'default'

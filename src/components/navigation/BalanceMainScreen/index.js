@@ -17,7 +17,6 @@ import {useModal} from 'components/Hooks/useModal';
 import {CashoutModalContent} from 'components/navigation/BalanceMainScreen/CashoutModalContent';
 import {ChangeBankNumberModalContent} from 'components/navigation/BalanceMainScreen/ChangeBankNumberModalContent';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {theme} from 'constants/theme';
 
 export default () => {
   const {isMobile, widthWithPadding, height, width} = useWindowDimension();

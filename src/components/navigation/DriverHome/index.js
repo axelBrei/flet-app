@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useEffect, useState, useCallback, useMemo, useRef} from 'react';
 import {Screen} from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {useModal} from 'components/Hooks/useModal';
@@ -41,7 +41,12 @@ export default ({navigation}) => {
   const pendingShipmentError = useSelector(selectPendingShipmentError);
   const error = useSelector(selectPendingShipmentAnswerError);
   const debouncedCurrentPosition = useSelector(selectCurrentPosition);
-  const {check, status} = usePermission([PERMISSIONS.backgroundLocation]);
+  const mapRef = useRef(null);
+  const {check, status} = usePermission(
+    [PERMISSIONS.backgroundLocation, PERMISSIONS.location],
+    false,
+    true,
+  );
 
   useFetcingPendingShipment();
 
@@ -57,7 +62,9 @@ export default ({navigation}) => {
         web: CAR_MARKER,
         native: CarMarker,
       }),
-      debouncedCurrentPosition.bearing || orientation,
+      debouncedCurrentPosition.bearing > 0
+        ? debouncedCurrentPosition.bearing || orientation
+        : orientation,
       40,
     );
     return [
@@ -94,13 +101,13 @@ export default ({navigation}) => {
   const onChangeOnlineStatus = useCallback(
     (newOnlineStatus, time) => {
       if (!courrier.enabled) {
-        Alert.alert(
+        return Alert.alert(
           'Ya casi!',
           'Todavía estamos analizando tu perfil.\nNosotros te avisaremos cuando puedas empezar a realizar envíos',
         );
-        return;
       }
       if (status) {
+        mapRef.current?.centerOnUserLocation();
         dispatch(changeOnlineStatus(newOnlineStatus, time.until));
       } else {
         check();
@@ -113,8 +120,10 @@ export default ({navigation}) => {
     <Screen>
       <Loader unmount={false}>
         <Map
+          ref={mapRef}
           style={{flex: 1, width: '100%'}}
           markers={positionMarker}
+          minMarkerAnimation={-1}
           showsMyLocationButton
         />
         <OnlineStatusCard onPressButton={onChangeOnlineStatus} />

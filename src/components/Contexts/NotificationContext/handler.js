@@ -9,6 +9,8 @@ import {
   receiveRejectShipmentFail,
 } from 'redux-store/slices/driverShipmentSlice';
 import {keysToCamelCase} from 'helpers/objectHelper';
+import {fetchCourrierRejectionsList} from 'redux-store/slices/driverSlice';
+import {changeCourrierEnabledStatus} from 'redux-store/slices/loginSlice';
 
 export const handleNewToken = async token => {
   try {
@@ -41,6 +43,16 @@ export const useNotificationHandler = () => {
           if (userData.isDriver) {
             dispatch(receiveRejectShipmentFail('El usuario cancelo el pedido'));
           }
+          break;
+        }
+        case NOTIFICATION_TYPES.COURRIER_REJECTION_CHANGED: {
+          dispatch(fetchCourrierRejectionsList());
+          dispatch(changeCourrierEnabledStatus(false));
+          break;
+        }
+        case NOTIFICATION_TYPES.COURRIER_ENABLED_CHANGE: {
+          // change courrier to enabled if notification bringd data;
+          dispatch(changeCourrierEnabledStatus(data.enabled === 'true'));
           break;
         }
       }

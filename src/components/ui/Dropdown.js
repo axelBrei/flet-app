@@ -49,7 +49,7 @@ export const Dropdown = ({visible, data, ...props}) => {
         onChangeText={onChangeText}
         value={value?.name ?? value}
         onLayout={measureInput}
-        error={null}
+        error={props.error}
         renderAccesory={() => (
           <TouchableOpacity
             onPress={() => {

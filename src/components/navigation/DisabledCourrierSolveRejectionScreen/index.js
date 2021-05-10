@@ -23,6 +23,7 @@ import {
   selectUpdateCourrierRejectionError,
 } from 'redux-store/slices/driverSlice';
 import {AnimatedError} from 'components/ui/AnimatedError';
+import {VehicleTypeDropdown} from 'components/navigation/DisabledCourrierSolveRejectionScreen/VehicleTypeDropDown';
 
 export default ({route, navigation}) => {
   const {rejection} = route.params;
@@ -33,6 +34,8 @@ export default ({route, navigation}) => {
   const isLoading = useSelector(selectIsLoadingUpdateCourrierRejection);
   const error = useSelector(selectUpdateCourrierRejectionError);
   const [isFormSubmited, setIsFormSubmited] = useState(false);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (isFormSubmited && !isLoading && !error) {
@@ -60,16 +63,22 @@ export default ({route, navigation}) => {
   } = useFormikCustom({
     initialValues: {[field]: isCamera ? null : ''},
     validationSchema: yup.object({
-      [field]: yup[isCamera ? 'object' : 'string']()
+      [field]: yup[
+        isCamera ? 'object' : field === 'vehicle.type' ? 'number' : 'string'
+      ]()
         .nullable()
         .required(strings.validations.requiredField),
     }),
     onSubmit,
   });
 
-  const InputComponent = isCamera ? SelectImage : InputField;
+  const InputComponent = isCamera
+    ? SelectImage
+    : field === 'vehicle.type'
+    ? VehicleTypeDropdown
+    : InputField;
   const placeholder = isCamera ? 'Nueva foto de' : '';
-  console.log(values);
+
   return (
     <ScreenComponent>
       <StartRow style={{marginBottom: 20}}>
@@ -108,5 +117,8 @@ const Image = styled(CustomImage)`
 
 const InputContainer = styled.View`
   padding: 20px 0;
-  justify-content: center;
+  justify-content: flex-start;
+  elevation: 5;
+  z-index: 10;
+  flex: 1;
 `;

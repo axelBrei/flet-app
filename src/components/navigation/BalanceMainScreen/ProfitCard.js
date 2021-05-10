@@ -17,16 +17,18 @@ export const ProfitCard = () => {
     <BalanceCard>
       <CenteredColumn>
         <AppText>Ganancia bruta</AppText>
-        <TotalEarned>${totalEarned}</TotalEarned>
+        <TotalEarned positive={!totalEarned || totalEarned >= 0}>
+          ${totalEarned || 0}
+        </TotalEarned>
       </CenteredColumn>
       <Row>
         <CenteredColumn style={{flex: 1}} displayBorder>
           <AppText>Ganancia neta</AppText>
-          <PaymentValue>${netProfit}</PaymentValue>
+          <PaymentValue>${netProfit || 0}</PaymentValue>
         </CenteredColumn>
         <CenteredColumn style={{flex: 1}} displayBorder comission>
           <AppText>Comisiones</AppText>
-          <PaymentValue comission>${totalFee}</PaymentValue>
+          <PaymentValue comission>${totalFee || 0}</PaymentValue>
         </CenteredColumn>
       </Row>
     </BalanceCard>
@@ -44,7 +46,7 @@ const BalanceCard = styled.View`
 
 const TotalEarned = styled(AppText)`
   font-size: 40px;
-  color: ${theme.online};
+  color: ${({positive}) => (positive ? theme.online : theme.error)};
   font-weight: bold;
 `;
 

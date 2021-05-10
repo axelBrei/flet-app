@@ -35,7 +35,7 @@ export const OnlineStatusCard = ({onPressButton}) => {
   );
 
   const _onPressButton = () => {
-    if (!selectedTime) {
+    if (!isOnline && !selectedTime) {
       return setError('Tenés que seleccionar un horario.');
     }
     if (!error) {
@@ -43,6 +43,8 @@ export const OnlineStatusCard = ({onPressButton}) => {
         ...selectedTime,
         until: selectedTime?.date.valueOf(),
       });
+    } else {
+      console.log('status err', error);
     }
   };
 

@@ -1,4 +1,4 @@
-import {NativeModules, NativeEventEmitter} from 'react-native';
+import {NativeModules, NativeEventEmitter, Alert} from 'react-native';
 import {useUserData} from 'components/Hooks/useUserData';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, usePermission} from 'components/Hooks/usePermission';
@@ -46,12 +46,11 @@ export default (
   const {loading, status, error, check} = usePermission(
     [PERMISSIONS.backgroundLocation],
     true,
-    false,
+    true,
   );
 
   const enable = useCallback(
     (checkPermission = true) => {
-      console.log(loading, status, LocationTrackingModule);
       if (status) {
         emitter?.addListener('onLocation', body => {
           console.log('new location', body);
@@ -59,6 +58,7 @@ export default (
         });
         emitter.addListener('error', error => {
           console.log('location error', error);
+          Alert.alert('Error', error);
         });
         setListening(true);
         LocationTrackingModule.startTracking();
@@ -71,12 +71,21 @@ export default (
   );
 
   const disable = useCallback(() => {
-    try {
-      emitter.removeAllListeners();
-      setListening(false);
-    } catch (e) {}
+    if (listening) {
+      try {
+        emitter.removeAllListeners('location');
+        emitter.removeAllListeners('error');
+        setListening(false);
+      } catch (e) {
+        Alert.alert(
+          'Error',
+          'Ocurrió un error al querer deshabilitar la ubicacion en segundo plano',
+        );
+      }
+    }
+
     LocationTrackingModule.stopTracking();
-  }, []);
+  }, [emitter]);
 
   const hasPermission = useCallback(() => {
     if (!loading && !status) {

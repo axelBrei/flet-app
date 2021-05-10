@@ -15,6 +15,7 @@ import {
   updateDriverLocation,
 } from 'redux-store/slices/driverShipmentSlice';
 import {useUserData} from 'components/Hooks/useUserData';
+import {theme} from 'constants/theme';
 import {
   receiveUpdatePositionSuccess,
   selectOnlineStatus,
@@ -22,6 +23,7 @@ import {
 } from 'redux-store/slices/driverSlice';
 import {Platform} from 'react-native';
 import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
+import {AppLogo} from 'components/ui/AppLogo';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -75,14 +77,23 @@ export const DriverStack = ({navigation}) => {
           component={DriverNewShipmentScreen}
           options={{headerTransparent: true, headerShown: false}}
         />
+      ) : status !== DELIVERED && courrier.enabled ? (
+        <Screen
+          name={routes.driverHomeScreen}
+          component={DriverHomeScreen}
+          options={{headerTransparent: true, headerShown: false}}
+        />
       ) : (
-        status !== DELIVERED && (
-          <Screen
-            name={routes.driverHomeScreen}
-            component={DriverHomeScreen}
-            options={{headerTransparent: true, headerShown: false}}
-          />
-        )
+        <Screen
+          name={routes.disabledCourrierHomeScreen}
+          options={{
+            headerTitleAlign: 'center',
+            title: <AppLogo color={theme.primaryColor} />,
+          }}
+          getComponent={() =>
+            require('components/navigation/DisabledCourrierHomeScreen').default
+          }
+        />
       )}
       {status === DELIVERED && (
         <Screen
@@ -94,13 +105,7 @@ export const DriverStack = ({navigation}) => {
           }}
         />
       )}
-      <Screen
-        name={routes.disabledCourrierHomeScreen}
-        options={{title: '¡Ya casi!'}}
-        getComponent={() =>
-          require('components/navigation/DisabledCourrierHomeScreen').default
-        }
-      />
+
       <Screen
         name={routes.disabledCourrierSolveRejectionScreen}
         options={{title: 'Detalle', headerLeft: CustomHeaderBackButton}}

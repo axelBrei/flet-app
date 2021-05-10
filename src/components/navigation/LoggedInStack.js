@@ -79,7 +79,8 @@ export default () => {
         style: {
           paddingVertical: 5,
           ...Platform.select({
-            web: {height: 75, paddingBottom: 15},
+            android: {height: 55},
+            web: {height: 80, paddingBottom: 15},
           }),
         },
       }}

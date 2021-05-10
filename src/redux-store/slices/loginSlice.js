@@ -55,6 +55,9 @@ const slice = createSlice({
       state.loading.recover = false;
       state.error.recover = action.payload;
     },
+    changeCourrierEnabledStatus: (state, action) => {
+      state.userData.courrier.enabled = action.payload;
+    },
     logout: state => {
       Object.assign(state, initialState);
     },
@@ -87,6 +90,7 @@ export const {
   requestRecoverPassword,
   receiveRecoverPasswordSuccess,
   receiveRecoverPasswordFail,
+  changeCourrierEnabledStatus,
   logout,
 } = slice.actions;
 

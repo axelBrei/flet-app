@@ -126,6 +126,9 @@ export const registerDriverPersonalData = (
     form.append('phone.country_code', personalData.countryCode);
     form.append('phone.area_code', personalData.areaCode);
     form.append('phone.number', personalData.number);
+    if (personalData?.userId) {
+      form.append('user_id', personalData.userId);
+    }
     appendToForm(form, 'file', profile);
 
     const {data} = await loginService.registerCourrierPersonalData(form, token);
@@ -140,7 +143,7 @@ export const registerDriverPersonalData = (
       }),
     );
   } catch (e) {
-    dispatch(receiveRegisterFail(e?.response?.message || e));
+    dispatch(receiveRegisterFail(e?.response?.data?.message || e));
   }
 };
 
@@ -164,7 +167,7 @@ export const registerDriverVehicleData = vehicleData => async (
     await loginService.registerCourrierVehicleData(form);
     dispatch(receiveCourrierVehicleDataSuccess(vehicleData));
   } catch (e) {
-    dispatch(receiveRegisterFail(e?.response?.message || e));
+    dispatch(receiveRegisterFail(e?.response?.data?.message || e));
   }
 };
 
@@ -187,7 +190,7 @@ export const registerDriverLegaleData = legalData => async (
     await loginService.registerCourrierLegalData(form);
     dispatch(receiveCourrierLegaldataSuccess());
   } catch (e) {
-    dispatch(receiveRegisterFail(e?.response?.message || e));
+    dispatch(receiveRegisterFail(e?.response?.data?.message || e));
   }
 };
 

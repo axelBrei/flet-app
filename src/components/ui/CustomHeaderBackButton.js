@@ -8,9 +8,7 @@ import {AppText} from 'components/ui/AppText';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useNavigation} from 'components/Hooks/useNavigation';
 
-export const CustomHeaderBackButton = props => {
-  const navigation = useNavigation();
-
+export const CustomHeaderBackButton = ({navigation, ...props}) => {
   const onPress = () => {
     if (Platform.OS === 'web' && props.canGoBack) {
       history.back();

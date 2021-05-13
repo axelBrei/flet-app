@@ -35,8 +35,8 @@ export default ({navigation}) => {
 
   const onSubmit = useCallback(
     values => {
-      setIsSubmited(true);
       dispatch(registerDriverLegaleData(values));
+      setIsSubmited(true);
     },
     [navigation, dispatch],
   );

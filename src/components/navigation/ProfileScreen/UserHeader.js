@@ -49,6 +49,8 @@ export const UserHeader = () => {
               ref={inputRef}
               onSelectImage={onImageChange}
               autoFocus={false}
+              aspectRatio={3 / 4}
+              acceptFrontCamera
             />
             <Image
               defaultIcon="account"

@@ -16,6 +16,9 @@ import {PersonalDataModal} from 'components/navigation/ProfileScreen/ModalConten
 import {useNavigation} from '@react-navigation/native';
 import {ChangePasswordModal} from 'components/navigation/ProfileScreen/ModalContents/ChangePasswordModal';
 import {MapPreferencesModalContent} from 'components/navigation/ProfileScreen/ModalContents/MapPreferencesModalContent';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchPhonesToRegisterCourrier} from 'redux-store/slices/loginSlice';
+import {selectIsLoadingPersonalDataTelephones} from 'redux-store/slices/personalData/telephonesSlice';
 
 const data = [
   {
@@ -56,13 +59,23 @@ const data = [
 
 export default () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const {isMobile} = useWindowDimension();
   const {isDriver} = useUserData();
+  const isLoading = useSelector(selectIsLoadingPersonalDataTelephones);
 
   const onPressItem = useCallback(
     ({redirectTo}) => redirectTo && navigation.navigate(redirectTo),
     [navigation],
   );
+
+  const onPressDriveWitUs = useCallback(async () => {
+    await dispatch(fetchPhonesToRegisterCourrier());
+    navigation.navigate(routes.registerStack, {
+      screen: routes.registerPersonalData,
+      driver: true,
+    });
+  }, [navigation]);
 
   const renderItem = item => <MenuItem {...item} onPressItem={onPressItem} />;
   const renderHeader = name => <SectionHeader>{name}</SectionHeader>;
@@ -86,7 +99,14 @@ export default () => {
     <ScreenComponent scrollable>
       <CenterContainer>
         <UserHeader />
-        {!isDriver && <MainButton label="Maneja con nosotros" inverted />}
+        {!isDriver && (
+          <MainButton
+            onPress={onPressDriveWitUs}
+            label="Maneja con nosotros"
+            loading={isLoading}
+            inverted
+          />
+        )}
       </CenterContainer>
       <ContentContainer>
         {filteredList.map((item, index) => (

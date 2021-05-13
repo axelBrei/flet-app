@@ -1,7 +1,10 @@
 import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
 import {capitallize} from 'helpers/stringHelper';
-import {receiveRegisterSuccess} from './registerSlice';
+import {
+  receiveCourrierDataSuccess,
+  receiveRegisterSuccess,
+} from './registerSlice';
 import {
   changeOnlineStatus,
   receiveChangeOnlineStatusSuccess,
@@ -14,6 +17,7 @@ import {
   receiveUpdatePasswordSuccess,
   receiveUpdatePersonalDataSuccess,
 } from 'redux-store/slices/personalData/personalData';
+import {fetchTelephones} from 'redux-store/slices/personalData/telephonesSlice';
 
 const initialState = {
   userData: null,
@@ -143,6 +147,17 @@ export const fetchRecoverPassword = data => async dispatch => {
     dispatch(receiveRecoverPasswordFail(e?.response?.data?.message || e));
   }
 };
+
+export const fetchPhonesToRegisterCourrier = () => async (
+  dispatch,
+  getState,
+) => {
+  await dispatch(fetchTelephones());
+  const [phone] = getState().personalData.telephones.telephones;
+  dispatch(receiveCourrierDataSuccess(phone));
+  console.log(phone);
+};
+
 /**
  * @SELECTORS
  */

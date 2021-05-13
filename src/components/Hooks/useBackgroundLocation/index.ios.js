@@ -73,6 +73,7 @@ export default (
   const disable = useCallback(() => {
     if (listening) {
       try {
+        LocationTrackingModule.stopTracking();
         emitter.removeAllListeners('location');
         emitter.removeAllListeners('error');
         setListening(false);
@@ -83,8 +84,6 @@ export default (
         );
       }
     }
-
-    LocationTrackingModule.stopTracking();
   }, [emitter]);
 
   const hasPermission = useCallback(() => {

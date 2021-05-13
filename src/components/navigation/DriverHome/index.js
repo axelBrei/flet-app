@@ -107,13 +107,13 @@ export default ({navigation}) => {
         );
       }
       if (status) {
-        mapRef.current?.centerOnUserLocation();
+        newOnlineStatus && mapRef.current?.centerOnUserLocation();
         dispatch(changeOnlineStatus(newOnlineStatus, time.until));
       } else {
         check();
       }
     },
-    [status, check, courrier],
+    [status, check, courrier, mapRef],
   );
 
   return (
@@ -123,7 +123,7 @@ export default ({navigation}) => {
           ref={mapRef}
           style={{flex: 1, width: '100%'}}
           markers={positionMarker}
-          minMarkerAnimation={-1}
+          minMarkerAnimation={0}
           showsMyLocationButton
         />
         <OnlineStatusCard onPressButton={onChangeOnlineStatus} />

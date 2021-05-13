@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {AppLogo} from 'components/ui/AppLogo';
+import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -58,18 +59,6 @@ const renderPublicRoutes = (width, isMobile) => (
         require('components/navigation/RecoverPasswordResultScreen').default
       }
     />
-    <Screen
-      name={routes.registerStack}
-      component={RegisterStack}
-      options={{
-        headerTitle: () => <AppLogo color={theme.primaryColor} />,
-        headerStyle: {
-          backgroundColor: theme.white,
-        },
-        headerTintColor: theme.primaryDarkColor,
-        headerShown: true,
-      }}
-    />
   </>
 );
 
@@ -103,6 +92,18 @@ export default () => {
         },
       })}>
       {userData ? renderPrivateRoutes() : renderPublicRoutes(width, isMobile)}
+      <Screen
+        name={routes.registerStack}
+        component={RegisterStack}
+        options={({navigation}) => ({
+          headerTitle: () => <AppLogo color={theme.primaryColor} />,
+          headerStyle: {
+            backgroundColor: theme.white,
+          },
+          headerTintColor: theme.primaryDarkColor,
+          headerShown: true,
+        })}
+      />
       <Screen
         name="pagina-inexistente"
         component={PageNotFound}

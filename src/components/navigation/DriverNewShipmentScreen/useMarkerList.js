@@ -64,7 +64,7 @@ export const useMarkerList = () => {
           web: CAR_MARKER,
           native: CarMarker,
         }),
-        orientation,
+        currentLocation?.bearing || orientation,
         scaleDp(40),
       );
       setCurrenPositionMarker({

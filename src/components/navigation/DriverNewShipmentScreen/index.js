@@ -13,7 +13,6 @@ import {
   selectPendingShipmentError,
 } from 'redux-store/slices/driverShipmentSlice';
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
-import {updatePosition} from 'redux-store/slices/driverSlice';
 import {ShipmentDescription} from 'components/navigation/DriverNewShipmentScreen/ShipmentDescription';
 import {Alert} from 'react-native';
 

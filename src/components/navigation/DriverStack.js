@@ -70,6 +70,16 @@ export const DriverStack = ({navigation}) => {
       screenOptions={navigationConfig({
         headerLeft: () => null,
       })}>
+      {status === DELIVERED && (
+        <Screen
+          name={routes.driverShipmentDeliveryConfirmationScreen}
+          component={DriverDeliveryConfirmation}
+          options={{
+            title: 'Confimacion de envío',
+            headerShown: false,
+          }}
+        />
+      )}
       {!currentShipmentError &&
       [COURRIER_CONFIRMED, ON_PROCESS].includes(status) ? (
         <Screen
@@ -95,17 +105,6 @@ export const DriverStack = ({navigation}) => {
           }
         />
       )}
-      {status === DELIVERED && (
-        <Screen
-          name={routes.driverShipmentDeliveryConfirmationScreen}
-          component={DriverDeliveryConfirmation}
-          options={{
-            title: 'Confimacion de envío',
-            headerShown: false,
-          }}
-        />
-      )}
-
       <Screen
         name={routes.disabledCourrierSolveRejectionScreen}
         options={{title: 'Detalle', headerLeft: CustomHeaderBackButton}}

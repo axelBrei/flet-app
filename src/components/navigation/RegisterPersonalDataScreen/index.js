@@ -19,6 +19,7 @@ import {
   registerDriverPersonalData,
 } from 'redux-store/slices/registerSlice';
 import {routes} from 'constants/config/routes';
+import {selectUserData} from 'redux-store/slices/loginSlice';
 
 export default ({navigation}) => {
   const {params} = useRoute();
@@ -26,14 +27,18 @@ export default ({navigation}) => {
   const loading = useSelector(selectIsLoadingRegister);
   const error = useSelector(selectRegisterError);
   const savedData = useSelector(selectRegisterDriverData);
+  const userData = useSelector(selectUserData);
 
   const onSubmit = useCallback(
     values => {
       dispatch(
-        (params?.driver ? registerDriverPersonalData : registerUser)?.(values),
+        (params?.driver ? registerDriverPersonalData : registerUser)?.({
+          userId: userData?.id || null,
+          ...values,
+        }),
       );
     },
-    [dispatch, params],
+    [dispatch, params, userData],
   );
 
   const {

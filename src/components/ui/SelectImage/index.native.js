@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Platform, Alert} from 'react-native';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
@@ -13,8 +13,26 @@ const defaultProps = {
   cropperCancelText: 'Cancelar',
   compressImageQuality: Platform.select({
     android: 0.6,
-    ios: 0.8,
+    ios: 0.7,
   }),
+};
+const getCroppingAreaSize = (height, width, aspectRatio) => {
+  let cropperSize;
+
+  if (aspectRatio < 1) {
+    cropperSize = {
+      width: Math.min(Math.min(width, height), 1280),
+      height: Math.min(Math.max(width, height), 720),
+    };
+    cropperSize.width = cropperSize.height / Math.pow(aspectRatio, -1);
+  } else {
+    cropperSize = {
+      width: Math.min(Math.max(width, height), 1280),
+      height: Math.min(Math.min(width, height), 720),
+    };
+    cropperSize.height = cropperSize.width / aspectRatio;
+  }
+  return cropperSize;
 };
 
 const SelectImage = ({
@@ -26,6 +44,8 @@ const SelectImage = ({
   onFocus,
   onSelectImage,
   externalRef,
+  acceptFrontCamera = false,
+  aspectRatio = 16 / 9,
   ...props
 }) => {
   const processImage = useCallback(
@@ -44,6 +64,25 @@ const SelectImage = ({
     [onSelectImage],
   );
 
+  useEffect(() => ImagePicker.clean(), []);
+
+  const cropImage = async original => {
+    try {
+      return await ImagePicker.openCropper({
+        path: original.path,
+        ...getCroppingAreaSize(original.height, original.width, aspectRatio),
+        ...defaultProps,
+      });
+    } catch (e) {
+      if (e.code !== 'E_PICKER_CANCELLED') {
+        Alert.alert(
+          'Error',
+          'Ocurrió un error al querer abrir el editor de la foto.',
+        );
+      }
+    }
+  };
+
   const onPressCamera = useCallback(async () => {
     if (
       !(await PermissionManager.checkPermissions([
@@ -55,10 +94,11 @@ const SelectImage = ({
     const image = await ImagePicker.openCamera({
       multiple: maxFiles > 1,
       mediaType: 'photo',
-      cropping: true,
+      useFrontCamera: acceptFrontCamera,
       ...defaultProps,
     });
-    processImage(image);
+    const cropped = await cropImage(image);
+    processImage(cropped);
   }, [onSelectImage, maxFiles]);
 
   const onPressGalery = useCallback(async () => {
@@ -72,10 +112,12 @@ const SelectImage = ({
     const image = await ImagePicker.openPicker({
       multiple: maxFiles > 1,
       mediaType: 'photo',
-      cropping: true,
+      cropping: false,
       ...defaultProps,
     });
-    processImage(image);
+    const cropped = await cropImage(image);
+    console.log(cropped, image);
+    processImage(cropped);
   }, [onSelectImage, maxFiles]);
 
   const _onFocus = useCallback(e => {
@@ -93,6 +135,7 @@ const SelectImage = ({
         },
         {text: 'Cancelar', style: 'cancel'},
       ],
+      {cancelable: true},
     );
     return true;
   }, []);

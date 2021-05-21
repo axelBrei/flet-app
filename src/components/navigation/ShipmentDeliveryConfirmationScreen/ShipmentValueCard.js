@@ -12,8 +12,8 @@ import {
   selectShipmentPrice,
 } from 'redux-store/slices/driverShipmentSlice';
 
-export const ShipmentValueCard = () => {
-  const price = useSelector(selectShipmentPrice);
+export const ShipmentValueCard = ({shipment}) => {
+  const price = shipment?.price || '';
   return (
     <IconCard
       imageBackground={theme.primaryLightColor}

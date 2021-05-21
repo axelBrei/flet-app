@@ -1,48 +1,54 @@
-import {useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  fetchPendingShipments,
-  selectDriverShipmentData,
-  selectPendingShipment,
+  fetchCurrentShipment,
+  selectPendingShipments,
 } from 'redux-store/slices/driverShipmentSlice';
 import {selectOnlineStatus} from 'redux-store/slices/driverSlice';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {useInterval} from 'components/Hooks/useInterval';
 
 const FETCH_INTERVAL = 6 * 1000;
 export const useFetcingPendingShipment = () => {
-  let interval = useRef(null);
   const dispatch = useDispatch();
-  const isOnline = useSelector(selectOnlineStatus);
   const isFocused = useIsFocused();
-  const currentShipment = useSelector(selectDriverShipmentData);
+  const isOnline = useSelector(selectOnlineStatus);
+  const pendingShipments = useSelector(selectPendingShipments);
+  const [currentInterval, setCurrentInterval] = useState(null);
 
-  const start = useCallback(() => {
-    interval.current = setInterval(() => {
-      !currentShipment?.id && dispatch(fetchPendingShipments());
-    }, FETCH_INTERVAL);
-  }, [interval, currentShipment]);
+  console.log(isOnline, pendingShipments, isFocused, currentInterval);
+
+  const tick = useCallback(() => {
+    if (isFocused && pendingShipments.length === 0) {
+      dispatch(fetchCurrentShipment());
+    }
+  }, [isFocused, pendingShipments]);
+
+  const cancelInterval = useCallback(() => {
+    if (currentInterval) {
+      console.log('cancelInterval');
+      clearInterval(currentInterval);
+      setCurrentInterval(null);
+    }
+  }, [currentInterval]);
 
   useEffect(() => {
-    if (currentShipment?.id && interval.current) {
-      clearInterval(interval.current);
+    if (
+      !currentInterval &&
+      isFocused &&
+      isOnline &&
+      pendingShipments.length === 0
+    ) {
+      const interval = setInterval(tick, FETCH_INTERVAL);
+      setCurrentInterval(interval);
     }
-  }, [currentShipment, interval]);
+  }, [isOnline, isFocused, tick, currentInterval]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isOnline) {
-        start();
-      } else if (interval.current) {
-        clearInterval(interval.current);
-      }
-      return () => clearInterval(interval.current);
-    }, [isOnline, interval]),
-  );
-  // useEffect(() => {
-  //
-  //   if (!isOnline || !isFocused) {
-  //     clearInterval(interval.current);
-  //   }
-  // }, [isOnline, isFocused]);
+  useEffect(() => {
+    if (!isOnline || !isFocused || pendingShipments.length > 0) {
+      console.log('data', isOnline, isFocused, pendingShipments);
+      console.log(!isOnline || !isFocused || pendingShipments.length > 0);
+      cancelInterval();
+    }
+    // return cancelInterval;
+  }, [isOnline, isFocused, pendingShipments, cancelInterval]);
 };

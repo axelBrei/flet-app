@@ -11,6 +11,7 @@ import PackageDelivered from 'resources/images/box_delivered.svg';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  selectDriverShipmentData,
   selectIsLoadingSecureCode,
   uploadConfirmationCode,
 } from 'redux-store/slices/driverShipmentSlice';
@@ -20,21 +21,23 @@ import {ShipmentValueCard} from 'components/navigation/ShipmentDeliveryConfirmat
 export default () => {
   const dispatch = useDispatch();
   const {widthWithPadding} = useWindowDimension();
+  const shipments = useSelector(selectDriverShipmentData);
+  const closestShipment = shipments[0];
 
   const [securityCode, setSecurityCode] = useState('');
 
   const onPressAccept = useCallback(() => {
     if (securityCode.length === 5) {
-      dispatch(uploadConfirmationCode(securityCode));
+      dispatch(uploadConfirmationCode(securityCode, closestShipment.id));
     } else {
       Alert.alert('Debe completar todos los campos del código');
     }
-  }, [securityCode]);
+  }, [securityCode, closestShipment]);
 
   return (
     <Screen scrollable>
       <ScreenContainer>
-        <ShipmentValueCard />
+        <ShipmentValueCard shipment={closestShipment} />
         <ImageContainer>
           <PackageDelivered width={widthWithPadding} height={150} />
         </ImageContainer>
@@ -48,7 +51,7 @@ export default () => {
   );
 };
 
-const ScreenContainer = styled(Screen)`
+const ScreenContainer = styled.View`
   padding: 0 20px 65px;
   align-items: center;
   justify-content: center;

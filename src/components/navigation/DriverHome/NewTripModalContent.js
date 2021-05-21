@@ -1,18 +1,14 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components';
 import {ActivityIndicator, Platform} from 'react-native';
-import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
-import {TextLink} from 'components/ui/TextLink';
 import {theme} from 'constants/theme';
-import {Icon} from 'components/ui/Icon';
 import {useSelector} from 'react-redux';
 import {
+  selectDriverShipmentData,
   selectLoadingPendingShipmentAnswer,
-  selectPendingShipment,
   selectPendingShipmentAnswerError,
 } from 'redux-store/slices/driverShipmentSlice';
-import {Loader} from 'components/ui/Loader';
 import {Title} from 'components/ui/Title';
 import {StaticInputField} from 'components/ui/StaticInputField';
 import {IconCard} from 'components/ui/IconCard';
@@ -21,6 +17,7 @@ import DestinationImage from 'resources/images/destination-pin.svg';
 import {RowWithBoldData} from 'components/ui/RowWithBoldData';
 import {useModalContext} from 'components/Hooks/useModal';
 import dayjs from 'dayjs';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
 const strings = {
   newTrip: '¡Nuevo viaje!',
@@ -44,10 +41,14 @@ export const NewTripModalContent = ({
   onPressReject,
 }) => {
   const [submited, setSubmited] = useState(false);
-  const shipment = useSelector(selectPendingShipment);
+  const shipments = useSelector(selectDriverShipmentData);
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
   const error = useSelector(selectPendingShipmentAnswerError);
   const {closeModal} = useModalContext();
+  const shipment = shipments.find(
+    s => s.status === SHIPMENT_STATE.PENDING_COURRIER,
+  );
+  console.log(shipment);
 
   useEffect(() => {
     if (submited && !loading) {
@@ -91,10 +92,15 @@ export const NewTripModalContent = ({
     <Container>
       <Title width="100%">¡Nuevo viaje!</Title>
       <Row>
-        <StaticInputField bold label="Distancia" style={{width: '45%'}}>
-          {getDistanceIfKm(distance)}
-        </StaticInputField>
-        <StaticInputField bold label="Llegas a las" style={{width: '45%'}}>
+        {distance > 0 && (
+          <StaticInputField bold label="Distancia" style={{width: '45%'}}>
+            {getDistanceIfKm(distance)}
+          </StaticInputField>
+        )}
+        <StaticInputField
+          bold
+          label="Llegas a las"
+          style={{width: distance > 0 ? '45%' : '100%'}}>
           {arrivalTime}
         </StaticInputField>
       </Row>

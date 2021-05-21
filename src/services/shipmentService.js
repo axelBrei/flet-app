@@ -1,6 +1,14 @@
 import {api} from 'constants/network';
 
-const fetchPendingShipments = async () => await api.get('shipment/courrier');
+const fetchCourrierShipments = async id =>
+  await api.get(
+    'shipment/courrier',
+    id && {
+      params: {
+        shipment_id: id,
+      },
+    },
+  );
 
 const confirmShipment = async shipmentId =>
   await api.post(`shipment/confirm?shipment_id=${shipmentId}`, {});
@@ -32,10 +40,8 @@ const getNewShipmentPrice = async shipmentData =>
 const getLastShipments = async (page, pageSize) =>
   await api.get(`shipment/history?page=${page}&page_size=${pageSize}`);
 
-const getCurrentShipment = async () => await api.get('shipment/current');
-
 export default {
-  fetchPendingShipments,
+  fetchCourrierShipments,
   createNewShipment,
   cancelShipment,
   checkShipmentStatus,
@@ -46,5 +52,4 @@ export default {
   uploadConfirmationCode,
   getNewShipmentPrice,
   getLastShipments,
-  getCurrentShipment,
 };

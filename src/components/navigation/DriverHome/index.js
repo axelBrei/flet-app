@@ -7,9 +7,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   confirmShipment,
   rejectShipment,
-  selectPendingShipment,
   selectPendingShipmentAnswerError,
-  selectPendingShipmentError,
+  selectCurrentShipmentError,
+  selectDriverShipmentData,
+  selectPendingShipments,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {getRotatedMarker} from 'components/ui/Map/helper';
@@ -31,14 +32,12 @@ import {useUserData} from 'components/Hooks/useUserData';
 import {useIsFocused} from '@react-navigation/native';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 
-export default ({navigation}) => {
+const DriverHome = ({navigation}) => {
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
   const {courrier} = useUserData();
-  const isOnline = useSelector(selectOnlineStatus);
   const previosPosition = useSelector(selectPreviosPosition);
-  const pendingShipment = useSelector(selectPendingShipment);
-  const pendingShipmentError = useSelector(selectPendingShipmentError);
+  const shipments = useSelector(selectPendingShipments);
+  const pendingShipmentError = useSelector(selectCurrentShipmentError);
   const error = useSelector(selectPendingShipmentAnswerError);
   const debouncedCurrentPosition = useSelector(selectCurrentPosition);
   const mapRef = useRef(null);
@@ -47,6 +46,7 @@ export default ({navigation}) => {
     false,
     true,
   );
+  const pendingShipment = shipments[0]; // TODO: find the closest shipment
 
   useFetcingPendingShipment();
 
@@ -81,10 +81,10 @@ export default ({navigation}) => {
       distance: pendingShipment?.startPoint?.distance,
       dropZone: pendingShipment?.endPoint?.name.split(',')[2],
       onPressAccept: () => {
-        dispatch(confirmShipment());
+        dispatch(confirmShipment(pendingShipment.id));
       },
       onPressReject: () => {
-        dispatch(rejectShipment());
+        dispatch(rejectShipment(pendingShipment.id));
       },
     },
     {cancelable: false, fullscreen: false},
@@ -132,3 +132,4 @@ export default ({navigation}) => {
     </Screen>
   );
 };
+export default DriverHome;

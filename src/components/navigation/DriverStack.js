@@ -11,7 +11,7 @@ import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   selectDriverShipmentData,
-  selectPendingShipmentError,
+  selectCurrentShipmentError,
   updateDriverLocation,
 } from 'redux-store/slices/driverShipmentSlice';
 import {useUserData} from 'components/Hooks/useUserData';
@@ -32,8 +32,9 @@ export const DriverStack = ({navigation}) => {
   const dispatch = useDispatch();
   const {courrier} = useUserData();
   const {isMobile} = useWindowDimension();
-  const {status} = useSelector(selectDriverShipmentData) || {};
-  const currentShipmentError = useSelector(selectPendingShipmentError);
+  const shipments = useSelector(selectDriverShipmentData);
+  const {status} = shipments[0]; //get closest shipment in future
+  const currentShipmentError = useSelector(selectCurrentShipmentError);
   const isOnline = useSelector(selectOnlineStatus);
 
   const {enable, disable, hasLocationPermission} = useBackgroundLocation(
@@ -57,12 +58,8 @@ export const DriverStack = ({navigation}) => {
   );
 
   useEffect(() => {
-    if (isOnline && hasLocationPermission()) {
-      enable();
-    } else if (!isOnline) {
-      disable();
-    }
-  }, [isOnline, enable, disable]);
+    hasLocationPermission() && (isOnline ? enable : disable)?.();
+  }, [isOnline, hasLocationPermission]);
 
   return (
     <Navigator

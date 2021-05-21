@@ -10,43 +10,47 @@ import {decodeDirections, trackUserPosition} from 'helpers/locationHelper';
 import {
   fetchCurrentShipment,
   selectDriverShipmentData,
-  selectPendingShipmentError,
+  selectCurrentShipmentError,
+  receiveChangeShipmentStatusSuccess,
 } from 'redux-store/slices/driverShipmentSlice';
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
 import {ShipmentDescription} from 'components/navigation/DriverNewShipmentScreen/ShipmentDescription';
 import {Alert} from 'react-native';
 
-export default ({}) => {
+const DriverNewShipmentScreen = () => {
   const dispatch = useDispatch();
-  const currentShipmentError = useSelector(selectPendingShipmentError);
+  const currentShipmentError = useSelector(selectCurrentShipmentError);
   const [directions, setDirections] = useState([]);
-  const shipment = useSelector(selectDriverShipmentData);
+  const shipments = useSelector(selectDriverShipmentData);
+  const closestShipment = shipments[0];
 
   useEffect(() => {
     return () => {
       currentShipmentError &&
-        !shipment &&
+        !closestShipment &&
         Alert.alert('El cliente canceló el envio');
     };
-  }, [currentShipmentError, shipment]);
+  }, [currentShipmentError, closestShipment]);
 
   const {markersList, loadingMakers, loadingMessage} = useMarkerList();
 
   useEffect(() => {
-    if (shipment?.polyline && directions.length === 0) {
-      setDirections(decodeDirections(shipment.polyline));
+    if (closestShipment?.polyline && directions.length === 0) {
+      setDirections(decodeDirections(closestShipment.polyline));
     }
-  }, [directions, shipment]);
+  }, [directions, closestShipment]);
 
   useFocusEffect(
     useCallback(() => {
-      const num = setInterval(() => {
-        dispatch(fetchCurrentShipment());
-      }, 6000);
-      return () => {
-        clearInterval(num);
-      };
-    }, []),
+      if (closestShipment.id) {
+        const num = setInterval(() => {
+          dispatch(fetchCurrentShipment(closestShipment.id));
+        }, 6000);
+        return () => {
+          clearInterval(num);
+        };
+      }
+    }, [closestShipment]),
   );
 
   return (
@@ -66,6 +70,7 @@ export default ({}) => {
     </ScreenComponent>
   );
 };
+export default DriverNewShipmentScreen;
 
 const ScreenComponent = styled(Screen)`
   display: flex;

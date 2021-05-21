@@ -12,14 +12,14 @@ import {
 import {MainButton} from 'components/ui/MainButton';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {ShipmentStagesDescriptor} from 'components/navigation/DriverNewShipmentScreen/ShipmentStagesDescriptor';
-import {openMapsOnDevice} from 'helpers/locationHelper';
 import {selectDriverIsLoadingShipmentStatus} from 'redux-store/slices/driverShipmentSlice';
 import {openMap} from 'redux-store/slices/preferencesSlice';
 
 export const ShipmentDescription = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
-  const {status, startPoint, endPoint} = useSelector(selectDriverShipmentData);
+  const shipments = useSelector(selectDriverShipmentData);
+  const {id, status, startPoint, endPoint} = shipments[0]; // TODO: find closest shipment
   const destination =
     status === SHIPMENT_STATE.COURRIER_CONFIRMED ? startPoint : endPoint;
 
@@ -36,7 +36,7 @@ export const ShipmentDescription = () => {
       status === SHIPMENT_STATE.COURRIER_CONFIRMED
         ? markShipmentAsPickedUp
         : markShipmentAsDelivered;
-    dispatch(action?.());
+    dispatch(action?.(id));
   }, [status, dispatch]);
 
   const Component = useCallback(ShipmentStagesDescriptor(destination), [

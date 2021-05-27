@@ -38,12 +38,16 @@ export const configureAuthInterceptor = store => {
     }
     const {data} = config;
     if (data?._parts || data?.values?.()) {
-      console.log('entra aca');
       return config;
     }
+    const _data = data
+      ? data.keepCase
+        ? data
+        : keysToSnakeCase(data)
+      : undefined;
     return {
       ...config,
-      data: data ? (data.keepCase ? data : keysToSnakeCase(data)) : undefined,
+      data: _data,
     };
   });
 

@@ -19,9 +19,21 @@ export const ShipmentDescription = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipments = useSelector(selectDriverShipmentData);
-  const {id, status, startPoint, endPoint} = shipments[0]; // TODO: find closest shipment
+  const {
+    id,
+    status,
+    startPoint,
+    endPoint,
+    destinations,
+    currentDestination,
+  } = shipments[0]; // TODO: find closest shipment
+  const destinationIndex = destinations?.findIndex(
+    d => d.id === currentDestination,
+  );
   const destination =
-    status === SHIPMENT_STATE.COURRIER_CONFIRMED ? startPoint : endPoint;
+    status === SHIPMENT_STATE.COURRIER_CONFIRMED
+      ? startPoint
+      : destinations[destinationIndex]?.address;
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

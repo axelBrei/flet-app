@@ -17,15 +17,13 @@ export const SecurityCodeInput = ({
   digits = 5,
   onPressAccept,
 }) => {
-  let [values, setValues] = useState(
-    new Array(digits).fill(null).map((_) => ''),
-  );
+  let [values, setValues] = useState(new Array(digits).fill(null).map(_ => ''));
   const loading = useSelector(selectIsLoadingSecureCode);
   const refList = new Array(digits).fill(null).map(useRef);
 
   useEffect(() => {
     onChangeValue(values.join(''));
-    if (values.every((i) => i !== '')) {
+    if (values.every(i => i !== '')) {
       onCompleteEnterCode(values.join(''));
     }
   }, [values]);
@@ -37,7 +35,7 @@ export const SecurityCodeInput = ({
   }, [value]);
 
   const onKeyPress = useCallback(
-    (i) => (e) => {
+    i => e => {
       const valuesArray = Array.from(values);
       if (i > 0 && !values[i] && e.code === 'Backspace') {
         refList[i - 1]?.current?.focus();
@@ -49,7 +47,7 @@ export const SecurityCodeInput = ({
   );
 
   const onChangeText = useCallback(
-    (i) => (text) => {
+    i => text => {
       const valuesArray = Array.from(values);
       if (i === digits - 1 && text.length > 1) {
         return;
@@ -85,7 +83,7 @@ export const SecurityCodeInput = ({
       <Button
         inverted
         onPress={onPressAccept}
-        loading={loading}
+        // loading={loading}
         loaderColor={theme.white}>
         Confirmar envío
       </Button>

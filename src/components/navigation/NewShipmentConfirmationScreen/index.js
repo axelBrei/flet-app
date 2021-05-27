@@ -81,6 +81,7 @@ export default ({navigation}) => {
     [_setFieldValue, values],
   );
 
+  const [startPoint, middlePoint, endPoint] = shipmentDescription.addresses;
   return (
     <ScreenComponent scrollable={!loading}>
       <Loader
@@ -92,17 +93,19 @@ export default ({navigation}) => {
               top: isMobile ? 35 : 0,
               bottom: isMobile ? 35 : -5,
             }}
-            markers={[
-              shipmentDescription.startPoint,
-              shipmentDescription.endPoint,
-            ]}
+            markers={shipmentDescription.addresses}
           />
           <ColorizedCard>
             <StaticInputField label="Desde">
-              {shipmentDescription.startPoint?.name}
+              {startPoint?.name?.split(',')[0]}
             </StaticInputField>
+            {endPoint && (
+              <StaticInputField label="Pasando por">
+                {middlePoint?.name?.split(',')[0]}
+              </StaticInputField>
+            )}
             <StaticInputField label="Hasta">
-              {shipmentDescription.endPoint?.name}
+              {(endPoint || middlePoint)?.name?.split(',')[0]}
             </StaticInputField>
           </ColorizedCard>
         </ShipmentInformationContainer>

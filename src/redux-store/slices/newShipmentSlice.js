@@ -9,8 +9,9 @@ const initialState = {
   },
   shipmentRequest: {
     shipmentDescription: {
-      startPoint: null,
-      endPoint: null,
+      addresses: [],
+      // startPoint: null,
+      // endPoint: null,
       package: {
         description: '',
         value: null,
@@ -45,8 +46,9 @@ const slice = createSlice({
   initialState,
   reducers: {
     updateNewShipmentLocations: (state, {payload}) => {
-      state.shipmentRequest.shipmentDescription.startPoint = payload.startPoint;
-      state.shipmentRequest.shipmentDescription.endPoint = payload.endPoint;
+      state.shipmentRequest.shipmentDescription.addresses = payload;
+      // state.shipmentRequest.shipmentDescription.startPoint = payload.startPoint;
+      // state.shipmentRequest.shipmentDescription.endPoint = payload.endPoint;
     },
     updateShipmentDescription: (state, action) => {
       state.shipmentRequest.shipmentDescription.package = action.payload;
@@ -124,9 +126,10 @@ export const fetchShipmentPrice = confirmationInformation => async (
       shipmentDescription,
       shipmentVehicule: shipmentVehicle,
     } = selectNewShipmentData(getState());
+    console.log(shipmentDescription.addresses);
     const {data} = await shipmentService.getNewShipmentPrice({
       shipmentDescription: {
-        ...shipmentDescription,
+        addresses: shipmentDescription.addresses,
         package: {
           ...shipmentDescription.package,
           type: shipmentVehicle?.vehiculeSize?.id,
@@ -169,7 +172,7 @@ export const createNewShipment = (confirmationInformation = {}) => async (
   try {
     const body = {
       shipmentDescription: {
-        ...shipmentDescription,
+        addresses: shipmentDescription.addresses,
         package: {
           ...shipmentDescription.package,
           type: shipmentVehicle?.vehiculeSize?.id,

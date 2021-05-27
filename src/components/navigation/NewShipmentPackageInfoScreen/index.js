@@ -34,7 +34,7 @@ export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
   const {
-    shipmentDescription: {startPoint, endPoint},
+    shipmentDescription: {addresses},
   } = useSelector(selectNewShipmentData);
 
   const onSubmit = useCallback(
@@ -124,7 +124,16 @@ export default ({navigation}) => {
         />
         <Button label="Continuar" onPress={handleSubmit} />
       </CenteredContainer>
-      <StyledMap markers={[startPoint, endPoint]} accesible={false} />
+      <StyledMap
+        markers={addresses}
+        accesible={false}
+        edgePadding={{
+          left: isMobile ? 35 : 0,
+          right: isMobile ? 35 : 0,
+          top: isMobile ? 35 : 0,
+          bottom: isMobile ? 35 : 0,
+        }}
+      />
     </ScreenComponent>
   );
 };

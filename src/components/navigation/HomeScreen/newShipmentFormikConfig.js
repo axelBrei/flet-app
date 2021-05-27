@@ -5,8 +5,9 @@ import {capitallize} from 'helpers/stringHelper';
 const {requiredField, minimumFieldLength} = strings.validations;
 
 export const FIELDS = {
-  START_POINT: 'startPoint',
-  END_POINT: 'endPoint',
+  START_POINT: 'address1',
+  MID_POINT: 'address2',
+  END_POINT: 'address3',
 };
 
 const initialValues = {
@@ -29,7 +30,7 @@ const validationSchema = yup.object({
   [FIELDS.END_POINT]: yup.object(pointShape).nullable().required(requiredField),
 });
 
-export const formikConfig = (onSubmit) => ({
+export const formikConfig = onSubmit => ({
   onSubmit,
   initialValues,
   validationSchema,

@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect, useCallback, useMemo} from 'react';
 import styled from 'styled-components';
 import {Container} from 'components/ui/Container';
 import {theme} from 'constants/theme';
@@ -14,12 +14,39 @@ import {getCardContentComponent} from 'components/navigation/ShipmentScreen/ship
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {routes} from 'constants/config/routes';
 import {LabelIconButton} from 'components/ui/LabelIconButton';
+import StepsWithLoader from 'components/ui/StepsWithLoader';
+
+const stepsIndexMapping = {
+  [SHIPMENT_STATE.PENDING_COURRIER]: -1,
+  [SHIPMENT_STATE.COURRIER_CONFIRMED]: 0,
+  // [SHIPMENT_STATE.WAITING_ORIGIN]: 1, // TODO: WAITING ORIGIN
+  [SHIPMENT_STATE.ON_PROCESS]: 1,
+  [SHIPMENT_STATE.WAITING_PACKAGE]: 2,
+  [SHIPMENT_STATE.DELIVERED]: 2,
+};
+
+const BASE_STEPS = [
+  SHIPMENT_STATE.PENDING_COURRIER,
+  SHIPMENT_STATE.COURRIER_CONFIRMED,
+  SHIPMENT_STATE.ON_PROCESS,
+  SHIPMENT_STATE.WAITING_PACKAGE,
+];
+
+const CANCELABLE_STATUS = [
+  SHIPMENT_STATE.PENDING_COURRIER,
+  SHIPMENT_STATE.COURRIER_CONFIRMED,
+];
 
 export const ShipmentDetailCard = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const shipmentStatus = useSelector(selectCurrentShipmentStatus);
+  const shipmentStatus = useSelector(selectCurrentShipmentStatus) || {};
   const isLoadingCancel = useSelector(selectIsLoadingCancelShipment);
+  console.log(shipmentStatus);
+  const currentAddresIndex = shipmentStatus?.addresses?.findIndex(
+    a => a.id === shipmentStatus.currentDestination,
+  );
+  const currentAddress = shipmentStatus?.addresses?.[currentAddresIndex];
 
   useEffect(() => {
     if (shipmentStatus?.status === SHIPMENT_STATE.FINISHED) {
@@ -37,12 +64,48 @@ export const ShipmentDetailCard = () => {
     dispatch(cancelShipment());
   }, [navigation]);
 
-  const Component = getCardContentComponent(
-    shipmentStatus?.status || SHIPMENT_STATE.PENDING_COURRIER,
+  const Component = useMemo(
+    () =>
+      getCardContentComponent(
+        shipmentStatus?.status || SHIPMENT_STATE.PENDING_COURRIER,
+        shipmentStatus?.status === SHIPMENT_STATE.COURRIER_CONFIRMED
+          ? shipmentStatus?.addresses?.[currentAddresIndex - 1]?.address?.name
+          : currentAddress?.address?.name,
+      ),
+    [shipmentStatus.status, currentAddress],
   );
+
+  const steps = useMemo(
+    () =>
+      new Array(
+        BASE_STEPS.length + (shipmentStatus?.addresses?.length > 2 ? 2 : 0),
+      )
+        .fill(null)
+        .map((a, index) => ({
+          id: index,
+          title: 'test',
+        })),
+    [shipmentStatus],
+  );
+
+  const getCurrentStepFromState = useCallback(() => {
+    let baseIndex = currentAddresIndex > 1 ? BASE_STEPS.length - 2 : 0;
+    let stateIndex = stepsIndexMapping[shipmentStatus?.status];
+    if (stateIndex !== undefined) {
+      return baseIndex + stateIndex;
+    }
+
+    return (
+      baseIndex +
+      shipmentStatus.addresses?.findIndex(
+        a => a.id === shipmentStatus.currentDestination,
+      )
+    );
+  }, [steps, shipmentStatus]);
 
   return (
     <Card>
+      <StepsWithLoader steps={steps} currentStep={getCurrentStepFromState()} />
       {Component && <Component />}
       <ButtonContainer>
         <LabelIconButton
@@ -50,7 +113,7 @@ export const ShipmentDetailCard = () => {
           label={'Tengo un\nproblema'}
           onPress={onPressHaveAProblem}
         />
-        {shipmentStatus?.status !== SHIPMENT_STATE.DELIVERED && (
+        {CANCELABLE_STATUS.includes(shipmentStatus?.status) && (
           <LabelIconButton
             loading={isLoadingCancel}
             onPress={onPressCancel}

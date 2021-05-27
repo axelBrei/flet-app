@@ -15,8 +15,6 @@ export const useFetcingPendingShipment = () => {
   const pendingShipments = useSelector(selectPendingShipments);
   const [currentInterval, setCurrentInterval] = useState(null);
 
-  console.log(isOnline, pendingShipments, isFocused, currentInterval);
-
   const tick = useCallback(() => {
     if (isFocused && pendingShipments.length === 0) {
       dispatch(fetchCurrentShipment());

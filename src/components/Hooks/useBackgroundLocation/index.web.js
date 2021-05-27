@@ -40,5 +40,6 @@ export default (
   return {
     enable: () => setEnabled(true),
     disable: () => setEnabled(false),
+    hasLocationPermission: () => true,
   };
 };

@@ -105,7 +105,7 @@ export default () => {
         ),
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       })}>
-      {userData?.isDriver && shouldDisplayDriverScreen && (
+      {isMobile && userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.driverStack}
           getComponent={() =>

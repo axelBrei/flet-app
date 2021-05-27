@@ -215,10 +215,11 @@ export const selectDriverPosition = createPositionCheckSelector(
   state => state.shipment?.driverPosition,
   d => d || {},
 );
-export const selectCurrentShipmentStatus = createStateCheckSelector(
+export const selectCurrentShipmentStatus = createSelector(
   state => state.shipment?.shipmentStatus,
   selectCurrentShipment,
-  (s, currentShipment) => s || currentShipment || {},
+  (s, currentShipment) =>
+    s ? {...currentShipment, ...s} : currentShipment || {},
 );
 
 export const selectCurrentShipmentStatusString = createStateCheckSelector(

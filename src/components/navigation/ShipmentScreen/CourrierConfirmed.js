@@ -11,44 +11,58 @@ import dayjs from 'dayjs';
 import {vehiculeSizeOptions} from 'constants/vehicleSizes';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
-export const CourrierConfirmed = title => () => {
-  const {courrier, duration, distance, status, ...shipmentStatus} = useSelector(
-    selectCurrentShipmentStatus,
-  );
+export const CourrierConfirmed = (title, message = null) => () => {
+  const {
+    courrier,
+    status,
+    addresses,
+    currentDestination,
+    ...shipmentStatus
+  } = useSelector(selectCurrentShipmentStatus);
+  const item = vehiculeSizeOptions.find(i => i.id === 2);
 
+  const [origin, destination] = useMemo(() => {
+    const destinationIndex = addresses?.findIndex(
+      i => i.id === currentDestination,
+    );
+    if (!destinationIndex || destinationIndex < 0) return [{}, {}];
+    return [addresses[destinationIndex - 1], addresses[destinationIndex]];
+  }, [currentDestination, addresses]);
+
+  const {duration, distance} = origin;
   const arrivalTime = useMemo(
-    () => [
-      dayjs(duration).format('HH:mm'),
-      dayjs(duration).add(10, 'minute').format('HH:mm'),
-    ],
+    () =>
+      duration && [
+        dayjs(duration).format('HH:mm'),
+        dayjs(duration).add(10, 'minute').format('HH:mm'),
+      ],
     [duration],
   );
 
   return (
     <Container>
       <Title size={19}>{title}</Title>
-      {status === SHIPMENT_STATE.COURRIER_CONFIRMED && (
-        <AppText fontSize={13}>
-          Esta yendo a la direccion de inicio a levantar el paquete
-        </AppText>
+      {message && <AppText fontSize={13}>{message}</AppText>}
+      {duration && (
+        <StaticField label="Llegará entre las:">
+          {arrivalTime.join(' - ')}
+        </StaticField>
       )}
       <Row>
-        <LabeledImage
-          source={{uri: courrier?.photoUrl}}
-          label={courrier?.name}
-        />
-        <StaticInputField label="Llegará entre las:">
-          {arrivalTime.join(' - ')}
-        </StaticInputField>
-        <LabeledImage
-          renderImage={() => {
-            const item = vehiculeSizeOptions.find(i => i.id === 2);
-            return item?.renderIcon(50);
-          }}
-          label={`${
+        <Image source={{uri: courrier?.photoUrl}} />
+        <ShipmentDataContainer>
+          <AppText>Conductor</AppText>
+          <AppText bold>{courrier?.name}</AppText>
+        </ShipmentDataContainer>
+      </Row>
+      <Row>
+        <IconBackground>{item?.renderIcon(50)}</IconBackground>
+        <ShipmentDataContainer>
+          <AppText>Vehículo</AppText>
+          <AppText>{`${
             courrier?.vehicle?.model
-          } ${courrier?.vehicle?.number.toUpperCase()}`}
-        />
+          } ${courrier?.vehicle?.number.toUpperCase()}`}</AppText>
+        </ShipmentDataContainer>
       </Row>
     </Container>
   );
@@ -61,6 +75,31 @@ const Container = styled.View`
 const Row = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   padding-top: 20px;
+`;
+
+const Image = styled.Image`
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+`;
+
+const IconBackground = styled.View`
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  background-color: ${theme.primaryLightColor};
+  align-items: center;
+  justify-content: center;
+`;
+
+const ShipmentDataContainer = styled.View`
+  flex-direction: column;
+  margin-left: 10px;
+  justify-content: center;
+`;
+
+const StaticField = styled(StaticInputField)`
+  margin: 10px 0;
 `;

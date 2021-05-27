@@ -89,9 +89,7 @@ const slice = createSlice({
     },
     receiveSubmitConfirmationCodeSucess: (state, action) => {
       state.loading.code = false;
-      state.shipmentData = state.shipmentData.filter(
-        i => i.id !== action.payload,
-      );
+      state.shipmentData = action.payload;
     },
     receiveSubmitConfirmationCodeFail: (state, action) => {
       state.loading.code = false;
@@ -194,11 +192,33 @@ export const markShipmentAsDelivered = id => async (dispatch, getState) => {
   }
 };
 
-export const uploadConfirmationCode = (code, id) => async dispatch => {
+export const uploadConfirmationCode = (code, id) => async (
+  dispatch,
+  getState,
+) => {
   dispatch(requestSubmitConfirmationCode());
   try {
     await shipmentService.uploadConfirmationCode(id, code);
-    dispatch(receiveSubmitConfirmationCodeSucess(id));
+    const shipments = selectDriverShipmentData(getState());
+    const currentShipment = shipments.find(s => s.id === id);
+    const {destinations, currentDestination} = currentShipment;
+    const currentDestinationIndex = destinations.findIndex(
+      d => d.id === currentDestination,
+    );
+    let array;
+    if (currentDestinationIndex === destinations.length - 1) {
+      array = shipments.filter(s => s.id !== id);
+    } else {
+      array = shipments.map(s =>
+        s.id === id
+          ? {
+              ...s,
+              status: SHIPMENT_STATE.ON_PROCESS,
+            }
+          : s,
+      );
+    }
+    dispatch(receiveSubmitConfirmationCodeSucess(array));
   } catch (e) {
     dispatch(
       receiveSubmitConfirmationCodeFail(e?.response?.data?.message || e),

@@ -2,20 +2,22 @@ import React from 'react';
 import {Container} from 'components/ui/Container';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {useSelector} from 'react-redux';
 import {selectCurrentShipmentStatus} from 'redux-store/slices/shipmentSlice';
 import {theme} from 'constants/theme';
 import {Title} from 'components/ui/Title';
 import {StaticInputField} from 'components/ui/StaticInputField';
 
-export const ShipmentSecurityCode = () => {
+export const ShipmentSecurityCode = address => () => {
   const status = useSelector(selectCurrentShipmentStatus);
   return (
     <>
-      <Title size={18}>El conductor ha llegado a la direccion de entrega</Title>
+      <TitleContainer>
+        <CardTitle>El conductor llego a</CardTitle>
+        <AddressText>{address}</AddressText>
+      </TitleContainer>
       <AppText fontSize={12}>
-        Muéstrale este código para que te entregue el pedido
+        Mostrále este código para confirmar la entrega
       </AppText>
       <CodeContainer>
         <StaticInputField
@@ -34,4 +36,25 @@ const CodeContainer = styled.View`
   width: 100%;
   align-items: center;
   padding: 15px 0 0;
+`;
+
+const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const CardTitle = styled(Title)`
+  font-size: 18px;
+  margin-bottom: 0;
+`;
+
+const AddressText = styled(AppText)`
+  background-color: ${theme.primaryColor};
+  color: ${theme.white};
+  font-weight: bold;
+  padding: 0 5px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-left: 5px;
 `;

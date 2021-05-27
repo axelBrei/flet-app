@@ -1,14 +1,14 @@
-const snakeToCamelCase = (str) =>
+const snakeToCamelCase = str =>
   str.includes('_')
-    ? str.replace(/_[a-zA-Z]{1}/g, (letter) => letter[1].toUpperCase())
+    ? str.replace(/_[a-zA-Z]{1}/g, letter => letter[1].toUpperCase())
     : str;
 
-const camelToSnakeCase = (str) =>
-  str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+const camelToSnakeCase = str =>
+  str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 
-export const keysToCamelCase = (object) =>
+export const keysToCamelCase = object =>
   Array.isArray(object)
-    ? object.map((item) => {
+    ? object.map(item => {
         const isObject = item && typeof item === 'object';
         return isObject ? keysToCamelCase(item) : item;
       })
@@ -22,8 +22,15 @@ export const keysToCamelCase = (object) =>
         };
       }, {});
 
-export const keysToSnakeCase = (object) =>
-  Object.keys(object).reduce((acc, key) => {
+export const keysToSnakeCase = object => {
+  const isArray = Array.isArray(object);
+  if (isArray) {
+    return object.map(item => {
+      const isObject = item && typeof item === 'object';
+      return isObject ? keysToCamelCase(item) : item;
+    });
+  }
+  return Object.keys(object).reduce((acc, key) => {
     try {
       const isObject = typeof object?.[key] === 'object';
       return {
@@ -36,3 +43,4 @@ export const keysToSnakeCase = (object) =>
       return acc;
     }
   }, {});
+};

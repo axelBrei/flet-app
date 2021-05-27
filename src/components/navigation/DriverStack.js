@@ -27,7 +27,12 @@ import {AppLogo} from 'components/ui/AppLogo';
 
 const {Navigator, Screen} = createStackNavigator();
 
-const {COURRIER_CONFIRMED, ON_PROCESS, DELIVERED} = SHIPMENT_STATE;
+const {
+  COURRIER_CONFIRMED,
+  ON_PROCESS,
+  DELIVERED,
+  WAITING_PACKAGE,
+} = SHIPMENT_STATE;
 export const DriverStack = ({navigation}) => {
   const dispatch = useDispatch();
   const {courrier} = useUserData();
@@ -67,7 +72,7 @@ export const DriverStack = ({navigation}) => {
       screenOptions={navigationConfig({
         headerLeft: () => null,
       })}>
-      {status === DELIVERED && (
+      {[WAITING_PACKAGE, DELIVERED].includes(status) && (
         <Screen
           name={routes.driverShipmentDeliveryConfirmationScreen}
           component={DriverDeliveryConfirmation}

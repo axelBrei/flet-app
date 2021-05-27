@@ -13,6 +13,7 @@ import {
 } from 'redux-store/slices/shipmentSlice';
 import {theme} from 'constants/theme';
 import {useShipmentIntervals} from 'components/navigation/ShipmentScreen/useShipmentIntervals';
+import BottomSheet from 'components/ui/DraggableBottomView';
 
 export default ({}) => {
   const {width} = useWindowDimension();
@@ -42,9 +43,13 @@ export default ({}) => {
           bottom: 40,
         }}
       />
-      <CardContainer>
+      {/*<CardContainer>*/}
+      <BottomSheet
+        initialHiddenContentPercentage={0.5}
+        snapPoints={['35%', '60%']}>
         <ShipmentDetailCard />
-      </CardContainer>
+      </BottomSheet>
+      {/*</CardContainer>*/}
     </Screen>
   );
 };

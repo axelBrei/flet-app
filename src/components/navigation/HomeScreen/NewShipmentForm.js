@@ -1,5 +1,5 @@
 import React, {useEffect, useCallback, useState} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import InputField from 'components/ui/InputField';
 import {MainButton} from 'components/ui/MainButton';
 import {Container} from 'components/ui/Container';
@@ -22,10 +22,16 @@ import {useModal} from 'components/Hooks/useModal';
 import GeolocationFilterModal from 'components/MobileFullScreenModals/GeolocationModalScreen';
 import {Title} from 'components/ui/Title';
 import {fetchUserAddresses} from 'redux-store/slices/personalData/addressSlice';
+import {TextLink} from 'components/ui/TextLink';
+import {Row} from 'components/ui/Row';
+import {IconButton} from 'components/ui/IconButton';
+import {Icon} from 'components/ui/Icon';
+import {MiddleAddressInput} from 'components/navigation/HomeScreen/MiddleAddressInput';
 
 export const NewShipmentForm = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [showThirdAddress, setShowThirdAddress] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUserAddresses());
@@ -33,7 +39,7 @@ export const NewShipmentForm = () => {
 
   const onSubmit = useCallback(
     values => {
-      dispatch(updateNewShipmentLocations(values));
+      dispatch(updateNewShipmentLocations(Object.values(values)));
       navigation.navigate(routes.newShipmentPackageDetailScreen);
     },
     [navigation, dispatch],
@@ -101,15 +107,34 @@ export const NewShipmentForm = () => {
         />
         <InputField
           onChangeText={clearInput(FIELDS.END_POINT)}
-          label="¿A donde lo llevamos?"
-          icon="map-marker"
+          label={
+            showThirdAddress ? 'Punto intermedio' : '¿A donde lo llevamos?'
+          }
+          icon={showThirdAddress ? 'ray-start-arrow' : 'map-marker'}
           onFocus={toggleModal(FIELDS.END_POINT)}
           value={values[FIELDS.END_POINT]?.name}
           error={touched[FIELDS.END_POINT] && errors[FIELDS.END_POINT]}
           clearable
         />
-        <ContinueButton label="Continuar" onPress={handleSubmit} />
+        <MiddleAddressInput
+          onChangeText={clearInput(FIELDS.MID_POINT)}
+          label="¿A donde lo llevamos?"
+          icon="map-marker"
+          onFocus={toggleModal(FIELDS.MID_POINT)}
+          value={values[FIELDS.MID_POINT]?.name}
+          error={touched[FIELDS.MID_POINT] && errors[FIELDS.MID_POINT]}
+          clearable
+          visible={showThirdAddress}
+          onPressRemove={() => setShowThirdAddress(false)}
+        />
+
+        {!showThirdAddress && (
+          <AddAddressButton onPress={() => setShowThirdAddress(true)}>
+            <TextLink>Agregar dirección</TextLink>
+          </AddAddressButton>
+        )}
       </FormContainer>
+      <ContinueButton label="Continuar" onPress={handleSubmit} />
       <Modal />
     </>
   );
@@ -126,12 +151,26 @@ NewShipmentForm.defaultProps = {
 
 const FormContainer = styled(Container)`
   width: 100%;
-  align-items: center;
-  padding: 20px 10px 100px;
+  padding: 20px 10px;
+  ${({theme}) =>
+    theme.isMobile &&
+    css`
+      flex: 1;
+      padding: 20px 10px 100px;
+    `}
 `;
 
 const ContinueButton = styled(MainButton)`
   margin-top: ${scaleDpTheme(20)};
   width: 85%;
   min-height: ${scaleDpTheme(30)};
+  align-self: center;
+  margin-bottom: 20px;
+`;
+
+const AddAddressButton = styled.TouchableOpacity`
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 10px 0;
 `;

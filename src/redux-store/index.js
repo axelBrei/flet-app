@@ -27,7 +27,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const middlewares = [
   ...getDefaultMiddleware({
     serializableCheck: false,
-    immutableCheck: ['register/receiveCourrierVehicleDataSuccess'],
+    immutableCheck: false, // ['register/receiveCourrierVehicleDataSuccess'],
     // serializableCheck: {
     //   ignoredActions: [
     //     FLUSH,

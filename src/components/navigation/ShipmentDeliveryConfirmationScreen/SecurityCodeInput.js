@@ -9,6 +9,7 @@ import {AppText} from 'components/ui/AppText';
 import {Loader} from 'components/ui/Loader';
 import {useSelector} from 'react-redux';
 import {selectIsLoadingSecureCode} from 'redux-store/slices/driverShipmentSlice';
+import {current} from '@reduxjs/toolkit';
 
 export const SecurityCodeInput = ({
   value,
@@ -20,6 +21,10 @@ export const SecurityCodeInput = ({
   let [values, setValues] = useState(new Array(digits).fill(null).map(_ => ''));
   const loading = useSelector(selectIsLoadingSecureCode);
   const refList = new Array(digits).fill(null).map(useRef);
+
+  // useEffect(() => {
+  //   refList?.[0]?.current?.focus();
+  // }, [refList]);
 
   useEffect(() => {
     onChangeValue(values.join(''));
@@ -35,58 +40,32 @@ export const SecurityCodeInput = ({
   }, [value]);
 
   const onKeyPress = useCallback(
-    i => e => {
+    i => ({nativeEvent, ...e}) => {
       const valuesArray = Array.from(values);
-      if (i > 0 && !values[i] && e.code === 'Backspace') {
-        refList[i - 1]?.current?.focus();
+      if ((e?.code || nativeEvent.key) === 'Backspace') {
+        i > 0 && refList[i - 1]?.current?.focus();
         valuesArray.splice(i - 1, 1, '');
-        setValues(valuesArray);
+        1;
+      } else if (/[0-9]/.test(e?.code || nativeEvent.key)) {
+        valuesArray.splice(i, 1, nativeEvent.key);
+        i + 1 < digits && refList[i + 1]?.current?.focus();
       }
-    },
-    [values, refList],
-  );
-
-  const onChangeText = useCallback(
-    i => text => {
-      const valuesArray = Array.from(values);
-      if (i === digits - 1 && text.length > 1) {
-        return;
-      }
-
-      if (i + 1 < digits && text !== '') {
-        refList[i + 1]?.current?.focus();
-      }
-
-      valuesArray.splice(i, 1, text);
       setValues(valuesArray);
     },
-    [values, refList],
+    [values, refList, setValues],
   );
 
   return (
     <Container>
-      <PaddinglesTitle alternative>Código de seguridad</PaddinglesTitle>
-      <AppText alternative fontSize={12}>
-        Pedile este código a la persona que recibe el paquete
-      </AppText>
-      <InputContainer>
-        {new Array(digits).fill(null).map((_, i) => (
-          <CharacterInput
-            value={values[i]}
-            ref={refList[i]}
-            onKeyPress={onKeyPress(i)}
-            onChangeText={onChangeText(i)}
-            keyboardType="numeric"
-          />
-        ))}
-      </InputContainer>
-      <Button
-        inverted
-        onPress={onPressAccept}
-        // loading={loading}
-        loaderColor={theme.white}>
-        Confirmar envío
-      </Button>
+      {new Array(digits).fill(null).map((_, i) => (
+        <CharacterInput
+          value={values[i]}
+          ref={refList[i]}
+          onKeyPress={onKeyPress(i)}
+          keyboardType="numeric"
+          returnKeyType={i + 1 === digits ? 'done' : null}
+        />
+      ))}
     </Container>
   );
 };
@@ -106,34 +85,22 @@ SecurityCodeInput.propTypes = {
 };
 
 const Container = styled.View`
-  padding: 15px;
-  background-color: ${theme.primaryColor};
+  padding: 15px 0;
+  width: 100%;
   border-radius: 20px;
-  justify-content: center;
-`;
-
-const PaddinglesTitle = styled(Title)`
-  margin-bottom: 0px;
-  line-height: 20px;
-`;
-
-const InputContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  width: 100%;
-  margin-top: 20px;
+  margin: 35px 0 0;
 `;
 
 const CharacterInput = styled(TextInput)`
-  width: 50px;
-  background-color: ${theme.grayBackground};
+  width: 65px;
+  height: 65px;
+  background-color: ${theme.primaryOpacity};
+  color: ${theme.primaryColor};
   text-align: center;
   font-size: 24px;
   padding: 20px 0;
-  border-radius: 15px;
-`;
-
-const Button = styled(MainButton)`
-  margin: 20px 0;
+  border-radius: 33px;
 `;

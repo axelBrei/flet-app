@@ -32,6 +32,7 @@ const {
   ON_PROCESS,
   DELIVERED,
   WAITING_PACKAGE,
+  WAITING_ORIGIN,
 } = SHIPMENT_STATE;
 export const DriverStack = ({navigation}) => {
   const dispatch = useDispatch();
@@ -83,7 +84,7 @@ export const DriverStack = ({navigation}) => {
         />
       )}
       {!currentShipmentError &&
-      [COURRIER_CONFIRMED, ON_PROCESS].includes(status) ? (
+      [COURRIER_CONFIRMED, ON_PROCESS, WAITING_ORIGIN].includes(status) ? (
         <Screen
           name={routes.driverShipmentScreen}
           component={DriverNewShipmentScreen}

@@ -16,7 +16,7 @@ import {useShipmentIntervals} from 'components/navigation/ShipmentScreen/useShip
 import BottomSheet from 'components/ui/DraggableBottomView';
 
 export default ({}) => {
-  const {width} = useWindowDimension();
+  const {width, height} = useWindowDimension();
   const driverPosition = useSelector(selectDriverPosition);
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
   const currentShipment = useSelector(selectCurrentShipment);
@@ -46,7 +46,7 @@ export default ({}) => {
       {/*<CardContainer>*/}
       <BottomSheet
         initialHiddenContentPercentage={0.5}
-        snapPoints={['35%', '60%']}>
+        snapPoints={height > 700 ? ['35%', '60%'] : ['40%', '85%']}>
         <ShipmentDetailCard />
       </BottomSheet>
       {/*</CardContainer>*/}

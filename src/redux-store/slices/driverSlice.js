@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import courrierService from 'services/courrierService';
+import {selectUserData} from 'redux-store/slices/loginSlice';
 
 const initialState = {
   isOnline: false,
@@ -111,8 +112,14 @@ export const {
  * @THUNK
  */
 
-export const changeOnlineStatus = (isOnline, until) => async dispatch => {
+export const changeOnlineStatus = (isOnline, until) => async (
+  dispatch,
+  getState,
+) => {
+  const user = selectUserData(getState());
+  if (!user.isDriver) return;
   dispatch(requestChangeOnlineStatus(isOnline));
+
   try {
     await courrierService.changeOnlineStatus({until, isOnline});
     dispatch(receiveChangeOnlineStatusSuccess(isOnline));

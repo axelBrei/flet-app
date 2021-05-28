@@ -10,7 +10,10 @@ import {
   receiveChangeOnlineStatusSuccess,
 } from 'redux-store/slices/driverSlice';
 import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
-import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
+import {
+  fetchCurrentShipment,
+  receiveFetchShipmentsSuccess,
+} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
 import {
   receiveChangeProfilePictureSuccess,
@@ -106,20 +109,33 @@ export const loginAs = (email, pass) => async dispatch => {
   try {
     const {data} = await LoginService.loginAs(email, pass);
     const {shipment, ...loginData} = data;
-    if (data.shipment) {
+    const {isDriver, courrier} = loginData;
+    if (isDriver) {
+      console.log('shipment', shipment);
+      if (shipment?.id) {
+        dispatch(
+          receiveFetchShipmentsSuccess([
+            {
+              ...shipment,
+              destinations: shipment.addresses,
+            },
+          ]),
+        );
+      } else {
+        dispatch(fetchCurrentShipment());
+      }
+      if (courrier?.isOnline && courrier.onlineUntil) {
+        const until = dayjs(courrier.onlineUntil);
+        dispatch(receiveChangeOnlineStatusSuccess(until.isAfter(dayjs())));
+      }
+    } else if (shipment) {
       dispatch(
         receiveNewShipmentSuccess({
-          shipment_id: data.shipment.id,
+          shipment_id: shipment.id,
           ...shipment,
         }),
       );
     }
-    if (data?.courrier?.isOnline) {
-      const until = dayjs(data.courrier.onlineUntil);
-      dispatch(receiveChangeOnlineStatusSuccess(until.isAfter(dayjs())));
-    }
-
-    data?.isDriver && dispatch(fetchCurrentShipment());
 
     dispatch(
       receiveLoginSuccess({

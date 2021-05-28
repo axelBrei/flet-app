@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 
 export const MiddleAddressInput = ({visible, onPressRemove, ...props}) => {
+  const [hidden, setHidden] = useState(!visible);
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -14,21 +15,25 @@ export const MiddleAddressInput = ({visible, onPressRemove, ...props}) => {
     Animated.spring(opacity, {
       toValue: visible ? 1 : 0,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      setHidden(!visible);
+    });
   }, [visible]);
 
   return (
-    <Container
-      style={{
-        opacity,
-        height: visible ? 90 : 1,
-      }}>
-      <InputField {...props} />
-      <RemoveMidAddresContainer onPress={onPressRemove}>
-        <AppText>Quitar</AppText>
-        <Icon name="close" size={22} />
-      </RemoveMidAddresContainer>
-    </Container>
+    visible && (
+      <Container
+        style={{
+          opacity,
+          height: visible ? 90 : 1,
+        }}>
+        <InputField {...props} />
+        <RemoveMidAddresContainer onPress={onPressRemove}>
+          <AppText>Quitar</AppText>
+          <Icon name="close" size={22} />
+        </RemoveMidAddresContainer>
+      </Container>
+    )
   );
 };
 

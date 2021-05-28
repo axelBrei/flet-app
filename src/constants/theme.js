@@ -18,6 +18,7 @@
 // NEW COLORS
 export const theme = {
   primaryColor: 'rgb(110,139,255)',
+  primaryOpacity: 'rgba(110,139,255, 0.2)',
   primaryDarkColor: 'rgb(83,104,191)', //'rgb(109,98,142)',
   primaryLightColor: 'rgb(149,170,255)', //'rgb(161,145,208)',
   primaryUltraDark: 'rgb(20, 49, 166)',

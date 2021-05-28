@@ -5,12 +5,17 @@ import {useCallback} from 'react';
 import {useUserData} from 'components/Hooks/useUserData';
 import {useDispatch} from 'react-redux';
 import {
-  receiveFetchPendingShipmentSuccess,
+  receiveFetchShipmentsSuccess,
   receiveRejectShipmentFail,
 } from 'redux-store/slices/driverShipmentSlice';
 import {keysToCamelCase} from 'helpers/objectHelper';
 import {fetchCourrierRejectionsList} from 'redux-store/slices/driverSlice';
 import {changeCourrierEnabledStatus} from 'redux-store/slices/loginSlice';
+import {
+  cleanShipments,
+  receiveShipmentStatusSuccess,
+} from 'redux-store/slices/shipmentSlice';
+import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
 export const handleNewToken = async token => {
   try {
@@ -35,7 +40,7 @@ export const useNotificationHandler = () => {
         }
         case NOTIFICATION_TYPES.NEW_SHIPMENT: {
           if (userData.isDriver) {
-            dispatch(receiveFetchPendingShipmentSuccess(data.shipment));
+            dispatch(receiveFetchShipmentsSuccess([data.shipment]));
           }
           break;
         }
@@ -43,6 +48,20 @@ export const useNotificationHandler = () => {
           if (userData.isDriver) {
             dispatch(receiveRejectShipmentFail('El usuario cancelo el pedido'));
           }
+          break;
+        }
+        case NOTIFICATION_TYPES.SHIPMENT_FINISHED: {
+          if (appOpenedByNotification) {
+            dispatch(cleanShipments());
+          } else {
+            dispatch(
+              receiveShipmentStatusSuccess({
+                ...data?.shipment,
+                status: SHIPMENT_STATE.FINISHED,
+              }),
+            );
+          }
+
           break;
         }
         case NOTIFICATION_TYPES.COURRIER_REJECTION_CHANGED: {

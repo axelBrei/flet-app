@@ -40,7 +40,7 @@ export default ({children}) => {
   }, []);
 
   useEffect(() => {
-    if (permissionGranted && userData) {
+    if (permissionGranted && userData?.id) {
       getToken();
       const unsubscribeOnMessage = messaging().onMessage(
         handleNotification(false),

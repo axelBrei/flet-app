@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   markShipmentAsDelivered,
   markShipmentAsPickedUp,
+  markShipmentAsWaitingInOrigin,
   selectDriverShipmentData,
 } from 'redux-store/slices/driverShipmentSlice';
 import {MainButton} from 'components/ui/MainButton';
@@ -19,6 +20,7 @@ export const ShipmentDescription = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipments = useSelector(selectDriverShipmentData);
+  console.log(shipments);
   const {
     id,
     status,
@@ -32,26 +34,29 @@ export const ShipmentDescription = () => {
   );
   const destination =
     status === SHIPMENT_STATE.COURRIER_CONFIRMED
-      ? startPoint
-      : destinations[destinationIndex]?.address;
+      ? destinations[0]
+      : destinations?.[destinationIndex];
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [status]);
 
   const onPressOpenMaps = useCallback(() => {
-    dispatch(openMap(destination));
-  }, [destination]);
+    dispatch(openMap(destination.address));
+  }, [destination.address]);
 
   const onPressButton = useCallback(() => {
     const action =
       status === SHIPMENT_STATE.COURRIER_CONFIRMED
+        ? markShipmentAsWaitingInOrigin
+        : status === SHIPMENT_STATE.WAITING_ORIGIN
         ? markShipmentAsPickedUp
         : markShipmentAsDelivered;
     dispatch(action?.(id));
   }, [status, dispatch]);
 
-  const Component = useCallback(ShipmentStagesDescriptor(destination), [
+  console.log(destination);
+  const Component = useCallback(ShipmentStagesDescriptor(destination, status), [
     status,
     destination,
   ]);
@@ -71,6 +76,8 @@ export const ShipmentDescription = () => {
         onPress={onPressButton}
         loading={loading}>
         {status === SHIPMENT_STATE.COURRIER_CONFIRMED
+          ? 'Estoy en la dirección de retiro'
+          : status === SHIPMENT_STATE.WAITING_ORIGIN
           ? 'Tengo el paquete en mis manos'
           : 'Estoy en la ubicacion de entrega'}
       </MainButton>

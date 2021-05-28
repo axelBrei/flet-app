@@ -19,17 +19,18 @@ import StepsWithLoader from 'components/ui/StepsWithLoader';
 const stepsIndexMapping = {
   [SHIPMENT_STATE.PENDING_COURRIER]: -1,
   [SHIPMENT_STATE.COURRIER_CONFIRMED]: 0,
-  // [SHIPMENT_STATE.WAITING_ORIGIN]: 1, // TODO: WAITING ORIGIN
-  [SHIPMENT_STATE.ON_PROCESS]: 1,
-  [SHIPMENT_STATE.WAITING_PACKAGE]: 2,
-  [SHIPMENT_STATE.DELIVERED]: 2,
+  [SHIPMENT_STATE.WAITING_ORIGIN]: 1,
+  [SHIPMENT_STATE.ON_PROCESS]: 2,
+  [SHIPMENT_STATE.WAITING_PACKAGE]: 3,
+  [SHIPMENT_STATE.DELIVERED]: 3,
 };
 
 const BASE_STEPS = [
   SHIPMENT_STATE.PENDING_COURRIER,
   SHIPMENT_STATE.COURRIER_CONFIRMED,
+  SHIPMENT_STATE.WAITING_ORIGIN,
   SHIPMENT_STATE.ON_PROCESS,
-  SHIPMENT_STATE.WAITING_PACKAGE,
+  SHIPMENT_STATE.DELIVERED,
 ];
 
 const CANCELABLE_STATUS = [
@@ -42,7 +43,6 @@ export const ShipmentDetailCard = () => {
   const dispatch = useDispatch();
   const shipmentStatus = useSelector(selectCurrentShipmentStatus) || {};
   const isLoadingCancel = useSelector(selectIsLoadingCancelShipment);
-  console.log(shipmentStatus);
   const currentAddresIndex = shipmentStatus?.addresses?.findIndex(
     a => a.id === shipmentStatus.currentDestination,
   );
@@ -50,7 +50,9 @@ export const ShipmentDetailCard = () => {
 
   useEffect(() => {
     if (shipmentStatus?.status === SHIPMENT_STATE.FINISHED) {
-      navigation.navigate(routes.shipmentFinishedScreen);
+      navigation.navigate(routes.shipmentFinishedScreen, {
+        shipment: shipmentStatus,
+      });
     }
   }, [shipmentStatus]);
 
@@ -89,8 +91,8 @@ export const ShipmentDetailCard = () => {
   );
 
   const getCurrentStepFromState = useCallback(() => {
-    let baseIndex = currentAddresIndex > 1 ? BASE_STEPS.length - 2 : 0;
-    let stateIndex = stepsIndexMapping[shipmentStatus?.status];
+    const baseIndex = currentAddresIndex > 1 ? BASE_STEPS.length - 3 : 0;
+    const stateIndex = stepsIndexMapping[shipmentStatus?.status];
     if (stateIndex !== undefined) {
       return baseIndex + stateIndex;
     }

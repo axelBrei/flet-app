@@ -92,6 +92,7 @@ export const NewShipmentForm = () => {
     [_setFieldValue],
   );
 
+  console.log(values);
   return (
     <>
       <Title>¿Que llevamos hoy?</Title>
@@ -127,7 +128,6 @@ export const NewShipmentForm = () => {
           visible={showThirdAddress}
           onPressRemove={() => setShowThirdAddress(false)}
         />
-
         {!showThirdAddress && (
           <AddAddressButton onPress={() => setShowThirdAddress(true)}>
             <TextLink>Agregar dirección</TextLink>

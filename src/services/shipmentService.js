@@ -16,6 +16,9 @@ const confirmShipment = async shipmentId =>
 const rejectShipment = async shipmentId =>
   await api.post(`shipment/reject?shipment_id=${shipmentId}`, {});
 
+const updateShipmentToWaitingInOrigin = shipmentId =>
+  api.post(`/shipment/origin?shipment_id=${shipmentId}`, {});
+
 const updateShipmentToPickedUp = async shipmentId =>
   await api.post(`shipment/picked?shipment_id=${shipmentId}`, {});
 
@@ -47,6 +50,7 @@ export default {
   checkShipmentStatus,
   confirmShipment,
   rejectShipment,
+  updateShipmentToWaitingInOrigin,
   updateShipmentToPickedUp,
   updateShipmentToDelivered,
   uploadConfirmationCode,

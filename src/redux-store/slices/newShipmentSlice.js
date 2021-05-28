@@ -126,7 +126,6 @@ export const fetchShipmentPrice = confirmationInformation => async (
       shipmentDescription,
       shipmentVehicule: shipmentVehicle,
     } = selectNewShipmentData(getState());
-    console.log(shipmentDescription.addresses);
     const {data} = await shipmentService.getNewShipmentPrice({
       shipmentDescription: {
         addresses: shipmentDescription.addresses,

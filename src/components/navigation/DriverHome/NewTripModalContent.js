@@ -68,21 +68,21 @@ export const NewTripModalContent = ({
   );
 
   const arrivalTime = useMemo(() => {
-    const time = dayjs(shipment?.startPoint?.duration);
+    const time = dayjs().add(shipment?.destinations?.[0]?.duration || 0, 's');
     return `${time.format('HH:mm')} - ${time
       .add(10, 'minute')
       .format('HH:mm')}`;
   }, [shipment]);
 
   const destinationTime = useMemo(() => {
-    const now = dayjs();
-    const arrivalTime = dayjs(shipment?.startPoint?.duration);
-    const pickupTravelTime = now.diff(arrivalTime);
-    const destinationTime = dayjs(shipment?.endPoint?.duration).add(
-      pickupTravelTime,
-      'millisecond',
+    const arrivalTime = dayjs().add(
+      shipment?.destinations?.[0]?.duration || 0,
+      's',
     );
-
+    const destinationTime = arrivalTime.add(
+      shipment?.destinations?.[1]?.duration || 0,
+      's',
+    );
     return `${destinationTime.format('HH:mm')} - ${destinationTime
       .add(10, 'minute')
       .format('HH:mm')}`;
@@ -126,7 +126,11 @@ export const NewTripModalContent = ({
         <Title alternative>Destino</Title>
         <RowWithBoldData
           label="Zona"
-          data={shipment?.endPoint?.name.split(', ')[2]}
+          data={
+            shipment?.destinations[
+              shipment.destinations.length - 1
+            ]?.address?.name.split(', ')[2]
+          }
         />
         <RowWithBoldData label="Llegada" data={destinationTime} />
       </IconCard>

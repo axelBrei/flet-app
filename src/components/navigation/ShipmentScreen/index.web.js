@@ -83,7 +83,7 @@ const ScreenComponent = styled(Screen)`
   align-items: flex-start;
   justify-content: center;
   height: 100%;
-  height: ${(props) => props.theme.screenHeight}px;
+  height: ${props => props.theme.screenHeight}px;
   width: 100%;
   padding: ${scaleDpTheme(20)} 0;
 `;
@@ -96,5 +96,5 @@ const ShipmentDetailContainer = styled(Container)`
   padding: ${scaleDpTheme(10)} ${scaleDpTheme(15)};
   border-radius: ${scaleDpTheme(8)};
   box-shadow: 0 3px 6px ${theme.shadowColor};
-  width: max(${scaleDpTheme(270)}, 35%);
+  width: max(${scaleDpTheme(270)}, 45%);
 `;

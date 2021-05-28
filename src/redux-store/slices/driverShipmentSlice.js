@@ -74,7 +74,7 @@ const slice = createSlice({
     },
     receiveChangeShipmentStatusSuccess: (state, action) => {
       state.loading.stateChange = false;
-      state.shipmentData.map(shipment =>
+      state.shipmentData = state.shipmentData.map(shipment =>
         shipment.id === action.payload.id ? action.payload : shipment,
       );
     },
@@ -169,6 +169,16 @@ export const rejectShipment = id => async (dispatch, getState) => {
     dispatch(receiveRejectShipmentSucces(id));
   } catch (e) {
     dispatch(receiveRejectShipmentFail(e?.response?.data?.message || e));
+  }
+};
+
+export const markShipmentAsWaitingInOrigin = id => async dispatch => {
+  dispatch(requestChangeShipmentStatus());
+  try {
+    const {data} = await shipmentService.updateShipmentToWaitingInOrigin(id);
+    dispatch(receiveChangeShipmentStatusSuccess(data));
+  } catch (e) {
+    dispatch(receiveChangeShipmentStatusFail(e?.response?.data?.message || e));
   }
 };
 

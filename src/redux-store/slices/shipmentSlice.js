@@ -52,7 +52,8 @@ const slice = createSlice({
     },
     receiveCancelShipmentSuccess: (state, action) => {
       state.loading.cancel = false;
-      state.currentShipment = {};
+      state.currentShipment = initialState.currentShipment;
+      state.shipmentStatus = initialState.shipmentStatus;
     },
     receiveCancelShipmentFail: (state, action) => {
       state.loading.cancel = false;

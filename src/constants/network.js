@@ -59,7 +59,10 @@ export const configureAuthInterceptor = store => {
       };
     },
     async err => {
-      if (err?.response?.status === 401) {
+      if (
+        err?.response?.status === 401 &&
+        !err.config.url.includes('user/token')
+      ) {
         const {email, pass} = store.getState().login.userData;
         try {
           await store.dispatch(loginAs(email, pass));

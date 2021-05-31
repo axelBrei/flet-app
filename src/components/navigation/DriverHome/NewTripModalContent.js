@@ -76,11 +76,11 @@ export const NewTripModalContent = ({
 
   const destinationTime = useMemo(() => {
     const arrivalTime = dayjs().add(
-      shipment?.destinations?.[0]?.duration || 0,
+      shipment?.addresses?.[0]?.duration || 0,
       's',
     );
     const destinationTime = arrivalTime.add(
-      shipment?.destinations?.[1]?.duration || 0,
+      shipment?.addresses?.[1]?.duration || 0,
       's',
     );
     return `${destinationTime.format('HH:mm')} - ${destinationTime
@@ -127,8 +127,8 @@ export const NewTripModalContent = ({
         <RowWithBoldData
           label="Zona"
           data={
-            shipment?.destinations[
-              shipment.destinations.length - 1
+            shipment?.addresses[
+              shipment.addresses.length - 1
             ]?.address?.name.split(', ')[2]
           }
         />

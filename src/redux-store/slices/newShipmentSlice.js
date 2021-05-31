@@ -128,7 +128,7 @@ export const fetchShipmentPrice = confirmationInformation => async (
     } = selectNewShipmentData(getState());
     const {data} = await shipmentService.getNewShipmentPrice({
       shipmentDescription: {
-        addresses: shipmentDescription.addresses,
+        addresses: shipmentDescription.addresses.filter(i => i),
         package: {
           ...shipmentDescription.package,
           type: shipmentVehicle?.vehiculeSize?.id,
@@ -171,7 +171,7 @@ export const createNewShipment = (confirmationInformation = {}) => async (
   try {
     const body = {
       shipmentDescription: {
-        addresses: shipmentDescription.addresses,
+        addresses: shipmentDescription.addresses.filter(i => i),
         package: {
           ...shipmentDescription.package,
           type: shipmentVehicle?.vehiculeSize?.id,

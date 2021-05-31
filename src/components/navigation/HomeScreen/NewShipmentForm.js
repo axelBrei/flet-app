@@ -92,7 +92,6 @@ export const NewShipmentForm = () => {
     [_setFieldValue],
   );
 
-  console.log(values);
   return (
     <>
       <Title>¿Que llevamos hoy?</Title>

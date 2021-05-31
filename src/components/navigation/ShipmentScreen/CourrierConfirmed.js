@@ -21,7 +21,7 @@ export const CourrierConfirmed = (title, message = null) => () => {
   } = useSelector(selectCurrentShipmentStatus);
   const item = vehiculeSizeOptions.find(i => i.id === 2);
 
-  const [origin, destination] = useMemo(() => {
+  const [origin] = useMemo(() => {
     const destinationIndex = addresses?.findIndex(
       i => i.id === currentDestination,
     );
@@ -29,15 +29,14 @@ export const CourrierConfirmed = (title, message = null) => () => {
     return [addresses[destinationIndex - 1], addresses[destinationIndex]];
   }, [currentDestination, addresses]);
 
-  const {duration, distance} = origin;
-  const arrivalTime = useMemo(
-    () =>
-      duration && [
-        dayjs(duration).format('HH:mm'),
-        dayjs(duration).add(10, 'minute').format('HH:mm'),
-      ],
-    [duration],
-  );
+  const arrivalTime = useMemo(() => {
+    if (origin) {
+      const {duration, arrivalDate, arrival_date} = origin;
+      const date = dayjs(arrival_date || arrivalDate).add(duration, 's');
+      return [date.format('HH:mm'), date.add(10, 'minute').format('HH:mm')];
+    }
+    return [];
+  }, [origin]);
 
   return (
     <Container>

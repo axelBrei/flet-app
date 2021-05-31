@@ -39,15 +39,15 @@ export default ({navigation, route}) => {
           <Row>
             <Label>Desde: </Label>
             <Value>
-              {shipment?.destinations[0].address?.name?.split(',')[0]}
+              {shipment?.addresses?.[0].address?.name?.split(',')[0]}
             </Value>
           </Row>
 
-          {shipment?.destinations.length > 2 && (
+          {shipment?.addresses?.length > 2 && (
             <Row>
               <Label>Pasando por: </Label>
               <Value>
-                {shipment?.destinations[1].address?.name?.split(',')[0]}
+                {shipment?.addresses?.[1].address?.name?.split(',')[0]}
               </Value>
             </Row>
           )}
@@ -55,9 +55,9 @@ export default ({navigation, route}) => {
             <Label>Hasta: </Label>
             <Value>
               {
-                shipment?.destinations[
-                  shipment?.destinations - 1
-                ].address?.name?.split(',')[0]
+                shipment?.addresses?.[
+                  shipment?.addresses - 1
+                ]?.address?.name?.split(',')[0]
               }
             </Value>
           </Row>

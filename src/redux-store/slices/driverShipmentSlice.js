@@ -35,7 +35,11 @@ const slice = createSlice({
       state.loading.fetch = false;
       state.error.confirm = null;
       state.error.reject = null;
-      state.shipmentData = action.payload;
+      state.shipmentData = action.payload.map(i => ({
+        ...i,
+        destinations: i.destinations || action.payload.addresses || [],
+        addresses: i.addresses || action.payload.destinations || [],
+      }));
     },
     receiveFetchShipmentsFail: (state, action) => {
       state.loading.fetch = false;
@@ -48,7 +52,11 @@ const slice = createSlice({
     },
     receiveConfirmShipmentSucces: (state, action) => {
       state.loading.confirm = false;
-      state.shipmentData = action.payload;
+      state.shipmentData = action.payload.map(i => ({
+        ...i,
+        destinations: i.destinations || action.payload.addresses || [],
+        addresses: i.addresses || action.payload.destinations || [],
+      }));
     },
     receiveConfirmShipmentFail: (state, action) => {
       state.loading.confirm = false;
@@ -75,7 +83,15 @@ const slice = createSlice({
     receiveChangeShipmentStatusSuccess: (state, action) => {
       state.loading.stateChange = false;
       state.shipmentData = state.shipmentData.map(shipment =>
-        shipment.id === action.payload.id ? action.payload : shipment,
+        shipment.id === action.payload.id
+          ? {
+              ...action.payload,
+              destinations:
+                shipment.destinations || action.payload.addresses || [],
+              addresses:
+                shipment.addresses || action.payload.destinations || [],
+            }
+          : shipment,
       );
     },
     receiveChangeShipmentStatusFail: (state, action) => {
@@ -89,7 +105,11 @@ const slice = createSlice({
     },
     receiveSubmitConfirmationCodeSucess: (state, action) => {
       state.loading.code = false;
-      state.shipmentData = action.payload;
+      state.shipmentData = action.payload.map(i => ({
+        ...i,
+        destinations: i.destinations || action.payload.addresses || [],
+        addresses: i.addresses || action.payload.destinations || [],
+      }));
     },
     receiveSubmitConfirmationCodeFail: (state, action) => {
       state.loading.code = false;
@@ -254,7 +274,9 @@ export const selectDriverShipmentData = createSelector(
 export const selectPendingShipments = createSelector(
   selectDriverShipmentData,
   shipments =>
-    shipments?.filter?.(s => s.status === SHIPMENT_STATE.PENDING_COURRIER),
+    shipments?.filter?.(s => {
+      return s.status === SHIPMENT_STATE.PENDING_COURRIER;
+    }),
 );
 
 // Shipment price

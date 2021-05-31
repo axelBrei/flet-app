@@ -99,7 +99,7 @@ export default ({navigation}) => {
             <StaticInputField label="Desde">
               {startPoint?.name?.split(',')[0]}
             </StaticInputField>
-            {endPoint && (
+            {middlePoint && (
               <StaticInputField label="Pasando por">
                 {middlePoint?.name?.split(',')[0]}
               </StaticInputField>

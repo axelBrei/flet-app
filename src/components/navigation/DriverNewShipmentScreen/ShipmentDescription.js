@@ -42,8 +42,8 @@ export const ShipmentDescription = () => {
   }, [status]);
 
   const onPressOpenMaps = useCallback(() => {
-    dispatch(openMap(destination.address));
-  }, [destination.address]);
+    dispatch(openMap(destination?.address));
+  }, [destination]);
 
   const onPressButton = useCallback(() => {
     const action =
@@ -55,7 +55,6 @@ export const ShipmentDescription = () => {
     dispatch(action?.(id));
   }, [status, dispatch]);
 
-  console.log(destination);
   const Component = useCallback(ShipmentStagesDescriptor(destination, status), [
     status,
     destination,

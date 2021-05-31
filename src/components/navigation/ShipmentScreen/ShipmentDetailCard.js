@@ -44,7 +44,7 @@ export const ShipmentDetailCard = () => {
   const shipmentStatus = useSelector(selectCurrentShipmentStatus) || {};
   const isLoadingCancel = useSelector(selectIsLoadingCancelShipment);
   const currentAddresIndex = shipmentStatus?.addresses?.findIndex(
-    a => a.id === shipmentStatus.currentDestination,
+    a => a?.id === shipmentStatus.currentDestination,
   );
   const currentAddress = shipmentStatus?.addresses?.[currentAddresIndex];
 
@@ -100,7 +100,7 @@ export const ShipmentDetailCard = () => {
     return (
       baseIndex +
       shipmentStatus.addresses?.findIndex(
-        a => a.id === shipmentStatus.currentDestination,
+        a => a?.id === shipmentStatus.currentDestination,
       )
     );
   }, [steps, shipmentStatus]);

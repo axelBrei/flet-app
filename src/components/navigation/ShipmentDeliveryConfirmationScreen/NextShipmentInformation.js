@@ -56,8 +56,8 @@ export const NextShipmentInformation = ({shipment}) => {
           bottom: 25,
         }}
         markers={[
-          destination.address,
-          destinations[destinationIndex - 1].address,
+          destination?.address,
+          destinations?.[(destinationIndex || 1) - 1]?.address,
         ]}
       />
     </>

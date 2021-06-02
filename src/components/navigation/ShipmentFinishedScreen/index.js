@@ -33,7 +33,7 @@ export default ({navigation, route}) => {
         <DataContainer>
           <Row>
             <Label>Costo del envío: </Label>
-            <Value>{shipment?.price}</Value>
+            <Value>${shipment?.price}</Value>
           </Row>
 
           <Row>
@@ -56,7 +56,7 @@ export default ({navigation, route}) => {
             <Value>
               {
                 shipment?.addresses?.[
-                  shipment?.addresses - 1
+                  shipment?.addresses.length - 1
                 ]?.address?.name?.split(',')[0]
               }
             </Value>
@@ -100,15 +100,15 @@ const DataContainer = styled.View`
 `;
 
 const Label = styled(AppText)`
-  padding: 5px 0;
   width: 50%;
-  text-align: right;
   margin-right: 5px;
+  text-align: right;
+  padding: 5px 0;
 `;
 
 const Value = styled(AppText)`
   color: ${theme.primaryColor};
-  font-weight: bold;
   width: 50%;
   text-align: left;
+  padding: 5px 0;
 `;

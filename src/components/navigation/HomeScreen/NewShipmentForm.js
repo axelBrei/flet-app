@@ -23,8 +23,6 @@ import GeolocationFilterModal from 'components/MobileFullScreenModals/Geolocatio
 import {Title} from 'components/ui/Title';
 import {fetchUserAddresses} from 'redux-store/slices/personalData/addressSlice';
 import {TextLink} from 'components/ui/TextLink';
-import {Row} from 'components/ui/Row';
-import {IconButton} from 'components/ui/IconButton';
 import {Icon} from 'components/ui/Icon';
 import {MiddleAddressInput} from 'components/navigation/HomeScreen/MiddleAddressInput';
 
@@ -39,7 +37,13 @@ export const NewShipmentForm = () => {
 
   const onSubmit = useCallback(
     values => {
-      dispatch(updateNewShipmentLocations(Object.values(values)));
+      dispatch(
+        updateNewShipmentLocations([
+          values[FIELDS.START_POINT],
+          values[FIELDS.MID_POINT],
+          values[FIELDS.END_POINT],
+        ]),
+      );
       navigation.navigate(routes.newShipmentPackageDetailScreen);
     },
     [navigation, dispatch],
@@ -92,6 +96,21 @@ export const NewShipmentForm = () => {
     [_setFieldValue],
   );
 
+  const onPressAddAddress = useCallback(() => {
+    _setFieldValue(FIELDS.MID_POINT)(values[FIELDS.END_POINT]);
+    _setFieldValue(FIELDS.END_POINT)(null);
+    setShowThirdAddress(true);
+  }, [values]);
+
+  const onPressRemoveAddress = useCallback(() => {
+    console.log(values);
+    if (values[FIELDS.END_POINT]) {
+      _setFieldValue(FIELDS.END_POINT)(values[FIELDS.END_POINT]);
+    }
+    _setFieldValue(FIELDS.MID_POINT)(null);
+    setShowThirdAddress(false);
+  }, [values]);
+
   return (
     <>
       <Title>¿Que llevamos hoy?</Title>
@@ -105,30 +124,29 @@ export const NewShipmentForm = () => {
           error={touched[FIELDS.START_POINT] && errors[FIELDS.START_POINT]}
           clearable
         />
-        <InputField
-          onChangeText={clearInput(FIELDS.END_POINT)}
-          label={
-            showThirdAddress ? 'Punto intermedio' : '¿A donde lo llevamos?'
-          }
-          icon={showThirdAddress ? 'ray-start-arrow' : 'map-marker'}
-          onFocus={toggleModal(FIELDS.END_POINT)}
-          value={values[FIELDS.END_POINT]?.name}
-          error={touched[FIELDS.END_POINT] && errors[FIELDS.END_POINT]}
-          clearable
-        />
         <MiddleAddressInput
           onChangeText={clearInput(FIELDS.MID_POINT)}
-          label="¿A donde lo llevamos?"
-          icon="map-marker"
+          label="Punto intermedio"
+          icon="ray-start-arrow"
           onFocus={toggleModal(FIELDS.MID_POINT)}
           value={values[FIELDS.MID_POINT]?.name}
           error={touched[FIELDS.MID_POINT] && errors[FIELDS.MID_POINT]}
           clearable
           visible={showThirdAddress}
-          onPressRemove={() => setShowThirdAddress(false)}
+          onPressRemove={onPressRemoveAddress}
         />
+        <InputField
+          onChangeText={clearInput(FIELDS.END_POINT)}
+          label="¿A donde lo llevamos?"
+          icon={'map-marker'}
+          onFocus={toggleModal(FIELDS.END_POINT)}
+          value={values[FIELDS.END_POINT]?.name}
+          error={touched[FIELDS.END_POINT] && errors[FIELDS.END_POINT]}
+          clearable
+        />
+
         {!showThirdAddress && (
-          <AddAddressButton onPress={() => setShowThirdAddress(true)}>
+          <AddAddressButton onPress={onPressAddAddress}>
             <TextLink>Agregar dirección</TextLink>
           </AddAddressButton>
         )}
@@ -172,4 +190,12 @@ const AddAddressButton = styled.TouchableOpacity`
   align-items: flex-end;
   justify-content: center;
   padding: 10px 0;
+`;
+
+const RemoveMidAddresContainer = styled.TouchableOpacity`
+  flex-direction: row;
+  padding: 10px 0;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
 `;

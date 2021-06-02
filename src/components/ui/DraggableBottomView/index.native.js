@@ -1,9 +1,18 @@
 import React, {useCallback, useRef, useImperativeHandle, useState} from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
+import {View} from 'react-native';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {AppText} from 'components/ui/AppText';
 
-const _DraggableBottomView = ({children, snapPoints, externalRef}) => {
+const _DraggableBottomView = ({
+  children,
+  snapPoints = ['40%', '100%'],
+  externalRef,
+}) => {
   const bottomSheetRef = useRef(null);
+  const {height: screenHeight} = useWindowDimension();
   const [isOpen, setIsOpen] = useState(false);
+  const [localSnapPoints, setLocalSnapPoints] = useState(snapPoints);
 
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
@@ -19,14 +28,34 @@ const _DraggableBottomView = ({children, snapPoints, externalRef}) => {
     isOpen,
   }));
 
+  const onChildrenLayout = useCallback(
+    ({nativeEvent: {layout}}) => {
+      const {height} = layout;
+      setLocalSnapPoints(
+        snapPoints.map((point, index) => {
+          const numberPercentage = Number(point.replace('%', '')) / 100;
+          const visiblePercentage = (numberPercentage * height) / screenHeight;
+          return `${Math.min(
+            100,
+            Math.ceil(
+              visiblePercentage * 100 +
+                (index + 1 === snapPoints.length ? 10 : 0),
+            ),
+          )}%`;
+        }),
+      );
+    },
+    [screenHeight],
+  );
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
       index={0}
       alwaysOpen={150}
-      snapPoints={snapPoints || ['25%', '50%']}
+      snapPoints={localSnapPoints}
       onChange={handleSheetChanges}>
-      {children}
+      <View onLayout={onChildrenLayout}>{children}</View>
     </BottomSheet>
   );
 };

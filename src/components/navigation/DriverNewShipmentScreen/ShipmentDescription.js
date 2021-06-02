@@ -20,7 +20,6 @@ export const ShipmentDescription = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipments = useSelector(selectDriverShipmentData);
-  console.log(shipments);
   const {
     id,
     status,
@@ -35,7 +34,11 @@ export const ShipmentDescription = () => {
   const destination =
     status === SHIPMENT_STATE.COURRIER_CONFIRMED
       ? destinations[0]
-      : destinations?.[destinationIndex];
+      : destinations?.[
+          status === SHIPMENT_STATE.WAITING_PACKAGE
+            ? destinationIndex + 1
+            : destinationIndex
+        ];
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

@@ -20,6 +20,7 @@ export const getCardContentComponent = (status = '', addressName = '') => {
       return CourrierConfirmed(
         'El conductor llego a retirar el paquete',
         `Está en ${address}.`,
+        true,
       );
     }
     case SHIPMENT_STATE.ON_PROCESS: {

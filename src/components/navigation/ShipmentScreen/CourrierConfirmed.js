@@ -8,10 +8,15 @@ import {useSelector} from 'react-redux';
 import {selectCurrentShipmentStatus} from 'redux-store/slices/shipmentSlice';
 import {StaticInputField} from 'components/ui/StaticInputField';
 import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 import {vehiculeSizeOptions} from 'constants/vehicleSizes';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
-export const CourrierConfirmed = (title, message = null) => () => {
+export const CourrierConfirmed = (
+  title,
+  message = null,
+  hideArraiveIn = false,
+) => () => {
   const {
     courrier,
     status,
@@ -21,18 +26,21 @@ export const CourrierConfirmed = (title, message = null) => () => {
   } = useSelector(selectCurrentShipmentStatus);
   const item = vehiculeSizeOptions.find(i => i.id === 2);
 
-  const [origin] = useMemo(() => {
+  const origin = useMemo(() => {
     const destinationIndex = addresses?.findIndex(
       i => i.id === currentDestination,
     );
-    if (!destinationIndex || destinationIndex < 0) return [{}, {}];
-    return [addresses[destinationIndex - 1], addresses[destinationIndex]];
+    if (!destinationIndex || destinationIndex < 0) return {};
+    if (status === SHIPMENT_STATE.COURRIER_CONFIRMED) {
+      return addresses[destinationIndex - 1];
+    }
+    return addresses[destinationIndex];
   }, [currentDestination, addresses]);
+  const {duration = 0, arrivalDate, arrival_date} = origin;
 
   const arrivalTime = useMemo(() => {
     if (origin) {
-      const {duration, arrivalDate, arrival_date} = origin;
-      const date = dayjs(arrival_date || arrivalDate).add(duration, 's');
+      const date = dayjs(arrival_date || arrivalDate);
       return [date.format('HH:mm'), date.add(10, 'minute').format('HH:mm')];
     }
     return [];
@@ -42,7 +50,7 @@ export const CourrierConfirmed = (title, message = null) => () => {
     <Container>
       <Title size={19}>{title}</Title>
       {message && <AppText fontSize={13}>{message}</AppText>}
-      {duration && (
+      {!hideArraiveIn && Number.isInteger(duration) && (
         <StaticField label="Llegará entre las:">
           {arrivalTime.join(' - ')}
         </StaticField>

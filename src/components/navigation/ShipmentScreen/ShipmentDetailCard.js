@@ -15,6 +15,7 @@ import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {routes} from 'constants/config/routes';
 import {LabelIconButton} from 'components/ui/LabelIconButton';
 import StepsWithLoader from 'components/ui/StepsWithLoader';
+import {AppText} from 'components/ui/AppText';
 
 const stepsIndexMapping = {
   [SHIPMENT_STATE.PENDING_COURRIER]: -1,
@@ -70,11 +71,14 @@ export const ShipmentDetailCard = () => {
     () =>
       getCardContentComponent(
         shipmentStatus?.status || SHIPMENT_STATE.PENDING_COURRIER,
-        shipmentStatus?.status === SHIPMENT_STATE.COURRIER_CONFIRMED
+        [
+          SHIPMENT_STATE.COURRIER_CONFIRMED,
+          SHIPMENT_STATE.WAITING_ORIGIN,
+        ].includes(shipmentStatus?.status)
           ? shipmentStatus?.addresses?.[currentAddresIndex - 1]?.address?.name
           : currentAddress?.address?.name,
       ),
-    [shipmentStatus.status, currentAddress],
+    [shipmentStatus, currentAddress],
   );
 
   const steps = useMemo(

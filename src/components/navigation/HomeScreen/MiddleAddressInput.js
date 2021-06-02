@@ -6,7 +6,12 @@ import {Icon} from 'components/ui/Icon';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 
-export const MiddleAddressInput = ({visible, onPressRemove, ...props}) => {
+export const MiddleAddressInput = ({
+  visible,
+  onPressRemove,
+  hideRemoveButton = false,
+  ...props
+}) => {
   const [hidden, setHidden] = useState(!visible);
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -28,10 +33,12 @@ export const MiddleAddressInput = ({visible, onPressRemove, ...props}) => {
           height: visible ? 90 : 1,
         }}>
         <InputField {...props} />
-        <RemoveMidAddresContainer onPress={onPressRemove}>
-          <AppText>Quitar</AppText>
-          <Icon name="close" size={22} />
-        </RemoveMidAddresContainer>
+        {!hideRemoveButton && (
+          <RemoveMidAddresContainer onPress={onPressRemove}>
+            <AppText>Quitar</AppText>
+            <Icon name="close" size={22} />
+          </RemoveMidAddresContainer>
+        )}
       </Container>
     )
   );

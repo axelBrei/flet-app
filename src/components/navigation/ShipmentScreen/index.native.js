@@ -33,7 +33,11 @@ export default ({}) => {
   );
 
   return (
-    <Screen style={{width}} scrollable={false} enableAvoidKeyboard={false}>
+    <Screen
+      style={{width}}
+      scrollable={false}
+      enableAvoidKeyboard={false}
+      removeTWF>
       <Map
         style={{flex: 1}}
         markers={markers}
@@ -44,9 +48,7 @@ export default ({}) => {
         }}
       />
       {/*<CardContainer>*/}
-      <BottomSheet
-        initialHiddenContentPercentage={0.5}
-        snapPoints={height > 700 ? ['35%', '60%'] : ['40%', '85%']}>
+      <BottomSheet initialHiddenContentPercentage={0.5}>
         <ShipmentDetailCard />
       </BottomSheet>
       {/*</CardContainer>*/}

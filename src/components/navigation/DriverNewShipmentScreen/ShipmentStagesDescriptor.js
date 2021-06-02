@@ -8,19 +8,15 @@ import dayjs from 'dayjs';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
 
 const {WAITING_ORIGIN, ON_PROCESS} = SHIPMENT_STATE;
-export const ShipmentStagesDescriptor = (
-  destination,
-  status,
-  arrival_date,
-  updatedAt = dayjs(),
-) => () => {
+export const ShipmentStagesDescriptor = (destination, status) => () => {
   const {duration, distance, address, arrivalDate, ...rest} = destination || {};
+
   const arrivalTime = useMemo(() => {
-    const time = dayjs(arrivalDate).add(duration, 's');
+    const time = dayjs(arrivalDate);
     return `${time.format('HH:mm')} - ${time
       .add(10, 'minute')
       .format('HH:mm')}`;
-  }, [arrivalDate, duration]);
+  }, [arrivalDate]);
 
   const getTitle = useCallback(() => {
     if (status === WAITING_ORIGIN) return 'Esperando paquete';
@@ -32,7 +28,7 @@ export const ShipmentStagesDescriptor = (
     if (status === WAITING_ORIGIN) return 'Próximo destino';
     else if (status === ON_PROCESS) return 'Llevar paquete a';
     return 'Se encuentra en';
-  }, []);
+  }, [status]);
 
   return (
     <>

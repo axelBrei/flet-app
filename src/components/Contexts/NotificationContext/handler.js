@@ -32,6 +32,8 @@ export const useNotificationHandler = () => {
       const {type, ...data} = notification?.data || {};
       if (data.shipment) {
         data.shipment = keysToCamelCase(JSON.parse(data.shipment));
+        data.shipment.destinations = data.shipment?.addresses || [];
+        data.shipment.vehicle = data.shipment?.courrier?.vehicle || {};
       }
       switch (type) {
         case NOTIFICATION_TYPES.SHIPMENT_UPDATE: {

@@ -9,23 +9,25 @@ export const NextShipmentInformation = ({shipment}) => {
   const {destinations, currentDestination} = shipment;
   const destinationIndex =
     destinations?.findIndex(d => d.id === currentDestination) || 0;
-  const destination = destinations?.[destinationIndex + 1] || {};
+
+  const destination = destinations?.[destinationIndex] || {};
+  const nextDestination = destinations?.[destinationIndex + 1] || {};
 
   const getDistance = useCallback(() => {
-    const {distance} = destinations?.[destinationIndex - 1] || {};
+    const {distance} = nextDestination;
     if (distance > 999) {
       return `${(distance / 1000).toString().substring(0, 4)} Km.`;
     }
     return `${distance} Mts.`;
-  }, [destination]);
+  }, [nextDestination]);
 
   const getDuration = useCallback(() => {
-    const {duration} = destinations?.[destinationIndex - 1] || {};
+    const {duration} = nextDestination;
     const hours = Math.round(duration / 3600);
     return `${hours > 0 ? `${hours} hs` : ''} ${Math.round(
       (hours > 0 ? duration - hours * 3600 : duration) / 60,
     )} min.`;
-  }, [destinations, destinationIndex]);
+  }, [nextDestination]);
 
   return (
     <>
@@ -33,13 +35,11 @@ export const NextShipmentInformation = ({shipment}) => {
         <Title>Próximo paquete</Title>
         <Label>
           Paquete entregado en:{' '}
-          <Value>
-            {destinations?.[destinationIndex].address?.name.split(',')[0]}
-          </Value>
+          <Value>{destination.address?.name.split(',')[0]}</Value>
         </Label>
         <Label>
           Dirección de entrega:{' '}
-          <Value>{destination?.address?.name?.split(',')[0]}</Value>
+          <Value>{nextDestination?.address?.name?.split(',')[0]}</Value>
         </Label>
         <Label>
           Distancia: <Value>{getDistance()}</Value>
@@ -55,10 +55,7 @@ export const NextShipmentInformation = ({shipment}) => {
           right: 90,
           bottom: 25,
         }}
-        markers={[
-          destination?.address,
-          destinations?.[(destinationIndex || 1) - 1]?.address,
-        ]}
+        markers={[destination?.address, nextDestination?.address]}
       />
     </>
   );

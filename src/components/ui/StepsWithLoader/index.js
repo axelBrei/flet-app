@@ -27,9 +27,10 @@ const StepsWithLoader = ({steps, currentStep}: StepsWithLoaderProps) => {
     <Container onLayout={handleLayout}>
       {steps.map((step: StepItem, index) => {
         return index === currentStepIndex + 1 ? (
-          <LoadingStep width={stepWidth} />
+          <LoadingStep key={index.toString()} width={stepWidth} />
         ) : (
           <Step
+            key={index.toString()}
             color={
               index <= currentStepIndex ? theme.primaryColor : theme.lightGray
             }

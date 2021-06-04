@@ -30,19 +30,23 @@ export const useNotificationHandler = () => {
   return useCallback(
     (appOpenedByNotification = false) => async notification => {
       const {type, ...data} = notification?.data || {};
+      let shipment = {};
       if (data.shipment) {
-        data.shipment = keysToCamelCase(JSON.parse(data.shipment));
-        data.shipment.destinations = data.shipment?.addresses || [];
-        data.shipment.vehicle = data.shipment?.courrier?.vehicle || {};
+        const _shipment = keysToCamelCase(JSON.parse(data.shipment));
+        shipment = {
+          ..._shipment,
+          destinations: _shipment?.addresses || [],
+          vehicle: _shipment?.courrier?.vehicle || _shipment?.vehicle || {},
+        };
       }
       switch (type) {
         case NOTIFICATION_TYPES.SHIPMENT_UPDATE: {
-          dispatch(receiveNewShipmentSuccess(data?.shipment));
+          dispatch(receiveNewShipmentSuccess(shipment));
           break;
         }
         case NOTIFICATION_TYPES.NEW_SHIPMENT: {
           if (userData.isDriver) {
-            dispatch(receiveFetchShipmentsSuccess([data.shipment]));
+            dispatch(receiveFetchShipmentsSuccess([shipment]));
           }
           break;
         }
@@ -58,7 +62,7 @@ export const useNotificationHandler = () => {
           } else {
             dispatch(
               receiveShipmentStatusSuccess({
-                ...data?.shipment,
+                ...shipment,
                 status: SHIPMENT_STATE.FINISHED,
               }),
             );

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import PaymentButton from 'components/ui/PaymentButton';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -8,7 +8,6 @@ import {
   selectNewShipmentError,
   selectNewShipmentLoading,
 } from 'redux-store/slices/newShipmentSlice';
-import Config from 'react-native-config';
 
 export default () => {
   const dispatch = useDispatch();

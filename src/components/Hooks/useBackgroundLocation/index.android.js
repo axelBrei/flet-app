@@ -41,7 +41,6 @@ export default (
   },
 ) => {
   const {userToken} = useUserData();
-  const appState = useRef(AppState.currentState);
   const {loading, status, error, check} = usePermission(
     [PERMISSIONS.backgroundLocation],
     true,
@@ -52,7 +51,6 @@ export default (
     (checkPermission = true) => {
       if (status) {
         BackgroundGeolocation.checkStatus(status => {
-          console.log(status, BackgroundGeolocation.AUTHORIZED);
           if (!status.isRunning) {
             BackgroundGeolocation.start();
           }
@@ -141,7 +139,6 @@ export default (
 
     return () => {
       if (config.stopOnUnfocus) {
-        console.log('removing listenners');
         BackgroundGeolocation.stop();
       }
       BackgroundGeolocation.removeAllListeners();

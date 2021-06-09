@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import styled, {css} from 'styled-components';
 import {Platform} from 'react-native';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchLastShipments,

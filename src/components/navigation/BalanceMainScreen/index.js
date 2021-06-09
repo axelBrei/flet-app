@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import {Loader} from 'components/ui/Loader';
 import {RefreshControl} from 'components/ui/RefreshControl';
@@ -91,10 +91,14 @@ export default () => {
 const ScreenContainer = styled.View`
   padding: 20px;
   ${({theme}) =>
-    !theme.isMobile &&
-    css`
-      width: 100%;
-      align-self: center;
-      max-width: max(414px, 60%);
-    `};
+    theme.isMobile
+      ? css`
+          flex: 1;
+          height: 100%;
+        `
+      : css`
+          width: 100%;
+          align-self: center;
+          max-width: max(414px, 60%);
+        `};
 `;

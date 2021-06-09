@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import styled from 'styled-components';
 import {StartRow} from 'components/ui/Row';

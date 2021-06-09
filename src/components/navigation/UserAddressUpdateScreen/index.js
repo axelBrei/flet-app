@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {Title} from 'components/ui/Title';
 import {CommonList} from 'components/ui/CommonList';
 import styled, {css} from 'styled-components';

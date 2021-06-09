@@ -1,8 +1,7 @@
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
-import {AppText} from 'components/ui/AppText';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map';
 import {Title} from 'components/ui/Title';
 import {MainButton} from 'components/ui/MainButton';
@@ -12,10 +11,6 @@ import {
   formikConfig,
   FIELDS,
 } from 'components/navigation/NewShipmentPackageInfoScreen/shipmentPackageFormikConfig';
-import OpenBoxImage from 'resources/images/open-box.svg';
-import WeightImage from 'resources/images/weight.svg';
-import {IconCard} from 'components/ui/IconCard';
-import {theme} from 'constants/theme';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   selectNewShipmentData,

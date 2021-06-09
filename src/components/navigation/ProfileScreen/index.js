@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {routes} from 'constants/config/routes';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {LogoutButton} from 'components/ui/LogoutButton';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {Platform} from 'react-native';

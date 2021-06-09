@@ -43,9 +43,9 @@ target 'fletex_app' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
-  if !ENV['CI']
-    use_flipper!()
-  end
+#   if !ENV['CI']
+#     use_flipper!()
+#   end
 
   post_install do |installer|
     react_native_post_install(installer)
@@ -56,7 +56,7 @@ target 'fletex_app' do
           config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
         end
       end
-      flipper_post_install(installer)
+#       flipper_post_install(installer)
     end
   end
 end

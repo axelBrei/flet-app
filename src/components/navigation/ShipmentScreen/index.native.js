@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {ShipmentDetailCard} from 'components/navigation/ShipmentScreen/ShipmentDetailCard';
 import Map from 'components/ui/Map';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';

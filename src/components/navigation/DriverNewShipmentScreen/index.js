@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 import {Loader} from 'components/ui/Loader';

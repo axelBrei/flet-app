@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import Motorbike from 'resources/images/scooter';
 import Car from 'resources/images/car';
 import Pickup from 'resources/images/van';

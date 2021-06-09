@@ -12,9 +12,8 @@ import {theme} from 'constants/theme';
 import LoggedInStack from 'components/navigation/LoggedInStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
-import {scaleDp} from 'helpers/responsiveHelper';
+import crashlytics from 'services/FirebaseWebService/crashlytics';
 import {AppLogo} from 'components/ui/AppLogo';
-import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -73,6 +72,10 @@ const renderPrivateRoutes = () => (
 export default () => {
   const {width, isMobile} = useWindowDimension();
   const userData = useSelector(selectUserData);
+
+  useEffect(() => {
+    crashlytics.logUser(userData);
+  }, [userData]);
 
   return (
     <Navigator

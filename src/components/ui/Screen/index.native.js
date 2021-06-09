@@ -5,14 +5,13 @@ import {
   Keyboard,
   ScrollView,
   useColorScheme,
-  SafeAreaView,
 } from 'react-native';
 import styled from 'styled-components';
 import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {KeyboardAvoidScreen} from 'components/ui/KeyboardaAvoidScreen';
-import {Platform} from 'react-native-web';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Screen = ({
   children,
@@ -27,6 +26,7 @@ const Screen = ({
   const colorScheme = useColorScheme();
   const route = useRoute();
   const {width} = useWindowDimension();
+  const insets = useSafeAreaInsets();
 
   const ScrollableLayer = scrollable ? ScrollView : View;
   return (
@@ -41,7 +41,7 @@ const Screen = ({
             : 'default'
         }
       />
-      <SafeArea>
+      <SafeArea insets={insets}>
         <KeyboardAvoidScreen>
           <Container accessible={!scrollable} onPress={Keyboard.dismiss}>
             <ScrollableLayer
@@ -83,9 +83,10 @@ const Container = styled.TouchableWithoutFeedback`
   width: 100%;
 `;
 
-const SafeArea = styled(SafeAreaView)`
+const SafeArea = styled.SafeAreaView`
   flex: 1;
   height: 100%;
   width: 100%;
   background-color: ${theme.backgroundColor};
+  margin-top: ${props => props?.insets?.top || 0}px;
 `;

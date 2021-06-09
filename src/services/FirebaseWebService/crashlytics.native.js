@@ -3,7 +3,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 export default {
   logUser: async user => {
     await Promise.all([
-      crashlytics().setUserId(user.id),
+      crashlytics().setUserId(user.id.toString()),
       crashlytics().setAttributes({
         role: user.role,
         email: user.email,

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import RegisterImage from 'resources/images/review-docs.svg';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {Title} from 'components/ui/Title';

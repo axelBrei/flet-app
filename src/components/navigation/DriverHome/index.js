@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback, useMemo, useRef} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {useModal} from 'components/Hooks/useModal';
 import {NewTripModalContent} from 'components/navigation/DriverHome/NewTripModalContent';

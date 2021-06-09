@@ -1,6 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map';
 import {theme} from 'constants/theme';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';

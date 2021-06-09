@@ -5,7 +5,7 @@ import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
 import RegisterScreen from 'components/navigation/RegisterScreen';
 import {theme} from 'constants/theme';
-import {Screen as BaseScreen} from 'components/ui/Screen';
+import {default as BaseScreen} from 'components/ui/Screen';
 import RegisterPersonalDataScreen from 'components/navigation/RegisterPersonalDataScreen';
 import {StepSelector} from 'components/navigation/RegisterStack/StepSelector';
 import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
@@ -14,10 +14,10 @@ const {Navigator, Screen} = createStackNavigator();
 
 export default ({navigation: parentNav, route}) => {
   const [currentScreenIndex, setCurrentScreenIndex] = useState(
-    route.params.screen ? 1 : 0,
+    route?.params?.screen ? 1 : 0,
   );
   const [headerHidden, setHeaderHidden] = useState(false);
-  const {screen, ...params} = route.params;
+  const {screen, ...params} = route.params || {};
   const [childrenNavigator, setChildrenNavigator] = useState(null);
 
   const getScreenListeners = useCallback(
@@ -25,9 +25,8 @@ export default ({navigation: parentNav, route}) => {
       focus: () => setCurrentScreenIndex(screenIndex),
       blur: () => setCurrentScreenIndex(screenIndex - 1),
       beforeRemove: e => {
-        console.log(e, currentScreenIndex, screenIndex, route);
         if (
-          currentScreenIndex > route.params.screen
+          currentScreenIndex > route?.params?.screen
             ? 1
             : 0 && currentScreenIndex < screenIndex
         ) {
@@ -59,9 +58,18 @@ export default ({navigation: parentNav, route}) => {
             setChildrenNavigator(navigation);
             return navigationConfig({
               title: '',
+              headerTitle: '',
               headerShown: true,
-              headerStyle: {height: 1},
+              headerStyle: {height: 1, shadowOpacity: 0},
               headerLeft: null,
+              header: props => {
+                return headerHidden ? null : (
+                  <StepSelector
+                    currentIndex={currentScreenIndex}
+                    reduced={!route.params?.driver}
+                  />
+                );
+              },
             });
           }}>
           <Screen
@@ -102,12 +110,12 @@ export default ({navigation: parentNav, route}) => {
             }}
           />
         </Navigator>
-        {!headerHidden && (
-          <StepSelector
-            currentIndex={currentScreenIndex}
-            reduced={!route.params?.driver}
-          />
-        )}
+        {/*{!headerHidden && (*/}
+        {/*  <StepSelector*/}
+        {/*    currentIndex={currentScreenIndex}*/}
+        {/*    reduced={!route.params?.driver}*/}
+        {/*  />*/}
+        {/*)}*/}
       </Container>
     </ScreenComponent>
   );

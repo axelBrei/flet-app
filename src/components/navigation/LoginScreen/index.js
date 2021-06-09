@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import InputField from 'components/ui/InputField';
 import {MainButton} from 'components/ui/MainButton';

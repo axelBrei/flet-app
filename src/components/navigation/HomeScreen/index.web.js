@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
 import MobileScreen from './index.native';
 import {NewShipmentForm} from 'components/navigation/HomeScreen/NewShipmentForm';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import styled, {css} from 'styled-components';
 import EmailSuccess from 'resources/images/mail_sent.svg';
 import EmailError from 'resources/images/mail_error.svg';

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
 import {useDispatch} from 'react-redux';

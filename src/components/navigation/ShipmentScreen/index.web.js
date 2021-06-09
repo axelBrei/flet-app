@@ -1,7 +1,7 @@
 import React, {useMemo, useEffect} from 'react';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
 import MobileScreen from 'components/navigation/ShipmentScreen/index.native';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/screen';
 import styled from 'styled-components';
 import {Container} from 'components/ui/Container';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';

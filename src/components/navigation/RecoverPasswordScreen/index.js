@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import ForgorPasswordImage from 'resources/images/forgot_password.svg';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import InputField from 'components/ui/InputField';

@@ -35,10 +35,9 @@ export default ({children}) => {
   }, [handleNotification]);
 
   useEffect(() => {
-    requestPermissions();
     SplashScreen.hide();
+    requestPermissions();
   }, []);
-
   useEffect(() => {
     if (permissionGranted && userData?.id) {
       getToken();

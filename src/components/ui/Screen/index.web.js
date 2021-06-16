@@ -5,7 +5,7 @@ import {theme} from 'constants/theme';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useBodyLock} from 'components/Contexts/BodyLockContext/index';
-import {PLATFORMS} from 'components/Hooks/usePlatformEffect';
+import {PLATFORMS, usePlatformEffect} from 'components/Hooks/usePlatformEffect';
 
 const Screen = ({
   children,
@@ -34,7 +34,7 @@ const Screen = ({
     }, [scrollable, isMobile, lockBody, unlockBody, route]),
   );
 
-  useFocusEffect(
+  usePlatformEffect(
     () => {
       if (isMobile && scrollable) {
         unlockBody(route);

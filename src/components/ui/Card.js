@@ -28,13 +28,13 @@ Card.defaultProps = {
 };
 
 const CardComponent = styled(View)`
-  padding: ${(props) => props.theme.scale(8)}px;
-  ${(props) =>
+  padding: 8px;
+  ${props =>
     props.visible &&
     css`
-      background-color: ${(props) =>
+      background-color: ${props =>
         props.backgroundColor || props.theme.colors.white};
-      box-shadow: 0px 3px 6px ${(props) => props.theme.colors.shadowColor};
+      box-shadow: 0px 3px 6px ${props => props.theme.colors.shadowColor};
       border-radius: 7px;
     `}
 `;

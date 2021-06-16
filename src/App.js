@@ -19,6 +19,10 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import NotificationProvider from 'components/Contexts/NotificationContext';
 import ErrorBoundary from 'components/ui/ErrorBoundary/index';
 import analytics from '@react-native-firebase/analytics';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+
+dayjs.locale('es');
 
 axios.defaults.withCredentials = false;
 configureAuthInterceptor(store);

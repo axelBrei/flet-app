@@ -23,7 +23,7 @@ const getIconForRoute = routeName => {
       return 'package-variant';
     case 'courrier':
       return 'truck-fast';
-    case 'ultimospedidos':
+    case 'pedidos':
       return 'truck';
     case routes.balanceStack:
       return 'wallet';
@@ -136,9 +136,9 @@ export default () => {
         />
       ) : (
         <Screen
-          name={routes.lastShippmentsScreen}
+          name={routes.lastShipmentStack}
           getComponent={() =>
-            require('components/navigation/LastShipmentsScreen').default
+            require('components/navigation/LastShipmentsStack').default
           }
           initialParams={{title: 'Mis pedidos'}}
           options={{

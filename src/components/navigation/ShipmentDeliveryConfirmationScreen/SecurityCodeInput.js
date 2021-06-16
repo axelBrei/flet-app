@@ -16,56 +16,36 @@ export const SecurityCodeInput = ({
   onChangeValue = () => {},
   onCompleteEnterCode,
   digits = 5,
-  onPressAccept,
 }) => {
-  let [values, setValues] = useState(new Array(digits).fill(null).map(_ => ''));
-  const loading = useSelector(selectIsLoadingSecureCode);
-  const refList = new Array(digits).fill(null).map(useRef);
-
-  // useEffect(() => {
-  //   refList?.[0]?.current?.focus();
-  // }, [refList]);
+  const hiddenInputRef = useRef(null);
 
   useEffect(() => {
-    onChangeValue(values.join(''));
-    if (values.every(i => i !== '')) {
-      onCompleteEnterCode(values.join(''));
+    if (value.length === digits) {
+      onCompleteEnterCode(value);
     }
-  }, [values]);
-
-  useEffect(() => {
-    if (value) {
-      setValues(value.split(''));
-    }
-  }, [value]);
-
-  const onKeyPress = useCallback(
-    i => ({nativeEvent, ...e}) => {
-      const valuesArray = Array.from(values);
-      if ((e?.code || nativeEvent.key) === 'Backspace') {
-        i > 0 && refList[i - 1]?.current?.focus();
-        valuesArray.splice(i - 1, 1, '');
-        1;
-      } else if (/[0-9]/.test(e?.code || nativeEvent.key)) {
-        valuesArray.splice(i, 1, nativeEvent.key);
-        i + 1 < digits && refList[i + 1]?.current?.focus();
-      }
-      setValues(valuesArray);
-    },
-    [values, refList, setValues],
-  );
+  }, [value, onCompleteEnterCode, digits]);
 
   return (
-    <Container>
+    <Container
+      onPress={() => hiddenInputRef.current?.focus()}
+      activeOpacity={1}>
       {new Array(digits).fill(null).map((_, i) => (
-        <CharacterInput
-          value={values[i]}
-          ref={refList[i]}
-          onKeyPress={onKeyPress(i)}
-          keyboardType="numeric"
-          returnKeyType={i + 1 === digits ? 'done' : null}
-        />
+        <CharacterContainer>
+          <CharacterInput
+            pointerEvents="none"
+            keyboardType="numeric"
+            returnKeyType={i + 1 === digits ? 'done' : null}>
+            {value[i]}
+          </CharacterInput>
+        </CharacterContainer>
       ))}
+      <HiddenInput
+        ref={hiddenInputRef}
+        onChangeText={onChangeValue}
+        value={value}
+        maxLength={digits}
+        keyboardType="numeric"
+      />
     </Container>
   );
 };
@@ -84,7 +64,7 @@ SecurityCodeInput.propTypes = {
   digits: PropTypes.number,
 };
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   padding: 15px 0;
   width: 100%;
   border-radius: 20px;
@@ -94,13 +74,22 @@ const Container = styled.View`
   margin: 35px 0 0;
 `;
 
-const CharacterInput = styled(TextInput)`
+const CharacterContainer = styled.View`
   width: 65px;
   height: 65px;
+  border-radius: 33px;
   background-color: ${theme.primaryOpacity};
+  align-items: center;
+  justify-content: center;
+`;
+
+const CharacterInput = styled(AppText)`
   color: ${theme.primaryColor};
   text-align: center;
   font-size: 24px;
-  padding: 20px 0;
-  border-radius: 33px;
+`;
+
+const HiddenInput = styled.TextInput`
+  height: 1px;
+  width: 1px;
 `;

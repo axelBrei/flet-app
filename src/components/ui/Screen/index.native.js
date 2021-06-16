@@ -43,7 +43,10 @@ const Screen = ({
       />
       <SafeArea insets={insets}>
         <KeyboardAvoidScreen>
-          <Container accessible={!scrollable} onPress={Keyboard.dismiss}>
+          <Container
+            accessible={!scrollable}
+            disabled={removeTWF}
+            onPress={Keyboard.dismiss}>
             <ScrollableLayer
               nativeID={route.name}
               showsVerticalScrollIndicator={false}
@@ -51,7 +54,7 @@ const Screen = ({
               contentContainerStyle={props.contentContainerStyle}
               refreshControl={props.refreshControl}
               style={[
-                {backgroundColor: theme.white},
+                {backgroundColor: theme.backgroundColor},
                 !scrollable && {
                   alignItems,
                   overflow: 'hidden',
@@ -78,7 +81,7 @@ Screen.defaultProps = {
 export default Screen;
 
 const Container = styled.TouchableWithoutFeedback`
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${props => props.theme.colors.backgroundColor};
   height: 100%;
   width: 100%;
 `;

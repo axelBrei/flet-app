@@ -74,7 +74,7 @@ export default () => {
   const userData = useSelector(selectUserData);
 
   useEffect(() => {
-    userData.id && crashlytics.logUser(userData);
+    userData?.id && crashlytics.logUser(userData);
   }, [userData]);
 
   return (

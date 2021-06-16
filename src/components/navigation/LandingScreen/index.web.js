@@ -1,5 +1,5 @@
 import React, {useCallback, useLayoutEffect} from 'react';
-import Screen from 'components/ui/screen';
+import Screen from 'components/ui/Screen/index.web';
 import {Container} from 'components/ui/Container';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
 import MobileHomeScreen from 'components/navigation/LandingScreen/index.native';

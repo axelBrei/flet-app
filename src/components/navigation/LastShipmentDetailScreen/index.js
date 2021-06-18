@@ -55,7 +55,8 @@ const LastShipmentDetailScreen = ({route}) => {
                 alternative={false}
                 label="Costo"
                 data={`$${Math.round(
-                  shipment?.price * shipment?.insurance?.valueModificator,
+                  shipment?.package?.value *
+                    shipment?.insurance?.valueModificator,
                 )}`}
               />
             </>

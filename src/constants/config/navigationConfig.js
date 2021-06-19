@@ -17,10 +17,7 @@ export const navigationConfig = ({title, ...props} = {}) => ({
     shadowColor: theme.backgroundColor,
     ...props.headerStyle,
   },
-  headerTitle: props =>
-    console.log(props) || (
-      <Title size={22} color={props.tintColor} {...props} />
-    ),
+  headerTitle: props => <Title size={22} color={props.tintColor} {...props} />,
   ...Platform.select({
     web: {
       headerLeft: props => (

@@ -16,6 +16,7 @@ import {
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
 import {ShipmentDescription} from 'components/navigation/DriverNewShipmentScreen/ShipmentDescription';
 import {Alert} from 'react-native';
+import BottomSheet from 'components/ui/DraggableBottomView';
 
 const DriverNewShipmentScreen = () => {
   const dispatch = useDispatch();
@@ -65,7 +66,9 @@ const DriverNewShipmentScreen = () => {
           directions={directions}
           markers={markersList}
         />
-        <ShipmentDescription />
+        <BottomSheet>
+          <ShipmentDescription />
+        </BottomSheet>
       </Loader>
     </ScreenComponent>
   );

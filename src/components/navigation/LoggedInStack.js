@@ -112,8 +112,14 @@ export default () => {
             require('components/navigation/DriverStack').DriverStack
           }
           initialParams={{title: 'Conducir'}}
-          options={{
-            headerShown: false,
+          options={({route}) => {
+            const {index, routeNames} = {...route.state};
+            return {
+              headerShown: false,
+              tabBarVisible: !routeNames?.[index]
+                ?.toLowerCase()
+                ?.includes('chat'),
+            };
           }}
         />
       )}

@@ -74,22 +74,37 @@ export const DriverStack = ({navigation}) => {
         headerLeft: () => null,
       })}>
       {[WAITING_PACKAGE, DELIVERED].includes(status) && (
-        <Screen
-          name={routes.driverShipmentDeliveryConfirmationScreen}
-          component={DriverDeliveryConfirmation}
-          options={{
-            title: 'Confimacion de envío',
-            headerShown: false,
-          }}
-        />
+        <>
+          <Screen
+            name={routes.driverShipmentDeliveryConfirmationScreen}
+            component={DriverDeliveryConfirmation}
+            options={{
+              title: 'Confimacion de envío',
+              headerShown: false,
+            }}
+          />
+        </>
       )}
       {!currentShipmentError &&
       [COURRIER_CONFIRMED, ON_PROCESS, WAITING_ORIGIN].includes(status) ? (
-        <Screen
-          name={routes.driverShipmentScreen}
-          component={DriverNewShipmentScreen}
-          options={{headerTransparent: true, headerShown: false}}
-        />
+        <>
+          <Screen
+            name={routes.driverShipmentScreen}
+            component={DriverNewShipmentScreen}
+            options={{headerTransparent: true, headerShown: false}}
+          />
+          <Screen
+            name={routes.chatScreen}
+            options={{
+              title: 'Chat',
+              headerLeft: props => <HeaderBackButton {...props} />,
+              tabBarVisible: false,
+            }}
+            getComponent={() =>
+              require('components/navigation/ChatScreen').default
+            }
+          />
+        </>
       ) : status !== DELIVERED && courrier.enabled ? (
         <Screen
           name={routes.driverHomeScreen}

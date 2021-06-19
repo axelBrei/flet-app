@@ -31,7 +31,7 @@ export const KeyboardAvoidScreen = props => {
           const gap = windowHeight - softInputHeight - (pageY + height);
           if (gap - props.extraHeight >= 0) return;
           Animated.timing(translateY, {
-            toValue: gap - props.extraHeight - 11,
+            toValue: gap - props.extraHeight - 30,
             useNativeDriver: true,
             duration: 150,
           }).start();

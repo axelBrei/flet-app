@@ -17,9 +17,9 @@ export const CustomHeaderBackButton = ({navigation, ...props}) => {
     (props.canGoBack ? props?.onPress : navigation.goBack)();
   };
 
-  if (Platform.OS !== 'web') {
-    return <HeaderBackButton {...props} />;
-  }
+  // if (Platform.OS !== 'web') {
+  //   return <HeaderBackButton {...props} />;
+  // }
   return (
     <TouchableOpacity
       onPress={onPress}

@@ -40,6 +40,7 @@ const slice = createSlice({
       adapter.removeOne(state, 'pending');
       adapter.addOne(state, action);
     },
+    addMessage: adapter.addOne,
   },
 });
 export default {[slice.name]: slice.reducer};
@@ -49,6 +50,7 @@ export const {
   receiveConversationFail,
   requestSendMessage,
   receiveSendMessageSuccess,
+  addMessage,
 } = slice.actions;
 
 // THUNK

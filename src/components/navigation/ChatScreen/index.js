@@ -23,23 +23,24 @@ const ChatScreen = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingMessages);
   const messages = useSelector(selectConversationMessages);
-  const {id: userId, ...rest} = useUserData();
+  const {id: userId, isDriver, ...rest} = useUserData();
   const userShipment = useSelector(selectCurrentShipmentStatus);
   const driverShipment = useSelector(selectDriverShipmentData);
-  const {courrier, user, ...shipment} =
-    rest.role === 'client' ? userShipment : driverShipment[0];
+  const {id, courrier, user, ...shipment} = !isDriver
+    ? userShipment
+    : driverShipment[0];
   const [inputValue, setInputvalue] = useState('');
 
   useFocusEffect(
     useCallback(() => {
-      dispatch(fetchConversation(shipment.id));
-    }, [shipment.id]),
+      dispatch(fetchConversation(id));
+    }, [id]),
   );
 
   const onPressSendMessage = useCallback(() => {
-    dispatch(sendMessage(shipment.id, inputValue, userId));
+    dispatch(sendMessage(id, inputValue, userId));
     setInputvalue('');
-  }, [dispatch, inputValue, shipment, userId]);
+  }, [dispatch, inputValue, id, userId]);
 
   return (
     <Screen removeTWF enableAvoidKeyboard>
@@ -63,14 +64,17 @@ const ChatScreen = () => {
                   }
                 />
                 <InnerMessagesContainer>
-                  <AppText bold>
+                  <AppText bold textAlign={isFromLoggedUser ? 'right' : 'left'}>
                     {isFromLoggedUser ? rest?.name : courrier?.name}
                   </AppText>
-                  {m.message.map(innerMessage => (
-                    <Messages {...m} isFromLoggedUser={isFromLoggedUser}>
-                      {innerMessage}
-                    </Messages>
-                  ))}
+                  {m.message.map(
+                    innerMessage =>
+                      console.log(innerMessage) || (
+                        <Messages {...m} isFromLoggedUser={isFromLoggedUser}>
+                          {innerMessage}
+                        </Messages>
+                      ),
+                  )}
                 </InnerMessagesContainer>
               </MessageContainer>
             );
@@ -132,12 +136,12 @@ const UserImage = styled.Image`
 
 const InnerMessagesContainer = styled.View`
   flex-direction: column;
+  flex: 1;
 `;
 
 const Messages = styled(AppText)`
   color: ${props => (props.confirmed ? theme.fontColor : theme.error)};
   padding: 3px 0;
-  max-width: 90%;
   text-align: ${({isFromLoggedUser}) => (!isFromLoggedUser ? 'left' : 'right')};
 `;
 

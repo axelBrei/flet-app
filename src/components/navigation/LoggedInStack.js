@@ -126,6 +126,14 @@ export default () => {
       <Screen
         name={routes.shipmentStack}
         component={ShipmentStack}
+        options={({route}) => {
+          const {index, routeNames} = {...route.state};
+          return {
+            tabBarVisible: !routeNames?.[index]
+              ?.toLowerCase()
+              ?.includes('chat'),
+          };
+        }}
         initialParams={{
           title: userData?.isDriver ? 'Enviar' : 'Inicio',
         }}

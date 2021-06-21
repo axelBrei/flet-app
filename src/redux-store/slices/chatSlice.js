@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import chatService from 'services/chatService';
 import dayjs from 'dayjs';
+import {State} from 'react-native-gesture-handler';
 
 const adapter = createEntityAdapter({
   selectId: message => message.timestamp,
@@ -13,6 +14,7 @@ const adapter = createEntityAdapter({
 const slice = createSlice({
   name: 'chat',
   initialState: adapter.getInitialState({
+    pendingMessages: false,
     loading: {messages: false},
     error: {messages: false},
   }),
@@ -23,6 +25,7 @@ const slice = createSlice({
     },
     receiveConversationSuccess: (state, action) => {
       state.loading.messages = false;
+      state.pendingMessages = false;
       adapter.setAll(state, action.payload);
     },
     receiveConversationFail: (state, action) => {
@@ -33,6 +36,7 @@ const slice = createSlice({
     requestSendMessage: (state, {payload}) => {
       adapter.addOne(state, {
         ...payload,
+        timestamp: 'pending',
         confirmed: false,
       });
     },
@@ -40,7 +44,10 @@ const slice = createSlice({
       adapter.removeOne(state, 'pending');
       adapter.addOne(state, action);
     },
-    addMessage: adapter.addOne,
+    addMessage: (state, action) => {
+      state.pendingMessages = true;
+      adapter.addOne(state, action);
+    },
   },
 });
 export default {[slice.name]: slice.reducer};
@@ -54,22 +61,24 @@ export const {
 } = slice.actions;
 
 // THUNK
-export const fetchConversation = shipmentId => async dispatch => {
-  dispatch(requestConversation());
-  try {
-    const {data} = await chatService.getConversation(shipmentId);
-    dispatch(
-      receiveConversationSuccess(
-        data
-          .filter(m => m.timestamp)
-          .sort((x, y) => x.timestamp - y.timestamp)
-          .map(m => ({...m, confirmed: true})),
-      ),
-    );
-  } catch (e) {
-    dispatch(receiveConversationFail(e?.response?.data?.message || e));
-  }
-};
+export const fetchConversation =
+  (shipmentId, silent = false) =>
+  async dispatch => {
+    !silent && dispatch(requestConversation());
+    try {
+      const {data} = await chatService.getConversation(shipmentId);
+      dispatch(
+        receiveConversationSuccess(
+          data
+            .filter(m => m.timestamp)
+            .sort((x, y) => x.timestamp - y.timestamp)
+            .map(m => ({...m, confirmed: true})),
+        ),
+      );
+    } catch (e) {
+      dispatch(receiveConversationFail(e?.response?.data?.message || e));
+    }
+  };
 
 export const sendMessage = (shipment_id, message, userId) => async dispatch => {
   let m = {
@@ -94,7 +103,8 @@ const selectors = adapter.getSelectors();
 export const selectIsLoadingMessages = state =>
   state[slice.name].loading.messages;
 export const selectMessagesError = state => state[slice.name].error.messages;
-
+export const selectIsPendingChatMessages = state =>
+  state[slice.name].pendingMessages;
 export const selectConversationMessages = createSelector(
   state => selectors.selectAll(state[slice.name]),
   messages =>

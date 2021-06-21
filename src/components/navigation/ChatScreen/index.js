@@ -1,8 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Screen from 'components/ui/Screen';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
+  addMessage,
   fetchConversation,
   selectConversationMessages,
   selectIsLoadingMessages,
@@ -18,6 +19,7 @@ import {IconButton} from 'components/ui/IconButton';
 import {CommonList} from 'components/ui/CommonList';
 import {Loader} from 'components/ui/Loader';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
+import dayjs from 'dayjs';
 
 const ChatScreen = () => {
   const dispatch = useDispatch();
@@ -31,9 +33,17 @@ const ChatScreen = () => {
     : driverShipment[0];
   const [inputValue, setInputvalue] = useState('');
 
+  const messageList = useMemo(() => messages.reverse(), [messages]);
+
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchConversation(id));
+      const interval = setInterval(() => {
+        dispatch(fetchConversation(id, true));
+      }, 15 * 1000); // 15 seconds
+      return () => {
+        clearInterval(interval);
+      };
     }, [id]),
   );
 
@@ -47,9 +57,9 @@ const ChatScreen = () => {
       <Loader loading={isLoading}>
         <MessagesList
           inverted={1}
-          data={messages.reverse()}
+          data={messageList}
           renderItem={({item: m}) => {
-            const isFromLoggedUser = m.senderId === userId;
+            const isFromLoggedUser = (m.senderId || m.sender_id) === userId;
             return (
               <MessageContainer isFromLoggedUser={isFromLoggedUser}>
                 <UserImage
@@ -59,23 +69,29 @@ const ChatScreen = () => {
                       : {
                           uri:
                             user?.photoUrl ||
-                            'https://image.flaticon.com/icons/png/128/3570/3570462.png',
+                            (isDriver
+                              ? 'https://image.flaticon.com/icons/png/128/1077/1077012.png'
+                              : 'https://image.flaticon.com/icons/png/128/3570/3570462.png'),
                         }
                   }
                 />
                 <InnerMessagesContainer>
                   <AppText bold textAlign={isFromLoggedUser ? 'right' : 'left'}>
-                    {isFromLoggedUser ? rest?.name : courrier?.name}
+                    {isFromLoggedUser
+                      ? rest?.name
+                      : isDriver
+                      ? user?.name
+                      : courrier?.name}
                   </AppText>
-                  {m.message.map(
-                    innerMessage =>
-                      console.log(innerMessage) || (
-                        <Messages {...m} isFromLoggedUser={isFromLoggedUser}>
-                          {innerMessage}
-                        </Messages>
-                      ),
-                  )}
+                  {m.message.map(innerMessage => (
+                    <Messages {...m} isFromLoggedUser={isFromLoggedUser}>
+                      {innerMessage}
+                    </Messages>
+                  ))}
                 </InnerMessagesContainer>
+                <AppText fontSize={11}>
+                  {dayjs(m.timestamp).format('HH:MM')}
+                </AppText>
               </MessageContainer>
             );
           }}

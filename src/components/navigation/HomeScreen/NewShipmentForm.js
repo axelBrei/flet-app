@@ -103,7 +103,6 @@ export const NewShipmentForm = () => {
   }, [values]);
 
   const onPressRemoveAddress = useCallback(() => {
-    console.log(values);
     if (values[FIELDS.END_POINT]) {
       _setFieldValue(FIELDS.END_POINT)(values[FIELDS.END_POINT]);
     }

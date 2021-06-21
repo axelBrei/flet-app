@@ -116,7 +116,6 @@ const SelectImage = ({
       ...defaultProps,
     });
     const cropped = await cropImage(image);
-    console.log(cropped, image);
     processImage(cropped);
   }, [onSelectImage, maxFiles]);
 

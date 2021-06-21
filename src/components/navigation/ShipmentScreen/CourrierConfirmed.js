@@ -16,11 +16,13 @@ import {CenteredRow} from 'components/ui/Row';
 import {Icon} from 'components/ui/Icon';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
+import {selectIsPendingChatMessages} from 'redux-store/slices/chatSlice';
 
 export const CourrierConfirmed =
   (title, message = null, hideArraiveIn = false) =>
   () => {
     const navigation = useNavigation();
+    const unreadedMessages = useSelector(selectIsPendingChatMessages);
     const {courrier, status, addresses, currentDestination, ...shipmentStatus} =
       useSelector(selectCurrentShipmentStatus);
     const item = vehiculeSizeOptions.find(i => i.id === 2);
@@ -58,13 +60,18 @@ export const CourrierConfirmed =
             <StaticField label="Llegará entre las:">
               {arrivalTime.join(' - ')}
             </StaticField>
-            <ChatButton onPress={onPressChat}>
-              <Icon
-                name={'message-text'}
-                size={30}
-                color={theme.primaryColor}
-              />
-            </ChatButton>
+            {status === SHIPMENT_STATE.COURRIER_CONFIRMED ? (
+              <ChatButton onPress={onPressChat}>
+                {unreadedMessages && <ChatBullet />}
+                <Icon
+                  name={'message-text'}
+                  size={30}
+                  color={theme.primaryColor}
+                />
+              </ChatButton>
+            ) : (
+              <></>
+            )}
           </CenteredRow>
         )}
         <Row>
@@ -116,6 +123,7 @@ const IconBackground = styled.View`
 const ShipmentDataContainer = styled.View`
   flex-direction: column;
   margin-left: 10px;
+  flex: 1;
   justify-content: center;
 `;
 
@@ -132,4 +140,15 @@ const ChatButton = styled.TouchableOpacity`
   background-color: ${theme.primaryOpacity};
   align-items: center;
   justify-content: center;
+`;
+
+const ChatBullet = styled.View`
+  height: 12px;
+  width: 12px;
+  background-color: red;
+  position: absolute;
+  border-radius: 6px;
+  z-index: 2;
+  top: 2px;
+  right: 0;
 `;

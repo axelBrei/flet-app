@@ -16,6 +16,7 @@ import {routes} from 'constants/config/routes';
 import {LabelIconButton} from 'components/ui/LabelIconButton';
 import StepsWithLoader from 'components/ui/StepsWithLoader';
 import {AppText} from 'components/ui/AppText';
+import {selectIsPendingChatMessages} from 'redux-store/slices/chatSlice';
 
 const stepsIndexMapping = {
   [SHIPMENT_STATE.PENDING_COURRIER]: -1,
@@ -44,6 +45,7 @@ export const ShipmentDetailCard = () => {
   const dispatch = useDispatch();
   const shipmentStatus = useSelector(selectCurrentShipmentStatus) || {};
   const isLoadingCancel = useSelector(selectIsLoadingCancelShipment);
+  const pendingMessages = useSelector(selectIsPendingChatMessages);
   const currentAddresIndex = shipmentStatus?.addresses?.findIndex(
     a => a?.id === shipmentStatus.currentDestination,
   );
@@ -109,6 +111,10 @@ export const ShipmentDetailCard = () => {
     );
   }, [steps, shipmentStatus]);
 
+  const onPressChat = useCallback(() => {
+    navigation.navigate(routes.chatScreen);
+  }, [navigation]);
+
   return (
     <Card>
       <StepsWithLoader steps={steps} currentStep={getCurrentStepFromState()} />
@@ -119,7 +125,7 @@ export const ShipmentDetailCard = () => {
           label={'Tengo un\nproblema'}
           onPress={onPressHaveAProblem}
         />
-        {CANCELABLE_STATUS.includes(shipmentStatus?.status) && (
+        {CANCELABLE_STATUS.includes(shipmentStatus?.status) ? (
           <LabelIconButton
             loading={isLoadingCancel}
             onPress={onPressCancel}
@@ -128,6 +134,17 @@ export const ShipmentDetailCard = () => {
             backgroundColor={theme.cancel}
             fontColor={theme.white}
           />
+        ) : (
+          <MessageContainer>
+            <LabelIconButton
+              onPress={onPressChat}
+              icon="message-text"
+              label="Abrir chat"
+              backgroundColor={theme.primaryOpacity}
+              fontColor={theme.primaryDarkColor}
+            />
+            {pendingMessages && <ChatBullet />}
+          </MessageContainer>
         )}
       </ButtonContainer>
     </Card>
@@ -145,4 +162,16 @@ const ButtonContainer = styled(Container)`
   justify-content: space-evenly;
   flex-direction: row;
   margin-top: 25px;
+`;
+
+const MessageContainer = styled.View``;
+
+const ChatBullet = styled.View`
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 17px;
+  left: 34px;
+  background-color: ${theme.error};
+  border-radius: 7px;
 `;

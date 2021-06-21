@@ -14,14 +14,12 @@ class ErrorBoundary extends React.Component {
 
   static getDerivedStateFromError(error) {
     crashlytics().recordError(error);
-    console.log('static error:', error);
     // Update state so the next render will show the fallback UI.
     return {hasError: true};
   }
   // renderFallback = useCallback(<Fallback>Error</Fallback>, []);
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.log('error catch', error);
     this.setState({hasError: true});
   }
 

@@ -86,7 +86,6 @@ export const useNotificationHandler = () => {
             break;
           }
           case NOTIFICATION_TYPES.SHIPMENT_CHAT_MESSAGE: {
-            console.log('message', JSON.parse(data.data));
             dispatch(
               addMessage({
                 confirmed: true,

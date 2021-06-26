@@ -5,15 +5,15 @@ import CarMarker from 'resources/assets/driver_car.svg';
 import CAR_MARKER from 'resources/assets/driver_car.png';
 import {theme} from 'constants/theme';
 
-export const getMarkersList = (shipmentData = {}, driverPosition = {}) => {
-  if (shipmentData?.addresses && !shipmentData.destinations) {
-    shipmentData.destinations = shipmentData?.addresses;
-  }
-  if (shipmentData?.destinations?.length === 0) {
+export const getMarkersList = (shipmentData = null, driverPosition = {}) => {
+  if (!shipmentData || shipmentData?.destinations?.length === 0) {
     return [];
   }
+  if (shipmentData?.addresses && !shipmentData?.destinations) {
+    shipmentData.destinations = shipmentData?.addresses;
+  }
   const destinationIndex = shipmentData?.destinations?.findIndex(
-    i => i.id === shipmentData.currentDestination,
+    i => i.id === shipmentData?.currentDestination,
   );
   const endPoint = shipmentData?.destinations[destinationIndex]?.address;
   const startPoint = shipmentData?.destinations[destinationIndex - 1]?.address;

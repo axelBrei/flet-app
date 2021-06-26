@@ -18,7 +18,7 @@
     "cleanAndroid": "cd android && rm -rf app/build && ./gradlew clean && cd ..",
     "web": "webpack-dev-server -d --config ./webpack.config.js --inline --hot --colors",
     "postinstall": "node ./node_modules/@darron1217/react-native-background-geolocation/scripts/postlink.js",
-    "bundle-ios": "react-native bundle --entry-file index.native.js --platform ios --dev false --bundle-output ios/resto_mobile/main.jsbundle --assets-dest ios",
+    "bundle-ios": "react-native bundle --entry-file index.native.js --platform ios --dev false --bundle-output ios/fletex_app/main.jsbundle --assets-dest ios",
     "bundle-android": "react-native bundle --platform android --dev false --entry-file index.native.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "assembleAndroid": "./assembleNativeApp.sh android",
     "assembleAndExportIos": "./assembleNativeApp.sh ios",

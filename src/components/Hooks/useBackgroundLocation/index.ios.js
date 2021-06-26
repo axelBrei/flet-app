@@ -53,11 +53,9 @@ export default (
     (checkPermission = true) => {
       if (status) {
         emitter?.addListener('onLocation', body => {
-          console.log('new location', body);
           onLocationObtained?.(body);
         });
         emitter.addListener('error', error => {
-          console.log('location error', error);
           Alert.alert('Error', error);
         });
         setListening(true);

@@ -89,6 +89,7 @@ export default () => {
           },
           ...Platform.select({
             android: {height: 60},
+            ios: {height: 90},
             web: {height: 80, paddingBottom: 15},
           }),
         },
@@ -107,6 +108,9 @@ export default () => {
               source={icon}
               resizeMode={'contain'}
               size={iconSize}
+              style={{
+                tintColor: focused ? theme.primaryDarkColor : theme.fontColor,
+              }}
               tintColor={focused ? theme.primaryDarkColor : theme.fontColor}
             />
           );

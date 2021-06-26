@@ -44,7 +44,6 @@ export const OnlineStatusCard = ({onPressButton}) => {
         until: selectedTime?.date.valueOf(),
       });
     } else {
-      console.log('status err', error);
     }
   };
 

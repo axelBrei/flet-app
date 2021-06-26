@@ -2,7 +2,7 @@
   "name": "fletex_app",
   "nameToShow": "FletApp",
   "version": "0.0.1",
-  "testing-version": 28,
+  "testing-version": 29,
   "private": true,
   "proxy": "http://localhost:3000",
   "scripts": {
@@ -24,7 +24,7 @@
     "assembleAndExportIos": "./assembleNativeApp.sh ios",
     "debug-analytics-android": "adb shell setprop debug.firebase.analytics.app com.fletex_app",
     "stop-debug-analytics-android": "adb shell setprop debug.firebase.analytics.app .none.",
-    "dix-android-time": "sudo adb shell \"su 0 date `date +%m%d%H%M%Y.%S`\""
+    "fix-android-time": "sudo adb shell \"su 0 date `date +%m%d%H%M%Y.%S`\""
   },
   "dependencies": {
     "@darron1217/react-native-background-geolocation": "^0.6.6",

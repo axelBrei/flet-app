@@ -54,7 +54,7 @@ export default () => {
     balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
   return (
     <Screen
-      scrollable
+      scrollable={false}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}

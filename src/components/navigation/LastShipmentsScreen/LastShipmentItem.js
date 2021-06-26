@@ -9,6 +9,7 @@ import {Row} from 'components/ui/Row';
 import {ShipmentDestinationsSteps} from 'components/ui/ShipmentDestinationSteps';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const LastShipmentItem = ({
   date,
@@ -44,10 +45,13 @@ const Container = styled.View`
   box-shadow: 1px 5px 3px ${theme.shadowColor};
   background-color: white;
   margin: 9px 20px;
+  elevation: 4;
+  background-color: ${theme.backgroundColor};
   border-radius: 20px;
   min-height: ${({destinationsAmount}) =>
     destinationsAmount === 3 ? 228 : 193}px;
 `;
+Container.defaultProps = applyShadow();
 
 const DataContainer = styled.View`
   padding: 20px 20px 0;

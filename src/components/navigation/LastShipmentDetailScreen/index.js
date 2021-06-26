@@ -6,11 +6,12 @@ import {AppText} from 'components/ui/AppText';
 import {DetailHeader} from 'components/navigation/LastShipmentDetailScreen/DetailHeader';
 import {Title} from 'components/ui/Title';
 import {ShipmentDestinationsSteps} from 'components/ui/ShipmentDestinationSteps';
-import {CenteredRow, Row, StartRow} from 'components/ui/Row';
+import {StartRow} from 'components/ui/Row';
 import {Icon} from 'components/ui/Icon';
 import {RowWithBoldData} from 'components/ui/RowWithBoldData';
 import {LayoutAnimation} from 'react-native';
 import {vehiculeSizeOptions} from 'constants/vehicleSizes';
+import {applyShadow} from 'helpers/uiHelper';
 
 const LastShipmentDetailScreen = ({route}) => {
   const {shipment} = route.params || {};
@@ -37,7 +38,7 @@ const LastShipmentDetailScreen = ({route}) => {
           <Title>Destinos</Title>
           <ShipmentDestinationsSteps destinations={shipment.destinations} />
         </Card>
-        <Card bottom>
+        <Card isBottom>
           <ListHeader onPress={toggleInsurance}>
             <AppText fontSize={20} bold>
               Seguro
@@ -92,17 +93,18 @@ const LastShipmentDetailScreen = ({route}) => {
 export default LastShipmentDetailScreen;
 
 const ContentContainer = styled.ScrollView`
-  padding: 20px;
+  padding: 20px 0;
 `;
 
 const Card = styled.View`
-  width: 100%;
+  flex: 1;
   background-color: white;
-  box-shadow: 0px 3px 6px ${theme.shadowColor};
+  box-shadow: 1px 3px 6px ${theme.shadowColor};
   border-radius: 12px;
-  padding: 15px 20px ${props => (props.bottom ? 15 : 0)}px;
-  margin-bottom: 20px;
+  padding: 15px 20px ${props => (props.isBottom ? 15 : 0)}px;
+  margin: 0 20px 20px;
 `;
+Card.defaultProps = applyShadow();
 
 const Divider = styled.View`
   width: 100%;

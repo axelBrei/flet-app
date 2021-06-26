@@ -10,27 +10,27 @@ import {TransitionPresets} from '@react-navigation/stack';
 import ShipmentStack from 'components/navigation/ShipmentStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
-import {DriverStack} from 'components/navigation/DriverStack';
 import {Platform} from 'react-native';
-import PageNotFound from 'components/navigation/PageNotFound';
 import {Icon} from 'components/ui/Icon';
-import ProfileStack from 'components/navigation/ProfileStack';
+import {resources} from 'resources';
 import {AppText} from 'components/ui/AppText';
+import styled from 'styled-components';
+import {applyShadow} from 'helpers/uiHelper';
 
 const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
-      return 'package-variant';
+      return {icon: resources.shipmentIcon}; //'package-variant';
     case 'courrier':
-      return 'truck-fast';
+      return {icon: resources.courrierDeliverIcon, size: 30}; //'truck-fast';
     case 'pedidos':
-      return 'truck';
+      return {icon: resources.lastShipmentsIcon, size: 34}; //'truck';
     case routes.balanceStack:
-      return 'wallet';
+      return {icon: resources.balanceIcon}; //'wallet';
     case routes.profileStack:
-      return 'account';
+      return {icon: resources.accountIcon, size: 24}; //'account';
     default:
-      return 'account-question';
+      return {icon: resources.shipmentIcon}; // 'account-question';
   }
 };
 
@@ -77,9 +77,17 @@ export default () => {
         keyboardHidesTabBar: true,
 
         style: {
+          backgroundColor: theme.backgroundColor,
           paddingVertical: 5,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          ...applyShadow(false),
+          shadowOffset: {
+            width: 0,
+            height: -2,
+          },
           ...Platform.select({
-            android: {height: 55},
+            android: {height: 60},
             web: {height: 80, paddingBottom: 15},
           }),
         },
@@ -91,13 +99,17 @@ export default () => {
             {route.params.title}
           </AppText>
         ),
-        tabBarIcon: ({focused, color, size}) => (
-          <Icon
-            name={getIconForRoute(route?.name)}
-            size={32}
-            color={focused ? theme.primaryDarkColor : theme.fontColor}
-          />
-        ),
+        tabBarIcon: ({focused, color, size}) => {
+          const {icon, size: iconSize = size} = getIconForRoute(route?.name);
+          return (
+            <TabBarIcon
+              source={icon}
+              resizeMode={'contain'}
+              size={iconSize}
+              tintColor={focused ? theme.primaryDarkColor : theme.fontColor}
+            />
+          );
+        },
         drawerLabel: props => (
           <AppText {...props} fontSize={16}>
             {route.params.title}
@@ -135,7 +147,7 @@ export default () => {
           };
         }}
         initialParams={{
-          title: userData?.isDriver ? 'Enviar' : 'Inicio',
+          title: 'Enviar',
         }}
       />
       {userData?.isDriver ? (
@@ -154,7 +166,7 @@ export default () => {
           getComponent={() =>
             require('components/navigation/LastShipmentsStack').default
           }
-          initialParams={{title: 'Mis pedidos'}}
+          initialParams={{title: 'Últimos pedidos'}}
           options={{
             headerShown: false,
           }}
@@ -166,9 +178,14 @@ export default () => {
           require('components/navigation/ProfileStack').default
         }
         initialParams={{
-          title: 'Mi cuenta',
+          title: 'Cuenta',
         }}
       />
     </Navigator>
   );
 };
+
+const TabBarIcon = styled.Image`
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
+`;

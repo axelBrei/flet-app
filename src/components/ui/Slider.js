@@ -8,6 +8,7 @@ import {theme} from 'constants/theme';
 import {Container} from 'components/ui/Container';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {AnimatedError} from 'components/ui/AnimatedError';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const Slider = ({
   label,
@@ -35,7 +36,7 @@ export const Slider = ({
   }, [value, setValue]);
 
   const onSlidingComplete = useCallback(
-    (v) => {
+    v => {
       setFocused(false);
       if (stepsEnabled) {
         setValue(Math.round(v));
@@ -66,7 +67,7 @@ export const Slider = ({
   );
 
   const renderTrackMarcks = useCallback(
-    (i) =>
+    i =>
       options.length > 0 && (
         <TrackContainer hidden={options.length === 0}>
           <OptionText
@@ -149,15 +150,15 @@ const Label = styled(AppText)`
 `;
 
 const TrackContainer = styled(Container)`
-  bottom: ${(props) => scaleDpTheme(props.hidden ? 1.4 : 7.9)};
+  bottom: ${props => scaleDpTheme(props.hidden ? 1.4 : 7.9)};
 `;
 
 const OptionText = styled(AppText)`
   color: ${theme.disabled};
   padding-bottom: 0;
   position: relative;
-  left: ${(props) => props.left || -40}%;
-  display: ${(props) =>
+  left: ${props => props.left || -40}%;
+  display: ${props =>
     props.hidden ? 'none' : Platform.select({web: 'unset', native: 'flex'})};
   max-width: ${scaleDpTheme(85)};
   font-size: ${scaleDpTheme(9)};
@@ -167,7 +168,7 @@ const TrackMark = styled(View)`
   width: ${scaleDpTheme(1)};
   height: ${scaleDpTheme(10)};
   border-radius: ${scaleDpTheme(7)};
-  background-color: ${(props) =>
+  background-color: ${props =>
     props.selected ? theme.primaryDarkColor : '#b3b3b3'};
   margin-left: ${scaleDpTheme(5)};
   margin-top: 4px;
@@ -188,3 +189,4 @@ const AboveThumbComponent = styled(AppText)`
   padding: ${scaleDpTheme(5)};
   border-radius: ${scaleDpTheme(8)};
 `;
+AboveThumbComponent.defaultProps = applyShadow();

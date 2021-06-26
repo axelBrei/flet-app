@@ -6,6 +6,7 @@ import {Icon} from 'components/ui/Icon';
 import {theme} from 'constants/theme';
 import {Container} from 'components/ui/Container';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const UserSelectionTextField = ({label, value, icon}) => {
   return (
@@ -34,6 +35,8 @@ const RowContainer = styled(Container)`
   border-radius: ${scaleDpTheme(8)};
   box-shadow: 0px 3px 6px ${theme.shadowColor};
 `;
+RowContainer.defaultProps = applyShadow();
+
 const Divider = styled(View)`
   width: 0.5px;
   background-color: ${theme.backdropColor};

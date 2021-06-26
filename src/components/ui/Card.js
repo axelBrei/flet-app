@@ -17,6 +17,7 @@ export const Card = ({
     <CardComponent
       backgroundColor={backgroundColor}
       visible={visible}
+      style={visible ? applyShadow(false) : null}
       {...props}>
       {children}
     </CardComponent>

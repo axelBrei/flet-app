@@ -54,7 +54,6 @@ const Screen = ({
               contentContainerStyle={props.contentContainerStyle}
               refreshControl={props.refreshControl}
               style={[
-                {backgroundColor: theme.backgroundColor},
                 !scrollable && {
                   alignItems,
                   overflow: 'hidden',
@@ -63,6 +62,7 @@ const Screen = ({
                   height: '100%',
                 },
                 style,
+                {backgroundColor: theme.backgroundColor},
               ]}>
               {children}
             </ScrollableLayer>

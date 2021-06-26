@@ -352,12 +352,12 @@ PODS:
     - React-Core
   - react-native-geolocation (2.0.2):
     - React
-  - react-native-google-maps (0.27.1):
+  - react-native-google-maps (0.28.0):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
-    - React
-  - react-native-maps (0.27.1):
-    - React
+    - React-Core
+  - react-native-maps (0.28.0):
+    - React-Core
   - react-native-safe-area-context (3.2.0):
     - React-Core
   - react-native-splash-screen (3.2.0):
@@ -705,8 +705,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
   react-native-config: c98128a72bc2c3a1ca72caec0b021f0fa944aa29
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
-  react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
-  react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
+  react-native-google-maps: 46dea4aa4acb7300beff508f64d9f8c84e9fb106
+  react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 193d233c29eacce1f42ca2637dab7ba79c25a6de

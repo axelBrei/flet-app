@@ -5,6 +5,7 @@ import styled, {css} from 'styled-components';
 import {theme} from 'constants/theme';
 import {useSelector} from 'react-redux';
 import {selectCourrierBalance} from 'redux-store/slices/balanceSlice';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const ProfitCard = () => {
   const balance = useSelector(selectCourrierBalance);
@@ -43,6 +44,7 @@ const BalanceCard = styled.View`
   background-color: ${theme.backgroundColor};
   elevation: 4;
 `;
+BalanceCard.defaultProps = applyShadow();
 
 const TotalEarned = styled(AppText)`
   font-size: 40px;

@@ -23,7 +23,8 @@
     "assembleAndroid": "./assembleNativeApp.sh android",
     "assembleAndExportIos": "./assembleNativeApp.sh ios",
     "debug-analytics-android": "adb shell setprop debug.firebase.analytics.app com.fletex_app",
-    "stop-debug-analytics-android": "adb shell setprop debug.firebase.analytics.app .none."
+    "stop-debug-analytics-android": "adb shell setprop debug.firebase.analytics.app .none.",
+    "dix-android-time": "sudo adb shell \"su 0 date `date +%m%d%H%M%Y.%S`\""
   },
   "dependencies": {
     "@darron1217/react-native-background-geolocation": "^0.6.6",
@@ -61,7 +62,7 @@
     "react-native-config": "^1.4.1",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-image-crop-picker": "^0.36.2",
-    "react-native-maps": "0.27.1",
+    "react-native-maps": "0.28.0",
     "react-native-modal": "^11.5.6",
     "react-native-permissions": "^3.0.0",
     "react-native-reanimated": "^1.13.2",

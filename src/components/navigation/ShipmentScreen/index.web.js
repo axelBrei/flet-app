@@ -19,6 +19,7 @@ import {
   selectDriverPosition,
 } from 'redux-store/slices/shipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import {applyShadow} from 'helpers/uiHelper';
 
 const positionEnabledStates = [
   SHIPMENT_STATE.COURRIER_CONFIRMED,
@@ -98,3 +99,4 @@ const ShipmentDetailContainer = styled(Container)`
   box-shadow: 0 3px 6px ${theme.shadowColor};
   width: max(${scaleDpTheme(270)}, 45%);
 `;
+ShipmentDetailCard.defaultProps = applyShadow();

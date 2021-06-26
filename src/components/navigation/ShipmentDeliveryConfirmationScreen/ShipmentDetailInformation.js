@@ -4,6 +4,7 @@ import {AppText} from 'components/ui/AppText';
 import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const ShipmentDetailInformation = ({shipment}) => {
   const {destinations, helpNeeded} = shipment;
@@ -54,6 +55,7 @@ const AlertContainer = styled.View`
   box-shadow: 1px 1px 6px ${theme.shadowColor};
   margin: 20px 0 0;
 `;
+AlertContainer.defaultProps = applyShadow();
 
 const Text = styled(AppText)`
   font-size: 12px;

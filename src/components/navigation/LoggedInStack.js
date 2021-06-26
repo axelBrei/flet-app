@@ -77,14 +77,15 @@ export default () => {
         keyboardHidesTabBar: true,
 
         style: {
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: theme.white,
           paddingVertical: 5,
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
           ...applyShadow(false),
+          elevation: 10,
           shadowOffset: {
             width: 0,
-            height: -2,
+            height: -4,
           },
           ...Platform.select({
             android: {height: 60},

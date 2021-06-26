@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="345" height="512" viewBox="0 0 345 512"><defs><filter id="a" x="83.279" y="-6" width="269.827" height="472.05" filterUnits="userSpaceOnUse"><feOffset dy="3" input="SourceAlpha"/><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-opacity="0.251"/><feComposite operator="in" in2="b"/><feComposite in="SourceGraphic"/></filter><clipPath id="d"><rect width="345" height="512"/></clipPath></defs><g id="c" clip-path="url(#d)"><g transform="translate(-26.627 -129.459)"><rect width="262.32" height="454.05" rx="50" transform="translate(26.627 187.409)" opacity="0.251"/><g transform="matrix(1, 0, 0, 1, 26.63, 129.46)" filter="url(#a)"><rect width="251.827" height="454.05" rx="50" transform="translate(92.28)" fill="#ffc070"/></g><rect width="209.856" height="283.782" rx="50" transform="translate(139.891 242.971)" fill="rgba(0,0,0,0.48)"/><rect width="167.885" height="170.269" rx="45" transform="translate(160.876 328.106)" fill="#ffc070"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="143.682" height="80.841" viewBox="0 0 143.682 80.841">
+  <defs>
+    <filter id="Rectangle_73" x="0" y="0" width="143.682" height="80.841" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.251"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_7055" data-name="Group 7055" transform="translate(-102 -216.5)">
+    <g transform="matrix(1, 0, 0, 1, 102, 216.5)" filter="url(#Rectangle_73)">
+      <rect id="Rectangle_73-2" data-name="Rectangle 73" width="62.841" height="125.682" rx="8" transform="translate(9 68.84) rotate(-90)" fill="#6e8bff"/>
+    </g>
+    <rect id="Rectangle_74" data-name="Rectangle 74" width="52.367" height="78.551" rx="8" transform="translate(142.419 280.241) rotate(-90)" fill="rgba(0,0,0,0.48)"/>
+    <rect id="Rectangle_75" data-name="Rectangle 75" width="41.894" height="47.131" rx="6" transform="translate(165.983 275.142) rotate(-90)" fill="#6e8bff"/>
+  </g>
+</svg>

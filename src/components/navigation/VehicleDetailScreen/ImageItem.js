@@ -5,6 +5,7 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
 import {IconButton} from 'components/ui/IconButton';
 import {Loader} from 'components/ui/Loader';
+import {applyShadow} from 'helpers/uiHelper';
 
 const ITEM_HEIGHT = 200;
 export const ImageItem = ({uri}) => {
@@ -53,6 +54,7 @@ const Container = styled.View`
   border-radius: 20px;
   background-color: ${theme.backgroundColor};
 `;
+Container.defaultProps = applyShadow();
 
 const ButtonContainer = styled.View`
   position: absolute;

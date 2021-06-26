@@ -21,6 +21,7 @@ import {Container} from 'components/ui/Container';
 import {AppText} from 'components/ui/AppText';
 import {getCurrentPosition} from 'helpers/locationHelper';
 import {IconButton} from 'components/ui/IconButton';
+import {applyShadow} from 'helpers/uiHelper';
 
 const Map = ({
   markers,
@@ -37,7 +38,7 @@ const Map = ({
     googleMapsApiKey: Config.REACT_APP_GMAPS_API_KEY,
   });
   const [mapRef, setMapRef] = useState(null);
-  const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
+  const filteredMarkers = useMemo(() => markers.filter(m => !!m), [markers]);
 
   const setZoom = useCallback(
     (zoom = 16) => {
@@ -62,8 +63,8 @@ const Map = ({
       if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
         const bounds = new window.google.maps.LatLngBounds();
         filteredMarkers
-          .filter((i) => i.latitude && i.longitude)
-          .forEach((marker) => {
+          .filter(i => i.latitude && i.longitude)
+          .forEach(marker => {
             bounds.extend({lat: marker.latitude, lng: marker.longitude});
           });
         (mapRef || map).fitBounds(
@@ -84,7 +85,7 @@ const Map = ({
     }
   }, [mapRef, filteredMarkers]);
 
-  const handleLoad = (map) => {
+  const handleLoad = map => {
     setMapRef(map);
     fitBounds(map);
   };
@@ -102,8 +103,8 @@ const Map = ({
           }}
           icon={{
             url: icon ? icon : MAP_PIN,
-            color: theme.primaryColor,
-            tintColor: theme.primaryColor,
+            color: marker?.color || theme.primaryColor,
+            tintColor: marker?.color || theme.primaryColor,
             scaledSize: iconSize
               ? iconSize
               : {
@@ -121,8 +122,8 @@ const Map = ({
   const renderDirections = useCallback(() => {
     const dirList =
       directions
-        ?.filter((i) => !(i.latitude && i.longitude))
-        .map((i) => ({
+        ?.filter(i => !(i.latitude && i.longitude))
+        .map(i => ({
           lat: i[0],
           lng: i[1],
         })) || [];
@@ -181,7 +182,7 @@ const Map = ({
           center={INITIAL_POSITION}
           onLoad={handleLoad}>
           {filteredMarkers
-            .filter((i) => i.latitude && i.longitude)
+            .filter(i => i.latitude && i.longitude)
             .map(renderMapMarker)}
           {renderDirections()}
         </GoogleMap>
@@ -225,3 +226,4 @@ const CurrentLoactionButton = styled(IconButton)`
   elevation: 3;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
 `;
+CurrentLoactionButton.defaultProps = applyShadow();

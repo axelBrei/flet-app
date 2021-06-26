@@ -20,6 +20,7 @@ import {CommonList} from 'components/ui/CommonList';
 import {Loader} from 'components/ui/Loader';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
+import {applyShadow} from 'helpers/uiHelper';
 
 const ChatScreen = () => {
   const dispatch = useDispatch();
@@ -142,6 +143,7 @@ const MessageContainer = styled.View`
   padding: 15px;
   border-radius: 15px;
 `;
+MessageContainer.defaultProps = applyShadow();
 
 const UserImage = styled.Image`
   height: 45px;

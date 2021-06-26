@@ -15,19 +15,14 @@ import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {ShipmentStagesDescriptor} from 'components/navigation/DriverNewShipmentScreen/ShipmentStagesDescriptor';
 import {selectDriverIsLoadingShipmentStatus} from 'redux-store/slices/driverShipmentSlice';
 import {openMap} from 'redux-store/slices/preferencesSlice';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const ShipmentDescription = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipments = useSelector(selectDriverShipmentData);
-  const {
-    id,
-    status,
-    startPoint,
-    endPoint,
-    destinations,
-    currentDestination,
-  } = shipments[0]; // TODO: find closest shipment
+  const {id, status, startPoint, endPoint, destinations, currentDestination} =
+    shipments[0]; // TODO: find closest shipment
   const destinationIndex = destinations?.findIndex(
     d => d.id === currentDestination,
   );
@@ -95,3 +90,4 @@ const Container = styled.View`
   background-color: ${theme.white};
   box-shadow: 1px 5px 3px ${theme.shadowColor};
 `;
+Container.defaultProps = applyShadow();

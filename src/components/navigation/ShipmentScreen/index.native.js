@@ -44,22 +44,14 @@ export default ({}) => {
         minMarkerAnimation={0}
         edgePadding={{
           top: 40,
-          bottom: 40,
+          bottom: 150,
+          left: 20,
+          right: 20,
         }}
       />
-      {/*<CardContainer>*/}
       <BottomSheet initialHiddenContentPercentage={0.5}>
         <ShipmentDetailCard />
       </BottomSheet>
-      {/*</CardContainer>*/}
     </Screen>
   );
 };
-
-const CardContainer = styled.View`
-  width: 100%;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  background-color: ${theme.white};
-  box-shadow: 3px -3px 8px ${theme.shadowColor};
-`;

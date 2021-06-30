@@ -23,7 +23,7 @@ export const useMarkerList = () => {
   const currentLocation = useSelector(selectCurrentPosition);
   const [directionsMakers, setDirectionsMakers] = useState(null);
   const [currentPositionMarker, setCurrenPositionMarker] = useState(null);
-  const shipment = useSelector(selectDriverShipmentData);
+  const shipment = useSelector(selectDriverShipmentData)?.[0];
 
   const orientation = useMemo(() => {
     if (currentLocation) {
@@ -37,10 +37,9 @@ export const useMarkerList = () => {
 
   useEffect(() => {
     if (shipment.id) {
-      const point =
-        shipment?.status === SHIPMENT_STATE.ON_PROCESS
-          ? shipment.endPoint
-          : shipment.startPoint;
+      const point = shipment?.destinations?.find(
+        d => d.id === shipment?.currentDestination,
+      )?.address;
       setDirectionsMakers({
         latitude: point.latitude,
         longitude: point.longitude,

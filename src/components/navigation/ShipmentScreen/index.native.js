@@ -42,12 +42,16 @@ export default ({}) => {
         style={{flex: 1}}
         markers={markers}
         minMarkerAnimation={0}
-        edgePadding={{
-          top: 40,
-          bottom: 150,
-          left: 20,
-          right: 20,
-        }}
+        edgePadding={
+          markers.length === 1
+            ? {top: 100, bottom: 250, left: 60, right: 60}
+            : {
+                top: 40,
+                bottom: 150,
+                left: 20,
+                right: 20,
+              }
+        }
       />
       <BottomSheet initialHiddenContentPercentage={0.5}>
         <ShipmentDetailCard />

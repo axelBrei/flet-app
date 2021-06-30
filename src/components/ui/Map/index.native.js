@@ -26,44 +26,24 @@ const Map = ({
   const filteredMarkers = useMemo(() => markers.filter(m => !!m), [markers]);
 
   const fitToMarkers = useCallback(() => {
-    // let options = {animated: true};
-    // if (edgePadding) {
-    //   options.edgePadding = edgePadding;
-    //   mapRef.current?.fitToCoordinates(
-    //     filteredMarkers.map(marker => ({
-    //       latitude: marker.latitude,
-    //       longitude: marker.longitude,
-    //     })),
-    //     options,
-    //   );
-    // if (filteredMarkers.length === 1) {
-    //   mapRef.current?.setCamera({
-    //     ...mapRef.current?.getCamera(),
-    //     zoom: 16,
-    //   });
-    // }
-    // } else
     mapRef.current?.fitToElements(true);
   }, [mapRef, filteredMarkers, edgePadding]);
 
   useEffect(() => {
-    if (filteredMarkers.length >= minMarkerAnimation) {
+    if (setIsMapReady && filteredMarkers?.length >= minMarkerAnimation) {
       fitToMarkers();
     }
-  }, [filteredMarkers, minMarkerAnimation]);
+  }, [mapRef, setIsMapReady, filteredMarkers, minMarkerAnimation]);
 
   useEffect(() => {
     if (directions) {
-      mapRef.current?.fitToElements({
-        animated: true,
-      });
+      mapRef.current?.fitToElements(true);
     }
   }, [directions]);
 
   const onMapReady = useCallback(() => {
     setIsMapReady(true);
-    if (filteredMarkers.length > 0) fitToMarkers();
-  }, [mapRef]);
+  }, []);
 
   const renderMarkers = useCallback(
     ({icon: SvgIcon, renderIcon, ...marker}, index) =>

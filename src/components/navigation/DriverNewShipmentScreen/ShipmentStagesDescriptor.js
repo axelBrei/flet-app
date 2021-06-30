@@ -12,6 +12,7 @@ import {Icon} from 'components/ui/Icon';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
 import {selectIsPendingChatMessages} from 'redux-store/slices/chatSlice';
+import {AppText} from 'components/ui/AppText';
 
 const {WAITING_ORIGIN, ON_PROCESS} = SHIPMENT_STATE;
 export const ShipmentStagesDescriptor = (destination, status) => () => {
@@ -46,9 +47,21 @@ export const ShipmentStagesDescriptor = (destination, status) => () => {
     <>
       <Title>{getTitle()}</Title>
       <Row>
-        <StaticInput label={getSubtitle()}>
-          {address?.name.split(',')?.[0]}
-        </StaticInput>
+        <AppText style={{marginBottom: 10}}>
+          <AppText bold color={theme.disabledFont}>
+            {getSubtitle()}
+          </AppText>
+          {'\n'}
+          <AppText fontSize={16}>{address?.name.split(',')?.[0]}</AppText>
+          {address?.comments ? (
+            <>
+              {'\n'}
+              <AppText italic>Datos referencia: </AppText>
+              {address?.comments}
+            </>
+          ) : null}
+        </AppText>
+
         <ChatButton onPress={onPressChat}>
           {unreadedMessages && <ChatBullet />}
           <Icon name={'message-text'} size={30} color={theme.primaryColor} />

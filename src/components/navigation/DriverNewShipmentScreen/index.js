@@ -63,8 +63,13 @@ const DriverNewShipmentScreen = () => {
           }}
           followsUserLocation
           showsMyLocationButton
-          directions={directions}
           markers={markersList}
+          edgePadding={{
+            top: 100,
+            bottom: 120,
+            left: 20,
+            right: 20,
+          }}
         />
         <BottomSheet>
           <ShipmentDescription />

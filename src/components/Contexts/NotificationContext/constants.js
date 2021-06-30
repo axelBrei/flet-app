@@ -5,4 +5,5 @@ export const NOTIFICATION_TYPES = {
   SHIPMENT_FINISHED: 'finish_shipment',
   COURRIER_REJECTION_CHANGED: 'rejection_changed',
   COURRIER_ENABLED_CHANGE: 'courrier_enabled_change',
+  SHIPMENT_CHAT_MESSAGE: 'CHAT_MESSAGE'
 };

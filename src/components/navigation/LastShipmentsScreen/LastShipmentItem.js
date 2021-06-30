@@ -1,117 +1,69 @@
-import React from 'react';
-import styled, {css} from 'styled-components';
-import {Platform} from 'react-native';
+import React, {useCallback} from 'react';
+import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
-import dayjs from 'dayjs';
 import {theme} from 'constants/theme';
+import dayjs from 'dayjs';
+import {capitallize} from 'helpers/stringHelper';
 import {Title} from 'components/ui/Title';
 import {Row} from 'components/ui/Row';
-import {SHIPMENT_STATE} from 'constants/shipmentStates';
-
-const {
-  PENDING_COURRIER,
-  ON_PROCESS,
-  COURRIER_CONFIRMED,
-  FINISHED,
-  NEW,
-  CANCELLED,
-  DELIVERED,
-} = SHIPMENT_STATE;
-
-const getStatusColor = status => {
-  if (status === FINISHED) {
-    return theme.online;
-  }
-  if ([PENDING_COURRIER, COURRIER_CONFIRMED, ON_PROCESS].includes(status)) {
-    return theme.primaryDarkColor;
-  }
-  if (status === CANCELLED) {
-    return theme.error;
-  }
-  return theme.start;
-};
-
-const getStatusText = status => {
-  if (status === FINISHED) return 'Terminado';
-  if (status === CANCELLED) return 'Cancelado';
-  if ([PENDING_COURRIER, COURRIER_CONFIRMED, ON_PROCESS].includes(status)) {
-    return 'Pendiente';
-  }
-  if (status === NEW) return 'Nuevo';
-  if (status === DELIVERED) return 'Entregado';
-};
+import {ShipmentDestinationsSteps} from 'components/ui/ShipmentDestinationSteps';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from 'constants/config/routes';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const LastShipmentItem = ({
+  date,
   price,
-  status,
-  package: p,
-  createdAt,
-  startPoint,
-  endPoint,
-  ...rest
+  destinations,
+  onPressViewMore,
 }) => {
-  const date = createdAt ? dayjs(createdAt) : dayjs();
+  const navigation = useNavigation();
+  const shipmentDate = dayjs(date).format('ddd DD MMM YYYY - HH:MM[hs]');
+
   return (
-    <Container>
-      <Row disablePadding>
-        <ShipmentDate>{date.format('DD/MM/YYYY[-]HH:mm[ Hs.]')}</ShipmentDate>
-        <StatusContainer>
-          <AppText bold color={getStatusColor(status)}>
-            {getStatusText(status)}
+    <Container destinationsAmount={destinations.length}>
+      <DataContainer>
+        <Row>
+          <AppText fontSize={14} bold>
+            {capitallize(shipmentDate)}
           </AppText>
-        </StatusContainer>
-      </Row>
-      <AppText padding="10px 1">
-        Descripción del paquete: <AppText bold>{p?.description}</AppText>
-      </AppText>
-      <AppText>
-        Desde: <AppText bold>{startPoint?.name?.split(',')?.[0]}</AppText>
-      </AppText>
-      <AppText>
-        Hasta: <AppText bold>{endPoint?.name?.split(',')?.[0]}</AppText>
-      </AppText>
-      <AppText textAlign="right">
-        Valor total: <PriceText>${price}</PriceText>
-      </AppText>
+          <Title color={theme.primaryColor}>${price}</Title>
+        </Row>
+        <ShipmentDestinationsSteps destinations={destinations} />
+      </DataContainer>
+      <ViewMoreButton onPress={onPressViewMore}>
+        <AppText color="white" bold>
+          Ver más
+        </AppText>
+      </ViewMoreButton>
     </Container>
   );
 };
 
 const Container = styled.View`
-  padding: 0 20px 10px;
-  margin: 10px 0;
-
-  ${props =>
-    Platform.OS === 'web' &&
-    !props.theme.isMobile &&
-    css`
-      max-width: 550px;
-    `}
-`;
-
-const ShipmentDate = styled(Title)`
-  color: ${theme.primaryDarkColor};
-  padding: 10px 0;
-  margin-bottom: 0;
+  padding: 20px 0 0;
+  box-shadow: 1px 5px 3px ${theme.shadowColor};
+  background-color: white;
+  margin: 9px 20px;
+  elevation: 4;
+  background-color: ${theme.backgroundColor};
   border-radius: 20px;
-  overflow: hidden;
+  min-height: ${({destinationsAmount}) =>
+    destinationsAmount === 3 ? 228 : 193}px;
+`;
+Container.defaultProps = applyShadow();
+
+const DataContainer = styled.View`
+  padding: 20px 20px 0;
 `;
 
-const PriceText = styled(AppText)`
-  font-size: 16px;
-  color: ${theme.fontColor};
-  font-weight: bold;
-  padding: 0 10px;
-  text-align: right;
-`;
-
-const StatusContainer = styled.View`
-  background-color: ${theme.grayBackground};
-  font-weight: bold;
-  border-radius: 20px;
-  padding: 10px 20px;
-  overflow: hidden;
-  height: 45px;
+const ViewMoreButton = styled.TouchableOpacity`
+  flex: 1;
+  height: 30px;
+  min-height: 30px;
+  background-color: ${theme.primaryDarkColor};
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   align-items: center;
   justify-content: center;
 `;

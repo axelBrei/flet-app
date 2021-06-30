@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 import com.android.build.OutputFile
 /**
@@ -16,7 +17,7 @@ import com.android.build.OutputFile
  *   bundleAssetName: "index.android.bundle",
  *
  *   // the entry file for bundle generation. If none specified and
- *   // "index.android.js" exists, it will be used. Otherwise "index.js" is
+ *   // "index.android.js" exists, it will be used. Otherwise "index.web.js" is
  *   // default. Can be overridden with ENTRY_FILE environment variable.
  *   // https://reactnative.dev/docs/performance#enable-the-ram-format
  *   bundleCommand: "ram-bundle",
@@ -147,7 +148,11 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+        dexOptions {
+            javaMaxHeapSize "4g"
+        }
     }
+
     splits {
         abi {
             reset()
@@ -167,6 +172,7 @@ android {
     buildTypes {
         debug {
             debuggable true
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
             signingConfig signingConfigs.debug
         }
         release {
@@ -174,6 +180,7 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }

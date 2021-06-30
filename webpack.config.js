@@ -35,7 +35,7 @@ const babelLoaderConfiguration = {
   ],
   // Add every directory that needs to be compiled by Babel during the build.
   include: [
-    path.resolve(appDirectory, 'index.js'),
+    path.resolve(appDirectory, 'index.web.js'),
     path.resolve(appDirectory, 'src'),
     path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
     path.resolve(appDirectory, 'node_modules/react-native-vector-icons'),
@@ -175,13 +175,20 @@ module.exports = env => ({
     // This will only alias the exact import "react-native"
     alias: {
       'styled-components': 'styled-components/native',
-      'react-native-modal': path.resolve('./src/components/ui/Modal/index.js'),
+      'react-native-modal': path.resolve(
+        './src/components/ui/Modal/index.web.js',
+      ),
       'react-native-vector-icons': 'react-native-vector-icons/dist',
       components: path.resolve('./src/components'),
       constants: path.resolve('./src/constants'),
       services: path.resolve('./src/services'),
       helpers: path.resolve('./src/helpers'),
       resources: path.resolve('./src/resources'),
+      '@react-native-firebase': path.resolve(
+        'src',
+        'services',
+        'FirebaseWebService',
+      ),
       'redux-store': path.resolve('./src/redux-store'),
       'react-native$': 'react-native-web',
       './ReactNativeSVG': aliasPathJoin([
@@ -206,5 +213,8 @@ module.exports = env => ({
     fonts: './src/resources/fonts',
     android: './android',
     ios: './ios',
+    '@darron1217/react-native-background-geolocation':
+      '@darron1217/react-native-background-geolocation',
+    '@gorhom/bottom-sheet': '@gorhom/bottom-sheet',
   },
 });

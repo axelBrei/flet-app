@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {ShipmentDetailCard} from 'components/navigation/ShipmentScreen/ShipmentDetailCard';
 import Map from 'components/ui/Map';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
@@ -42,24 +42,20 @@ export default ({}) => {
         style={{flex: 1}}
         markers={markers}
         minMarkerAnimation={0}
-        edgePadding={{
-          top: 40,
-          bottom: 40,
-        }}
+        edgePadding={
+          markers.length === 1
+            ? {top: 100, bottom: 250, left: 60, right: 60}
+            : {
+                top: 40,
+                bottom: 150,
+                left: 20,
+                right: 20,
+              }
+        }
       />
-      {/*<CardContainer>*/}
       <BottomSheet initialHiddenContentPercentage={0.5}>
         <ShipmentDetailCard />
       </BottomSheet>
-      {/*</CardContainer>*/}
     </Screen>
   );
 };
-
-const CardContainer = styled.View`
-  width: 100%;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  background-color: ${theme.white};
-  box-shadow: 3px -3px 8px ${theme.shadowColor};
-`;

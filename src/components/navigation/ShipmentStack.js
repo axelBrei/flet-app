@@ -62,13 +62,31 @@ export default () => {
             }}
           />
         ) : (
-          <Screen
-            name={routes.shipmentScreen}
-            component={ShipmentScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
+          <>
+            <Screen
+              name={routes.shipmentScreen}
+              component={ShipmentScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Screen
+              name={routes.chatScreen}
+              options={navigationConfig({
+                tabBarVisible: false,
+                headerTitle: 'Chat',
+                title: 'Chat',
+                headerTitleStyle: {
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: theme.primaryColor,
+                },
+              })}
+              getComponent={() =>
+                require('components/navigation/ChatScreen').default
+              }
+            />
+          </>
         )
       ) : (
         <>

@@ -80,7 +80,7 @@ then
   try pod install
   next
 # cd ..
-#react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/fletex_app/main.jsbundle --assets-dest ios
+#react-native bundle --entry-file index.web.js --platform ios --dev false --bundle-output ios/fletex_app/main.jsbundle --assets-dest ios
 #  cd ios/
 
   step "(2/6) Cleaning project"

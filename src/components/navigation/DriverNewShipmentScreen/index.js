@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect, useCallback} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 import {Loader} from 'components/ui/Loader';
@@ -16,6 +16,7 @@ import {
 import {useMarkerList} from 'components/navigation/DriverNewShipmentScreen/useMarkerList';
 import {ShipmentDescription} from 'components/navigation/DriverNewShipmentScreen/ShipmentDescription';
 import {Alert} from 'react-native';
+import BottomSheet from 'components/ui/DraggableBottomView';
 
 const DriverNewShipmentScreen = () => {
   const dispatch = useDispatch();
@@ -62,10 +63,17 @@ const DriverNewShipmentScreen = () => {
           }}
           followsUserLocation
           showsMyLocationButton
-          directions={directions}
           markers={markersList}
+          edgePadding={{
+            top: 100,
+            bottom: 120,
+            left: 20,
+            right: 20,
+          }}
         />
-        <ShipmentDescription />
+        <BottomSheet>
+          <ShipmentDescription />
+        </BottomSheet>
       </Loader>
     </ScreenComponent>
   );

@@ -48,7 +48,6 @@ export const NewTripModalContent = ({
   const shipment = shipments.find(
     s => s.status === SHIPMENT_STATE.PENDING_COURRIER,
   );
-  console.log(shipment);
 
   useEffect(() => {
     if (submited && !loading) {

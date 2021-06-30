@@ -23,7 +23,6 @@ export const useFetcingPendingShipment = () => {
 
   const cancelInterval = useCallback(() => {
     if (currentInterval) {
-      console.log('cancelInterval');
       clearInterval(currentInterval);
       setCurrentInterval(null);
     }
@@ -43,8 +42,6 @@ export const useFetcingPendingShipment = () => {
 
   useEffect(() => {
     if (!isOnline || !isFocused || pendingShipments.length > 0) {
-      console.log('data', isOnline, isFocused, pendingShipments);
-      console.log(!isOnline || !isFocused || pendingShipments.length > 0);
       cancelInterval();
     }
     // return cancelInterval;

@@ -9,6 +9,7 @@ import MOTORCYCLE_THUMBNAIL from 'resources/assets/motorcycle_thumbnail.svg';
 import CAR_THMBNAIL from 'resources/assets/car_thumbnail.svg';
 import PICKUP_THMBNAIL from 'resources/assets/pickup_thumbnail.svg';
 import TRUCK_THMBNAIL from 'resources/assets/truck_thumbnail.svg';
+import {applyShadow} from 'helpers/uiHelper';
 
 const list = [
   {
@@ -76,3 +77,4 @@ const VehicleItemContainer = styled(Container)`
   transition: all 100ms linear;
   transform: scale(${props => (props.hover ? 1.1 : 1)});
 `;
+VehicleItemContainer.defaultProps = applyShadow();

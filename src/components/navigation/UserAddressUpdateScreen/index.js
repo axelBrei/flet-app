@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {Title} from 'components/ui/Title';
 import {CommonList} from 'components/ui/CommonList';
 import styled, {css} from 'styled-components';
@@ -39,17 +39,18 @@ export default ({navigation}) => {
   }, []);
 
   const onSelectAddress = useCallback((_, {id, ...adddress}, comments) => {
-    dispatch(
-      submitNewAddres({
-        ...adddress,
-        comments,
-      }),
-    );
+    dispatch(submitNewAddres(adddress));
   }, []);
 
   const {Modal, open} = useModal(
     GeolocationModal,
-    {},
+    {
+      allowRecents: true,
+      allowFavorites: false,
+      initialOpen: {
+        Recientes: true,
+      },
+    },
     {fullscreen: true, cancellable: true},
   );
 
@@ -58,9 +59,10 @@ export default ({navigation}) => {
   }, [open]);
 
   const onPressDelete = useCallback(
-    ({id}) => () => {
-      dispatch(deleteAddress(id));
-    },
+    ({id}) =>
+      () => {
+        dispatch(deleteAddress(id));
+      },
     [],
   );
 

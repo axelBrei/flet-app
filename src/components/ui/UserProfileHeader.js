@@ -26,6 +26,7 @@ export const UserProfileHeader = ({style}) => {
 const ComponentContainer = styled.View`
   padding: 30px 25px;
   flex-direction: row;
+  background-color: ${theme.primaryColor};
 `;
 
 const Container = styled.View``;
@@ -42,7 +43,7 @@ const UserName = styled(AppText)`
   font-size: 24px;
   font-weight: bold;
 
-  ${(props) =>
+  ${props =>
     !props.theme.isMobile &&
     css`
       font-size: 20px;

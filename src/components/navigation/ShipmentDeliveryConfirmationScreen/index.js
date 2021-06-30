@@ -1,6 +1,6 @@
 import React, {useState, useCallback} from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
 import {SecurityCodeInput} from 'components/navigation/ShipmentDeliveryConfirmationScreen/SecurityCodeInput';

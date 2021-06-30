@@ -6,7 +6,7 @@
  */
 const {getDefaultConfig} = require('metro-config');
 
-// const blacklist = require('metro-config/src/defaults/blacklist');
+const exclusionList = require('metro-config/src/defaults/exclusionList');
 const path = require('path');
 
 const ignoreTopLevelFolders = [
@@ -31,6 +31,7 @@ const ignoreTopLevelFolders = [
   '@svgr/webpack',
   'google-maps-react',
   'webfontloader',
+  '@sentry/react',
   'fbjs',
 ].map(f => new RegExp(`${path.resolve(f)}/.*`));
 const ignoreWebFiles = /.*\.web.js/;
@@ -52,11 +53,12 @@ module.exports = (async () => {
     resolver: {
       assetExts: [...assetExts.filter(ext => ext !== 'svg'), 'web.js'],
       sourceExts: [...sourceExts, 'svg'],
-      // blacklistRE: blacklist([
-      //   '/webpack.config.js',
-      //   ...ignoreTopLevelFolders,
-      //   ignoreWebFiles,
-      // ]),
+      blacklistRE: exclusionList([
+        '/webpack.config.js',
+        ...ignoreTopLevelFolders,
+        /^firebase$/,
+        ignoreWebFiles,
+      ]),
     },
   };
 })();

@@ -112,26 +112,24 @@ export const {
  * @THUNK
  */
 
-export const changeOnlineStatus = (isOnline, until) => async (
-  dispatch,
-  getState,
-) => {
-  const user = selectUserData(getState());
-  if (!user.isDriver) return;
-  dispatch(requestChangeOnlineStatus(isOnline));
+export const changeOnlineStatus =
+  (isOnline, until) => async (dispatch, getState) => {
+    const user = selectUserData(getState());
+    if (!user.isDriver) return;
+    dispatch(requestChangeOnlineStatus(isOnline));
 
-  try {
-    await courrierService.changeOnlineStatus({until, isOnline});
-    dispatch(receiveChangeOnlineStatusSuccess(isOnline));
-  } catch (e) {
-    dispatch(
-      receiveChangeOnlineStatusFail({
-        status: isOnline,
-        error: e?.response?.data || e,
-      }),
-    );
-  }
-};
+    try {
+      await courrierService.changeOnlineStatus({until, isOnline});
+      dispatch(receiveChangeOnlineStatusSuccess(isOnline));
+    } catch (e) {
+      dispatch(
+        receiveChangeOnlineStatusFail({
+          status: isOnline,
+          error: e?.response?.data || e,
+        }),
+      );
+    }
+  };
 
 export const updatePosition = position => async (dispatch, getState) => {
   const vehicleList = getState().login.userData?.courrier?.vehicle;
@@ -163,25 +161,21 @@ export const fetchCourrierRejectionsList = () => async dispatch => {
   }
 };
 
-export const fetchUpdateCourrierRejection = (
-  rejection_id,
-  field_name,
-  value,
-) => async dispatch => {
-  dispatch(requestUpdateRejection());
-  try {
-    const form = new FormData();
-    form.append('rejection_id', rejection_id);
-    form.append('field_name', field_name);
-    form.append('value', value?.original || value, value?.filename);
+export const fetchUpdateCourrierRejection =
+  (rejection_id, field_name, value) => async dispatch => {
+    dispatch(requestUpdateRejection());
+    try {
+      const form = new FormData();
+      form.append('rejection_id', rejection_id);
+      form.append('field_name', field_name);
+      form.append('value', value?.original || value, value?.filename);
 
-    await courrierService.updateRejection(form);
-    dispatch(receiveUpdateRejectionSuccess(rejection_id));
-  } catch (e) {
-    console.log(e, {...e});
-    dispatch(receiveUpdateRejectionFail(e?.response?.data?.message || e));
-  }
-};
+      await courrierService.updateRejection(form);
+      dispatch(receiveUpdateRejectionSuccess(rejection_id));
+    } catch (e) {
+      dispatch(receiveUpdateRejectionFail(e?.response?.data?.message || e));
+    }
+  };
 
 /*
  * @SELECTORS

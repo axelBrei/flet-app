@@ -10,10 +10,7 @@ import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from 'constants/config/routes';
 import {useDispatch} from 'react-redux';
-import {
-  updateNewShipmentLocations,
-  updateShipmentDecription,
-} from 'redux-store/slices/newShipmentSlice';
+import {updateNewShipmentLocations} from 'redux-store/slices/newShipmentSlice';
 import {
   formikConfig,
   FIELDS,
@@ -23,8 +20,8 @@ import GeolocationFilterModal from 'components/MobileFullScreenModals/Geolocatio
 import {Title} from 'components/ui/Title';
 import {fetchUserAddresses} from 'redux-store/slices/personalData/addressSlice';
 import {TextLink} from 'components/ui/TextLink';
-import {Icon} from 'components/ui/Icon';
 import {MiddleAddressInput} from 'components/navigation/HomeScreen/MiddleAddressInput';
+import {AddressSelectionModal} from 'components/navigation/HomeScreen/AddressSelectionModal';
 
 export const NewShipmentForm = () => {
   const navigation = useNavigation();
@@ -59,18 +56,23 @@ export const NewShipmentForm = () => {
   } = useFormikCustom(formikConfig(onSubmit));
 
   const onSelectPoint = useCallback(
-    (field, value) => {
-      _setFieldValue(field)(value);
+    (field, value, comment) => {
+      _setFieldValue(field)({
+        ...value,
+        comment,
+      });
     },
     [_setFieldValue],
   );
 
   const {Modal, toggle, close} = useModal(
     GeolocationFilterModal,
+    // AddressSelectionModal,
     {
       onPressItem: onSelectPoint,
-      values: values,
+      // values: values,
       allowFavorites: true,
+      allowRecents: true,
     },
     {
       avoidKeyboard: false,
@@ -103,7 +105,6 @@ export const NewShipmentForm = () => {
   }, [values]);
 
   const onPressRemoveAddress = useCallback(() => {
-    console.log(values);
     if (values[FIELDS.END_POINT]) {
       _setFieldValue(FIELDS.END_POINT)(values[FIELDS.END_POINT]);
     }

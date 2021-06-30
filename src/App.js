@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {nameToShow as appName} from '../package.json';
 import {Platform, Linking, UIManager} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -17,9 +17,29 @@ import {configureAuthInterceptor} from 'constants/network';
 import BodyLockProvider from 'components/Contexts/BodyLockContext/index';
 import {useHeaderHeight} from '@react-navigation/stack';
 import NotificationProvider from 'components/Contexts/NotificationContext';
+import ErrorBoundary from 'components/ui/ErrorBoundary/index';
+import analytics from '@react-native-firebase/analytics';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+
+dayjs.locale('es');
 
 axios.defaults.withCredentials = false;
 configureAuthInterceptor(store);
+
+// gets the current screen from navigation state
+const getCurrentRouteName = navigationState => {
+  if (!navigationState) {
+    return null;
+  }
+  const {routes, index} = navigationState || {};
+  const route = routes[index];
+  // dive into nested navigators
+  if (route.state) {
+    return getCurrentRouteName(route.state || route);
+  }
+  return route.name;
+};
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -28,6 +48,7 @@ if (Platform.OS === 'android') {
 }
 const App = () => {
   const dispatch = store.dispatch;
+  const routeNameRef = useRef(null);
   const {rem, width, height, isMobile} = useWindowDimension();
   let headerHeight = 0;
   try {
@@ -35,18 +56,35 @@ const App = () => {
   } catch (e) {}
 
   const onStateChange = useCallback(
-    state => dispatch(changeNavigationState(state)),
-    [dispatch],
+    state => {
+      Platform.OS === 'web' && dispatch(changeNavigationState(state));
+      const previousRouteName = routeNameRef.current;
+      const currentRouteName = getCurrentRouteName(state);
+      if (currentRouteName && previousRouteName !== currentRouteName) {
+        analytics().logScreenView(
+          {
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          },
+          {
+            previous_screen_name: previousRouteName,
+            previous_screen_class: previousRouteName,
+          },
+        );
+        routeNameRef.current = currentRouteName;
+      }
+    },
+    [dispatch, routeNameRef],
   );
 
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
         <NavigationContainer
+          onStateChange={onStateChange}
           {...Platform.select({
             web: {
               linking: linkingConfig,
-              onStateChange,
               ...(process.env.NODE_ENV !== 'development' && {
                 initialState: store.getState()?.navigation?.state,
               }),
@@ -72,9 +110,11 @@ const App = () => {
               headerHeight: headerHeight,
             }}>
             <BodyLockProvider>
-              <NotificationProvider>
-                <MainNavigator />
-              </NotificationProvider>
+              <ErrorBoundary>
+                <NotificationProvider>
+                  <MainNavigator />
+                </NotificationProvider>
+              </ErrorBoundary>
             </BodyLockProvider>
           </ThemeProvider>
         </NavigationContainer>

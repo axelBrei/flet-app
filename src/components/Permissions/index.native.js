@@ -6,6 +6,7 @@ import {
 } from 'components/Permissions/permissions';
 import Permissions from 'react-native-permissions';
 import {Alert} from 'react-native';
+import {Platform} from 'react-native';
 
 const requestPermission = async (permissions = []) => {
   const res = await Permissions.requestMultiple(permissions);
@@ -13,15 +14,28 @@ const requestPermission = async (permissions = []) => {
 };
 
 const checkPermissions = async (permissions = [], mandatory = true) => {
-  let res = await Permissions.checkMultiple(permissions);
-  if (permissions.some(i => res[i] === permissionStatus.DENIED)) {
+  const filteredPermissions = permissions.filter(p => {
+    if (
+      Platform.OS === 'android' &&
+      p === PERMISSIONS.backgroundLocation &&
+      Platform.Version < 28
+    ) {
+      return false;
+    }
+    return true;
+  });
+  let res = await Permissions.checkMultiple(filteredPermissions);
+  if (filteredPermissions.some(i => res[i] === permissionStatus.DENIED)) {
     res = await requestPermission(
-      permissions.filter(i => res[i] === permissionStatus.DENIED),
+      filteredPermissions.filter(i => res[i] === permissionStatus.DENIED),
     );
   }
 
-  if (mandatory && permissions.some(i => res[i] === permissionStatus.BLOCKED)) {
-    const blockedPermissions = permissions.reduce((list, perm) => {
+  if (
+    mandatory &&
+    filteredPermissions.some(i => res[i] === permissionStatus.BLOCKED)
+  ) {
+    const blockedPermissions = filteredPermissions.reduce((list, perm) => {
       if (res[perm] === permissionStatus.BLOCKED) {
         list.push(`- ${permissionNames[permissionMappings[perm]]}`);
       }
@@ -52,7 +66,7 @@ const checkPermissions = async (permissions = [], mandatory = true) => {
       // SHOW PROBLEM TO USER
     }
   }
-  return permissions.every(i => res[i] === permissionStatus.GRANTED);
+  return filteredPermissions.every(i => res[i] === permissionStatus.GRANTED);
 };
 export default {
   checkPermissions,

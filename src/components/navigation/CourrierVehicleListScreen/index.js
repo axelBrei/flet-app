@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {Loader} from 'components/ui/Loader';
 import {useDispatch, useSelector} from 'react-redux';
 import {

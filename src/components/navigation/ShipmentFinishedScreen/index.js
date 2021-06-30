@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
 import {useDispatch} from 'react-redux';
@@ -19,8 +19,6 @@ export default ({navigation, route}) => {
   const dispatch = useDispatch();
   const {width, isMobile} = useWindowDimension();
 
-  console.log(shipment);
-
   const onPressButton = useCallback(() => {
     dispatch(cleanShipments());
   }, [navigation]);
@@ -31,10 +29,12 @@ export default ({navigation, route}) => {
         <Icon name="check-circle" size={80} color={theme.online} />
         <Title bold>{'El pedido ya fue entregado\ncorrectamente'}</Title>
         <DataContainer>
-          <Row>
-            <Label>Costo del envío: </Label>
-            <Value>${shipment?.price}</Value>
-          </Row>
+          {shipment?.price && (
+            <Row>
+              <Label>Costo del envío: </Label>
+              <Value>${shipment?.price}</Value>
+            </Row>
+          )}
 
           <Row>
             <Label>Desde: </Label>
@@ -94,21 +94,19 @@ const Title = styled(AppText)`
 
 const DataContainer = styled.View`
   flex: 1;
-  padding-top: 20px;
   align-items: center;
   width: 100%;
+  padding: 20px;
 `;
 
 const Label = styled(AppText)`
-  width: 50%;
   margin-right: 5px;
-  text-align: right;
   padding: 5px 0;
 `;
 
 const Value = styled(AppText)`
   color: ${theme.primaryColor};
-  width: 50%;
-  text-align: left;
   padding: 5px 0;
+  text-align: left;
+  flex: 1;
 `;

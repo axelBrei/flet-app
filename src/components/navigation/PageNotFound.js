@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import {AppText} from 'components/ui/AppText';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';

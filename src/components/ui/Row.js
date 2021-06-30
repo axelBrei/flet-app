@@ -19,4 +19,5 @@ export const StartRow = styled(CenteredRow)`
 
 export const Column = styled.View`
   flex-direction: column;
+  width: ${props => `${props.width}` || '100%'};
 `;

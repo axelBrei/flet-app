@@ -1,19 +1,27 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import {theme} from 'constants/theme';
 
 export const PaymentMethodItem = ({imageUrl, title, onPress, selected}) => {
   return (
-    <Container onPress={onPress}>
-      <ImageContainer>
-        <Image source={{uri: imageUrl}} />
-      </ImageContainer>
-      <BodyContainer>
-        <Title>{title}</Title>
-        {selected && <SelectedText>Seleccionado</SelectedText>}
-      </BodyContainer>
-    </Container>
+    <>
+      {selected && (
+        <SelectTextContainer>
+          <AppText textAlign="center" color="white">
+            Seleccionado
+          </AppText>
+        </SelectTextContainer>
+      )}
+      <Container onPress={onPress} selected={selected}>
+        <ImageContainer>
+          <Image source={{uri: imageUrl}} />
+        </ImageContainer>
+        <BodyContainer>
+          <Title>{title}</Title>
+        </BodyContainer>
+      </Container>
+    </>
   );
 };
 
@@ -21,9 +29,17 @@ const Container = styled.TouchableOpacity`
   flex-direction: row;
   background-color: ${theme.primaryLightColor};
   border-radius: 20px;
-  margin: 10px 0;
+  margin: 0 0 10px;
   padding: 10px 20px;
   overflow: hidden;
+
+  ${({selected}) =>
+    selected &&
+    css`
+      border-top-left-radius: 0;
+      border-color: ${theme.fontColor};
+      border-width: 2px;
+    `};
 `;
 
 const ImageContainer = styled.View`
@@ -47,15 +63,14 @@ const Title = styled(AppText)`
   color: ${theme.white};
 `;
 
-const SelectedText = styled(AppText)`
-  background-color: ${theme.primaryLightColor};
-  border-color: ${theme.white};
+const SelectTextContainer = styled.View`
+  background-color: ${theme.fontColor};
+  border-color: ${theme.fontColor};
   border-width: 2px;
   color: ${theme.white};
-  padding: 2px 5px;
-  overflow: hidden;
-  border-radius: 20px;
-  margin-top: 10px;
-  width: 105px;
-  text-align: center;
+  width: 150px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  align-items: center;
+  justify-content: center;
 `;

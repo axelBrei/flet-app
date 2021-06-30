@@ -17,6 +17,7 @@ export const Dropdown = ({visible, data, ...props}) => {
     ({nativeEvent: {layout}}) => {
       setInputMeasures({
         top: layout.y + layout.height - 18,
+        left: layout.x,
         width: layout.width,
       });
     },
@@ -74,7 +75,11 @@ export const Dropdown = ({visible, data, ...props}) => {
           onBlur={() => setDropdownOpen(false)}
           style={[
             styles.listContainer,
-            {top: inputMeasures.top, width: inputMeasures.width},
+            {
+              top: inputMeasures.top,
+              width: inputMeasures.width,
+              left: inputMeasures.left,
+            },
           ]}
           nestedScrollEnabled
           removeClippedSubviews={false}

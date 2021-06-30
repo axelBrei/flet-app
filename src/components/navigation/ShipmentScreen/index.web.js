@@ -1,7 +1,7 @@
 import React, {useMemo, useEffect} from 'react';
 import {WithMobileSupport} from 'components/HOC/WithMobileSupport';
 import MobileScreen from 'components/navigation/ShipmentScreen/index.native';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen/index.web';
 import styled from 'styled-components';
 import {Container} from 'components/ui/Container';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
@@ -19,6 +19,7 @@ import {
   selectDriverPosition,
 } from 'redux-store/slices/shipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import {applyShadow} from 'helpers/uiHelper';
 
 const positionEnabledStates = [
   SHIPMENT_STATE.COURRIER_CONFIRMED,
@@ -98,3 +99,4 @@ const ShipmentDetailContainer = styled(Container)`
   box-shadow: 0 3px 6px ${theme.shadowColor};
   width: max(${scaleDpTheme(270)}, 45%);
 `;
+ShipmentDetailCard.defaultProps = applyShadow();

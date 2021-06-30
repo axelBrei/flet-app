@@ -40,6 +40,12 @@ const validationSchema = yup.object({
 
 export const formikConfig = (onSubmit, values = null) => ({
   initialValues: initialValues(values),
+  initialErrors: {
+    [FIELDS.DESCRIPTION]: null,
+    [FIELDS.VALUE]: null,
+    [FIELDS.SIZE]: null,
+    [FIELDS.EXTRA_HELP]: null,
+  },
   validationSchema,
   onSubmit,
 });

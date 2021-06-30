@@ -9,6 +9,7 @@ import {Icon} from 'components/ui/Icon';
 import styled from 'styled-components';
 import {IconButton} from 'components/ui/IconButton';
 import {getCurrentPosition} from 'helpers/locationHelper';
+import {applyShadow} from 'helpers/uiHelper';
 
 const Map = ({
   markers,
@@ -25,25 +26,14 @@ const Map = ({
   const filteredMarkers = useMemo(() => markers.filter(m => !!m), [markers]);
 
   const fitToMarkers = useCallback(() => {
-    let options = {animated: true};
-    edgePadding && (options.edgePadding = edgePadding);
-    mapRef.current?.fitToSuppliedMarkers(
-      filteredMarkers.map((_, i) => `${i}`),
-      options,
-    );
-    if (filteredMarkers.length === 1) {
-      mapRef.current?.setCamera({
-        ...mapRef.current?.getCamera(),
-        zoom: 16,
-      });
-    }
+    mapRef.current?.fitToElements(true);
   }, [mapRef, filteredMarkers, edgePadding]);
 
   useEffect(() => {
-    if (filteredMarkers.length >= minMarkerAnimation) {
+    if (setIsMapReady && filteredMarkers?.length >= minMarkerAnimation) {
       fitToMarkers();
     }
-  }, [filteredMarkers, minMarkerAnimation]);
+  }, [mapRef, setIsMapReady, filteredMarkers, minMarkerAnimation]);
 
   useEffect(() => {
     if (directions) {
@@ -53,16 +43,14 @@ const Map = ({
 
   const onMapReady = useCallback(() => {
     setIsMapReady(true);
-    if (filteredMarkers.length > 0) fitToMarkers();
-  }, [mapRef]);
+  }, []);
 
   const renderMarkers = useCallback(
     ({icon: SvgIcon, renderIcon, ...marker}, index) =>
       marker.latitude &&
       marker.longitude && (
         <Marker
-          key={`${index}`}
-          identifier={`${index}`}
+          key={`${marker.latitude}${marker.longitude}`}
           coordinate={{
             latitude: marker.latitude,
             longitude: marker.longitude,
@@ -130,6 +118,7 @@ const Map = ({
         showsCompass={false}
         showsScale={false}
         showsBuildings={false}
+        mapPadding={edgePadding}
         showsIndoors={false}
         showsTraffic={false}
         showsIndoorLevelPicker={false}
@@ -185,3 +174,4 @@ const CurrentLoactionButton = styled(IconButton)`
   elevation: 3;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
 `;
+CurrentLoactionButton.defaultProps = applyShadow();

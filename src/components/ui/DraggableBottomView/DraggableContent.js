@@ -3,6 +3,7 @@ import styled, {css} from 'styled-components';
 import {Platform, TouchableOpacity, View} from 'react-native';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const DraggableContent = React.forwardRef(({isOpen, children}, ref) => {
   return (
@@ -29,6 +30,7 @@ const DrawableContainer = styled(TouchableOpacity)`
     `,
   })}
 `;
+DrawableContainer.defaultProps = applyShadow();
 
 const DrawerLine = styled(View)`
   align-self: center;

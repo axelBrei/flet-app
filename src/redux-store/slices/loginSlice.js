@@ -111,7 +111,6 @@ export const loginAs = (email, pass) => async dispatch => {
     const {shipment, ...loginData} = data;
     const {isDriver, courrier} = loginData;
     if (isDriver) {
-      console.log('shipment', shipment);
       if (shipment?.id) {
         dispatch(
           receiveFetchShipmentsSuccess([
@@ -164,15 +163,12 @@ export const fetchRecoverPassword = data => async dispatch => {
   }
 };
 
-export const fetchPhonesToRegisterCourrier = () => async (
-  dispatch,
-  getState,
-) => {
-  await dispatch(fetchTelephones());
-  const [phone] = getState().personalData.telephones.telephones;
-  dispatch(receiveCourrierDataSuccess(phone));
-  console.log(phone);
-};
+export const fetchPhonesToRegisterCourrier =
+  () => async (dispatch, getState) => {
+    await dispatch(fetchTelephones());
+    const [phone] = getState().personalData.telephones.telephones;
+    dispatch(receiveCourrierDataSuccess(phone));
+  };
 
 /**
  * @SELECTORS

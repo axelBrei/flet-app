@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Container} from 'components/ui/Container';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
@@ -7,9 +7,18 @@ import {selectCurrentShipmentStatus} from 'redux-store/slices/shipmentSlice';
 import {theme} from 'constants/theme';
 import {Title} from 'components/ui/Title';
 import {StaticInputField} from 'components/ui/StaticInputField';
+import {MainButton} from 'components/ui/MainButton';
+import {routes} from 'constants/config/routes';
+import {useNavigation} from '@react-navigation/native';
 
 export const ShipmentSecurityCode = address => () => {
   const status = useSelector(selectCurrentShipmentStatus);
+  const navigation = useNavigation();
+
+  const onPressChat = useCallback(() => {
+    navigation.navigate(routes.chatScreen);
+  }, [navigation]);
+
   return (
     <>
       <TitleContainer>

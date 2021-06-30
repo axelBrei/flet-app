@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
 import {theme} from 'constants/theme';
+import {applyShadow} from 'helpers/uiHelper';
 
 export const FloatingHamburguerButton = () => {
   const navigation = useNavigation();
@@ -27,3 +28,4 @@ const ContainerButton = styled(TouchableOpacity)`
   background-color: ${theme.white};
   box-shadow: 0px 3px 6px ${theme.shadowColor};
 `;
+ContainerButton.defaultProps = applyShadow();

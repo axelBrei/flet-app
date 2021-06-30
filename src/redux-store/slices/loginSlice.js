@@ -1,27 +1,36 @@
 import {createSlice, createSelector} from '@reduxjs/toolkit';
 import LoginService from 'services/loginService';
 import {capitallize} from 'helpers/stringHelper';
-import {receiveRegisterSuccess} from './registerSlice';
+import {
+  receiveCourrierDataSuccess,
+  receiveRegisterSuccess,
+} from './registerSlice';
 import {
   changeOnlineStatus,
   receiveChangeOnlineStatusSuccess,
 } from 'redux-store/slices/driverSlice';
 import {receiveNewShipmentSuccess} from 'redux-store/slices/newShipmentSlice';
-import {fetchCurrentShipment} from 'redux-store/slices/driverShipmentSlice';
+import {
+  fetchCurrentShipment,
+  receiveFetchShipmentsSuccess,
+} from 'redux-store/slices/driverShipmentSlice';
 import dayjs from 'dayjs';
 import {
   receiveChangeProfilePictureSuccess,
   receiveUpdatePasswordSuccess,
   receiveUpdatePersonalDataSuccess,
 } from 'redux-store/slices/personalData/personalData';
+import {fetchTelephones} from 'redux-store/slices/personalData/telephonesSlice';
 
 const initialState = {
   userData: null,
   loading: {
     user: false,
+    recover: false,
   },
   error: {
     user: null,
+    recover: null,
   },
 };
 
@@ -40,6 +49,21 @@ const slice = createSlice({
     receiveLoginFail: (state, action) => {
       state.loading.user = false;
       state.error.user = action.payload;
+    },
+    requestRecoverPassword: state => {
+      state.loading.recover = true;
+      state.error.recover = null;
+    },
+    receiveRecoverPasswordSuccess: (state, action) => {
+      state.loading.recover = false;
+      state.error.recover = null;
+    },
+    receiveRecoverPasswordFail: (state, action) => {
+      state.loading.recover = false;
+      state.error.recover = action.payload;
+    },
+    changeCourrierEnabledStatus: (state, action) => {
+      state.userData.courrier.enabled = action.payload;
     },
     logout: state => {
       Object.assign(state, initialState);
@@ -70,6 +94,10 @@ export const {
   requestLogin,
   receiveLoginSuccess,
   receiveLoginFail,
+  requestRecoverPassword,
+  receiveRecoverPasswordSuccess,
+  receiveRecoverPasswordFail,
+  changeCourrierEnabledStatus,
   logout,
 } = slice.actions;
 
@@ -81,20 +109,32 @@ export const loginAs = (email, pass) => async dispatch => {
   try {
     const {data} = await LoginService.loginAs(email, pass);
     const {shipment, ...loginData} = data;
-    if (data.shipment) {
+    const {isDriver, courrier} = loginData;
+    if (isDriver) {
+      if (shipment?.id) {
+        dispatch(
+          receiveFetchShipmentsSuccess([
+            {
+              ...shipment,
+              destinations: shipment.addresses,
+            },
+          ]),
+        );
+      } else {
+        dispatch(fetchCurrentShipment());
+      }
+      if (courrier?.isOnline && courrier.onlineUntil) {
+        const until = dayjs(courrier.onlineUntil);
+        dispatch(receiveChangeOnlineStatusSuccess(until.isAfter(dayjs())));
+      }
+    } else if (shipment) {
       dispatch(
         receiveNewShipmentSuccess({
-          shipment_id: data.shipment.id,
+          shipment_id: shipment.id,
           ...shipment,
         }),
       );
     }
-    if (data?.courrier?.isOnline) {
-      const until = dayjs(data.courrier.onlineUntil);
-      dispatch(receiveChangeOnlineStatusSuccess(until.isAfter(dayjs())));
-    }
-
-    data?.isDriver && dispatch(fetchCurrentShipment());
 
     dispatch(
       receiveLoginSuccess({
@@ -104,7 +144,7 @@ export const loginAs = (email, pass) => async dispatch => {
       }),
     );
   } catch (e) {
-    return dispatch(receiveLoginFail(e?.response?.data || e));
+    return dispatch(receiveLoginFail(e?.response?.data?.message || e));
   }
 };
 
@@ -112,6 +152,24 @@ export const fetchLogout = () => async dispatch => {
   await dispatch(changeOnlineStatus(false));
   dispatch(logout());
 };
+
+export const fetchRecoverPassword = data => async dispatch => {
+  dispatch(requestRecoverPassword());
+  try {
+    await LoginService.recoverPassword(data);
+    dispatch(receiveRecoverPasswordSuccess());
+  } catch (e) {
+    dispatch(receiveRecoverPasswordFail(e?.response?.data?.message || e));
+  }
+};
+
+export const fetchPhonesToRegisterCourrier =
+  () => async (dispatch, getState) => {
+    await dispatch(fetchTelephones());
+    const [phone] = getState().personalData.telephones.telephones;
+    dispatch(receiveCourrierDataSuccess(phone));
+  };
+
 /**
  * @SELECTORS
  */
@@ -138,3 +196,7 @@ export const selectUserPhoto = createSelector(
 );
 
 export const selectIsDriver = state => state.login?.userData?.isDriver;
+
+export const selectIsLoadingRecoverPassowrd = state =>
+  state.login.loading.recover;
+export const selectRecoverPassowrdError = state => state.login.error.recover;

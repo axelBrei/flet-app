@@ -37,6 +37,7 @@ export const DriverExtraData = ({
       onBlur={setFieldTouched(FIELDS.PROFILE_PIC)}
       error={errors[FIELDS.PROFILE_PIC]}
       onSelectImage={setFieldValue(FIELDS.PROFILE_PIC)}
+      acceptFrontCamera
     />
   </>
 );

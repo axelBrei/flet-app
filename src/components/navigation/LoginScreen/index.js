@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
-import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import styled, {css} from 'styled-components';
+import Screen from 'components/ui/Screen';
 import {useFormikCustom} from 'components/Hooks/useFormikCustom';
 import InputField from 'components/ui/InputField';
 import {MainButton} from 'components/ui/MainButton';
@@ -25,25 +25,19 @@ import {openMapsOnDevice} from 'helpers/locationHelper';
 import LoginImage from 'resources/images/login.svg';
 import {PasswordInput} from 'components/navigation/LoginScreen/PasswordInput';
 import {openMap} from 'redux-store/slices/preferencesSlice';
+import {routes} from 'constants/config/routes';
 
-export const LoginScreen = ({}) => {
+export const LoginScreen = ({navigation}) => {
   const {widthWithPadding, height, isMobile} = useWindowDimension();
   const dispatch = useDispatch();
   const loading = useSelector(selectLoadingLogin);
   const error = useSelector(selectLoginError);
 
   const onPressForgetPassword = () => {
-    dispatch(
-      openMap({
-        latitude: -34.61943940808439,
-        longitude: -58.454993291653814,
-      }),
-    );
-    // openMapsOnDevice({
-    //   latitude: -34.61943940808439,
-    //   longitude: -58.454993291653814,
-    // });
+    navigation.navigate(routes.recoverPasswordScreen);
   };
+
+  const onPressRegister = () => navigation.navigate(routes.registerStack);
 
   const onSubmit = values => {
     dispatch(loginAs(values[FIELDS.USERNAME], values[FIELDS.PASSWORD]));
@@ -87,11 +81,6 @@ export const LoginScreen = ({}) => {
             errors[FIELDS.USERNAME]
           }
           onBlur={_setFieldTouched(FIELDS.USERNAME)}
-          style={
-            !isMobile && {
-              maxWidth: scaleDp(250),
-            }
-          }
           textContentType="username"
         />
         <PasswordInput
@@ -105,11 +94,6 @@ export const LoginScreen = ({}) => {
             errors[FIELDS.PASSWORD]
           }
           onBlur={_setFieldTouched(FIELDS.PASSWORD)}
-          style={
-            !isMobile && {
-              maxWidth: scaleDp(250),
-            }
-          }
           onSubmitEditing={handleSubmit}
         />
       </InputsContainer>
@@ -120,7 +104,10 @@ export const LoginScreen = ({}) => {
         </Loader>
       </ButtonsContainer>
       <AppText>
-        ¿Todavia no tenes cuenta? <Link alternate>Crear cuenta</Link>
+        ¿Todavia no tenes cuenta?{' '}
+        <Link alternate onPress={onPressRegister}>
+          Crear cuenta
+        </Link>
       </AppText>
     </ScreenComponent>
   );
@@ -132,13 +119,19 @@ const ScreenComponent = styled(Screen)`
   height: ${props => props.theme.screenHeight}px;
   align-items: center;
   padding: 60px 20px 0;
+
+  ${props =>
+    !props.theme.isMobile &&
+    css`
+      align-self: center;
+      align-items: center;
+      max-width: 414px;
+    `}
 `;
 
 const InputsContainer = styled(View)`
   padding-top: 15px;
-  flex-shrink: 1;
   width: 100%;
-  align-items: center;
 `;
 
 const ButtonsContainer = styled(View)`

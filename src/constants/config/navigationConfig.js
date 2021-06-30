@@ -32,6 +32,7 @@ export const navigationConfig = ({title, ...props} = {}) => ({
   ...(isMobile
     ? {
         headerTintColor: theme.primaryColor,
+        headerTitleAlign: 'center',
       }
     : {
         headerTitleStyle: {display: 'none'},

@@ -11,49 +11,19 @@ import {scaleDp} from 'helpers/responsiveHelper';
 import {getRotatedMarker} from 'components/ui/Map/helper';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
-import useBackgroundLocation from 'components/Hooks/useBackgroundLocation/index';
-import {updatePosition} from 'redux-store/slices/driverSlice';
+import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
+import {
+  selectCurrentPosition,
+  updatePosition,
+} from 'redux-store/slices/driverSlice';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
-export const useMarkerList = updatePosition => {
-  const isFocused = useIsFocused();
+export const useMarkerList = () => {
   const [lastUserPosition, setLastUserPosition] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const currentLocation = useSelector(selectCurrentPosition);
   const [directionsMakers, setDirectionsMakers] = useState(null);
   const [currentPositionMarker, setCurrenPositionMarker] = useState(null);
-  const shipment = useSelector(selectDriverShipmentData);
-  const courrierVehicle = useSelector(
-    s => s.login.userData?.courrier?.vehicle[0],
-  );
-
-  const {enable, disable} = useBackgroundLocation(
-    loc =>
-      new Promise(resolve => {
-        setCurrentLocation(loc);
-        if (loc?.latitude && Platform.OS === 'web') {
-          updatePosition(position.coords);
-        }
-        resolve();
-      }),
-    {
-      autoStart: true,
-      stopOnUnfocus: true,
-      interval: 10 * 1000,
-      fastestInterval: 5 * 1000,
-      activitiesInterval: 10 * 1000,
-      url: 'courrier/position',
-
-      body: {
-        latitude: '@latitude',
-        longitude: '@longitude',
-        vehicle_id: courrierVehicle?.id,
-      },
-    },
-  );
-
-  useEffect(() => {
-    shipment && enable();
-  }, [shipment]);
+  const shipment = useSelector(selectDriverShipmentData)?.[0];
 
   const orientation = useMemo(() => {
     if (currentLocation) {
@@ -67,10 +37,9 @@ export const useMarkerList = updatePosition => {
 
   useEffect(() => {
     if (shipment.id) {
-      const point =
-        shipment?.status === SHIPMENT_STATE.ON_PROCESS
-          ? shipment.endPoint
-          : shipment.startPoint;
+      const point = shipment?.destinations?.find(
+        d => d.id === shipment?.currentDestination,
+      )?.address;
       setDirectionsMakers({
         latitude: point.latitude,
         longitude: point.longitude,
@@ -94,7 +63,7 @@ export const useMarkerList = updatePosition => {
           web: CAR_MARKER,
           native: CarMarker,
         }),
-        orientation,
+        currentLocation?.bearing || orientation,
         scaleDp(40),
       );
       setCurrenPositionMarker({

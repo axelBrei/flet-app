@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {View} from 'react-native';
 import {theme} from 'constants/theme';
 import {UserProfileHeader} from 'components/ui/UserProfileHeader';

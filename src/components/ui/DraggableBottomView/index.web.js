@@ -100,7 +100,7 @@ export const DraggableContainer = ({
     },
   });
   const measureView = useCallback(
-    (e) => {
+    e => {
       if (componentHeight === 0) {
         setComponentHeight(e.nativeEvent.layout.height);
       }

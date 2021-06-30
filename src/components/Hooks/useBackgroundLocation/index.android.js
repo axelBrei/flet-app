@@ -1,10 +1,10 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 import BackgroundGeolocation from '@darron1217/react-native-background-geolocation';
 import Config from 'react-native-config';
 import {useUserData} from 'components/Hooks/useUserData';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
-import {permissionStatus} from 'components/Permissions/permissionStatus';
+import {AppState} from 'react-native';
 
 interface BackgroundLocationConfig {
   interval: Number;
@@ -25,11 +25,11 @@ export default (
   config: BackgroundLocationConfig = {
     interval: 10000,
     fastestInterval: 5000,
-    stopOnTerminate: true,
+    stopOnTerminate: false,
     startOnBoot: false,
     activitiesInterval: 10000,
-    stationaryRadius: 50,
-    distanceFilter: 50,
+    stationaryRadius: 5,
+    distanceFilter: 20,
     url: 'courrier/position',
     body: {
       latitude: '@latitude',
@@ -80,20 +80,21 @@ export default (
 
   useEffect(() => {
     BackgroundGeolocation.configure({
-      desiredAccuracy: BackgroundGeolocation.MEDIUM_ACCURACY,
-      stationaryRadius: 50,
-      distanceFilter: 50,
+      desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+      stationaryRadius: config.stationaryRadius,
+      distanceFilter: config.distanceFilter,
       notificationTitle: 'FletApp',
       notificationText: 'Seguimiento ubicacion prendido',
       debug: false,
       startOnBoot: config.startOnBoot,
       stopOnTerminate: config.stopOnTerminate,
-      locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
+      locationProvider: BackgroundGeolocation.RAW_PROVIDER,
       interval: config.interval,
       fastestInterval: config.fastestInterval,
       activityType: 'AutomotiveNavigation',
       activitiesInterval: config.activitiesInterval,
       stopOnStillActivity: false,
+      pauseLocationUpdates: false,
       url: `${Config.REACT_APP_BASE_URL}/${config.url}`,
       httpHeaders: {
         AccesToken: Config.REACT_APP_ACCESS_TOKEN,
@@ -103,11 +104,7 @@ export default (
     });
 
     BackgroundGeolocation.on('location', location => {
-      BackgroundGeolocation.startTask(taskKey => {
-        onLocationObtained?.(location)?.then(t => {
-          BackgroundGeolocation.endTask(taskKey);
-        });
-      });
+      onLocationObtained?.(location);
     });
 
     BackgroundGeolocation.on('authorization', permissionStatus => {
@@ -134,11 +131,17 @@ export default (
       }
     });
 
+    BackgroundGeolocation.checkStatus(({isRunning}) => {
+      if (isRunning) {
+        BackgroundGeolocation.start(); // service was running -> rebind all listeners
+      }
+    });
+
     return () => {
       if (config.stopOnUnfocus) {
         BackgroundGeolocation.stop();
-        BackgroundGeolocation.removeAllListeners();
       }
+      BackgroundGeolocation.removeAllListeners();
     };
   }, []);
 

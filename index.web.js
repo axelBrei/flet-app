@@ -3,6 +3,7 @@ import {AppRegistry} from 'react-native';
 import App from './src/App';
 import {name as appName} from './package.json';
 import WebFont from 'webfontloader';
+import '@react-native-firebase';
 
 Object.assign(process.env, {
   REACT_APP_SC_ATTR: 'data-styled-fletapp',
@@ -12,6 +13,7 @@ Object.assign(process.env, {
 
 // Generate required css
 import iconFont from './node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf';
+import * as Sentry from '@sentry/react';
 const iconFontStyles = `@font-face {
   src: url(${iconFont});
   font-family: MaterialCommunityIcons;
@@ -34,6 +36,11 @@ WebFont.load({
   google: {
     families: ['Poppins:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700'],
   },
+});
+
+Sentry.init({
+  dsn:
+    'https://e9aa7ff8fab941e1a52520d4231f8283@o789898.ingest.sentry.io/5800049',
 });
 
 AppRegistry.registerComponent(appName, () => App);

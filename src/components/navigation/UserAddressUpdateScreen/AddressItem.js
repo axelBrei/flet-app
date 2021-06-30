@@ -17,7 +17,11 @@ export const AddressItem = ({name, onPressDelete, ...props}) => {
     <ItemContainer>
       <DataContainer>
         <Label numberOfLines={1}>{capitallize(name?.split(',')?.[0])}</Label>
-        <Comment>{props.comments}</Comment>
+        <Comment>
+          {props?.comments}
+          {props?.comments ? ' / ' : ''}
+          {props?.type}
+        </Comment>
       </DataContainer>
       <ButtonLoader loading={loading}>
         <IconButton

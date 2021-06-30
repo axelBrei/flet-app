@@ -4,7 +4,11 @@ import geocodingService from 'services/geolocationService';
 import axios from 'axios';
 import {capitallize} from 'helpers/stringHelper';
 
-export const useDebouncedGeocoding = (inputValue) => {
+export const useDebouncedGeocoding = (
+  inputValue,
+  enabled = true,
+  onFetchSuccess = () => {},
+) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
@@ -28,9 +32,10 @@ export const useDebouncedGeocoding = (inputValue) => {
         }))
         .filter(
           (address, index, self) =>
-            index === self.findIndex((t) => t.id === address.id),
+            index === self.findIndex(t => t.id === address.id),
         );
       setResults(addressList);
+      onFetchSuccess(addressList);
     } catch (e) {
       setError(e);
     }
@@ -38,8 +43,8 @@ export const useDebouncedGeocoding = (inputValue) => {
   }, [debouncedInputValue]);
 
   useEffect(() => {
-    debouncedInputValue.length > 3 && fetchAddresses();
-  }, [debouncedInputValue]);
+    enabled && debouncedInputValue.length > 3 && fetchAddresses();
+  }, [enabled, debouncedInputValue]);
 
   return {
     loading,

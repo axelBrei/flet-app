@@ -1,16 +1,13 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Motorbike from 'resources/images/scooter.svg';
 import Car from 'resources/images/car.svg';
 import Pickup from 'resources/images/van.svg';
 import Truck from 'resources/images/truck.svg';
-import {CenteredRow, Row} from 'components/ui/Row';
 import {Title} from 'components/ui/Title';
 import {AppText} from 'components/ui/AppText';
 import {theme} from 'constants/theme';
 import {Icon} from 'components/ui/Icon';
-import {useNavigation} from '@react-navigation/native';
-import {routes} from 'constants/config/routes';
 
 const iconMapping = {
   1: Motorbike,

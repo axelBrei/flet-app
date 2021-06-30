@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {
   legalDriverDataFormikConfig,
   FIELDS,
@@ -35,8 +35,8 @@ export default ({navigation}) => {
 
   const onSubmit = useCallback(
     values => {
-      setIsSubmited(true);
       dispatch(registerDriverLegaleData(values));
+      setIsSubmited(true);
     },
     [navigation, dispatch],
   );

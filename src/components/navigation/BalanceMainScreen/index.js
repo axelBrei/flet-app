@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {MainButton} from 'components/ui/MainButton';
 import {Loader} from 'components/ui/Loader';
 import {RefreshControl} from 'components/ui/RefreshControl';
@@ -17,7 +17,6 @@ import {useModal} from 'components/Hooks/useModal';
 import {CashoutModalContent} from 'components/navigation/BalanceMainScreen/CashoutModalContent';
 import {ChangeBankNumberModalContent} from 'components/navigation/BalanceMainScreen/ChangeBankNumberModalContent';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {theme} from 'constants/theme';
 
 export default () => {
   const {isMobile, widthWithPadding, height, width} = useWindowDimension();
@@ -55,7 +54,7 @@ export default () => {
     balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
   return (
     <Screen
-      scrollable
+      scrollable={false}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -92,10 +91,14 @@ export default () => {
 const ScreenContainer = styled.View`
   padding: 20px;
   ${({theme}) =>
-    !theme.isMobile &&
-    css`
-      width: 100%;
-      align-self: center;
-      max-width: max(414px, 60%);
-    `};
+    theme.isMobile
+      ? css`
+          flex: 1;
+          height: 100%;
+        `
+      : css`
+          width: 100%;
+          align-self: center;
+          max-width: max(414px, 60%);
+        `};
 `;

@@ -8,11 +8,18 @@ import {AppText} from 'components/ui/AppText';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useNavigation} from 'components/Hooks/useNavigation';
 
-export const CustomHeaderBackButton = props => {
-  const navigation = useNavigation();
+export const CustomHeaderBackButton = ({navigation, ...props}) => {
+  const onPress = () => {
+    if (Platform.OS === 'web' && props.canGoBack) {
+      history.back();
+      return;
+    }
+    (props.canGoBack ? props?.onPress : navigation.goBack)();
+  };
 
-  const onPress = props.canGoBack ? props?.onPress : navigation.goBack;
-
+  // if (Platform.OS !== 'web') {
+  //   return <HeaderBackButton {...props} />;
+  // }
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -25,7 +32,7 @@ export const CustomHeaderBackButton = props => {
       }}>
       <Icon
         color={props.tintColor}
-        size={20}
+        size={Platform.OS !== 'ios' ? 60 : 20}
         name={Platform.OS !== 'android' ? 'chevron-left' : 'arrow-left'}
       />
       {props.labelVisible && (

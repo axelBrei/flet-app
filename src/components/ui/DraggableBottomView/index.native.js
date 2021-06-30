@@ -1,86 +1,26 @@
-import React, {useState, useCallback, useRef, useImperativeHandle} from 'react';
-import {View, Animated, TouchableOpacity, Platform} from 'react-native';
+import React, {useCallback, useRef, useImperativeHandle, useState} from 'react';
+import BottomSheet from '@gorhom/bottom-sheet';
+import {View} from 'react-native';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {AppText} from 'components/ui/AppText';
-import {Container} from 'components/ui/Container';
-import styled, {css} from 'styled-components';
-import {PanGestureHandler, State} from 'react-native-gesture-handler';
-import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {theme} from 'constants/theme';
-import {DraggableContent} from 'components/ui/DraggableBottomView/DraggableContent';
-import {
-  openDrawer,
-  closeDrawer,
-} from 'components/ui/DraggableBottomView/animationHelpers';
 
-const DraggableBottomView = ({
+const _DraggableBottomView = ({
   children,
-  initialHiddenContentPercentage,
+  snapPoints = ['40%', '100%'],
   externalRef,
-  initiallyOpen,
 }) => {
+  const bottomSheetRef = useRef(null);
+  const {height: screenHeight} = useWindowDimension();
   const [isOpen, setIsOpen] = useState(false);
-  const [componentHeight, setComponentHeight] = useState(0.0);
-  const translateY = useRef(new Animated.Value(0)).current;
+  const [localSnapPoints, setLocalSnapPoints] = useState(snapPoints);
 
-  const open = useCallback(
-    (callback = () => {}) => {
-      openDrawer(
-        translateY,
-        componentHeight > 0 ? componentHeight : scaleDp(300),
-        initialHiddenContentPercentage,
-        () => {
-          setIsOpen(true);
-          callback();
-        },
-      );
-    },
-    [translateY, componentHeight, initialHiddenContentPercentage, setIsOpen],
-  );
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    setIsOpen(index > 0);
+  }, []);
 
-  const close = useCallback(
-    (cb = () => {}) => {
-      closeDrawer(translateY, () => {
-        setIsOpen(false);
-        cb();
-      });
-    },
-    [setIsOpen],
-  );
-
-  const measureContent = useCallback(
-    (e) => {
-      if (componentHeight === 0) {
-        setComponentHeight(e.nativeEvent.layout.height);
-        if (initiallyOpen) {
-          open();
-        }
-      }
-    },
-    [open, initiallyOpen, setComponentHeight],
-  );
-
-  const onPanGestureEvent = Animated.event(
-    [{nativeEvent: {translationY: translateY}}],
-    {useNativeDriver: true},
-  );
-
-  const onReleasePan = useCallback(
-    ({nativeEvent}) => {
-      const {state, oldState, translationY} = nativeEvent;
-      if (oldState === State.BEGAN && state === State.ACTIVE) {
-        translateY.setOffset(translateY.__getValue());
-      }
-      if (
-        oldState === State.ACTIVE &&
-        [State.END, State.CANCELLED].includes(state)
-      ) {
-        translateY.flattenOffset();
-        translationY < 0 ? open() : close();
-      }
-    },
-    [translateY, componentHeight],
-  );
+  const open = useCallback(() => {}, []);
+  const close = useCallback(() => {}, []);
 
   useImperativeHandle(externalRef, () => ({
     open,
@@ -88,45 +28,44 @@ const DraggableBottomView = ({
     isOpen,
   }));
 
+  const onChildrenLayout = useCallback(
+    ({nativeEvent: {layout}}) => {
+      const {height} = layout;
+      setLocalSnapPoints(
+        snapPoints.map((point, index) => {
+          const numberPercentage = Number(point.replace('%', '')) / 100;
+          const visiblePercentage = (numberPercentage * height) / screenHeight;
+          return `${Math.min(
+            100,
+            Math.ceil(
+              visiblePercentage * 100 +
+                (index + 1 === snapPoints.length ? 10 : 0),
+            ),
+          )}%`;
+        }),
+      );
+    },
+    [screenHeight],
+  );
+
   return (
-    <PanGestureHandler
-      minDist={10}
-      onGestureEvent={onPanGestureEvent}
-      onHandlerStateChange={onReleasePan}>
-      <DraggableView
-        onLayout={measureContent}
-        style={{
-          transform: [{translateY}],
-          bottom: -(componentHeight * (1 - initialHiddenContentPercentage)),
-        }}>
-        <DraggableContent>
-          {typeof children === 'function'
-            ? children({isOpen, open, close})
-            : children}
-        </DraggableContent>
-      </DraggableView>
-    </PanGestureHandler>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      alwaysOpen={150}
+      snapPoints={localSnapPoints}
+      onChange={handleSheetChanges}>
+      <View onLayout={onChildrenLayout}>{children}</View>
+    </BottomSheet>
   );
 };
 
-DraggableBottomView.defaultProps = {
+_DraggableBottomView.defaultProps = {
   initialHiddenContentPercentage: 0.3,
 };
 
-const RefComponent = React.forwardRef((props, ref) => (
-  <DraggableBottomView {...props} externalRef={ref} />
+const DraggableBottomView = React.forwardRef((props, ref) => (
+  <_DraggableBottomView {...props} externalRef={ref} />
 ));
 
-export default React.memo(RefComponent);
-
-const DraggableView = styled(Animated.View)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  background-color: ${theme.backgroundColor};
-  align-items: center;
-  width: 100%;
-  ${Platform.OS === 'web' && 'overflow: hidden;'}
-`;
+export default DraggableBottomView;

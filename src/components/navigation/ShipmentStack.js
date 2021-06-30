@@ -22,7 +22,10 @@ const shipmentStates = [
   SHIPMENT_STATE.PENDING_COURRIER,
   SHIPMENT_STATE.COURRIER_CONFIRMED,
   SHIPMENT_STATE.ON_PROCESS,
+  SHIPMENT_STATE.WAITING_PACKAGE,
+  SHIPMENT_STATE.WAITING_ORIGIN,
   SHIPMENT_STATE.DELIVERED,
+  SHIPMENT_STATE.FINISHED,
 ];
 
 export default () => {
@@ -31,6 +34,11 @@ export default () => {
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
   return (
     <Navigator
+      initialRouteName={
+        shipmentStatus.status === SHIPMENT_STATE.FINISHED
+          ? routes.shipmentFinishedScreen
+          : routes.homeScreen
+      }
       screenOptions={navigationConfig({
         headerTransparent: !isMobile,
         headerBackTitle: 'Volver',
@@ -43,23 +51,43 @@ export default () => {
         },
       })}>
       {currentShipment.shipmentId ||
-      (currentShipment.id && shipmentStates.includes(shipmentStatus.status)) ? (
-        <>
-          <Screen
-            name={routes.shipmentScreen}
-            component={ShipmentScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
+      (shipmentStatus.id && shipmentStates.includes(shipmentStatus.status)) ? (
+        shipmentStatus.status === SHIPMENT_STATE.FINISHED ? (
           <Screen
             name={routes.shipmentFinishedScreen}
             component={ShipmentFinishedScreen}
             options={{
               headerShown: false,
+              gestureEnabled: false,
             }}
           />
-        </>
+        ) : (
+          <>
+            <Screen
+              name={routes.shipmentScreen}
+              component={ShipmentScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Screen
+              name={routes.chatScreen}
+              options={navigationConfig({
+                tabBarVisible: false,
+                headerTitle: 'Chat',
+                title: 'Chat',
+                headerTitleStyle: {
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: theme.primaryColor,
+                },
+              })}
+              getComponent={() =>
+                require('components/navigation/ChatScreen').default
+              }
+            />
+          </>
+        )
       ) : (
         <>
           <Screen

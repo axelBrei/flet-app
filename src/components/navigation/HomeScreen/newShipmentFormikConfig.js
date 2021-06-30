@@ -5,12 +5,14 @@ import {capitallize} from 'helpers/stringHelper';
 const {requiredField, minimumFieldLength} = strings.validations;
 
 export const FIELDS = {
-  START_POINT: 'startPoint',
-  END_POINT: 'endPoint',
+  START_POINT: 'start',
+  MID_POINT: 'mid',
+  END_POINT: 'end',
 };
 
 const initialValues = {
   [FIELDS.START_POINT]: null,
+  [FIELDS.MID_POINT]: null,
   [FIELDS.END_POINT]: null,
 };
 
@@ -26,10 +28,11 @@ const validationSchema = yup.object({
     .object(pointShape)
     .nullable()
     .required(requiredField),
+  [FIELDS.MID_POINT]: yup.object(pointShape).nullable(),
   [FIELDS.END_POINT]: yup.object(pointShape).nullable().required(requiredField),
 });
 
-export const formikConfig = (onSubmit) => ({
+export const formikConfig = onSubmit => ({
   onSubmit,
   initialValues,
   validationSchema,

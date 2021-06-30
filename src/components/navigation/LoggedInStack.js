@@ -10,27 +10,32 @@ import {TransitionPresets} from '@react-navigation/stack';
 import ShipmentStack from 'components/navigation/ShipmentStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
-import {DriverStack} from 'components/navigation/DriverStack';
 import {Platform} from 'react-native';
-import PageNotFound from 'components/navigation/PageNotFound';
 import {Icon} from 'components/ui/Icon';
-import ProfileStack from 'components/navigation/ProfileStack';
+import {resources} from 'resources';
 import {AppText} from 'components/ui/AppText';
+import styled from 'styled-components';
+import {applyShadow} from 'helpers/uiHelper';
+import ShipmentIcon from 'resources/icons/shipmentIcon.svg';
+import CourrierDeliverIcon from 'resources/icons/courrierDeliverIcon.svg';
+import LastShipmentsIcon from 'resources/icons/historyIcon.svg';
+import BalanceIcon from 'resources/icons/balanceIcon.svg';
+import ProfileIcon from 'resources/icons/accountIcon.svg';
 
 const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
-      return 'package-variant';
+      return {Icon: ShipmentIcon}; //'package-variant';
     case 'courrier':
-      return 'truck-fast';
-    case 'ultimospedidos':
-      return 'truck';
+      return {Icon: CourrierDeliverIcon, size: 30}; //'truck-fast';
+    case 'pedidos':
+      return {Icon: LastShipmentsIcon, size: 34}; //'truck';
     case routes.balanceStack:
-      return 'wallet';
+      return {Icon: BalanceIcon}; //'wallet';
     case routes.profileStack:
-      return 'account';
+      return {Icon: ProfileIcon, size: 24}; //'account';
     default:
-      return 'account-question';
+      return {Icon: ShipmentIcon}; // 'account-question';
   }
 };
 
@@ -75,10 +80,22 @@ export default () => {
         activeTintColor: theme.primaryDarkColor,
         inactiveTintColor: theme.fontColor,
         keyboardHidesTabBar: true,
+
         style: {
+          backgroundColor: theme.white,
           paddingVertical: 5,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          ...applyShadow(false),
+          elevation: 10,
+          shadowOffset: {
+            width: 0,
+            height: -4,
+          },
           ...Platform.select({
-            web: {height: 75, paddingBottom: 15},
+            android: {height: 60},
+            ios: {height: 90},
+            web: {height: 80, paddingBottom: 15},
           }),
         },
       }}
@@ -89,30 +106,66 @@ export default () => {
             {route.params.title}
           </AppText>
         ),
-        tabBarIcon: ({focused, color, size}) => (
-          <Icon
-            name={getIconForRoute(route?.name)}
-            size={32}
-            color={focused ? theme.primaryDarkColor : theme.fontColor}
-          />
+        tabBarIcon: ({focused, color, size}) => {
+          const {Icon, size: iconSize = size} = getIconForRoute(route?.name);
+          return (
+            <Icon
+              color={focused ? theme.primaryDarkColor : theme.fontColor}
+              fill={focused ? theme.primaryDarkColor : theme.fontColor}
+              height={iconSize}
+              width={iconSize}
+            />
+          );
+          return (
+            <TabBarIcon
+              source={icon}
+              resizeMode={'contain'}
+              size={iconSize}
+              style={{
+                tintColor: focused ? theme.primaryDarkColor : theme.fontColor,
+              }}
+              tintColor={focused ? theme.primaryDarkColor : theme.fontColor}
+            />
+          );
+        },
+        drawerLabel: props => (
+          <AppText {...props} fontSize={16}>
+            {route.params.title}
+          </AppText>
         ),
         ...(isMobile && TransitionPresets.SlideFromRightIOS),
       })}>
-      {userData?.isDriver && shouldDisplayDriverScreen && (
+      {isMobile && userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.driverStack}
-          component={DriverStack}
+          getComponent={() =>
+            require('components/navigation/DriverStack').DriverStack
+          }
           initialParams={{title: 'Conducir'}}
-          options={{
-            headerShown: false,
+          options={({route}) => {
+            const {index, routeNames} = {...route.state};
+            return {
+              headerShown: false,
+              tabBarVisible: !routeNames?.[index]
+                ?.toLowerCase()
+                ?.includes('chat'),
+            };
           }}
         />
       )}
       <Screen
         name={routes.shipmentStack}
         component={ShipmentStack}
+        options={({route}) => {
+          const {index, routeNames} = {...route.state};
+          return {
+            tabBarVisible: !routeNames?.[index]
+              ?.toLowerCase()
+              ?.includes('chat'),
+          };
+        }}
         initialParams={{
-          title: userData?.isDriver ? 'Enviar' : 'Inicio',
+          title: 'Enviar',
         }}
       />
       {userData?.isDriver ? (
@@ -127,11 +180,11 @@ export default () => {
         />
       ) : (
         <Screen
-          name={routes.lastShippmentsScreen}
+          name={routes.lastShipmentStack}
           getComponent={() =>
-            require('components/navigation/LastShipmentsScreen').default
+            require('components/navigation/LastShipmentsStack').default
           }
-          initialParams={{title: 'Mis pedidos'}}
+          initialParams={{title: 'Últimos pedidos'}}
           options={{
             headerShown: false,
           }}
@@ -143,9 +196,14 @@ export default () => {
           require('components/navigation/ProfileStack').default
         }
         initialParams={{
-          title: 'Mi cuenta',
+          title: 'Cuenta',
         }}
       />
     </Navigator>
   );
 };
+
+const TabBarIcon = styled.Image`
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
+`;

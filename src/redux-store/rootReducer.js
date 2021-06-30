@@ -15,6 +15,7 @@ import insuranceReducer from 'redux-store/slices/insuranceSlice';
 import personalDataReducer from 'redux-store/slices/personalData';
 import balanceSlice from 'redux-store/slices/balanceSlice';
 import preferencesSlice from 'redux-store/slices/preferencesSlice';
+import chatSlice from 'redux-store/slices/chatSlice';
 
 const reducers = {
   login: loginSlice,
@@ -29,6 +30,7 @@ const reducers = {
     },
     shipmentReducer,
   ),
+  ...chatSlice,
   geolocation: geocodingReducer,
   courrier: courrierReducer,
   insurance: insuranceReducer,

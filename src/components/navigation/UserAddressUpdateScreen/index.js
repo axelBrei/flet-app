@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {Title} from 'components/ui/Title';
 import {CommonList} from 'components/ui/CommonList';
 import styled, {css} from 'styled-components';
@@ -23,6 +23,7 @@ import GeolocationModal from 'components/MobileFullScreenModals/GeolocationModal
 import {CenteredRow, Row} from 'components/ui/Row';
 import {TextLink} from 'components/ui/TextLink';
 import {theme} from 'constants/theme';
+import {Icon} from 'components/ui/Icon';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
@@ -38,17 +39,18 @@ export default ({navigation}) => {
   }, []);
 
   const onSelectAddress = useCallback((_, {id, ...adddress}, comments) => {
-    dispatch(
-      submitNewAddres({
-        ...adddress,
-        comments,
-      }),
-    );
+    dispatch(submitNewAddres(adddress));
   }, []);
 
   const {Modal, open} = useModal(
     GeolocationModal,
-    {},
+    {
+      allowRecents: true,
+      allowFavorites: false,
+      initialOpen: {
+        Recientes: true,
+      },
+    },
     {fullscreen: true, cancellable: true},
   );
 
@@ -57,9 +59,10 @@ export default ({navigation}) => {
   }, [open]);
 
   const onPressDelete = useCallback(
-    ({id}) => () => {
-      dispatch(deleteAddress(id));
-    },
+    ({id}) =>
+      () => {
+        dispatch(deleteAddress(id));
+      },
     [],
   );
 
@@ -76,14 +79,21 @@ export default ({navigation}) => {
       )}
       <CommonList
         data={loading ? [] : addresses}
-        contentContainerStyle={loading && {flex: 1}}
+        contentContainerStyle={(loading || addresses.length === 0) && {flex: 1}}
         ListEmptyComponent={
-          <FullScreenLoader
-            size="large"
-            loading
-            message="Cargando direcciones"
-            children={<></>}
-          />
+          addresses.length === 0 ? (
+            <EmptyListContainer>
+              <Icon name="playlist-remove" size={60} color={theme.fontColor} />
+              <Title>No tenes direcciones cargadas todavía</Title>
+            </EmptyListContainer>
+          ) : (
+            <FullScreenLoader
+              size="large"
+              loading
+              message="Cargando direcciones"
+              children={<></>}
+            />
+          )
         }
         renderItem={({item, index}) => (
           <AddressItem onPressDelete={onPressDelete(item)} {...item} />
@@ -104,6 +114,17 @@ export default ({navigation}) => {
 
 const ScreenComponent = styled(Screen)`
   padding: ${({theme}) => (theme.isMobile ? 20 : 50)}px 20px 10px;
+`;
+
+const EmptyListContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  padding: 40px 0;
+  ${props =>
+    !props.theme.isMobile &&
+    css`
+      max-width: 550px;
+    `}
 `;
 
 const FullScreenLoader = styled(Loader)`

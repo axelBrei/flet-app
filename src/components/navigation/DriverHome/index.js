@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
-import {Screen} from 'components/ui/Screen';
+import React, {useEffect, useState, useCallback, useMemo, useRef} from 'react';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {useModal} from 'components/Hooks/useModal';
 import {NewTripModalContent} from 'components/navigation/DriverHome/NewTripModalContent';
@@ -7,9 +7,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   confirmShipment,
   rejectShipment,
-  selectPendingShipment,
   selectPendingShipmentAnswerError,
-  selectPendingShipmentError,
+  selectCurrentShipmentError,
+  selectDriverShipmentData,
+  selectPendingShipments,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
 import {getRotatedMarker} from 'components/ui/Map/helper';
@@ -19,6 +20,7 @@ import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {
   changeOnlineStatus,
+  selectCurrentPosition,
   selectOnlineStatus,
   selectPreviosPosition,
   updatePosition,
@@ -28,49 +30,23 @@ import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCar
 import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {useUserData} from 'components/Hooks/useUserData';
 import {useIsFocused} from '@react-navigation/native';
+import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 
-export default ({navigation}) => {
+const DriverHome = ({navigation}) => {
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
   const {courrier} = useUserData();
-  const isOnline = useSelector(selectOnlineStatus);
   const previosPosition = useSelector(selectPreviosPosition);
-  const pendingShipment = useSelector(selectPendingShipment);
-  const pendingShipmentError = useSelector(selectPendingShipmentError);
+  const shipments = useSelector(selectPendingShipments);
+  const pendingShipmentError = useSelector(selectCurrentShipmentError);
   const error = useSelector(selectPendingShipmentAnswerError);
-  const [debouncedCurrentPosition, setLocation] = useState({});
-
-  const {enable, disable, hasLocationPermission} = useBackgroundLocation(
-    loc =>
-      new Promise(resolve => {
-        setLocation(loc);
-        if (loc?.latitude && Platform.OS === 'web') {
-          dispatch(updatePosition(loc));
-        }
-        resolve();
-      }),
-    {
-      interval: 10 * 1000,
-      fastestInterval: 5 * 1000,
-      activitiesInterval: 10 * 1000,
-      url: 'courrier/position',
-      body: {
-        latitude: '@latitude',
-        longitude: '@longitude',
-        vehicle_id: courrier.vehicle?.[0]?.id,
-      },
-    },
+  const debouncedCurrentPosition = useSelector(selectCurrentPosition);
+  const mapRef = useRef(null);
+  const {check, status} = usePermission(
+    [PERMISSIONS.backgroundLocation, PERMISSIONS.location],
+    false,
+    true,
   );
-
-  useEffect(() => {
-    if (isOnline) {
-      if (!enable()) {
-        dispatch(changeOnlineStatus(false));
-      }
-    } else if (isFocused) {
-      disable();
-    }
-  }, [isOnline, isFocused]);
+  const pendingShipment = shipments[0]; // TODO: find the closest shipment
 
   useFetcingPendingShipment();
 
@@ -86,7 +62,9 @@ export default ({navigation}) => {
         web: CAR_MARKER,
         native: CarMarker,
       }),
-      orientation,
+      debouncedCurrentPosition.bearing > 0
+        ? debouncedCurrentPosition.bearing || orientation
+        : orientation,
       40,
     );
     return [
@@ -103,10 +81,10 @@ export default ({navigation}) => {
       distance: pendingShipment?.startPoint?.distance,
       dropZone: pendingShipment?.endPoint?.name.split(',')[2],
       onPressAccept: () => {
-        dispatch(confirmShipment());
+        dispatch(confirmShipment(pendingShipment.id));
       },
       onPressReject: () => {
-        dispatch(rejectShipment());
+        dispatch(rejectShipment(pendingShipment.id));
       },
     },
     {cancelable: false, fullscreen: false},
@@ -123,25 +101,29 @@ export default ({navigation}) => {
   const onChangeOnlineStatus = useCallback(
     (newOnlineStatus, time) => {
       if (!courrier.enabled) {
-        Alert.alert(
+        return Alert.alert(
           'Ya casi!',
           'Todavía estamos analizando tu perfil.\nNosotros te avisaremos cuando puedas empezar a realizar envíos',
         );
-        return;
       }
-      if (hasLocationPermission()) {
+      if (status) {
+        newOnlineStatus && mapRef.current?.centerOnUserLocation();
         dispatch(changeOnlineStatus(newOnlineStatus, time.until));
+      } else {
+        check();
       }
     },
-    [hasLocationPermission],
+    [status, check, courrier, mapRef],
   );
 
   return (
     <Screen>
       <Loader unmount={false}>
         <Map
+          ref={mapRef}
           style={{flex: 1, width: '100%'}}
           markers={positionMarker}
+          minMarkerAnimation={0}
           showsMyLocationButton
         />
         <OnlineStatusCard onPressButton={onChangeOnlineStatus} />
@@ -150,3 +132,4 @@ export default ({navigation}) => {
     </Screen>
   );
 };
+export default DriverHome;

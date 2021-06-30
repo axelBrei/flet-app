@@ -1,8 +1,7 @@
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import styled, {css} from 'styled-components';
-import {Screen} from 'components/ui/Screen';
-import {AppText} from 'components/ui/AppText';
+import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map';
 import {Title} from 'components/ui/Title';
 import {MainButton} from 'components/ui/MainButton';
@@ -12,10 +11,6 @@ import {
   formikConfig,
   FIELDS,
 } from 'components/navigation/NewShipmentPackageInfoScreen/shipmentPackageFormikConfig';
-import OpenBoxImage from 'resources/images/open-box.svg';
-import WeightImage from 'resources/images/weight.svg';
-import {IconCard} from 'components/ui/IconCard';
-import {theme} from 'constants/theme';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   selectNewShipmentData,
@@ -34,7 +29,7 @@ export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
   const dispatch = useDispatch();
   const {
-    shipmentDescription: {startPoint, endPoint},
+    shipmentDescription: {addresses},
   } = useSelector(selectNewShipmentData);
 
   const onSubmit = useCallback(
@@ -61,6 +56,7 @@ export default ({navigation}) => {
     errors,
     touched,
     handleSubmit,
+    isValid,
     _setFieldValue,
     _setFieldTouched,
   } = useFormikCustom(
@@ -122,9 +118,18 @@ export default ({navigation}) => {
           onChangeValue={_setFieldValue(FIELDS.EXTRA_HELP)}
           value={values[FIELDS.EXTRA_HELP]}
         />
-        <Button label="Continuar" onPress={handleSubmit} />
+        <Button disabled={!isValid} label="Continuar" onPress={handleSubmit} />
       </CenteredContainer>
-      <StyledMap markers={[startPoint, endPoint]} accesible={false} />
+      <StyledMap
+        markers={addresses}
+        accesible={false}
+        edgePadding={{
+          left: isMobile ? 35 : 0,
+          right: isMobile ? 35 : 0,
+          top: isMobile ? 35 : 0,
+          bottom: isMobile ? 35 : 0,
+        }}
+      />
     </ScreenComponent>
   );
 };

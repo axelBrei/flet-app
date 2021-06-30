@@ -12,7 +12,9 @@ const _routes = {
   loggedStack: 'private',
   shipmentStack: 'envio',
   homeScreen: 'inicio',
+  lastShipmentStack: 'pedidos',
   lastShippmentsScreen: 'ultimosPedidos',
+  lastShipmentsDetailScreen: 'detallePedido',
   profileStack: 'usuario',
   profileScreen: 'perfil',
   profileVehicleStack: 'vehicles',
@@ -24,14 +26,19 @@ const _routes = {
   newShipmentConfirmationScreen: 'confirmar',
   paymentScreen: 'pagar',
   shipmentScreen: 'seguimiento',
+  chatScreen: 'chat',
   driverStack: 'courrier',
   driverHomeScreen: 'inicio-conductor',
+  disabledCourrierHomeScreen: 'deshabilitado',
+  disabledCourrierSolveRejectionScreen: 'resolver',
   driverShipmentScreen: 'envio-conductor',
   shipmentFinishedScreen: 'envio-terminado',
   balanceStack: 'balance',
   balanceMainScreen: 'menu',
   balanceLastMovements: 'movimientos',
   balancePendingMovementsScreen: 'pendiente',
+  recoverPasswordScreen: 'recuperar',
+  recoverPasswordResultScreen: 'resultado-recupero',
 };
 
 const nativeOnlyRoutes = {
@@ -44,6 +51,8 @@ const nativeOnlyRoutes = {
 export const linkingRoutes = {
   [_routes.landingScreen]: 'landing',
   [_routes.loginScreen]: 'login',
+  [_routes.recoverPasswordScreen]: _routes.recoverPasswordScreen,
+  [_routes.recoverPasswordResultScreen]: _routes.recoverPasswordResultScreen,
   [_routes.registerStack]: {
     path: _routes.registerStack,
     screens: {
@@ -65,6 +74,7 @@ export const linkingRoutes = {
           [_routes.newShipmentPackageDetailScreen]: 'paquete',
           [_routes.newShipmentConfirmationScreen]: 'confirmar',
           [_routes.shipmentScreen]: 'seguimiento',
+          [_routes.chatScreen]: 'chat',
           [_routes.shipmentFinishedScreen]: 'envio-terminado',
           [_routes.paymentScreen]: 'pagar',
         },
@@ -85,6 +95,10 @@ export const linkingRoutes = {
             nativeOnlyRoutes.driverHomeScreen,
           [nativeOnlyRoutes.driverShipmentScreen]:
             nativeOnlyRoutes.driverShipmentScreen,
+          [_routes.disabledCourrierHomeScreen]:
+            _routes.disabledCourrierHomeScreen,
+          [_routes.disabledCourrierSolveRejectionScreen]:
+            _routes.disabledCourrierSolveRejectionScreen,
         },
       },
       [_routes.profileStack]: {
@@ -101,7 +115,13 @@ export const linkingRoutes = {
           },
         },
       },
-      [_routes.lastShippmentsScreen]: 'ultimosPedidos',
+      [_routes.lastShipmentStack]: {
+        path: _routes.lastShipmentStack,
+        screens: {
+          [_routes.lastShippmentsScreen]: 'ultimosPedidos',
+          [_routes.lastShipmentsDetailScreen]: 'detallePedido',
+        },
+      },
       [_routes.plannedShippments]: 'planeados',
     },
   },

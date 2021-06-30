@@ -35,11 +35,15 @@ export const OnlineStatusCard = ({onPressButton}) => {
   );
 
   const _onPressButton = () => {
+    if (!isOnline && !selectedTime) {
+      return setError('Tenés que seleccionar un horario.');
+    }
     if (!error) {
       onPressButton(!isOnline, {
         ...selectedTime,
         until: selectedTime?.date.valueOf(),
       });
+    } else {
     }
   };
 
@@ -47,8 +51,8 @@ export const OnlineStatusCard = ({onPressButton}) => {
     <Container>
       <Row>
         <Title>¡Hola {name}!</Title>
-        <OnlineStatusContainer>
-          <AppText color={isOnline ? theme.online : theme.cancel}>
+        <OnlineStatusContainer isOnline={isOnline}>
+          <AppText color={theme.white} bold>
             {isOnline ? 'En linea' : 'Desconectado'}
           </AppText>
         </OnlineStatusContainer>
@@ -96,7 +100,7 @@ const Button = styled(MainButton)`
 `;
 
 const OnlineStatusContainer = styled.View`
-  background-color: ${theme.grayBackground};
+  background-color: ${props => (props.isOnline ? theme.online : theme.error)};
   padding: 5px 10px;
   border-radius: 20px;
 `;

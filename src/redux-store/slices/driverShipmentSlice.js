@@ -5,7 +5,6 @@ import {SHIPMENT_STATE} from 'constants/shipmentStates';
 import {createStateCheckSelector} from 'redux-store/customSelectors';
 
 const initialState = {
-  pendingShipment: null,
   shipmentData: null,
   loading: {
     fetch: false,
@@ -28,20 +27,23 @@ const slice = createSlice({
   initialState,
   reducers: {
     // FETCH PENDING
-    requestFetchPendingShipment: state => {
+    requestFetchShipments: state => {
       state.loading.fetch = true;
       state.error.fetch = null;
     },
-    receiveFetchPendingShipmentSuccess: (state, action) => {
+    receiveFetchShipmentsSuccess: (state, action) => {
       state.loading.fetch = false;
       state.error.confirm = null;
       state.error.reject = null;
-      state.pendingShipment = action.payload;
+      state.shipmentData = action.payload.map(i => ({
+        ...i,
+        destinations: i.destinations || action.payload.addresses || [],
+        addresses: i.addresses || action.payload.destinations || [],
+      }));
     },
-    receiveFetchPendingShipmentFail: (state, action) => {
+    receiveFetchShipmentsFail: (state, action) => {
       state.loading.fetch = false;
       state.error.fetch = action.payload;
-      state.shipmentData = null;
     },
     // CONFIRM
     requestConfirmShipment: state => {
@@ -50,8 +52,11 @@ const slice = createSlice({
     },
     receiveConfirmShipmentSucces: (state, action) => {
       state.loading.confirm = false;
-      state.shipmentData = action.payload;
-      state.pendingShipment = null;
+      state.shipmentData = action.payload.map(i => ({
+        ...i,
+        destinations: i.destinations || action.payload.addresses || [],
+        addresses: i.addresses || action.payload.destinations || [],
+      }));
     },
     receiveConfirmShipmentFail: (state, action) => {
       state.loading.confirm = false;
@@ -64,7 +69,7 @@ const slice = createSlice({
     },
     receiveRejectShipmentSucces: (state, action) => {
       state.loading.reject = false;
-      state.pendingShipment = null;
+      state.shipmentData = state.shipmentData(i => i.id !== action.payload);
     },
     receiveRejectShipmentFail: (state, action) => {
       state.loading.reject = false;
@@ -77,7 +82,17 @@ const slice = createSlice({
     },
     receiveChangeShipmentStatusSuccess: (state, action) => {
       state.loading.stateChange = false;
-      Object.assign(state.shipmentData, action.payload);
+      state.shipmentData = state.shipmentData.map(shipment =>
+        shipment.id === action.payload.id
+          ? {
+              ...action.payload,
+              destinations:
+                shipment.destinations || action.payload.addresses || [],
+              addresses:
+                shipment.addresses || action.payload.destinations || [],
+            }
+          : shipment,
+      );
     },
     receiveChangeShipmentStatusFail: (state, action) => {
       state.loading.stateChange = false;
@@ -90,8 +105,11 @@ const slice = createSlice({
     },
     receiveSubmitConfirmationCodeSucess: (state, action) => {
       state.loading.code = false;
-      state.shipmentData = initialState.shipmentData;
-      state.pendingShipment = initialState.pendingShipment;
+      state.shipmentData = action.payload.map(i => ({
+        ...i,
+        destinations: i.destinations || action.payload.addresses || [],
+        addresses: i.addresses || action.payload.destinations || [],
+      }));
     },
     receiveSubmitConfirmationCodeFail: (state, action) => {
       state.loading.code = false;
@@ -108,9 +126,9 @@ const slice = createSlice({
 export default slice.reducer;
 
 export const {
-  requestFetchPendingShipment,
-  receiveFetchPendingShipmentSuccess,
-  receiveFetchPendingShipmentFail,
+  requestFetchShipments,
+  receiveFetchShipmentsSuccess,
+  receiveFetchShipmentsFail,
   requestConfirmShipment,
   receiveConfirmShipmentSucces,
   receiveConfirmShipmentFail,
@@ -123,62 +141,70 @@ export const {
   requestSubmitConfirmationCode,
   receiveSubmitConfirmationCodeSucess,
   receiveSubmitConfirmationCodeFail,
+  updateDriverLocation,
 } = slice.actions;
 
 /**
  * @THUNK
  */
 
-export const fetchCurrentShipment = () => async dispatch => {
+export const fetchCurrentShipment = id => async (dispatch, getState) => {
   try {
-    const {data} = await shipmentService.getCurrentShipment();
-    dispatch(receiveConfirmShipmentSucces(data));
-  } catch (e) {
-    dispatch(receiveFetchPendingShipmentFail(e?.response?.data?.message || e));
-  }
-};
-
-export const fetchPendingShipments = () => async (dispatch, getState) => {
-  dispatch(requestFetchPendingShipment());
-  try {
-    const {data} = await shipmentService.fetchPendingShipments();
-    dispatch(receiveFetchPendingShipmentSuccess(data));
-  } catch (e) {
-    const shipmentData = selectDriverShipmentData(getState());
-    if (!shipmentData) {
-      dispatch(
-        receiveFetchPendingShipmentFail(e?.response?.data?.message || e),
+    dispatch(requestFetchShipments());
+    const {data} = await shipmentService.fetchCourrierShipments(id);
+    if (id) {
+      const shipments = selectDriverShipmentData(getState()).map(i =>
+        i.id === id ? data.find(ship => ship.id === id) || i : i,
       );
+
+      dispatch(
+        receiveFetchShipmentsSuccess(
+          shipments.map(i =>
+            i.id === id ? data.find(ship => ship.id === id) : i,
+          ),
+        ),
+      );
+    } else {
+      dispatch(receiveFetchShipmentsSuccess(data));
     }
+  } catch (e) {
+    dispatch(receiveFetchShipmentsFail(e?.response?.data?.message || e));
   }
 };
 
-export const confirmShipment = () => async (dispatch, getState) => {
+export const confirmShipment = id => async (dispatch, getState) => {
   dispatch(requestConfirmShipment());
   try {
-    const {id} = selectPendingShipment(getState());
     const {data} = await shipmentService.confirmShipment(id);
-    dispatch(receiveConfirmShipmentSucces(data));
+    dispatch(receiveConfirmShipmentSucces([data]));
   } catch (e) {
     dispatch(receiveConfirmShipmentFail(e?.response?.data?.message || e));
   }
 };
 
-export const rejectShipment = () => async (dispatch, getState) => {
+export const rejectShipment = id => async (dispatch, getState) => {
   dispatch(requestRejectShipment());
   try {
-    const {id} = selectPendingShipment(getState());
     const {data} = await shipmentService.rejectShipment(id);
-    dispatch(receiveRejectShipmentSucces(data));
+    dispatch(receiveRejectShipmentSucces(id));
   } catch (e) {
     dispatch(receiveRejectShipmentFail(e?.response?.data?.message || e));
   }
 };
 
-export const markShipmentAsPickedUp = () => async (dispatch, getState) => {
+export const markShipmentAsWaitingInOrigin = id => async dispatch => {
   dispatch(requestChangeShipmentStatus());
   try {
-    const {id} = selectDriverShipmentData(getState());
+    const {data} = await shipmentService.updateShipmentToWaitingInOrigin(id);
+    dispatch(receiveChangeShipmentStatusSuccess(data));
+  } catch (e) {
+    dispatch(receiveChangeShipmentStatusFail(e?.response?.data?.message || e));
+  }
+};
+
+export const markShipmentAsPickedUp = id => async (dispatch, getState) => {
+  dispatch(requestChangeShipmentStatus());
+  try {
     const {data} = await shipmentService.updateShipmentToPickedUp(id);
     dispatch(receiveChangeShipmentStatusSuccess(data));
   } catch (e) {
@@ -186,10 +212,9 @@ export const markShipmentAsPickedUp = () => async (dispatch, getState) => {
   }
 };
 
-export const markShipmentAsDelivered = () => async (dispatch, getState) => {
+export const markShipmentAsDelivered = id => async (dispatch, getState) => {
   dispatch(requestChangeShipmentStatus());
   try {
-    const {id} = selectDriverShipmentData(getState());
     const {data} = await shipmentService.updateShipmentToDelivered(id);
     dispatch(receiveChangeShipmentStatusSuccess(data));
   } catch (e) {
@@ -197,12 +222,33 @@ export const markShipmentAsDelivered = () => async (dispatch, getState) => {
   }
 };
 
-export const uploadConfirmationCode = code => async (dispatch, getState) => {
+export const uploadConfirmationCode = (code, id) => async (
+  dispatch,
+  getState,
+) => {
   dispatch(requestSubmitConfirmationCode());
   try {
-    const {id} = selectDriverShipmentData(getState());
     await shipmentService.uploadConfirmationCode(id, code);
-    dispatch(receiveSubmitConfirmationCodeSucess());
+    const shipments = selectDriverShipmentData(getState());
+    const currentShipment = shipments.find(s => s.id === id);
+    const {destinations, currentDestination} = currentShipment;
+    const currentDestinationIndex = destinations.findIndex(
+      d => d.id === currentDestination,
+    );
+    let array;
+    if (currentDestinationIndex === destinations.length - 1) {
+      array = shipments.filter(s => s.id !== id);
+    } else {
+      array = shipments.map(s =>
+        s.id === id
+          ? {
+              ...s,
+              status: SHIPMENT_STATE.ON_PROCESS,
+            }
+          : s,
+      );
+    }
+    dispatch(receiveSubmitConfirmationCodeSucess(array));
   } catch (e) {
     dispatch(
       receiveSubmitConfirmationCodeFail(e?.response?.data?.message || e),
@@ -213,14 +259,31 @@ export const uploadConfirmationCode = code => async (dispatch, getState) => {
 /**
  * @SELECTORS
  */
-
-export const selectDriverShipmentData = createStateCheckSelector(
+// Current shipment
+export const selectCurrentShipmentError = state =>
+  state.driverShipment.error.fetch;
+export const selectIsLoadingCurrentShipment = state =>
+  state.driverShipment.loading.fetch;
+export const selectDriverShipmentData = createSelector(
   state => state?.driverShipment?.shipmentData,
-  s => s || {},
+  s => {
+    return s?.length > 0 ? s : [{}];
+  },
 );
+
+export const selectPendingShipments = createSelector(
+  selectDriverShipmentData,
+  shipments =>
+    shipments?.filter?.(s => {
+      return s.status === SHIPMENT_STATE.PENDING_COURRIER;
+    }),
+);
+
+// Shipment price
 export const selectShipmentPrice = state =>
   state.driverShipment?.shipmentData?.price;
 
+// Accept or reject
 export const selectDriverRejectShipmentLoading = state =>
   state.driverShipment.loading.reject;
 export const selectDriverRejectShipmentError = state =>
@@ -241,11 +304,6 @@ export const selectPendingShipmentAnswerError = createSelector(
   selectDriverRejectShipmentError,
   (confirm, reject) => confirm || reject,
 );
-
-export const selectPendingShipment = state =>
-  state.driverShipment.pendingShipment;
-export const selectPendingShipmentError = state =>
-  state.driverShipment.error.fetch;
 
 export const selectSecureCodeError = state => state.driverShipment.error.code;
 export const selectIsLoadingSecureCode = state =>

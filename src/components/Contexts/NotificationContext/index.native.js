@@ -35,12 +35,11 @@ export default ({children}) => {
   }, [handleNotification]);
 
   useEffect(() => {
-    requestPermissions();
     SplashScreen.hide();
+    requestPermissions();
   }, []);
-
   useEffect(() => {
-    if (permissionGranted && userData) {
+    if (permissionGranted && userData?.id) {
       getToken();
       const unsubscribeOnMessage = messaging().onMessage(
         handleNotification(false),

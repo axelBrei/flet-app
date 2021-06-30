@@ -6,6 +6,9 @@ export const SHIPMENT_STATE = {
   PENDING_COURRIER: 'COURRIER_PENDING', // Waiting to find a courrier
   COURRIER_CONFIRMED: 'CONFIRMED', // One courrier accepted the order and it's going to pickup the package
   ON_PROCESS: 'ON_PROCESS', // The courrier is delivering the package to it's final location
+  WAITING_ORIGIN: 'WAITTING_ORIGIN', // Courrier is waiting to get the package
+  WAITING_DESTINATION: 'WAITING_DESTINATION', // Courrier is waiting to deliver the package
+  WAITING_PACKAGE: 'WAITING_PACKAGE', // courrier waiting to drop package
   DELIVERED: 'DELIVERED', // Courrier delivered the package
   FINISHED: 'FINISHED', // User accept the delivery with the courrier code.
 
@@ -22,7 +25,9 @@ export const SHIPMENT_STATE_ORDER = [
   SHIPMENT_STATE.NEW,
   SHIPMENT_STATE.PENDING_COURRIER,
   SHIPMENT_STATE.COURRIER_CONFIRMED,
+  SHIPMENT_STATE.WAITING_ORIGIN,
   SHIPMENT_STATE.ON_PROCESS,
+  SHIPMENT_STATE.WAITING_PACKAGE,
   SHIPMENT_STATE.DELIVERED,
   SHIPMENT_STATE.FINISHED,
 ];

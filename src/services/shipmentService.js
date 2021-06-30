@@ -1,12 +1,23 @@
 import {api} from 'constants/network';
 
-const fetchPendingShipments = async () => await api.get('shipment/courrier');
+const fetchCourrierShipments = async id =>
+  await api.get(
+    'shipment/courrier',
+    id && {
+      params: {
+        shipment_id: id,
+      },
+    },
+  );
 
 const confirmShipment = async shipmentId =>
   await api.post(`shipment/confirm?shipment_id=${shipmentId}`, {});
 
 const rejectShipment = async shipmentId =>
   await api.post(`shipment/reject?shipment_id=${shipmentId}`, {});
+
+const updateShipmentToWaitingInOrigin = shipmentId =>
+  api.post(`/shipment/origin?shipment_id=${shipmentId}`, {});
 
 const updateShipmentToPickedUp = async shipmentId =>
   await api.post(`shipment/picked?shipment_id=${shipmentId}`, {});
@@ -32,19 +43,17 @@ const getNewShipmentPrice = async shipmentData =>
 const getLastShipments = async (page, pageSize) =>
   await api.get(`shipment/history?page=${page}&page_size=${pageSize}`);
 
-const getCurrentShipment = async () => await api.get('shipment/current');
-
 export default {
-  fetchPendingShipments,
+  fetchCourrierShipments,
   createNewShipment,
   cancelShipment,
   checkShipmentStatus,
   confirmShipment,
   rejectShipment,
+  updateShipmentToWaitingInOrigin,
   updateShipmentToPickedUp,
   updateShipmentToDelivered,
   uploadConfirmationCode,
   getNewShipmentPrice,
   getLastShipments,
-  getCurrentShipment,
 };

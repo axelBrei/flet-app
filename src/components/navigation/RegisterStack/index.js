@@ -1,44 +1,88 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import styled from 'styled-components';
 import {createStackNavigator} from '@react-navigation/stack';
 import {routes} from 'constants/config/routes';
 import {navigationConfig} from 'constants/config/navigationConfig';
 import RegisterScreen from 'components/navigation/RegisterScreen';
 import {theme} from 'constants/theme';
-import {Screen as BaseScreen} from 'components/ui/Screen';
+import {default as BaseScreen} from 'components/ui/Screen';
 import RegisterPersonalDataScreen from 'components/navigation/RegisterPersonalDataScreen';
 import {StepSelector} from 'components/navigation/RegisterStack/StepSelector';
+import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
 
 const {Navigator, Screen} = createStackNavigator();
 
-export default ({route}) => {
-  const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
+export default ({navigation: parentNav, route}) => {
+  const [currentScreenIndex, setCurrentScreenIndex] = useState(
+    route?.params?.screen ? 1 : 0,
+  );
   const [headerHidden, setHeaderHidden] = useState(false);
+  const {screen, ...params} = route.params || {};
+  const [childrenNavigator, setChildrenNavigator] = useState(null);
+
+  const getScreenListeners = useCallback(
+    screenIndex => ({
+      focus: () => setCurrentScreenIndex(screenIndex),
+      blur: () => setCurrentScreenIndex(screenIndex - 1),
+      beforeRemove: e => {
+        if (
+          currentScreenIndex > route?.params?.screen
+            ? 1
+            : 0 && currentScreenIndex < screenIndex
+        ) {
+          setCurrentScreenIndex(currentScreenIndex - 1);
+        }
+        // childrenNavigator?.goBack();
+        // e.preventDefault?.();
+      },
+    }),
+    [childrenNavigator, currentScreenIndex, route],
+  );
+
+  React.useLayoutEffect(() => {
+    parentNav.setOptions({
+      headerLeft: props => (
+        <CustomHeaderBackButton
+          {...props}
+          onPress={childrenNavigator?.goBack || props.onPress}
+        />
+      ),
+    });
+  }, [childrenNavigator]);
 
   return (
     <ScreenComponent>
       <Container>
         <Navigator
-          initialRouteName={routes.registerDriverLegalsScreen}
-          screenOptions={navigationConfig({
-            title: '',
-            headerShown: false,
-          })}>
+          screenOptions={({navigation}) => {
+            setChildrenNavigator(navigation);
+            return navigationConfig({
+              title: '',
+              headerTitle: '',
+              headerShown: true,
+              headerStyle: {height: 1, shadowOpacity: 0},
+              headerLeft: null,
+              header: props => {
+                return headerHidden ? null : (
+                  <StepSelector
+                    currentIndex={currentScreenIndex}
+                    reduced={!route.params?.driver}
+                  />
+                );
+              },
+            });
+          }}>
           <Screen
             name={routes.registerScreen}
             component={RegisterScreen}
-            initialParams={route.params}
-            listeners={{
-              focus: () => setCurrentScreenIndex(0),
-            }}
+            initialParams={params}
+            listeners={getScreenListeners(0)}
           />
           <Screen
             name={routes.registerPersonalData}
             component={RegisterPersonalDataScreen}
-            initialParams={route.params}
-            listeners={{
-              focus: () => setCurrentScreenIndex(1),
-            }}
+            initialParams={params}
+            listeners={getScreenListeners(1)}
           />
           <Screen
             name={routes.registerDriverVehiculeScreen}
@@ -46,9 +90,7 @@ export default ({route}) => {
               require('components/navigation/RegisterDriverVehiculeDataScreen')
                 .default
             }
-            listeners={{
-              focus: () => setCurrentScreenIndex(2),
-            }}
+            listeners={getScreenListeners(2)}
           />
           <Screen
             name={routes.registerDriverLegalsScreen}
@@ -56,9 +98,7 @@ export default ({route}) => {
               require('components/navigation/RegisterDriverLegalDataScreen')
                 .default
             }
-            listeners={{
-              focus: () => setCurrentScreenIndex(3),
-            }}
+            listeners={getScreenListeners(3)}
           />
           <Screen
             name={routes.registerDriverCompleteScreen}
@@ -70,12 +110,12 @@ export default ({route}) => {
             }}
           />
         </Navigator>
-        {!headerHidden && (
-          <StepSelector
-            currentIndex={currentScreenIndex}
-            reduced={!route.params?.driver}
-          />
-        )}
+        {/*{!headerHidden && (*/}
+        {/*  <StepSelector*/}
+        {/*    currentIndex={currentScreenIndex}*/}
+        {/*    reduced={!route.params?.driver}*/}
+        {/*  />*/}
+        {/*)}*/}
       </Container>
     </ScreenComponent>
   );

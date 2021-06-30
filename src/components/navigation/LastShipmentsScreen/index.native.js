@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import styled, {css} from 'styled-components';
-import {RefreshControl} from 'react-native';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
+import {Title} from 'components/ui/Title';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchLastShipments,
@@ -10,16 +9,12 @@ import {
   selectLastShipmentsError,
   selectLastShipmentsPagination,
 } from 'redux-store/slices/shipmentSlice';
-import {Loader} from 'components/ui/Loader';
+import styled from 'styled-components';
 import {PaginatedList} from 'components/ui/PaginatedList';
-import {Title} from 'components/ui/Title';
-import {theme} from 'constants/theme';
 import {LastShipmentItem} from 'components/navigation/LastShipmentsScreen/LastShipmentItem';
-import {Platform} from 'react-native';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {routes} from 'constants/config/routes';
 
-export default () => {
-  const {isMobile} = useWindowDimension();
+const LastShipmentsScreen = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingLastShipments);
@@ -37,8 +32,17 @@ export default () => {
     }
   }, [isLoading, refreshing]);
 
-  const renderItem = useCallback(({item}) => {
-    return <LastShipmentItem {...item} />;
+  const renderItem = useCallback(({item, index}) => {
+    return (
+      <LastShipmentItem
+        {...item}
+        onPressViewMore={() => {
+          navigation.navigate(routes.lastShipmentsDetailScreen, {
+            shipment: item,
+          });
+        }}
+      />
+    );
   }, []);
 
   const fetchNewPage = useCallback((page, pageSize) => {
@@ -46,35 +50,34 @@ export default () => {
   }, []);
 
   return (
-    <Screen removeTWF scrollable={Platform.OS === 'web'}>
-      <Title padding={20}>Mis ultimos pedidos</Title>
+    <Screen removeTWF enableAvoidKeyboard={false} scrollable={false}>
+      <Title padding={20}>Mis últimos pedidos</Title>
       <List
         defaultPageSize={10}
         loading={isLoading}
         pagination={pagination}
-        ItemSeparatorComponent={() => <Divider />}
+        initialNumToRender={5}
         fetchDataFunction={fetchNewPage}
-        showsVerticalScrollIndicator={Platform.OS === 'web'}
+        showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         EmptyListComponent={() => <Title>{error}</Title>}
         data={lastShipmentList}
-        footerStyle={
-          !isMobile && {
-            maxWidth: 550,
-          }
-        }
+        getItemLayout={(data, index) => {
+          const height =
+            (data[index]?.destinations.length === 3 ? 228 : 193) + 18;
+          return {
+            length: height,
+            offset: height * index,
+            index,
+          };
+        }}
       />
     </Screen>
   );
 };
+export default LastShipmentsScreen;
 
 const List = styled(PaginatedList)`
   flex: 1;
   min-height: ${props => props.theme.screenHeight - 100}px;
-`;
-
-const Divider = styled.View`
-  height: 1px;
-  width: 100%;
-  background-color: ${theme.lightGray};
 `;

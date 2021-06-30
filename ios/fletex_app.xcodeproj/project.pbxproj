@@ -35,6 +35,8 @@
 		CF31C671260EA07500997C52 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 696EC8C7E07C4F7BBB18C0C9 /* Poppins-Thin.ttf */; };
 		CF31C672260EA07500997C52 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CC3E12BB3D844039164DEF6 /* Poppins-ThinItalic.ttf */; };
 		CF39EE2E262F84C00060C393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF39EE2D262F84C00060C393 /* GoogleService-Info.plist */; };
+		CF8F771B263C40E300107BF3 /* BackgroundLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8F771A263C40E300107BF3 /* BackgroundLocation.swift */; };
+		CFE1B613263C50F000686A85 /* BackgroundLocationBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = CFE1B612263C50F000686A85 /* BackgroundLocationBridge.m */; };
 		DDDB46D9D5A306EA4AB09F7F /* libPods-fletex_app-fletex_appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA657E6908B55839F8593C19 /* libPods-fletex_app-fletex_appTests.a */; };
 /* End PBXBuildFile section */
 
@@ -115,7 +117,11 @@
 		CF29E0CF26310EDB00DA91BA /* exportOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = exportOptions.plist; sourceTree = "<group>"; };
 		CF387D3F2630B4B600AC8D86 /* fletex_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = fletex_app.entitlements; path = fletex_app/fletex_app.entitlements; sourceTree = "<group>"; };
 		CF39EE2D262F84C00060C393 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "fletex_app/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CF8F7719263C40E300107BF3 /* BackrgoundLocation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BackrgoundLocation-Bridging-Header.h"; sourceTree = "<group>"; };
+		CF8F771A263C40E300107BF3 /* BackgroundLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundLocation.swift; sourceTree = "<group>"; };
 		CFB06BCE848D489F8B011AA1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/resources/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		CFE1B612263C50F000686A85 /* BackgroundLocationBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundLocationBridge.m; sourceTree = "<group>"; };
+		CFE1B61A263C533C00686A85 /* fletex_app-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fletex_app-Bridging-Header.h"; sourceTree = "<group>"; };
 		D5CCAAD45BDB43C8AC1C1DDB /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/resources/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		DAEFBE9F82404718BDCE4AAD /* PlayfairDisplay-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PlayfairDisplay-SemiBoldItalic.ttf"; path = "../src/resources/fonts/PlayfairDisplay-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		DBF5B5DA0AB932145F02626F /* Pods-fletex_app-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fletex_app-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-fletex_app-tvOSTests/Pods-fletex_app-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -175,6 +181,7 @@
 		13B07FAE1A68108700A75B9A /* fletex_app */ = {
 			isa = PBXGroup;
 			children = (
+				CF8F770F263C3E2B00107BF3 /* Modules */,
 				CF29E0CF26310EDB00DA91BA /* exportOptions.plist */,
 				CF387D3F2630B4B600AC8D86 /* fletex_app.entitlements */,
 				CF39EE2D262F84C00060C393 /* GoogleService-Info.plist */,
@@ -304,6 +311,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CF8F770F263C3E2B00107BF3 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				CF8F771A263C40E300107BF3 /* BackgroundLocation.swift */,
+				CF8F7719263C40E300107BF3 /* BackrgoundLocation-Bridging-Header.h */,
+				CFE1B612263C50F000686A85 /* BackgroundLocationBridge.m */,
+				CFE1B61A263C533C00686A85 /* fletex_app-Bridging-Header.h */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
 		E9CB5C493268652FC97D85E9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,7 +349,6 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				C3259432AFC5BAC7BE2968C4 /* [CP] Copy Pods Resources */,
-				AE6F2799EE08546587217286 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -354,8 +371,8 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				BBC5D71437728C8E937C5C39 /* [CP] Copy Pods Resources */,
-				7497A322B2FC4F9004714CED /* [CP] Embed Pods Frameworks */,
 				769864C21C943DF1CCB55C85 /* [CP-User] [RNFB] Core Configuration */,
+				0176996BD1002510DA55945A /* [CP-User] [RNFB] Crashlytics Configuration */,
 			);
 			buildRules = (
 			);
@@ -380,7 +397,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = BLMRKTJ696;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -456,7 +473,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\nexport ENTRY_FILE=index.native.js\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export NODE_BINARY=node\necho \"SKIP_BUNDLING = $CI\"\nif [ $CI = true ];then export SKIP_BUNDLING=1; fi\n\nexport ENTRY_FILE=index.native.js\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		0176996BD1002510DA55945A /* [CP-User] [RNFB] Crashlytics Configuration */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "[CP-User] [RNFB] Crashlytics Configuration";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\nif [[ ${PODS_ROOT} ]]; then\n  echo \"info: Exec FirebaseCrashlytics Run from Pods\"\n  \"${PODS_ROOT}/FirebaseCrashlytics/run\"\nelse\n  echo \"info: Exec FirebaseCrashlytics Run from framework\"\n  \"${PROJECT_DIR}/FirebaseCrashlytics.framework/run\"\nfi\n";
 		};
 		2FEFF086E70C8784E6C77297 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -478,24 +509,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7497A322B2FC4F9004714CED /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-fletex_app/Pods-fletex_app-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fletex_app/Pods-fletex_app-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		769864C21C943DF1CCB55C85 /* [CP-User] [RNFB] Core Configuration */ = {
@@ -531,24 +544,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AE6F2799EE08546587217286 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-fletex_app-fletex_appTests/Pods-fletex_app-fletex_appTests-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fletex_app-fletex_appTests/Pods-fletex_app-fletex_appTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BBC5D71437728C8E937C5C39 /* [CP] Copy Pods Resources */ = {
@@ -697,8 +692,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF8F771B263C40E300107BF3 /* BackgroundLocation.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				CFE1B613263C50F000686A85 /* BackgroundLocationBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +714,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 88F92C5E083C13A899509B4C /* Pods-fletex_app-fletex_appTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -740,6 +738,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0E19A197D236421691C495B0 /* Pods-fletex_app-fletex_appTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = fletex_appTests/Info.plist;
@@ -763,11 +762,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = fletex_app/fletex_app.entitlements;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = BLMRKTJ696;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 armv7";
 				INFOPLIST_FILE = fletex_app/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
@@ -777,6 +777,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.fletapp;
 				PRODUCT_NAME = fletex_app;
+				SWIFT_OBJC_BRIDGING_HEADER = "Modules/fletex_app-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -790,10 +791,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = fletex_app/fletex_app.entitlements;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = BLMRKTJ696;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 armv7";
 				INFOPLIST_FILE = fletex_app/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
@@ -803,6 +805,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.fletapp;
 				PRODUCT_NAME = fletex_app;
+				SWIFT_OBJC_BRIDGING_HEADER = "Modules/fletex_app-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

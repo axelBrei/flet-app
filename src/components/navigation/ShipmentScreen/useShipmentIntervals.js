@@ -19,6 +19,7 @@ export const useShipmentIntervals = () => {
   const status = useSelector(selectCurrentShipmentStatusString);
 
   useEffect(() => {
+    dispatch(fetchShipmentStatus());
     const statusInterval = setInterval(() => {
       dispatch(fetchShipmentStatus());
     }, STATUS_INTERVAL);

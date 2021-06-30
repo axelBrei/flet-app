@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 import styled from 'styled-components';
-import {Screen} from 'components/ui/Screen';
+import Screen from 'components/ui/Screen';
 import {CommonList} from 'components/ui/CommonList';
 import {useSelector} from 'react-redux';
 import {selectCourrierBalance} from 'redux-store/slices/balanceSlice';

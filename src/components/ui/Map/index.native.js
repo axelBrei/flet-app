@@ -9,6 +9,7 @@ import {Icon} from 'components/ui/Icon';
 import styled from 'styled-components';
 import {IconButton} from 'components/ui/IconButton';
 import {getCurrentPosition} from 'helpers/locationHelper';
+import {applyShadow} from 'helpers/uiHelper';
 
 const Map = ({
   markers,
@@ -17,26 +18,22 @@ const Map = ({
   directions,
   showsMyLocationButton,
   accesible,
+  externalRef,
   ...props
 }) => {
   const [isMapReady, setIsMapReady] = useState(false);
   const mapRef = useRef(null);
-  const filteredMarkers = useMemo(() => markers.filter((m) => !!m), [markers]);
+  const filteredMarkers = useMemo(() => markers.filter(m => !!m), [markers]);
 
   const fitToMarkers = useCallback(() => {
-    let options = {animated: true};
-    edgePadding && (options.edgePadding = edgePadding);
-    mapRef.current?.fitToSuppliedMarkers(
-      filteredMarkers.map((_, i) => `${i}`),
-      options,
-    );
+    mapRef.current?.fitToElements(true);
   }, [mapRef, filteredMarkers, edgePadding]);
 
   useEffect(() => {
-    if (filteredMarkers.length >= minMarkerAnimation) {
+    if (setIsMapReady && filteredMarkers?.length >= minMarkerAnimation) {
       fitToMarkers();
     }
-  }, [filteredMarkers, mapRef]);
+  }, [mapRef, setIsMapReady, filteredMarkers, minMarkerAnimation]);
 
   useEffect(() => {
     if (directions) {
@@ -46,16 +43,14 @@ const Map = ({
 
   const onMapReady = useCallback(() => {
     setIsMapReady(true);
-    if (filteredMarkers.length > 0) fitToMarkers();
-  }, [mapRef]);
+  }, []);
 
   const renderMarkers = useCallback(
     ({icon: SvgIcon, renderIcon, ...marker}, index) =>
       marker.latitude &&
       marker.longitude && (
         <Marker
-          key={`${index}`}
-          identifier={`${index}`}
+          key={`${marker.latitude}${marker.longitude}`}
           coordinate={{
             latitude: marker.latitude,
             longitude: marker.longitude,
@@ -83,7 +78,7 @@ const Map = ({
 
   const renderDirections = useCallback(() => {
     if (isMapReady && directions) {
-      const dirs = directions.map((i) => ({
+      const dirs = directions.map(i => ({
         latitude: i[0],
         longitude: i[1],
       }));
@@ -96,6 +91,11 @@ const Map = ({
       );
     }
   }, [directions, isMapReady]);
+
+  React.useImperativeHandle(externalRef, () => ({
+    fitToMarkers,
+    centerOnUserLocation,
+  }));
 
   return (
     <>
@@ -118,6 +118,7 @@ const Map = ({
         showsCompass={false}
         showsScale={false}
         showsBuildings={false}
+        mapPadding={edgePadding}
         showsIndoors={false}
         showsTraffic={false}
         showsIndoorLevelPicker={false}
@@ -148,7 +149,9 @@ Map.defaultProps = {
   edgePadding: null,
 };
 
-export default Map;
+export default React.forwardRef((props, ref) => (
+  <Map externalRef={ref} {...props} />
+));
 
 const styles = StyleSheet.create({
   map: {
@@ -171,3 +174,4 @@ const CurrentLoactionButton = styled(IconButton)`
   elevation: 3;
   box-shadow: 0px 3px 6px ${theme.shadowColor};
 `;
+CurrentLoactionButton.defaultProps = applyShadow();

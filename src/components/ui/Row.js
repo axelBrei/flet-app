@@ -13,6 +13,11 @@ export const CenteredRow = styled(Row)`
   align-items: center;
 `;
 
+export const StartRow = styled(CenteredRow)`
+  justify-content: flex-start;
+`;
+
 export const Column = styled.View`
   flex-direction: column;
+  width: ${props => `${props.width}` || '100%'};
 `;

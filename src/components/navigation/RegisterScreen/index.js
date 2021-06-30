@@ -1,7 +1,5 @@
 import React, {useCallback} from 'react';
-import {Screen} from 'components/ui/Screen';
 import styled, {css} from 'styled-components';
-import {ScrollView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -26,7 +24,7 @@ export default ({navigation}) => {
   const savedRegisterData = useSelector(selectCommonRegisterData);
 
   const _onSubmit = useCallback(
-    (values) => {
+    values => {
       const {[FIELDS.CONFIRM_PASSWORD]: p, ...rest} = values;
       dispatch(updateCommonUserData(rest, !isDriverRegistrations));
       navigation.navigate(routes.registerPersonalData);
@@ -98,7 +96,7 @@ export default ({navigation}) => {
 const Container = styled.View`
   background-color: ${theme.white};
   align-items: center;
-  padding: 0 20px;
+  padding: 25px 20px 0;
 
   ${({theme}) =>
     !theme.isMobile &&
@@ -110,6 +108,6 @@ const Container = styled.View`
 `;
 
 const Button = styled(MainButton)`
-  height: ${(props) => props.theme.scale(40)}px;
+  height: ${props => props.theme.scale(40)}px;
   width: 90%;
 `;

@@ -18,6 +18,7 @@ const InputField = ({
   icon,
   loading,
   clearable,
+  onClear,
   renderAccesory,
   onLayout,
   disableErrors,
@@ -48,7 +49,8 @@ const InputField = ({
     typeof onBlur === 'function' && onBlur();
   }, [onFocus, inputRef]);
 
-  const onClear = useCallback(() => {
+  const _onClear = useCallback(() => {
+    onClear(props.value);
     props.onChangeText('');
   }, [props]);
 
@@ -82,12 +84,12 @@ const InputField = ({
         {clearable && props.value !== '' && (
           <ClearIcon
             name="close-circle"
-            onPress={onClear}
+            onPress={_onClear}
             size={20}
             isAlone={!renderAccesory()}
           />
         )}
-        {!!renderAccesory && renderAccesory(onClear)}
+        {!!renderAccesory && renderAccesory(_onClear)}
       </Container>
       {!disableErrors && error && <AnimatedError error={error} />}
     </ComponentContainer>
@@ -100,6 +102,7 @@ InputField.defaultProps = {
   icon: null,
   disableErrors: false,
   renderAccesory: () => null,
+  onClear: () => null,
   unitString: null,
   value: '',
   disableCapitalize: false,

@@ -7,22 +7,10 @@ import {AppText} from 'components/ui/AppText';
 
 export const WaitingCourrier = () => (
   <Container>
-    <InformationContainer>
-      <Title numberOfLines={2} ellipsizeMode="tail" width="90%">
-        Estamos buscando al mejor conductor para vos
-      </Title>
-      <Loader
-        loading
-        size={Platform.select({
-          native: 'large',
-          web: 'small',
-        })}
-      />
-    </InformationContainer>
+    <Title width="100%">Estamos buscándote un conductor</Title>
     <AppText italic width="100%">
-      {
-        'Esto puede tardar varios minutos, podés cerrar la app.\nNosotros te avisamos'
-      }
+      Esto puede tardar varios minutos, podés cerrar la app y nosotros te
+      avisamos.
     </AppText>
   </Container>
 );
@@ -30,11 +18,4 @@ export const WaitingCourrier = () => (
 const Container = styled.View`
   width: 100%;
   flex-direction: column;
-`;
-
-const InformationContainer = styled.View`
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
 `;

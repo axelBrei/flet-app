@@ -90,7 +90,6 @@ export const OperationResult = ({
 OperationResult.propTypes = {
   icon: PropTypes.string.required,
   visible: PropTypes.bool.required,
-  title: PropTypes.string,
   message: PropTypes.string,
   theme: PropTypes.object,
   onHideOperationResult: PropTypes.func,

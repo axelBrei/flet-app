@@ -8,44 +8,67 @@ import {useModalContext} from 'components/Hooks/useModal';
 import {Title} from 'components/ui/Title';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectUserAddresses} from 'redux-store/slices/personalData/addressSlice';
-import {CenteredRow} from 'components/ui/Row';
+import {CenteredRow, Row} from 'components/ui/Row';
 import {Icon} from 'components/ui/Icon';
 import {
   addLastAddresses,
   selectLastAddresses,
 } from 'redux-store/slices/geolocationSlice';
+import styled from 'styled-components';
+import {MainButton} from 'components/ui/MainButton';
+import {LayoutAnimation} from 'react-native-web';
+import {IconButton} from 'components/ui/IconButton';
+import {PlaceItemHeader} from 'components/MobileFullScreenModals/GeolocationModalScreen/PlaceItemHeader';
 
 const Modal = ({
   field,
   values,
   onPressItem,
   allowComments,
+  commentsText,
   allowRecent,
+  inverted,
   allowFavorites,
+  initialOpen,
 }) => {
   const dispatch = useDispatch();
   const {closeModal} = useModalContext();
-  const inputRef = useRef(null);
-  const [inputValue, setInputValue] = useState('');
+  const [addressValue, setAddressValue] = useState('');
+  const [type, setType] = useState('');
   const [comments, setComments] = useState('');
-  const {loading, error, results} = useDebouncedGeocoding(inputValue);
-  const favoriteAddress = useSelector(selectUserAddresses)?.slice(0, 3);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const favoriteAddress = useSelector(selectUserAddresses);
   const recentAddresses = useSelector(selectLastAddresses);
+  const [expandedItems, setExpandedItems] = useState({});
 
-  useEffect(() => {
-    inputRef.current?.focus?.();
-  }, [inputRef]);
-
-  const _onPressItem = useCallback(
-    item => () => {
-      onPressItem(field, item, comments);
-      dispatch(addLastAddresses(item));
-      closeModal();
+  const {loading, error, results} = useDebouncedGeocoding(
+    addressValue,
+    !selectedAddress,
+    list => {
+      if (
+        list?.length > 0 &&
+        (expandedItems['Mis direcciones'] || expandedItems.Recientes)
+      ) {
+        setExpandedItems({
+          ...expandedItems,
+          'Mis direcciones': false,
+          Recientes: false,
+        });
+      }
     },
-    [field, comments],
   );
 
-  const list = [
+  useEffect(() => {
+    setExpandedItems({
+      'Mis direcciones': allowFavorites && results.length === 0,
+      Resultados: true,
+      Recientes: !allowFavorites && results.length === 0,
+      ...initialOpen,
+    });
+  }, []);
+
+  let list = [
+    {title: 'Resultados', icon: 'magnify', data: results},
     ...(allowFavorites
       ? [
           {
@@ -55,55 +78,103 @@ const Modal = ({
           },
         ]
       : []),
-    // ...(allowRecent ?
-    // [
-    {
-      title: 'Recientes',
-      icon: 'clock-outline',
-      data: recentAddresses || [],
-    },
-    // ],
-    // : [])
-    {title: 'Resultados', icon: 'magnify', data: results},
+    ...(allowRecent
+      ? [
+          {
+            title: 'Recientes',
+            icon: 'clock-outline',
+            data: recentAddresses || [],
+          },
+        ]
+      : []),
   ];
+
+  const onPressExpand = useCallback(
+    title => {
+      setExpandedItems({
+        ...expandedItems,
+        [title]: !expandedItems[title],
+      });
+    },
+    [expandedItems],
+  );
+
+  const onPressConfirm = useCallback(() => {
+    onPressItem(field, {
+      ...selectedAddress,
+      comments: comments || selectedAddress.comments,
+      type,
+    });
+    closeModal?.();
+  }, [field, comments, selectedAddress, onPressItem, closeModal]);
+
+  const _onPressItem = useCallback(
+    item => () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+      dispatch(addLastAddresses(item));
+      setAddressValue(item.name);
+      setSelectedAddress(item);
+    },
+    [field],
+  );
 
   return (
     <FullScreenModalContainer title="Ingresá una direccion">
-      {allowComments && (
+      <InputsContainer inverted={inverted}>
+        {allowComments && (
+          <InputField
+            onChangeText={setType}
+            value={type}
+            label={commentsText || 'Nombre de la dirección'}
+          />
+        )}
         <InputField
-          onChangeText={setComments}
-          value={comments}
-          label="Descripcion de la dirección"
+          label="Direccion"
+          icon="map-marker"
+          onClear={() => setSelectedAddress(null)}
+          onChangeText={setAddressValue}
+          value={values?.[field]?.name || addressValue}
+          loading={loading}
+          clearable
+          error={error}
+        />
+      </InputsContainer>
+      {selectedAddress && addressValue.length > 0 ? (
+        <>
+          <InputField
+            label="Departamento, piso y/o referencia"
+            value={selectedAddress?.comments || comments}
+            onChangeText={setComments}
+          />
+          <ButtonContainer>
+            <MainButton label="Confirmar" onPress={onPressConfirm} />
+          </ButtonContainer>
+        </>
+      ) : (
+        <SectionList
+          sections={list}
+          renderSectionHeader={({section}) =>
+            section?.data?.length > 0 && (
+              <PlaceItemHeader
+                expanded={expandedItems[section.title]}
+                onPress={() => onPressExpand(section.title)}
+                {...section}
+              />
+            )
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{width: '100%'}}
+          style={{flex: 1}}
+          keyExtractor={(_, i) => i.toString()}
+          renderItem={({item, section}) => (
+            <PlaceItem
+              expanded={expandedItems[section.title]}
+              onPress={_onPressItem(item)}
+              {...item}
+            />
+          )}
         />
       )}
-      <InputField
-        {...(!allowComments && {externalRef: inputRef})}
-        label="Direccion"
-        icon="map-marker"
-        onChangeText={setInputValue}
-        value={values?.[field]?.name || inputValue}
-        loading={loading}
-        clearable
-        error={error}
-      />
-      <SectionList
-        sections={list}
-        renderSectionHeader={({section: {data, icon, title}}) =>
-          data.length > 0 && (
-            <CenteredRow
-              style={{justifyContent: 'flex-start', alignItems: 'center'}}>
-              <Icon name={icon} size={24} />
-              <Title style={{marginBottom: 0, marginLeft: 5}}>{title}</Title>
-            </CenteredRow>
-          )
-        }
-        contentContainerStyle={{width: '100%'}}
-        style={{flex: 1}}
-        keyExtractor={(_, i) => i.toString()}
-        renderItem={({item}) => (
-          <PlaceItem onPress={_onPressItem(item)} {...item} />
-        )}
-      />
     </FullScreenModalContainer>
   );
 };
@@ -114,6 +185,20 @@ Modal.defaultProps = {
   onPressItem: () => {},
   allowComments: false,
   allowFavorites: true,
+  allowRecent: true,
+  inverted: false,
+  initialOpen: {},
 };
 
 export default Modal;
+
+const InputsContainer = styled.View`
+  width: 100%;
+  flex-direction: ${({inverted}) => (inverted ? 'column-reverse' : 'column')};
+`;
+
+const ButtonContainer = styled.View`
+  flex: 1;
+  justify-content: flex-end;
+  width: 100%;
+`;

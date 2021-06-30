@@ -12,7 +12,7 @@ import {theme} from 'constants/theme';
 import LoggedInStack from 'components/navigation/LoggedInStack';
 import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
-import {scaleDp} from 'helpers/responsiveHelper';
+import crashlytics from 'services/FirebaseWebService/crashlytics';
 import {AppLogo} from 'components/ui/AppLogo';
 
 const {Navigator, Screen} = createStackNavigator();
@@ -39,16 +39,24 @@ const renderPublicRoutes = (width, isMobile) => (
       }}
     />
     <Screen
-      name={routes.registerStack}
-      component={RegisterStack}
+      name={routes.recoverPasswordScreen}
       options={{
-        headerTitle: () => <AppLogo color={theme.primaryColor} />,
-        headerStyle: {
-          backgroundColor: theme.white,
-        },
-        headerTintColor: theme.primaryDarkColor,
         headerShown: true,
+        headerTitle: () => <AppLogo color={theme.primaryColor} />,
       }}
+      getComponent={() =>
+        require('components/navigation/RecoverPasswordScreen').default
+      }
+    />
+    <Screen
+      name={routes.recoverPasswordResultScreen}
+      options={{
+        headerShown: true,
+        headerTitle: () => <AppLogo color={theme.primaryColor} />,
+      }}
+      getComponent={() =>
+        require('components/navigation/RecoverPasswordResultScreen').default
+      }
     />
   </>
 );
@@ -65,12 +73,20 @@ export default () => {
   const {width, isMobile} = useWindowDimension();
   const userData = useSelector(selectUserData);
 
+  useEffect(() => {
+    userData?.id && crashlytics.logUser(userData);
+  }, [userData]);
+
   return (
     <Navigator
       initialRouteName={!!userData ? routes.loggedStack : routes.landingScreen}
       screenOptions={navigationConfig({
         title: '',
         headerShown: width <= 800,
+        headerTitleAlign: 'center',
+        headerTitleStyle: {
+          alignSelf: 'center',
+        },
         cardStyle: {
           backgroundColor: theme.white,
           paddingBottom: Platform.select({
@@ -79,6 +95,18 @@ export default () => {
         },
       })}>
       {userData ? renderPrivateRoutes() : renderPublicRoutes(width, isMobile)}
+      <Screen
+        name={routes.registerStack}
+        component={RegisterStack}
+        options={({navigation}) => ({
+          headerTitle: () => <AppLogo color={theme.primaryColor} />,
+          headerStyle: {
+            backgroundColor: theme.white,
+          },
+          headerTintColor: theme.primaryDarkColor,
+          headerShown: true,
+        })}
+      />
       <Screen
         name="pagina-inexistente"
         component={PageNotFound}

@@ -60,7 +60,7 @@ const App = () => {
       Platform.OS === 'web' && dispatch(changeNavigationState(state));
       const previousRouteName = routeNameRef.current;
       const currentRouteName = getCurrentRouteName(state);
-      if (previousRouteName !== currentRouteName) {
+      if (currentRouteName && previousRouteName !== currentRouteName) {
         analytics().logScreenView(
           {
             screen_name: currentRouteName,

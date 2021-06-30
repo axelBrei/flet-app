@@ -1,4 +1,4 @@
-import {AppRegistry, Platform} from 'react-native';
+import {AppRegistry, Platform, LogBox} from 'react-native';
 import App from './src/App';
 import React from 'react';
 import {name as appName} from './package.json';
@@ -14,6 +14,7 @@ if (Platform.OS === 'android') {
     }
   });
 }
+LogBox.ignoreLogs(["Accessing the 'state' property of the 'route'"]);
 
 analytics().setAnalyticsCollectionEnabled(true);
 

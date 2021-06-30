@@ -18,10 +18,10 @@ export const InsuranceItem = ({
     useSelector(selectNewShipmentData)?.shipmentDescription?.package?.value,
   );
 
-  const value = useMemo(() => Math.round(packageValue * valueModificator), [
-    valueModificator,
-    packageValue,
-  ]);
+  const value = useMemo(
+    () => Math.round(packageValue * valueModificator),
+    [valueModificator, packageValue],
+  );
 
   const fontColor = useMemo(
     () => (index % 2 === 0 ? theme.fontColor : theme.white),
@@ -29,38 +29,41 @@ export const InsuranceItem = ({
   );
 
   return (
-    <Container index={index} onPress={onPress(value)} selected={selected}>
-      <Row>
-        <Title color={fontColor}>{title}</Title>
-        <AppText color={fontColor}>
-          <AppText bold color={fontColor}>
-            Valor:
-          </AppText>{' '}
-          +${value}
-        </AppText>
-      </Row>
-      <Row>
-        <Description color={fontColor}>{description}</Description>
-        {selected && (
-          <SelectedText color={fontColor} selected={selected}>
-            Seleccionado
-          </SelectedText>
-        )}
-      </Row>
-    </Container>
+    <>
+      {selected && (
+        <SelectedTextContainer selected={selected}>
+          <AppText color={theme.white}>Seleccionado</AppText>
+        </SelectedTextContainer>
+      )}
+      <Container index={index} onPress={onPress(value)} selected={selected}>
+        <Row>
+          <Title color={fontColor}>{title}</Title>
+          <AppText color={fontColor}>
+            <AppText bold color={fontColor}>
+              Valor:
+            </AppText>{' '}
+            +${value}
+          </AppText>
+        </Row>
+        <Row>
+          <Description color={fontColor}>{description}</Description>
+        </Row>
+      </Container>
+    </>
   );
 };
 
 const Container = styled.TouchableOpacity`
-  background-color: ${(props) =>
+  background-color: ${props =>
     props.index % 2 === 0 ? theme.grayBackground : theme.primaryColor};
   padding: 20px;
   border-radius: 20px;
-  margin: 10px 0;
+  margin: 0 0 20px;
   ${({selected}) =>
     selected &&
     css`
       border-width: 2px;
+      border-top-left-radius: 0;
       border-color: ${theme.fontColor};
     `}
 `;
@@ -76,12 +79,14 @@ const Description = styled(AppText)`
   font-size: 15px;
 `;
 
-const SelectedText = styled(AppText)`
-  background-color: ${theme.grayBackground};
+const SelectedTextContainer = styled.View`
+  background-color: ${theme.fontColor};
   border-color: ${theme.fontColor};
   border-width: 2px;
-  color: ${theme.fontColor};
-  padding: 2px 5px;
-  overflow: hidden;
-  border-radius: 20px;
+  color: ${theme.white};
+  width: 150px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  align-items: center;
+  justify-content: center;
 `;

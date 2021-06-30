@@ -16,21 +16,26 @@ import {resources} from 'resources';
 import {AppText} from 'components/ui/AppText';
 import styled from 'styled-components';
 import {applyShadow} from 'helpers/uiHelper';
+import ShipmentIcon from 'resources/icons/shipmentIcon.svg';
+import CourrierDeliverIcon from 'resources/icons/courrierDeliverIcon.svg';
+import LastShipmentsIcon from 'resources/icons/historyIcon.svg';
+import BalanceIcon from 'resources/icons/balanceIcon.svg';
+import ProfileIcon from 'resources/icons/accountIcon.svg';
 
 const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
-      return {icon: resources.shipmentIcon}; //'package-variant';
+      return {Icon: ShipmentIcon}; //'package-variant';
     case 'courrier':
-      return {icon: resources.courrierDeliverIcon, size: 30}; //'truck-fast';
+      return {Icon: CourrierDeliverIcon, size: 30}; //'truck-fast';
     case 'pedidos':
-      return {icon: resources.lastShipmentsIcon, size: 34}; //'truck';
+      return {Icon: LastShipmentsIcon, size: 34}; //'truck';
     case routes.balanceStack:
-      return {icon: resources.balanceIcon}; //'wallet';
+      return {Icon: BalanceIcon}; //'wallet';
     case routes.profileStack:
-      return {icon: resources.accountIcon, size: 24}; //'account';
+      return {Icon: ProfileIcon, size: 24}; //'account';
     default:
-      return {icon: resources.shipmentIcon}; // 'account-question';
+      return {Icon: ShipmentIcon}; // 'account-question';
   }
 };
 
@@ -102,7 +107,15 @@ export default () => {
           </AppText>
         ),
         tabBarIcon: ({focused, color, size}) => {
-          const {icon, size: iconSize = size} = getIconForRoute(route?.name);
+          const {Icon, size: iconSize = size} = getIconForRoute(route?.name);
+          return (
+            <Icon
+              color={focused ? theme.primaryDarkColor : theme.fontColor}
+              fill={focused ? theme.primaryDarkColor : theme.fontColor}
+              height={iconSize}
+              width={iconSize}
+            />
+          );
           return (
             <TabBarIcon
               source={icon}

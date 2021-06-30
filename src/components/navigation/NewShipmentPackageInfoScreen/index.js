@@ -56,6 +56,7 @@ export default ({navigation}) => {
     errors,
     touched,
     handleSubmit,
+    isValid,
     _setFieldValue,
     _setFieldTouched,
   } = useFormikCustom(
@@ -117,7 +118,7 @@ export default ({navigation}) => {
           onChangeValue={_setFieldValue(FIELDS.EXTRA_HELP)}
           value={values[FIELDS.EXTRA_HELP]}
         />
-        <Button label="Continuar" onPress={handleSubmit} />
+        <Button disabled={!isValid} label="Continuar" onPress={handleSubmit} />
       </CenteredContainer>
       <StyledMap
         markers={addresses}

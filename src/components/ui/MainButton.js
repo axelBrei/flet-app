@@ -84,7 +84,7 @@ const Container = styled(View)`
   justify-content: center;
   align-items: center;
 
-  ${(props) =>
+  ${props =>
     !props.theme.isMobile &&
     css`
       max-width: 374px;
@@ -94,7 +94,7 @@ const Container = styled(View)`
 const Text = styled(AppText)`
   text-align: center;
   padding: 0 5px;
-  font-size: ${(props) => props.fontSize || 16}px;
+  font-size: ${props => props.fontSize || 16}px;
 `;
 
 const Button = Animated.createAnimatedComponent(
@@ -110,10 +110,15 @@ const Button = Animated.createAnimatedComponent(
     justify-content: center;
     z-index: 0;
 
-    ${(props) =>
+    ${props =>
       !props.theme.isMobile &&
       css`
         max-width: 374px;
-      `}
+      `};
+    ${props =>
+      props.disabled &&
+      css`
+        background-color: ${theme.disabledFont};
+      `};
   `,
 );

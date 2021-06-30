@@ -29,6 +29,7 @@ import {PaymentMethodCard} from 'components/navigation/NewShipmentConfirmationSc
 import {MainButton} from 'components/ui/MainButton';
 import {ShipmentPrice} from 'components/navigation/NewShipmentConfirmationScreen/ShipmentPrice';
 import {routes} from 'constants/config/routes';
+import {ShipmentDestinationsSteps} from 'components/ui/ShipmentDestinationSteps';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -81,7 +82,6 @@ export default ({navigation}) => {
     [_setFieldValue, values],
   );
 
-  const [startPoint, middlePoint, endPoint] = shipmentDescription.addresses;
   return (
     <ScreenComponent scrollable={!loading}>
       <Loader
@@ -90,23 +90,17 @@ export default ({navigation}) => {
         <ShipmentInformationContainer>
           <StyledMap
             edgePadding={{
-              top: isMobile ? 35 : 0,
-              bottom: isMobile ? 35 : -5,
+              top: isMobile ? 50 : 0,
+              bottom: isMobile ? 50 : -5,
             }}
             markers={shipmentDescription.addresses}
           />
-          <ColorizedCard>
-            <StaticInputField label="Desde">
-              {startPoint?.name?.split(',')[0]}
-            </StaticInputField>
-            {middlePoint && (
-              <StaticInputField label="Pasando por">
-                {middlePoint?.name?.split(',')[0]}
-              </StaticInputField>
-            )}
-            <StaticInputField label="Hasta">
-              {(endPoint || middlePoint)?.name?.split(',')[0]}
-            </StaticInputField>
+          <ColorizedCard style={{elevation: 4}}>
+            <ShipmentDestinationsSteps
+              destinations={shipmentDescription.addresses
+                ?.filter(a => a?.latitude)
+                .map(d => ({address: d}))}
+            />
           </ColorizedCard>
         </ShipmentInformationContainer>
         <FormContainer>
@@ -129,7 +123,9 @@ export default ({navigation}) => {
             <Button
               label="Confirmar"
               onPress={handleSubmit}
-              disabled={priceError || !currentPrice}
+              disabled={
+                priceError || !currentPrice || !values[FIELDS.PAYMENT_METHOD]
+              }
             />
           </CardContainer>
         </FormContainer>
@@ -162,27 +158,33 @@ const FormContainer = styled.View`
 
 const StyledMap = styled(Map)`
   height: 150px;
-  border-radius: 20px;
   top: 15px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   ${({theme}) =>
     !theme.isMobile &&
     css`
       top: 0;
       width: 414px;
+      border-radius: 12px;
     `};
 `;
 
-const ColorizedCard = styled(CardContainer)`
+const ColorizedCard = styled.View`
   margin: 0;
-  top: -10px;
+  background-color: ${theme.grayBackground};
+  justify-content: center;
+  padding: 10px;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
   ${({theme}) =>
     !theme.isMobile &&
     css`
-      top: 0;
       flex: 1;
       max-width: 414px;
       left: 15px;
-    `}
+      border-radius: 12px;
+    `};
 `;
 
 const Button = styled(MainButton)`

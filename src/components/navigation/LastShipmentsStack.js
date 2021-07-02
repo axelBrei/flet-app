@@ -6,16 +6,19 @@ import LastShipmentDetailScreen from 'components/navigation/LastShipmentDetailSc
 import {navigationConfig} from 'constants/config/navigationConfig';
 import dayjs from 'dayjs';
 import {capitallize} from 'helpers/stringHelper';
+import {Title} from 'components/ui/Title';
 
 const {Navigator, Screen} = createStackNavigator();
 
-const LastShipmentStack = () => {
+const LastShipmentStack = ({route}) => {
   return (
-    <Navigator>
+    <Navigator screenOptions={navigationConfig({})}>
       <Screen
         name={routes.lastShippmentsScreen}
         component={LastShipmentsScreen}
-        options={{headerShown: false}}
+        options={{
+          headerTitle: <Title padding={20}>Mis últimos pedidos</Title>,
+        }}
       />
       <Screen
         name={routes.lastShipmentsDetailScreen}

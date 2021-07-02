@@ -83,6 +83,7 @@ const Container = styled.View`
   overflow: hidden;
   padding: 20px;
   align-items: center;
+  background-color: white;
 `;
 // ${Platform.OS !== 'web' ? 80 : 20}px;
 const Row = styled.View`

@@ -16,6 +16,9 @@ import {
 import ShipmentFinishedScreen from 'components/navigation/ShipmentFinishedScreen';
 import NewShipmentPackageDescriptionScreen from 'components/navigation/NewShipmentPackageInfoScreen';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
+import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
+import {Platform} from 'react-native-web';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const {Navigator, Screen} = createStackNavigator();
 const shipmentStates = [
@@ -30,6 +33,7 @@ const shipmentStates = [
 
 export default () => {
   const {isMobile} = useWindowDimension();
+  const {top} = useSafeAreaInsets();
   const currentShipment = useSelector(selectCurrentShipment);
   const shipmentStatus = useSelector(selectCurrentShipmentStatus);
   return (
@@ -122,6 +126,16 @@ export default () => {
             getComponent={() =>
               require('components/navigation/PaymentScreen').default
             }
+          />
+          <Screen
+            name={routes.lastShipmentStack}
+            getComponent={() =>
+              require('components/navigation/LastShipmentsStack').default
+            }
+            initialParams={{title: 'Últimos pedidos'}}
+            options={navigationConfig({
+              headerShown: false,
+            })}
           />
         </>
       )}

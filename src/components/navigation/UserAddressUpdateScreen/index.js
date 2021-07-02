@@ -79,7 +79,11 @@ export default ({navigation}) => {
       )}
       <CommonList
         data={loading ? [] : addresses}
-        contentContainerStyle={(loading || addresses.length === 0) && {flex: 1}}
+        contentContainerStyle={
+          (loading || addresses.length === 0) && {
+            flex: 1,
+          }
+        }
         ListEmptyComponent={
           addresses.length === 0 ? (
             <EmptyListContainer>
@@ -129,6 +133,7 @@ const EmptyListContainer = styled.View`
 
 const FullScreenLoader = styled(Loader)`
   align-self: center;
+  width: 100%;
 `;
 
 const TitleContainer = styled(Row)`

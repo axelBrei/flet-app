@@ -17,9 +17,12 @@ import {useModal} from 'components/Hooks/useModal';
 import {CashoutModalContent} from 'components/navigation/BalanceMainScreen/CashoutModalContent';
 import {ChangeBankNumberModalContent} from 'components/navigation/BalanceMainScreen/ChangeBankNumberModalContent';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {theme} from 'constants/theme';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default () => {
   const {isMobile, widthWithPadding, height, width} = useWindowDimension();
+  const {top} = useSafeAreaInsets();
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingBalance);
   const error = useSelector(selectBalanceError);
@@ -53,17 +56,7 @@ export default () => {
   const profit =
     balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
   return (
-    <Screen
-      scrollable={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => {
-            setRefreshing(true);
-            dispatch(fetchBalance());
-          }}
-        />
-      }>
+    <Screen scrollable={false} notchColor={theme.primaryColor}>
       <Loader
         size="large"
         loading={!refreshing && isLoading}

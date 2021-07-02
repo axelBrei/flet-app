@@ -179,9 +179,9 @@ const FormContainer = styled(Container)`
 `;
 
 const ContinueButton = styled(MainButton)`
-  margin-top: ${scaleDpTheme(20)};
+  margin-top: 20px;
   width: 85%;
-  min-height: ${scaleDpTheme(30)};
+  min-height: 40px;
   align-self: center;
   margin-bottom: 20px;
 `;

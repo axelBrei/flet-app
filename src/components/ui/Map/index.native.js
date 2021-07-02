@@ -62,7 +62,7 @@ const Map = ({
           {renderIcon ? (
             renderIcon()
           ) : SvgIcon ? (
-            <SvgIcon height={30} width={30} />
+            <SvgIcon height={marker?.size || 32} width={marker?.size || 32} />
           ) : (
             <Icon name="map-marker" size={32} color={theme.primaryColor} />
           )}

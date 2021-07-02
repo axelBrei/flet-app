@@ -16,9 +16,11 @@ import {ShipmentStagesDescriptor} from 'components/navigation/DriverNewShipmentS
 import {selectDriverIsLoadingShipmentStatus} from 'redux-store/slices/driverShipmentSlice';
 import {openMap} from 'redux-store/slices/preferencesSlice';
 import {applyShadow} from 'helpers/uiHelper';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 export const ShipmentDescription = () => {
   const dispatch = useDispatch();
+  const {height} = useWindowDimension();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipments = useSelector(selectDriverShipmentData);
   const {id, status, startPoint, endPoint, destinations, currentDestination} =
@@ -89,5 +91,6 @@ const Container = styled.View`
   overflow: hidden;
   background-color: ${theme.white};
   box-shadow: 1px 5px 3px ${theme.shadowColor};
+  height: ${({theme}) => theme.screenHeight * 0.42}px;
 `;
 Container.defaultProps = applyShadow();

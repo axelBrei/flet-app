@@ -9,7 +9,6 @@ import {
   rejectShipment,
   selectPendingShipmentAnswerError,
   selectCurrentShipmentError,
-  selectDriverShipmentData,
   selectPendingShipments,
 } from 'redux-store/slices/driverShipmentSlice';
 import {Loader} from 'components/ui/Loader';
@@ -21,18 +20,15 @@ import CarMarker from 'resources/assets/driver_car';
 import {
   changeOnlineStatus,
   selectCurrentPosition,
-  selectOnlineStatus,
   selectPreviosPosition,
-  updatePosition,
 } from 'redux-store/slices/driverSlice';
 import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFetchPendignShipment';
 import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCard';
-import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
 import {useUserData} from 'components/Hooks/useUserData';
-import {useIsFocused} from '@react-navigation/native';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
+import {theme} from 'constants/theme';
 
-const DriverHome = ({navigation}) => {
+const DriverHome = () => {
   const dispatch = useDispatch();
   const {courrier} = useUserData();
   const previosPosition = useSelector(selectPreviosPosition);
@@ -117,7 +113,7 @@ const DriverHome = ({navigation}) => {
   );
 
   return (
-    <Screen>
+    <Screen notchColor={theme.primaryColor}>
       <Loader unmount={false}>
         <Map
           ref={mapRef}

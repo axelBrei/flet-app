@@ -8,7 +8,7 @@ import {Title} from 'components/ui/Title';
 import {Row} from 'components/ui/Row';
 import {ShipmentDestinationsSteps} from 'components/ui/ShipmentDestinationSteps';
 import {useNavigation} from '@react-navigation/native';
-import {routes} from 'constants/config/routes';
+import {Platform} from 'react-native';
 import {applyShadow} from 'helpers/uiHelper';
 
 export const LastShipmentItem = ({
@@ -17,7 +17,6 @@ export const LastShipmentItem = ({
   destinations,
   onPressViewMore,
 }) => {
-  const navigation = useNavigation();
   const shipmentDate = dayjs(date).format('ddd DD MMM YYYY - HH:MM[hs]');
 
   return (
@@ -41,7 +40,7 @@ export const LastShipmentItem = ({
 };
 
 const Container = styled.View`
-  padding: 20px 0 0;
+  padding: ${Platform.OS === 'android' ? 0 : 20}px 0 0;
   box-shadow: 1px 5px 3px ${theme.shadowColor};
   background-color: white;
   margin: 9px 20px;

@@ -7,6 +7,9 @@ import {
 import {useUserData} from 'components/Hooks/useUserData';
 import {Platform} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+import styled from 'styled-components';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {theme} from 'constants/theme';
 
 export default ({children}) => {
   const userData = useUserData();
@@ -63,5 +66,12 @@ export default ({children}) => {
     }
   }, [permissionGranted, userData, handleNotification]);
 
-  return children;
+  return <SafeArea edges={['top', 'left', 'right']}>{children}</SafeArea>;
 };
+
+const SafeArea = styled(SafeAreaView)`
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  background-color: ${theme.primaryColor};
+`;

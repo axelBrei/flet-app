@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback} from 'react';
 import {routes} from 'constants/config/routes';
 import styled, {css} from 'styled-components';
 import Screen from 'components/ui/Screen';
@@ -19,6 +19,7 @@ import {MapPreferencesModalContent} from 'components/navigation/ProfileScreen/Mo
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchPhonesToRegisterCourrier} from 'redux-store/slices/loginSlice';
 import {selectIsLoadingPersonalDataTelephones} from 'redux-store/slices/personalData/telephonesSlice';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const data = [
   {
@@ -96,7 +97,7 @@ export default () => {
   );
 
   return (
-    <ScreenComponent scrollable>
+    <ScreenComponent scrollable notchColor={theme.primaryColor}>
       <CenterContainer>
         <UserHeader />
         {!isDriver && (

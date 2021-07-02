@@ -39,6 +39,7 @@ export const NewTripModalContent = ({
   dropZone,
   onPressAccept,
   onPressReject,
+  ...props
 }) => {
   const [submited, setSubmited] = useState(false);
   const shipments = useSelector(selectDriverShipmentData);
@@ -47,6 +48,14 @@ export const NewTripModalContent = ({
   const {closeModal} = useModalContext();
   const shipment = shipments.find(
     s => s.status === SHIPMENT_STATE.PENDING_COURRIER,
+  );
+  const totalDistance = shipment?.destinations?.reduce(
+    (a, c) => a + c?.distance || 0,
+    0,
+  );
+  const totalDuration = shipment?.destinations?.reduce(
+    (a, c) => a + c?.duration || 0,
+    0,
   );
 
   useEffect(() => {
@@ -66,22 +75,12 @@ export const NewTripModalContent = ({
     [],
   );
 
-  const arrivalTime = useMemo(() => {
-    const time = dayjs().add(shipment?.destinations?.[0]?.duration || 0, 's');
-    return `${time.format('HH:mm')} - ${time
-      .add(10, 'minute')
-      .format('HH:mm')}`;
-  }, [shipment]);
-
   const destinationTime = useMemo(() => {
     const arrivalTime = dayjs().add(
       shipment?.addresses?.[0]?.duration || 0,
       's',
     );
-    const destinationTime = arrivalTime.add(
-      shipment?.addresses?.[1]?.duration || 0,
-      's',
-    );
+    const destinationTime = arrivalTime.add(totalDuration, 's');
     return `${destinationTime.format('HH:mm')} - ${destinationTime
       .add(10, 'minute')
       .format('HH:mm')}`;
@@ -91,18 +90,30 @@ export const NewTripModalContent = ({
     <Container>
       <Title width="100%">¡Nuevo viaje!</Title>
       <Row>
-        {distance > 0 && (
-          <StaticInputField bold label="Distancia" style={{width: '45%'}}>
-            {getDistanceIfKm(distance)}
-          </StaticInputField>
-        )}
-        <StaticInputField
-          bold
-          label="Llegas a las"
-          style={{width: distance > 0 ? '45%' : '100%'}}>
-          {arrivalTime}
+        <StaticInputField bold label="Distancia" style={{width: '49%'}}>
+          {getDistanceIfKm(totalDistance)}
+        </StaticInputField>
+        <StaticInputField bold label="Paquetes" style={{width: '49%'}}>
+          {shipment.destinations.length - 1} destinos
         </StaticInputField>
       </Row>
+      <IconCard
+        reverse
+        reduced
+        renderImage={size => (
+          <DestinationImage height={size - 25} width={size - 25} />
+        )}>
+        <Title alternative>Destino</Title>
+        <RowWithBoldData
+          label="Zona"
+          data={
+            shipment?.destinations?.[
+              shipment.destinations.length - 1
+            ]?.address?.name.split(',')[2]
+          }
+        />
+        <RowWithBoldData label="Llegada" data={destinationTime} />
+      </IconCard>
       <IconCard
         reverse
         reduced
@@ -115,23 +126,6 @@ export const NewTripModalContent = ({
           label="Desc."
           data={shipment?.package?.description}
         />
-      </IconCard>
-      <IconCard
-        reverse
-        reduced
-        renderImage={size => (
-          <DestinationImage height={size - 25} width={size - 25} />
-        )}>
-        <Title alternative>Destino</Title>
-        <RowWithBoldData
-          label="Zona"
-          data={
-            shipment?.addresses[
-              shipment.addresses.length - 1
-            ]?.address?.name.split(', ')[2]
-          }
-        />
-        <RowWithBoldData label="Llegada" data={destinationTime} />
       </IconCard>
       {loading ? (
         <ActivityIndicator

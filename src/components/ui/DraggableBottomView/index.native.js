@@ -3,6 +3,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import {View} from 'react-native';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {AppText} from 'components/ui/AppText';
+import {applyShadow} from 'helpers/uiHelper';
 
 const _DraggableBottomView = ({
   children,
@@ -35,13 +36,7 @@ const _DraggableBottomView = ({
         snapPoints.map((point, index) => {
           const numberPercentage = Number(point.replace('%', '')) / 100;
           const visiblePercentage = (numberPercentage * height) / screenHeight;
-          return `${Math.min(
-            100,
-            Math.ceil(
-              visiblePercentage * 100 +
-                (index + 1 === snapPoints.length ? 10 : 0),
-            ),
-          )}%`;
+          return `${Math.min(100, Math.ceil(visiblePercentage * 100))}%`;
         }),
       );
     },
@@ -53,6 +48,7 @@ const _DraggableBottomView = ({
       ref={bottomSheetRef}
       index={0}
       alwaysOpen={150}
+      style={applyShadow(false)}
       snapPoints={localSnapPoints}
       onChange={handleSheetChanges}>
       <View onLayout={onChildrenLayout}>{children}</View>

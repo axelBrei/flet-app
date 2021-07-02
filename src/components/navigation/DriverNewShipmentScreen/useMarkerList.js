@@ -1,22 +1,17 @@
-import React, {useState, useMemo, useEffect, useCallback} from 'react';
-import {View, Platform} from 'react-native';
+import React, {useState, useMemo, useEffect} from 'react';
+import {Platform} from 'react-native';
 import EndpointMarker from 'resources/assets/endpoint_marker.svg';
 import ENDPOINT_MARKER_PNG from 'resources/assets/endpoint_marker.png';
 import CarMarker from 'resources/assets/driver_car.svg';
 import CAR_MARKER from 'resources/assets/driver_car.png';
 import {useSelector} from 'react-redux';
-import {getCurrentPosition, trackUserPosition} from 'helpers/locationHelper';
+import {getCurrentPosition} from 'helpers/locationHelper';
 import {getBearingFromCoords} from 'helpers/locationHelper';
 import {scaleDp} from 'helpers/responsiveHelper';
 import {getRotatedMarker} from 'components/ui/Map/helper';
 import {selectDriverShipmentData} from 'redux-store/slices/driverShipmentSlice';
+import {selectCurrentPosition} from 'redux-store/slices/driverSlice';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
-import useBackgroundLocation from 'components/Hooks/useBackgroundLocation';
-import {
-  selectCurrentPosition,
-  updatePosition,
-} from 'redux-store/slices/driverSlice';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 export const useMarkerList = () => {
   const [lastUserPosition, setLastUserPosition] = useState(null);
@@ -36,17 +31,29 @@ export const useMarkerList = () => {
   }, [lastUserPosition, currentLocation, shipment]);
 
   useEffect(() => {
-    if (shipment.id) {
-      const point = shipment?.destinations?.find(
+    if (shipment?.currentDestination) {
+      const pointIndex = shipment?.destinations?.findIndex(
         d => d.id === shipment?.currentDestination,
-      )?.address;
+      );
+      let point = null;
+      if (
+        [
+          SHIPMENT_STATE.COURRIER_CONFIRMED,
+          SHIPMENT_STATE.WAITING_ORIGIN,
+        ].includes(shipment?.status)
+      ) {
+        point = shipment?.destinations?.[pointIndex - 1]?.address;
+      } else {
+        point = shipment?.destinations?.[pointIndex]?.address;
+      }
       setDirectionsMakers({
-        latitude: point.latitude,
-        longitude: point.longitude,
+        latitude: point?.latitude,
+        longitude: point?.longitude,
         anchor: {
           x: 0.75,
           y: 0.9,
         },
+        size: 50,
         icon: Platform.select({
           native: EndpointMarker,
           web: ENDPOINT_MARKER_PNG,
@@ -64,7 +71,7 @@ export const useMarkerList = () => {
           native: CarMarker,
         }),
         currentLocation?.bearing || orientation,
-        scaleDp(40),
+        40,
       );
       setCurrenPositionMarker({
         ...location,

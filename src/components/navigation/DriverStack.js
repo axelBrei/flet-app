@@ -64,7 +64,11 @@ export const DriverStack = ({navigation}) => {
   );
 
   useEffect(() => {
-    hasLocationPermission() && (isOnline ? enable : disable)?.();
+    if (hasLocationPermission() && isOnline) {
+      enable();
+    } else {
+      disable();
+    }
   }, [isOnline, hasLocationPermission]);
 
   return (

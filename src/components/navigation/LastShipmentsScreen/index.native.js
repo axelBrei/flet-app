@@ -51,7 +51,6 @@ const LastShipmentsScreen = ({navigation}) => {
 
   return (
     <Screen removeTWF enableAvoidKeyboard={false} scrollable={false}>
-      <Title padding={20}>Mis últimos pedidos</Title>
       <List
         defaultPageSize={10}
         loading={isLoading}

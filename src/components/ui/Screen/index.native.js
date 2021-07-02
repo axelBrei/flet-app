@@ -12,6 +12,7 @@ import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {KeyboardAvoidScreen} from 'components/ui/KeyboardaAvoidScreen';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {isLightColor} from 'helpers/colorHelper';
 
 const Screen = ({
   children,
@@ -21,54 +22,45 @@ const Screen = ({
   enableAvoidKeyboard,
   alignItems,
   style,
+  notchColor,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
   const route = useRoute();
   const {width} = useWindowDimension();
-  const insets = useSafeAreaInsets();
 
   const ScrollableLayer = scrollable ? ScrollView : View;
   return (
     <>
       <StatusBar
-        backgroundColor={theme.primaryDarkColor}
-        barStyle={
-          colorScheme
-            ? colorScheme === 'light'
-              ? 'dark-content'
-              : 'light-content'
-            : 'default'
-        }
+        backgroundColor={notchColor || theme.primaryColor}
+        barStyle={isLightColor(notchColor) ? 'dark-content' : 'light-content'}
       />
-      <SafeArea insets={insets}>
-        <KeyboardAvoidScreen>
-          <Container
-            accessible={!scrollable}
-            disabled={removeTWF}
-            onPress={Keyboard.dismiss}>
-            <ScrollableLayer
-              nativeID={route.name}
-              showsVerticalScrollIndicator={false}
-              classname={classname}
-              contentContainerStyle={props.contentContainerStyle}
-              refreshControl={props.refreshControl}
-              style={[
-                !scrollable && {
-                  alignItems,
-                  overflow: 'hidden',
-                  overscrollBehavior: 'none',
-                  maxWidth: width,
-                  height: '100%',
-                },
-                style,
-                {backgroundColor: theme.backgroundColor},
-              ]}>
-              {children}
-            </ScrollableLayer>
-          </Container>
-        </KeyboardAvoidScreen>
-      </SafeArea>
+      <KeyboardAvoidScreen>
+        <Container
+          accessible={!scrollable}
+          disabled={removeTWF}
+          onPress={Keyboard.dismiss}>
+          <ScrollableLayer
+            nativeID={route.name}
+            showsVerticalScrollIndicator={false}
+            classname={classname}
+            contentContainerStyle={props.contentContainerStyle}
+            refreshControl={props.refreshControl}
+            style={[
+              !scrollable && {
+                alignItems,
+                overflow: 'hidden',
+                overscrollBehavior: 'none',
+                maxWidth: width,
+                height: '100%',
+              },
+              style,
+              {backgroundColor: theme.backgroundColor},
+            ]}>
+            {children}
+          </ScrollableLayer>
+        </Container>
+      </KeyboardAvoidScreen>
     </>
   );
 };
@@ -77,19 +69,12 @@ Screen.defaultProps = {
   removeTWF: false,
   scrollable: false,
   enableAvoidKeyboard: true,
+  notchColor: theme.primaryColor,
 };
 export default Screen;
 
 const Container = styled.TouchableWithoutFeedback`
-  background-color: ${props => props.theme.colors.backgroundColor};
-  height: 100%;
-  width: 100%;
-`;
-
-const SafeArea = styled.SafeAreaView`
-  flex: 1;
-  height: 100%;
-  width: 100%;
   background-color: ${theme.backgroundColor};
-  margin-top: ${props => props?.insets?.top || 0}px;
+  height: 100%;
+  width: 100%;
 `;

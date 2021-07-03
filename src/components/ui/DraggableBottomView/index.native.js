@@ -2,8 +2,8 @@ import React, {useCallback, useRef, useImperativeHandle, useState} from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {View} from 'react-native';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {AppText} from 'components/ui/AppText';
 import {applyShadow} from 'helpers/uiHelper';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 const _DraggableBottomView = ({
   children,
@@ -12,6 +12,7 @@ const _DraggableBottomView = ({
 }) => {
   const bottomSheetRef = useRef(null);
   const {height: screenHeight} = useWindowDimension();
+  const tabBarHeight = useBottomTabBarHeight();
   const [isOpen, setIsOpen] = useState(false);
   const [localSnapPoints, setLocalSnapPoints] = useState(snapPoints);
 
@@ -35,12 +36,13 @@ const _DraggableBottomView = ({
       setLocalSnapPoints(
         snapPoints.map((point, index) => {
           const numberPercentage = Number(point.replace('%', '')) / 100;
-          const visiblePercentage = (numberPercentage * height) / screenHeight;
+          const visiblePercentage =
+            (numberPercentage * (height + tabBarHeight)) / screenHeight;
           return `${Math.min(100, Math.ceil(visiblePercentage * 100))}%`;
         }),
       );
     },
-    [screenHeight],
+    [tabBarHeight, screenHeight],
   );
 
   return (

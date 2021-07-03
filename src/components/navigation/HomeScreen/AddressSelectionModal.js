@@ -46,10 +46,6 @@ export const AddressSelectionModal = ({field, onPressItem}) => {
   ];
 
   const onPressConfirm = useCallback(() => {
-    console.log(field, selectedAddress, {
-      ...selectedAddress,
-      comments,
-    });
     onPressItem(field, {
       ...selectedAddress,
       comments: comments || selectedAddress.comments,

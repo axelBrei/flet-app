@@ -94,7 +94,7 @@ export default () => {
           },
           ...Platform.select({
             android: {height: 60},
-            ios: {height: 90},
+            ios: {height: 60},
             web: {height: 80, paddingBottom: 15},
           }),
         },

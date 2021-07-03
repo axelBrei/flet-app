@@ -86,11 +86,6 @@ export const ShipmentDescription = () => {
 
 const Container = styled.View`
   padding: 20px 20px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  overflow: hidden;
   background-color: ${theme.white};
-  box-shadow: 1px 5px 3px ${theme.shadowColor};
-  height: ${({theme}) => theme.screenHeight * 0.42}px;
 `;
-Container.defaultProps = applyShadow();
+// Container.defaultProps = applyShadow();

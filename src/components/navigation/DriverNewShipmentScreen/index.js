@@ -82,5 +82,7 @@ export default DriverNewShipmentScreen;
 
 const ScreenComponent = styled(Screen)`
   display: flex;
+  flex: 1;
   height: 100%;
+  padding-bottom: 0;
 `;

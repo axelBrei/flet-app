@@ -94,7 +94,7 @@ export const NewTripModalContent = ({
           {getDistanceIfKm(totalDistance)}
         </StaticInputField>
         <StaticInputField bold label="Paquetes" style={{width: '49%'}}>
-          {shipment.destinations.length - 1} destinos
+          {shipment?.destinations.length - 1} destinos
         </StaticInputField>
       </Row>
       <IconCard
@@ -108,7 +108,7 @@ export const NewTripModalContent = ({
           label="Zona"
           data={
             shipment?.destinations?.[
-              shipment.destinations.length - 1
+              shipment?.destinations.length - 1
             ]?.address?.name.split(',')[2]
           }
         />

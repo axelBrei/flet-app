@@ -2,7 +2,7 @@
   "name": "fletex_app",
   "nameToShow": "FletApp",
   "version": "0.0.1",
-  "testing-version": 32,
+  "testing-version": 33,
   "private": true,
   "proxy": "http://localhost:3000",
   "scripts": {

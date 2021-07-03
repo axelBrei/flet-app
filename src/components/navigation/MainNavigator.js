@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import crashlytics from 'services/FirebaseWebService/crashlytics';
 import {AppLogo} from 'components/ui/AppLogo';
+import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -105,6 +106,7 @@ export default () => {
           },
           headerTintColor: theme.primaryDarkColor,
           headerShown: true,
+          headerLet: props => <CustomHeaderBackButton {...props} />,
         })}
       />
       <Screen

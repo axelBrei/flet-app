@@ -54,12 +54,12 @@ Container.defaultProps = applyShadow();
 
 const DataContainer = styled.View`
   padding: 20px 20px 0;
+  flex: 1;
 `;
 
 const ViewMoreButton = styled.TouchableOpacity`
-  flex: 1;
-  height: 30px;
-  min-height: 30px;
+  width: 100%;
+  padding: 8px 0;
   background-color: ${theme.primaryDarkColor};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;

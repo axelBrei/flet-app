@@ -18,7 +18,11 @@ export const PaginatedList = ({
   const [page, setPage] = useState(pagination?.page || 1);
   const onEndReached = useCallback(
     ({distanceFromEnd}) => {
-      if (page <= pagination.pageCount && !fetching) {
+      if (
+        page <= pagination.pageCount &&
+        !fetching &&
+        props?.data.length === pagination.page * pagination.pageSize
+      ) {
         setFetching(true);
         fetchDataFunction?.(page + 1, pagination?.pageSize || defaultPageSize);
         setPage(page + 1);

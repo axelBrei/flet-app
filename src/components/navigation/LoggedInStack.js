@@ -21,6 +21,7 @@ import CourrierDeliverIcon from 'resources/icons/courrierDeliverIcon.svg';
 import LastShipmentsIcon from 'resources/icons/historyIcon.svg';
 import BalanceIcon from 'resources/icons/balanceIcon.svg';
 import ProfileIcon from 'resources/icons/accountIcon.svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
@@ -48,6 +49,7 @@ const titlesMappings = {
 
 export default () => {
   const {isMobile, isPWA, width} = useWindowDimension();
+  const {bottom} = useSafeAreaInsets();
   const userData = useSelector(selectUserData);
 
   const {Navigator, Screen} = useMemo(
@@ -93,8 +95,8 @@ export default () => {
             height: -4,
           },
           ...Platform.select({
-            android: {height: 60},
-            ios: {height: 60},
+            android: {height: 60 + bottom},
+            ios: {height: 50 + bottom},
             web: {height: 80, paddingBottom: 15},
           }),
         },
@@ -116,17 +118,6 @@ export default () => {
               width={iconSize}
             />
           );
-          return (
-            <TabBarIcon
-              source={icon}
-              resizeMode={'contain'}
-              size={iconSize}
-              style={{
-                tintColor: focused ? theme.primaryDarkColor : theme.fontColor,
-              }}
-              tintColor={focused ? theme.primaryDarkColor : theme.fontColor}
-            />
-          );
         },
         drawerLabel: props => (
           <AppText {...props} fontSize={16}>
@@ -146,6 +137,7 @@ export default () => {
             const {index, routeNames} = {...route.state};
             return {
               headerShown: false,
+              headerLeft: null,
               tabBarVisible: !routeNames?.[index]
                 ?.toLowerCase()
                 ?.includes('chat'),
@@ -159,6 +151,7 @@ export default () => {
         options={({route}) => {
           const {index, routeNames} = {...route.state};
           return {
+            headerLeft: null,
             tabBarVisible: !routeNames?.[index]
               ?.toLowerCase()
               ?.includes('chat'),
@@ -186,6 +179,7 @@ export default () => {
           }
           initialParams={{title: 'Últimos pedidos'}}
           options={{
+            headerLeft: null,
             headerShown: false,
           }}
         />
@@ -196,6 +190,7 @@ export default () => {
           require('components/navigation/ProfileStack').default
         }
         initialParams={{
+          headerLeft: null,
           title: 'Cuenta',
         }}
       />

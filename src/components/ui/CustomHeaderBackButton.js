@@ -1,25 +1,20 @@
 import React from 'react';
 import {TouchableOpacity, Platform} from 'react-native';
 import {Icon} from 'components/ui/Icon';
-import {HeaderBackButton} from '@react-navigation/stack';
 import {theme} from 'constants/theme';
-import {scaleDp} from 'helpers/responsiveHelper';
 import {AppText} from 'components/ui/AppText';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {useNavigation} from 'components/Hooks/useNavigation';
+import {useNavigation} from '@react-navigation/native';
 
 export const CustomHeaderBackButton = ({navigation, ...props}) => {
+  const nav = navigation || useNavigation();
   const onPress = () => {
     if (Platform.OS === 'web' && props.canGoBack) {
-      history.back();
+      history?.back();
       return;
     }
-    (props.canGoBack ? props?.onPress : navigation.goBack)();
+    (props.canGoBack ? props?.onPress : nav?.goBack)?.();
   };
 
-  // if (Platform.OS !== 'web') {
-  //   return <HeaderBackButton {...props} />;
-  // }
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -32,8 +27,8 @@ export const CustomHeaderBackButton = ({navigation, ...props}) => {
       }}>
       <Icon
         color={props.tintColor}
-        size={Platform.OS !== 'ios' ? 60 : 20}
-        name={Platform.OS !== 'android' ? 'chevron-left' : 'arrow-left'}
+        size={Platform.OS !== 'ios' ? 35 : 30}
+        name={'chevron-left'}
       />
       {props.labelVisible && (
         <AppText color={props.tintColor}>{props.label}</AppText>

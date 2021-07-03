@@ -101,7 +101,7 @@ export const DriverStack = ({navigation}) => {
             name={routes.chatScreen}
             options={{
               title: 'Chat',
-              headerLeft: props => <HeaderBackButton {...props} />,
+              headerLeft: props => <CustomHeaderBackButton {...props} />,
               tabBarVisible: false,
             }}
             getComponent={() =>

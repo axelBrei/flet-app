@@ -24,7 +24,7 @@
     "assembleAndExportIos": "./assembleNativeApp.sh ios",
     "debug-analytics-android": "adb shell setprop debug.firebase.analytics.app com.fletex_app",
     "stop-debug-analytics-android": "adb shell setprop debug.firebase.analytics.app .none.",
-    "fix-android-time": "sudo adb shell \"su 0 date `date +%m%d%H%M%Y.%S`\""
+    "fix-android-emu": "adb shell \"su 0 date `date +%m%d%H%M%Y.%S`\" && adb reverse tcp:8081 tcp:8081"
   },
   "dependencies": {
     "@darron1217/react-native-background-geolocation": "^0.6.6",

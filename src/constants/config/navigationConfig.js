@@ -18,17 +18,13 @@ export const navigationConfig = ({title, ...props} = {}) => ({
     ...props.headerStyle,
   },
   headerTitle: props => <Title size={22} color={props.tintColor} {...props} />,
-  ...Platform.select({
-    web: {
-      headerLeft: props => (
-        <CustomHeaderBackButton
-          {...props}
-          labelVisible={!isMobile}
-          label="Volver"
-        />
-      ),
-    },
-  }),
+  headerLeft: props => (
+    <CustomHeaderBackButton
+      {...props}
+      labelVisible={!isMobile}
+      label="Volver"
+    />
+  ),
   ...(isMobile
     ? {
         headerTintColor: theme.primaryColor,

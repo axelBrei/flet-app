@@ -12,7 +12,7 @@ const {Navigator, Screen} = createStackNavigator();
 
 const LastShipmentStack = ({route}) => {
   return (
-    <Navigator screenOptions={navigationConfig({})}>
+    <Navigator screenOptions={navigationConfig({headerLeft: null})}>
       <Screen
         name={routes.lastShippmentsScreen}
         component={LastShipmentsScreen}

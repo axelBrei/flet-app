@@ -69,7 +69,9 @@ const slice = createSlice({
     },
     receiveRejectShipmentSucces: (state, action) => {
       state.loading.reject = false;
-      state.shipmentData = state.shipmentData(i => i.id !== action.payload);
+      state.shipmentData = state.shipmentData.filter(
+        i => i.id !== action.payload,
+      );
     },
     receiveRejectShipmentFail: (state, action) => {
       state.loading.reject = false;
@@ -115,6 +117,13 @@ const slice = createSlice({
       state.loading.code = false;
       state.error.code = action.payload;
     },
+
+    removeShipmentFromList: (state, {payload: id}) => {
+      console.log('shipmentId', id);
+      state.shipmentData = state.shipmentData.filter(s => s.id !== id);
+      state.error.confirm = null;
+      state.error.reject = null;
+    },
   },
   extraReducers: {
     'login/logout': state => {
@@ -142,6 +151,7 @@ export const {
   receiveSubmitConfirmationCodeSucess,
   receiveSubmitConfirmationCodeFail,
   updateDriverLocation,
+  removeShipmentFromList,
 } = slice.actions;
 
 /**
@@ -222,39 +232,37 @@ export const markShipmentAsDelivered = id => async (dispatch, getState) => {
   }
 };
 
-export const uploadConfirmationCode = (code, id) => async (
-  dispatch,
-  getState,
-) => {
-  dispatch(requestSubmitConfirmationCode());
-  try {
-    await shipmentService.uploadConfirmationCode(id, code);
-    const shipments = selectDriverShipmentData(getState());
-    const currentShipment = shipments.find(s => s.id === id);
-    const {destinations, currentDestination} = currentShipment;
-    const currentDestinationIndex = destinations.findIndex(
-      d => d.id === currentDestination,
-    );
-    let array;
-    if (currentDestinationIndex === destinations.length - 1) {
-      array = shipments.filter(s => s.id !== id);
-    } else {
-      array = shipments.map(s =>
-        s.id === id
-          ? {
-              ...s,
-              status: SHIPMENT_STATE.ON_PROCESS,
-            }
-          : s,
+export const uploadConfirmationCode =
+  (code, id) => async (dispatch, getState) => {
+    dispatch(requestSubmitConfirmationCode());
+    try {
+      await shipmentService.uploadConfirmationCode(id, code);
+      const shipments = selectDriverShipmentData(getState());
+      const currentShipment = shipments.find(s => s.id === id);
+      const {destinations, currentDestination} = currentShipment;
+      const currentDestinationIndex = destinations.findIndex(
+        d => d.id === currentDestination,
+      );
+      let array;
+      if (currentDestinationIndex === destinations.length - 1) {
+        array = shipments.filter(s => s.id !== id);
+      } else {
+        array = shipments.map(s =>
+          s.id === id
+            ? {
+                ...s,
+                status: SHIPMENT_STATE.ON_PROCESS,
+              }
+            : s,
+        );
+      }
+      dispatch(receiveSubmitConfirmationCodeSucess(array));
+    } catch (e) {
+      dispatch(
+        receiveSubmitConfirmationCodeFail(e?.response?.data?.message || e),
       );
     }
-    dispatch(receiveSubmitConfirmationCodeSucess(array));
-  } catch (e) {
-    dispatch(
-      receiveSubmitConfirmationCodeFail(e?.response?.data?.message || e),
-    );
-  }
-};
+  };
 
 /**
  * @SELECTORS

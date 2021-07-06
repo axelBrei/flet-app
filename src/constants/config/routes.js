@@ -44,6 +44,8 @@ const _routes = {
 const nativeOnlyRoutes = {
   dirverHomeScreen: 'DirverHomeScreen',
   driverNewShipmentScreen: 'DriverNewShipmentScreen',
+  newShipmentModalStack: 'NewShipmentModalStack',
+  newShipmentModalScreen: 'NewShipmentModalScreen',
   driverShipmentDeliveryConfirmationScreen:
     'DriverShipmentDeliveryConfirmationScreen',
 };

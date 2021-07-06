@@ -27,7 +27,7 @@ const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
       return {Icon: ShipmentIcon}; //'package-variant';
-    case 'courrier':
+    case routes.newShipmentModalStack:
       return {Icon: CourrierDeliverIcon, size: 30}; //'truck-fast';
     case 'pedidos':
       return {Icon: LastShipmentsIcon, size: 34}; //'truck';
@@ -128,21 +128,26 @@ export default () => {
       })}>
       {isMobile && userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
-          name={routes.driverStack}
+          name={routes.newShipmentModalStack}
           getComponent={() =>
-            require('components/navigation/DriverStack').DriverStack
+            require('components/navigation/CourrierNewShipmentModalStack')
+              .default
           }
           initialParams={{title: 'Conducir'}}
-          options={({route}) => {
-            const {index, routeNames} = {...route.state};
-            return {
-              headerShown: false,
-              headerLeft: null,
-              tabBarVisible: !routeNames?.[index]
-                ?.toLowerCase()
-                ?.includes('chat'),
-            };
-          }}
+          // name={routes.driverStack}
+          // getComponent={() =>
+          //   require('components/navigation/DriverStack').DriverStack
+          // }
+          // options={({route}) => {
+          //   const {index, routeNames} = {...route.state};
+          //   return {
+          //     headerShown: false,
+          //     headerLeft: null,
+          //     tabBarVisible: !routeNames?.[index]
+          //       ?.toLowerCase()
+          //       ?.includes('chat'),
+          //   };
+          // }}
         />
       )}
       <Screen

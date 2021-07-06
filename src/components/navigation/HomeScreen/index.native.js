@@ -19,6 +19,7 @@ export default ({navigation}) => {
       <UserProfileHeader />
       <BodyContainer>
         <NewShipmentForm />
+
         {isDriver && (
           <LastShipmentsContainer>
             <MainButton

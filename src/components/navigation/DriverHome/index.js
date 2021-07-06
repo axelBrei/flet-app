@@ -1,12 +1,8 @@
 import React, {useEffect, useState, useCallback, useMemo, useRef} from 'react';
 import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
-import {useModal} from 'components/Hooks/useModal';
-import {NewTripModalContent} from 'components/navigation/DriverHome/NewTripModalContent';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  confirmShipment,
-  rejectShipment,
   selectPendingShipmentAnswerError,
   selectCurrentShipmentError,
   selectPendingShipments,
@@ -27,15 +23,17 @@ import {OnlineStatusCard} from 'components/navigation/DriverHome/OnlineStatusCar
 import {useUserData} from 'components/Hooks/useUserData';
 import {usePermission, PERMISSIONS} from 'components/Hooks/usePermission';
 import {theme} from 'constants/theme';
+import {routes} from 'constants/config/routes';
+import {useCurrentUserPosition} from 'components/Hooks/useCurrentUserPosition';
 
-const DriverHome = () => {
+const DriverHome = ({navigation}) => {
   const dispatch = useDispatch();
   const {courrier} = useUserData();
   const previosPosition = useSelector(selectPreviosPosition);
   const shipments = useSelector(selectPendingShipments);
   const pendingShipmentError = useSelector(selectCurrentShipmentError);
   const error = useSelector(selectPendingShipmentAnswerError);
-  const debouncedCurrentPosition = useSelector(selectCurrentPosition);
+  const {currentPosition: debouncedCurrentPosition} = useCurrentUserPosition();
   const mapRef = useRef(null);
   const {check, status} = usePermission(
     [PERMISSIONS.backgroundLocation, PERMISSIONS.location],
@@ -71,28 +69,11 @@ const DriverHome = () => {
     ];
   }, [debouncedCurrentPosition, previosPosition]);
 
-  const {Modal, isModalVisible, open, close} = useModal(
-    NewTripModalContent,
-    {
-      distance: pendingShipment?.startPoint?.distance,
-      dropZone: pendingShipment?.endPoint?.name.split(',')[2],
-      onPressAccept: () => {
-        dispatch(confirmShipment(pendingShipment.id));
-      },
-      onPressReject: () => {
-        dispatch(rejectShipment(pendingShipment.id));
-      },
-    },
-    {cancelable: false, fullscreen: false},
-  );
-
   useEffect(() => {
-    if (!error && !pendingShipmentError && pendingShipment && !isModalVisible) {
-      open();
-    } else if (error && isModalVisible) {
-      close();
+    if (!error && !pendingShipmentError && pendingShipment) {
+      navigation.navigate(routes.newShipmentModalScreen);
     }
-  }, [pendingShipment, error, pendingShipmentError, isModalVisible]);
+  }, [navigation, pendingShipment, error, pendingShipmentError]);
 
   const onChangeOnlineStatus = useCallback(
     (newOnlineStatus, time) => {
@@ -123,7 +104,6 @@ const DriverHome = () => {
           showsMyLocationButton
         />
         <OnlineStatusCard onPressButton={onChangeOnlineStatus} />
-        <Modal />
       </Loader>
     </Screen>
   );

@@ -37,5 +37,11 @@ export const navigationConfig = ({title, ...props} = {}) => ({
   cardStyle: {
     backgroundColor: 'white',
   },
+  ...Platform.select({
+    native: {
+      safeAreaInsets: {top: 0},
+    },
+    web: {},
+  }),
   ...props,
 });

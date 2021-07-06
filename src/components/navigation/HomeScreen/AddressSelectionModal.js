@@ -15,7 +15,7 @@ import {CenteredRow, Row} from 'components/ui/Row';
 import {Icon} from 'components/ui/Icon';
 import {Title} from 'components/ui/Title';
 import {MainButton} from 'components/ui/MainButton';
-import {LayoutAnimation} from 'react-native-web';
+import {LayoutAnimation, TouchableOpacity, Keyboard} from 'react-native';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import {IconButton} from 'components/ui/IconButton';
@@ -64,65 +64,70 @@ export const AddressSelectionModal = ({field, onPressItem}) => {
   );
 
   return (
-    <FullScreenModalContainer title="Ingresá una dirección">
-      <InputField
-        onClear={() => setSelectedAddress(null)}
-        label="Dirección"
-        clearable
-        loading={loading}
-        error={error && 'No se encontró la dirección'}
-        value={addressValue}
-        onChangeText={setAddressValue}
-      />
-      {selectedAddress && addressValue.length > 0 ? (
-        <>
-          <InputField
-            label="Departamento/Piso"
-            value={comments}
-            onChangeText={setComments}
-          />
-          <ButtonContainer>
-            <MainButton label="Confirmar" onPress={onPressConfirm} />
-          </ButtonContainer>
-        </>
-      ) : (
-        <SectionList
-          sections={list}
-          renderSectionHeader={({section: {data, icon, title}}) =>
-            data.length > 0 && (
-              <Row>
-                <CenteredRow
-                  style={{
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    marginTop: 10,
-                  }}>
-                  <Icon name={icon} size={24} />
-                  <Title style={{marginBottom: 0, marginLeft: 5}}>
-                    {title}
-                  </Title>
-                </CenteredRow>
-                <IconButton icon={'chevron-down'} size={20} />
-              </Row>
-            )
-          }
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{width: '100%'}}
-          style={{flex: 1}}
-          keyExtractor={(_, i) => i.toString()}
-          renderItem={({item}) => (
-            <PlaceItemContainer onPress={_onPressItem(item)}>
-              <AppText fontSize={10} color={'gray'}>
-                {item?.type}
-              </AppText>
-              <AppText numberOfLines={1} ellipsizeMode="tail">
-                {item.name}
-              </AppText>
-            </PlaceItemContainer>
-          )}
+    <TouchableOpacity
+      onPress={Keyboard.dismiss}
+      disabled={!(selectedAddress && addressValue.length > 0)}
+      activeOpacity={1}>
+      <FullScreenModalContainer title="Ingresá una dirección">
+        <InputField
+          onClear={() => setSelectedAddress(null)}
+          label="Dirección"
+          clearable
+          loading={loading}
+          error={error && 'No se encontró la dirección'}
+          value={addressValue}
+          onChangeText={setAddressValue}
         />
-      )}
-    </FullScreenModalContainer>
+        {selectedAddress && addressValue.length > 0 ? (
+          <>
+            <InputField
+              label="Departamento/Piso"
+              value={comments}
+              onChangeText={setComments}
+            />
+            <ButtonContainer>
+              <MainButton label="Confirmar" onPress={onPressConfirm} />
+            </ButtonContainer>
+          </>
+        ) : (
+          <SectionList
+            sections={list}
+            renderSectionHeader={({section: {data, icon, title}}) =>
+              data.length > 0 && (
+                <Row>
+                  <CenteredRow
+                    style={{
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                      marginTop: 10,
+                    }}>
+                    <Icon name={icon} size={24} />
+                    <Title style={{marginBottom: 0, marginLeft: 5}}>
+                      {title}
+                    </Title>
+                  </CenteredRow>
+                  <IconButton icon={'chevron-down'} size={20} />
+                </Row>
+              )
+            }
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{width: '100%'}}
+            style={{flex: 1}}
+            keyExtractor={(_, i) => i.toString()}
+            renderItem={({item}) => (
+              <PlaceItemContainer onPress={_onPressItem(item)}>
+                <AppText fontSize={10} color={'gray'}>
+                  {item?.type}
+                </AppText>
+                <AppText numberOfLines={1} ellipsizeMode="tail">
+                  {item.name}
+                </AppText>
+              </PlaceItemContainer>
+            )}
+          />
+        )}
+      </FullScreenModalContainer>
+    </TouchableOpacity>
   );
 };
 

@@ -4,6 +4,20 @@ import geocodingService from 'services/geolocationService';
 import axios from 'axios';
 import {capitallize} from 'helpers/stringHelper';
 
+const getAddressName = address => {
+  const components = address.address_components.reduce(
+    (a, c) => ({...a, [c.types[0]]: c}),
+    {},
+  );
+  const name =
+    `${components?.route?.short_name} ${components?.street_number?.short_name}, `
+      .concat(`${components?.postal_code?.short_name}, `)
+      .concat(`${components?.political?.short_name}, `)
+      .concat(`${components?.administrative_area_level_1?.short_name}, `)
+      .concat(`${components?.country?.long_name}`);
+  return capitallize(name, true);
+};
+
 export const useDebouncedGeocoding = (
   inputValue,
   enabled = true,
@@ -28,7 +42,7 @@ export const useDebouncedGeocoding = (
           id: index,
           latitude: item.geometry.location.lat,
           longitude: item.geometry.location.lng,
-          name: capitallize(item.formatted_address, true),
+          name: getAddressName(item),
         }))
         .filter(
           (address, index, self) =>

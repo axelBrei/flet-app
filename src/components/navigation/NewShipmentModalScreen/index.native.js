@@ -26,7 +26,7 @@ import {Platform, Alert} from 'react-native';
 import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {ProgressTimeout} from 'components/navigation/NewShipmentModalScreen/ProgressTimeout';
-import {loadConfig} from '@babel/core/src/config/files/index-browser';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 const getDistanceIfKm = distance => {
   if (distance > 999) {
@@ -36,6 +36,7 @@ const getDistanceIfKm = distance => {
 };
 const NewShipmentModalScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const {height} = useWindowDimension();
   const [hasInteracion, setHasInteraction] = useState(false);
   const {currentPosition} = useCurrentUserPosition();
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
@@ -77,71 +78,76 @@ const NewShipmentModalScreen = ({navigation, route}) => {
   }, [loading, error, navigation, dispatch]);
 
   return (
-    <ModalContainer>
-      <Row>
-        <Title size={26}>¡Nuevo viaje!</Title>
-        <RejectButton color={theme.error} onPress={onPressReject}>
-          Rechazar
-        </RejectButton>
-      </Row>
-      <Row>
-        {shipment?.startPoint?.distance ? (
-          <StaticInputField
-            bold
-            label="Distancia a inicio"
-            style={{width: '49%'}}>
-            {getDistanceIfKm(shipment?.startPoint?.distance)}
-          </StaticInputField>
-        ) : (
-          <StaticInputField bold label="Distancia total" style={{width: '49%'}}>
-            {getDistanceIfKm(totalDistance)}
-          </StaticInputField>
-        )}
+    <ModalContainer removeTWF>
+      <ScrollableContainer scrollEnabled={height <= 700}>
+        <Row>
+          <Title size={26}>¡Nuevo viaje!</Title>
+          <RejectButton color={theme.error} onPress={onPressReject}>
+            Rechazar
+          </RejectButton>
+        </Row>
+        <Row>
+          {shipment?.startPoint?.distance ? (
+            <StaticInputField
+              bold
+              label="Distancia a inicio"
+              style={{width: '49%'}}>
+              {getDistanceIfKm(shipment?.startPoint?.distance)}
+            </StaticInputField>
+          ) : (
+            <StaticInputField
+              bold
+              label="Distancia total"
+              style={{width: '49%'}}>
+              {getDistanceIfKm(totalDistance)}
+            </StaticInputField>
+          )}
 
-        <StaticInputField bold label="Ganás" style={{width: '49%'}}>
-          ${shipment?.price}
-        </StaticInputField>
-      </Row>
-      <ContentContainer>
-        <SmallMap
-          markers={[
-            shipment?.destinations?.[0]?.address,
-            {
-              ...getRotatedMarker(
-                Platform.select({
-                  web: CAR_MARKER,
-                  native: CarMarker,
-                }),
-                currentPosition?.coords?.bearing || 0,
-                40,
-              ),
-              ...(currentPosition?.coords || currentPosition),
-            },
-          ]}
-        />
-        <LocationsTitle>Ubicaciones</LocationsTitle>
-        {shipment?.destinations?.length > 0 && (
-          <ShipmentDestinationsSteps
-            destinations={
-              shipment?.destinations?.map((dest, index) =>
-                index > 0
-                  ? {
-                      ...dest,
-                      address: {
-                        ...dest.address,
-                        name: (dest.address ? dest.address.name : dest.name)
-                          ?.split(',')[1]
-                          .trim(),
-                      },
-                    }
-                  : dest.address
-                  ? dest
-                  : {address: dest},
-              ) || []
-            }
+          <StaticInputField bold label="Ganás" style={{width: '49%'}}>
+            ${shipment?.price}
+          </StaticInputField>
+        </Row>
+        <ContentContainer>
+          <SmallMap
+            markers={[
+              shipment?.destinations?.[0]?.address,
+              {
+                ...getRotatedMarker(
+                  Platform.select({
+                    web: CAR_MARKER,
+                    native: CarMarker,
+                  }),
+                  currentPosition?.coords?.bearing || 0,
+                  40,
+                ),
+                ...(currentPosition?.coords || currentPosition),
+              },
+            ]}
           />
-        )}
-      </ContentContainer>
+          <LocationsTitle>Ubicaciones</LocationsTitle>
+          {shipment?.destinations?.length > 0 && (
+            <ShipmentDestinationsSteps
+              destinations={
+                shipment?.destinations?.map((dest, index) =>
+                  index > 0
+                    ? {
+                        ...dest,
+                        address: {
+                          ...dest.address,
+                          name: (dest.address ? dest.address.name : dest.name)
+                            ?.split(',')[1]
+                            .trim(),
+                        },
+                      }
+                    : dest.address
+                    ? dest
+                    : {address: dest},
+                ) || []
+              }
+            />
+          )}
+        </ContentContainer>
+      </ScrollableContainer>
       <ProgressTimeout onPressAccept={onPressAccept} />
     </ModalContainer>
   );
@@ -160,12 +166,17 @@ const RejectButton = styled(MainButton)`
   color: white;
 `;
 
+const ScrollableContainer = styled.ScrollView`
+  flex: 1;
+`;
+
 const ContentContainer = styled.View`
   flex: 1;
 `;
 
 const SmallMap = styled(Map)`
-  height: 220px;
+  height: ${({theme}) => theme.screenHeight * 0.2}px;
+  min-height: 140px;
   width: 100%;
   border-radius: 20px;
   margin: 10px 0 20px;

@@ -43,7 +43,7 @@ const CourrierNewShipmentModalStackNative = ({navigation}) => {
           gestureEnabled: false,
           cardStyle: {
             backgroundColor: setOpacityToColor('#000000', 0.3),
-            paddingTop: 35,
+            paddingTop: 10,
           },
           title: null,
           headerStyle: {

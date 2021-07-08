@@ -26,35 +26,29 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {IconCard} from 'components/ui/IconCard';
 import {theme} from 'constants/theme';
+import {usePrevious} from 'components/Hooks/usePrevious';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingRegister);
+  const wasLoading = usePrevious(isLoading);
   const error = useSelector(selectRegisterError);
-  const [isSubmited, setIsSubmited] = useState(false);
 
   const onSubmit = useCallback(
     values => {
       dispatch(registerDriverLegaleData(values));
-      setIsSubmited(true);
     },
     [navigation, dispatch],
   );
 
-  const {
-    values,
-    errors,
-    touched,
-    _setFieldValue,
-    handleSubmit,
-  } = useFormikCustom(legalDriverDataFormikConfig(onSubmit));
+  const {values, errors, touched, _setFieldValue, handleSubmit} =
+    useFormikCustom(legalDriverDataFormikConfig(onSubmit));
 
   useEffect(() => {
-    if (isSubmited && !isLoading && !error) {
-      setIsSubmited(false);
+    if (wasLoading && !isLoading && !error) {
       navigation.navigate(routes.registerDriverCompleteScreen);
     }
-  }, [isSubmited, isLoading, error]);
+  }, [wasLoading, isLoading, error]);
 
   return (
     <Screen scrollable>

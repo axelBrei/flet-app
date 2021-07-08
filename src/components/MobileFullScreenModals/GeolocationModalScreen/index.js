@@ -1,24 +1,21 @@
-import React, {useState, useCallback, useRef, useEffect} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {SectionList} from 'react-native';
 import InputField from 'components/ui/InputField';
 import {useDebouncedGeocoding} from 'components/Hooks/useDebouncedGeocoding';
 import {PlaceItem} from 'components/MobileFullScreenModals/GeolocationModalScreen/PlaceItem';
 import {FullScreenModalContainer} from 'components/MobileFullScreenModals/FullScreenModalContainer';
 import {useModalContext} from 'components/Hooks/useModal';
-import {Title} from 'components/ui/Title';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectUserAddresses} from 'redux-store/slices/personalData/addressSlice';
-import {CenteredRow, Row} from 'components/ui/Row';
-import {Icon} from 'components/ui/Icon';
 import {
   addLastAddresses,
   selectLastAddresses,
 } from 'redux-store/slices/geolocationSlice';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {MainButton} from 'components/ui/MainButton';
 import {LayoutAnimation} from 'react-native-web';
-import {IconButton} from 'components/ui/IconButton';
 import {PlaceItemHeader} from 'components/MobileFullScreenModals/GeolocationModalScreen/PlaceItemHeader';
+import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 
 const Modal = ({
   field,
@@ -32,6 +29,7 @@ const Modal = ({
   initialOpen,
 }) => {
   const dispatch = useDispatch();
+  const {isMobile} = useWindowDimension();
   const {closeModal} = useModalContext();
   const [addressValue, setAddressValue] = useState('');
   const [type, setType] = useState('');
@@ -131,7 +129,10 @@ const Modal = ({
         <InputField
           label="Direccion"
           icon="map-marker"
-          onClear={() => setSelectedAddress(null)}
+          onClear={() => {
+            setSelectedAddress(null);
+            setAddressValue('');
+          }}
           onChangeText={setAddressValue}
           value={values?.[field]?.name || addressValue}
           loading={loading}
@@ -147,7 +148,11 @@ const Modal = ({
             onChangeText={setComments}
           />
           <ButtonContainer>
-            <MainButton label="Confirmar" onPress={onPressConfirm} />
+            <MainButton
+              style={!isMobile && {width: '85%'}}
+              label="Confirmar"
+              onPress={onPressConfirm}
+            />
           </ButtonContainer>
         </>
       ) : (
@@ -199,6 +204,12 @@ const InputsContainer = styled.View`
 
 const ButtonContainer = styled.View`
   flex: 1;
+  display: flex;
   justify-content: flex-end;
   width: 100%;
+  ${({theme}) =>
+    !theme.isMObile &&
+    css`
+      align-items: center;
+    `}
 `;

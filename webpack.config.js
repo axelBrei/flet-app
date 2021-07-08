@@ -61,7 +61,7 @@ const babelLoaderConfiguration = {
 };
 
 const dotenv = require('dotenv').config({
-  path: path.join(__dirname, '.env'),
+  path: path.join(__dirname, '.env.web'),
 });
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
@@ -135,10 +135,7 @@ module.exports = env => ({
     ...(env && (!env.dev || env.prod)
       ? [
           new CopyWebpackPlugin({
-            patterns: [
-              // {from: 'public/images', to: 'images'},
-              {from: path.resolve(appDirectory, './public')},
-            ],
+            patterns: [{from: path.resolve(appDirectory, './public')}],
           }),
           new InjectManifest({
             swSrc: path.resolve(
@@ -150,6 +147,14 @@ module.exports = env => ({
           }),
         ]
       : []),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: './firebase-messaging-sw.js',
+          to: './firebase-messaging-sw.js',
+        },
+      ],
+    }),
   ],
   module: {
     rules: [

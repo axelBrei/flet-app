@@ -55,6 +55,7 @@ module.exports = (async () => {
       sourceExts: [...sourceExts, 'svg'],
       blacklistRE: exclusionList([
         '/webpack.config.js',
+        /firebase-messaging-sw.js/,
         ...ignoreTopLevelFolders,
         /^firebase$/,
         ignoreWebFiles,

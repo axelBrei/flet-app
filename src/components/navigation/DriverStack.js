@@ -95,7 +95,7 @@ export const DriverStack = ({navigation}) => {
           <Screen
             name={routes.driverShipmentScreen}
             component={DriverNewShipmentScreen}
-            options={{headerTransparent: true, headerShown: false}}
+            options={{headerShown: false}}
           />
           <Screen
             name={routes.chatScreen}
@@ -113,7 +113,7 @@ export const DriverStack = ({navigation}) => {
         <Screen
           name={routes.driverHomeScreen}
           component={DriverHomeScreen}
-          options={{headerTransparent: true, headerShown: false}}
+          options={{headerShown: false}}
         />
       ) : (
         <Screen

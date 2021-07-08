@@ -20,11 +20,13 @@ import {
 } from 'redux-store/slices/registerSlice';
 import {routes} from 'constants/config/routes';
 import {selectUserData} from 'redux-store/slices/loginSlice';
+import {usePrevious} from 'components/Hooks/usePrevious';
 
 export default ({navigation}) => {
   const {params} = useRoute();
   const dispatch = useDispatch();
   const loading = useSelector(selectIsLoadingRegister);
+  const wasLoading = usePrevious(loading);
   const error = useSelector(selectRegisterError);
   const savedData = useSelector(selectRegisterDriverData);
   const userData = useSelector(selectUserData);
@@ -47,19 +49,18 @@ export default ({navigation}) => {
     touched,
     _setFieldTouched,
     _setFieldValue,
-    submited,
     handleSubmit,
   } = useFormikCustom(formikConfig(savedData, params?.driver, onSubmit));
 
   useEffect(() => {
-    if (submited && !loading && !error) {
+    if (wasLoading && !loading && !error) {
       navigation.navigate(
         params?.driver
           ? routes.registerDriverVehiculeScreen
           : routes.loginScreen,
       );
     }
-  }, [submited, loading, error, params]);
+  }, [wasLoading, loading, error, params]);
 
   return (
     <ScreenComponent scrollable>

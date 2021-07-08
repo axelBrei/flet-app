@@ -27,7 +27,7 @@ const getIconForRoute = routeName => {
   switch (routeName.toLowerCase()) {
     case 'envio':
       return {Icon: ShipmentIcon}; //'package-variant';
-    case routes.newShipmentModalStack:
+    case routes.newShipmentModalStack.toLowerCase():
       return {Icon: CourrierDeliverIcon, size: 30}; //'truck-fast';
     case 'pedidos':
       return {Icon: LastShipmentsIcon, size: 34}; //'truck';
@@ -130,24 +130,12 @@ export default () => {
         <Screen
           name={routes.newShipmentModalStack}
           getComponent={() =>
-            require('components/navigation/CourrierNewShipmentModalStack')
-              .default
+            require(Platform.select({
+              web: 'components/navigation/ProfileStack',
+              native: 'components/navigation/CourrierNewShipmentModalStack',
+            })).default
           }
           initialParams={{title: 'Conducir'}}
-          // name={routes.driverStack}
-          // getComponent={() =>
-          //   require('components/navigation/DriverStack').DriverStack
-          // }
-          // options={({route}) => {
-          //   const {index, routeNames} = {...route.state};
-          //   return {
-          //     headerShown: false,
-          //     headerLeft: null,
-          //     tabBarVisible: !routeNames?.[index]
-          //       ?.toLowerCase()
-          //       ?.includes('chat'),
-          //   };
-          // }}
         />
       )}
       <Screen

@@ -19,8 +19,11 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
         <link rel='preconnect' href='https://fonts.gstatic.com'>
         <link href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap' rel='stylesheet'>
         <style>
+          body {
+            background-color: ${theme.backgroundColor};
+          }
           h1, input, p, select, form {
-          font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif;
           }
           button {
             font-weight: bold;
@@ -73,18 +76,18 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
       <body>
         <form id='form-checkout'>
         <h1>Datos de la tarjeta</h1>
-         <input type='text' name='cardNumber' id='form-checkout__cardNumber' />
+         <input type='number' name='cardNumber' id='form-checkout__cardNumber' />
          <div class='row'>
-           <input style='width: 49%' type='text' name='cardExpirationMonth' id='form-checkout__cardExpirationMonth' />
-           <input style='width: 49%' type='text' name='cardExpirationYear' id='form-checkout__cardExpirationYear' />
+           <input style='width: 49%' type='number' name='cardExpirationMonth' id='form-checkout__cardExpirationMonth' />
+           <input style='width: 49%' type='number' name='cardExpirationYear' id='form-checkout__cardExpirationYear' />
          </div>
-         <input type='text' name='securityCode' id='form-checkout__securityCode' />
+         <input type='number' name='securityCode' id='form-checkout__securityCode' />
          <select name='issuer' id='form-checkout__issuer'></select>
          <h1 style='padding: 20px 0 0'>Datos de la personales</h1>
          <input type='text' name='cardholderName' id='form-checkout__cardholderName'/>
          <div class='row' >
            <select style='width: 48%' name='identificationType' id='form-checkout__identificationType'></select>
-           <input style='width: 50%' type='text' name='identificationNumber' id='form-checkout__identificationNumber'/>
+           <input style='width: 50%' type='number' name='identificationNumber' id='form-checkout__identificationNumber'/>
          </div>
          <select name='installments' id='form-checkout__installments'></select>
          <button type='submit' id='form-checkout__submit'>Pagar</button>
@@ -148,7 +151,10 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
               },
               onSubmit: event => {
                 event.preventDefault();
-          
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                  type: 'loading',
+                  value: true
+                }))
                 const {
                   paymentMethodId,
                   issuerId,
@@ -169,17 +175,11 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
                   }
                 }))
               },
-              onFetching: () => {
-                // window.ReactNativeWebView.postMessage(JSON.stringify({
-                //   type: 'loading',
-                //   value: true
-                // }))
-                // return () => {
-                //   window.ReactNativeWebView.postMessage(JSON.stringify({
-                //     type: 'loading',
-                //     value: false
-                //   }))
-                // };
+              onFetching: (res) => {
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                  type: 'loading res',
+                  value: res
+                }))
               },
             },
           });    
@@ -195,6 +195,7 @@ export default ({onPaymentSubmited, loading: newShipmetnLoading}) => {
         return setLoading(data.value);
       }
       if (data.type === 'submit') {
+        setLoading(false);
         return onPaymentSubmited?.(data.value);
       }
     },
@@ -225,4 +226,5 @@ const Container = styled.View`
   height: 100%;
   flex-direction: column;
   padding: 0 5px;
+  background-color: ${theme.backgroundColor};
 `;

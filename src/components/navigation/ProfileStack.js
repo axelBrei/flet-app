@@ -13,7 +13,6 @@ export default () => {
   return (
     <Navigator
       screenOptions={navigationConfig({
-        headerTransparent: !isMobile,
         headerBackTitle: 'Volver',
         headerBackTitleVisible: !isMobile,
         headerTitleStyle: {
@@ -32,7 +31,7 @@ export default () => {
       <Screen
         name={routes.userAddressUpdateScreen}
         options={{
-          title: isMobile ? 'Mis direcciones' : '',
+          title: 'Mis direcciones',
         }}
         getComponent={() =>
           require('components/navigation/UserAddressUpdateScreen').default

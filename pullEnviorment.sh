@@ -2,6 +2,6 @@
 
 yum install -y wget
 
-wget -O .env $ENV_URL
+wget -O .env.web $ENV_URL
 
 npm run build:web:prod

@@ -43,17 +43,19 @@ export default () => {
           ? routes.shipmentFinishedScreen
           : routes.homeScreen
       }
-      screenOptions={navigationConfig({
-        headerTransparent: !isMobile,
-        headerBackTitle: 'Volver',
-        headerTintColor: isMobile ? theme.fontColor : theme.primaryDarkColor,
-        headerBackTitleVisible: !isMobile,
-        headerTitleStyle: {
-          fontSize: 20,
-          fontWeight: 'bold',
-          color: theme.fontColor,
-        },
-      })}>
+      screenOptions={navigationConfig(
+        isMobile
+          ? {}
+          : {
+              headerTransparent: true,
+              headerBackTitle: 'Volver',
+              headerBackTitleVisible: true,
+              headerTitleStyle: {
+                fontSize: 20,
+                fontWeight: 'bold',
+              },
+            },
+      )}>
       {currentShipment.shipmentId ||
       (shipmentStatus.id && shipmentStates.includes(shipmentStatus.status)) ? (
         shipmentStatus.status === SHIPMENT_STATE.FINISHED ? (
@@ -123,6 +125,9 @@ export default () => {
           />
           <Screen
             name={routes.paymentScreen}
+            options={{
+              title: 'Paga tu envío',
+            }}
             getComponent={() =>
               require('components/navigation/PaymentScreen').default
             }

@@ -8,8 +8,10 @@ import {useNavigation} from '@react-navigation/native';
 export const CustomHeaderBackButton = ({navigation, ...props}) => {
   const nav = navigation || useNavigation();
   const onPress = () => {
-    if (Platform.OS === 'web' && props.canGoBack) {
-      history?.back();
+    if (Platform.OS === 'web') {
+      if (props.canGoBack) {
+        (props.canGoBack ? props?.onPress : nav?.goBack)?.();
+      } else history?.back();
       return;
     }
     (props.canGoBack ? props?.onPress : nav?.goBack)?.();

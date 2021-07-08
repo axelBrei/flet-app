@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import Screen from 'components/ui/Screen';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {theme} from 'constants/theme';
 import {AppText} from 'components/ui/AppText';
 import {DetailHeader} from 'components/navigation/LastShipmentDetailScreen/DetailHeader';
@@ -97,12 +97,17 @@ const ContentContainer = styled.ScrollView`
 `;
 
 const Card = styled.View`
-  flex: 1;
   background-color: white;
   box-shadow: 1px 3px 6px ${theme.shadowColor};
   border-radius: 12px;
   padding: 15px 20px ${props => (props.isBottom ? 15 : 0)}px;
   margin: 0 20px 20px;
+  display: flex;
+  ${({theme}) =>
+    theme.isMobile &&
+    css`
+      flex: 1;
+    `}
 `;
 Card.defaultProps = applyShadow();
 
@@ -111,6 +116,7 @@ const Divider = styled.View`
   height: 1px;
   margin: 10px 0;
   background-color: ${theme.disabledFont};
+  display: flex;
 `;
 
 const ListHeader = styled.TouchableOpacity`
@@ -119,6 +125,7 @@ const ListHeader = styled.TouchableOpacity`
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
+  display: flex;
 `;
 
 const DataRow = styled(RowWithBoldData)`

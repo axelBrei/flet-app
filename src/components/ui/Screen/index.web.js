@@ -53,7 +53,7 @@ const Screen = ({
         contentContainerStyle={props.contentContainerStyle}
         refreshControl={props.refreshControl}
         style={[
-          {backgroundColor: theme.white, overflowX: 'hidden'},
+          {backgroundColor: theme.backgroundColor, overflowX: 'hidden'},
           !scrollable
             ? {
                 alignItems,

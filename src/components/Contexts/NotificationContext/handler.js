@@ -42,7 +42,6 @@ export const useNotificationHandler = () => {
             vehicle: _shipment?.courrier?.vehicle || _shipment?.vehicle || {},
           };
         }
-        console.log('notification', type, shipment);
         switch (type) {
           case NOTIFICATION_TYPES.SHIPMENT_UPDATE: {
             dispatch(receiveNewShipmentSuccess(shipment));

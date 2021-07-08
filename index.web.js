@@ -39,9 +39,12 @@ WebFont.load({
 });
 
 Sentry.init({
-  dsn:
-    'https://e9aa7ff8fab941e1a52520d4231f8283@o789898.ingest.sentry.io/5800049',
+  dsn: 'https://e9aa7ff8fab941e1a52520d4231f8283@o789898.ingest.sentry.io/5800049',
 });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/firebase-messaging-sw.js');
+}
 
 AppRegistry.registerComponent(appName, () => App);
 AppRegistry.runApplication(appName, {

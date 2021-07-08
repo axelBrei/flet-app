@@ -25,10 +25,12 @@ import {
   selectLoadingVehicleTypes,
   selectVehicleTypes,
 } from 'redux-store/slices/vehicleTypesSlice';
+import {usePrevious} from 'components/Hooks/usePrevious';
 
 export default ({navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoadingRegister);
+  const wasLoading = usePrevious(isLoading);
   const error = useSelector(selectRegisterError);
   const vehicleTypes = useSelector(selectVehicleTypes);
   const loadingTypes = useSelector(selectLoadingVehicleTypes);
@@ -54,17 +56,16 @@ export default ({navigation}) => {
     values,
     errors,
     touched,
-    isSubmitting,
     _setFieldValue,
     _setFieldTouched,
     handleSubmit,
   } = useFormikCustom(vehiculeDataFormikConfig(onSubmit));
 
   useEffect(() => {
-    if (isSubmitting && !isLoading && !error) {
+    if (wasLoading && !isLoading && !error) {
       navigation.navigate(routes.registerDriverLegalsScreen);
     }
-  }, [isSubmitting, isLoading, error]);
+  }, [wasLoading, isLoading, error]);
 
   return (
     <Screen scrollable>

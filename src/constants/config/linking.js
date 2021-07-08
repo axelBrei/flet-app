@@ -22,22 +22,26 @@ export const linkingConfig = {
   getStateFromPath(path, options) {
     const linkingRoutes = getRoutesFromLinking();
     path = path?.slice(1) ?? path;
-    if (path.length <= 1) {
-      path = routes.landingScreen;
-    }
-    if (!Object.values(linkingRoutes).includes(path)) {
-      return {
-        index: 0,
-        routes: [{name: 'pagina-inexistente'}],
-      };
-    }
-    const isLoggedIn = !!reduxStore.getState()?.login?.userData;
-    const isPrivateRoute = path.includes('private');
-    if (!isLoggedIn && isPrivateRoute) {
-      return {
-        index: 0,
-        routes: [{name: routes.loginScreen}],
-      };
-    } else return getState(path, options);
+    try {
+      if (path.length <= 1) {
+        path = routes.landingScreen;
+      }
+      if (!Object.values(linkingRoutes).includes(path)) {
+        return {
+          index: 0,
+          routes: [{name: 'pagina-inexistente'}],
+        };
+      }
+      const isLoggedIn = !!reduxStore.getState()?.login?.userData;
+      const isPrivateRoute = path.includes('private');
+      if (!isLoggedIn && isPrivateRoute) {
+        return {
+          index: 0,
+          routes: [{name: routes.loginScreen}],
+        };
+      }
+    } catch (e) {}
+
+    return getState(path, options);
   },
 };

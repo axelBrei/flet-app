@@ -69,14 +69,6 @@ export default ({navigation}) => {
   const loading = isLoading || isLoadingNewAddres;
   return (
     <ScreenComponent>
-      {!isMobile && (
-        <TitleContainer>
-          <Title textAlign="left">Mis direcciones</Title>
-          <TextLink onPress={onPressAddAddress} color={theme.primaryColor}>
-            Agregar dirección
-          </TextLink>
-        </TitleContainer>
-      )}
       <CommonList
         data={loading ? [] : addresses}
         contentContainerStyle={
@@ -102,6 +94,19 @@ export default ({navigation}) => {
         renderItem={({item, index}) => (
           <AddressItem onPressDelete={onPressDelete(item)} {...item} />
         )}
+        ListFooterComponent={() =>
+          isMobile ? null : (
+            <WebButtonContainer>
+              <MainButton
+                style={{width: '85%'}}
+                disabled={isLoading}
+                loading={isLoadingNewAddres}
+                onPress={onPressAddAddress}>
+                Agregar dirección
+              </MainButton>
+            </WebButtonContainer>
+          )
+        }
       />
       {isMobile && (
         <MainButton
@@ -136,10 +141,9 @@ const FullScreenLoader = styled(Loader)`
   width: 100%;
 `;
 
-const TitleContainer = styled(Row)`
-  ${props =>
-    !props.theme.isMobile &&
-    css`
-      max-width: 550px;
-    `}
+const WebButtonContainer = styled.View`
+  padding: 35px 0 20px;
+  width: 100%;
+  max-width: 550px;
+  align-items: center;
 `;

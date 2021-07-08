@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, Dimensions} from 'react-native';
+import {Platform, Dimensions, View} from 'react-native';
 import {theme} from 'constants/theme';
 import {CustomHeaderBackButton} from 'components/ui/CustomHeaderBackButton';
 import {TransitionPresets} from '@react-navigation/stack';
@@ -17,7 +17,11 @@ export const navigationConfig = ({title, ...props} = {}) => ({
     shadowColor: theme.backgroundColor,
     ...props.headerStyle,
   },
-  headerTitle: props => <Title size={22} color={props.tintColor} {...props} />,
+  headerTitle: props => (
+    <View style={!isMobile && {marginLeft: 35}}>
+      <Title size={22} color={props.tintColor} {...props} />
+    </View>
+  ),
   headerLeft: props => (
     <CustomHeaderBackButton
       {...props}
@@ -31,7 +35,7 @@ export const navigationConfig = ({title, ...props} = {}) => ({
         headerTitleAlign: 'center',
       }
     : {
-        headerTitleStyle: {display: 'none'},
+        headerTitleStyle: {},
         title: '',
       }),
   cardStyle: {

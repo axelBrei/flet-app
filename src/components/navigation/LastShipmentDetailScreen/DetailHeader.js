@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {theme} from 'constants/theme';
 import {CenteredRow, Column, Row} from 'components/ui/Row';
 import {AppText} from 'components/ui/AppText';
@@ -77,6 +77,11 @@ const Container = styled.View`
   padding: 70px 20px 20px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  ${({theme}) =>
+    !theme.isMobile &&
+    css`
+      border-radius: 20px;
+    `}
 `;
 
 const DriverContainer = styled.View`

@@ -31,7 +31,7 @@ export const AnimatedError = ({error, errorFontSize}) => {
         style={{
           width: '100%',
           color: theme.error,
-          fontSize: errorFontSize || 8,
+          fontSize: errorFontSize || 12,
           opacity,
           transform: [{translateX: position.x}, {translateY: position.y}],
         }}>
@@ -44,5 +44,7 @@ export const AnimatedError = ({error, errorFontSize}) => {
 const Container = styled(View)`
   position: absolute;
   top: 100%;
-  left: ${Platform.OS === 'web' ? 5 : 15}px;
+  width: auto;
+  background-color: green;
+  left: 15px;
 `;

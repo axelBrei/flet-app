@@ -119,7 +119,6 @@ const slice = createSlice({
     },
 
     removeShipmentFromList: (state, {payload: id}) => {
-      console.log('shipmentId', id);
       state.shipmentData = state.shipmentData.filter(s => s.id !== id);
       state.error.confirm = null;
       state.error.reject = null;

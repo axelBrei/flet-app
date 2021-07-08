@@ -29,7 +29,7 @@ const LastShipmentsScreen = () => {
   const {isMobile, width} = useWindowDimension();
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoadingLastShipments);
+  const isLoading = true; // useSelector(selectIsLoadingLastShipments);
   const error = useSelector(selectLastShipmentsError);
   const lastShipmentList = useSelector(selectLastShipments);
   const pagination = useSelector(selectLastShipmentsPagination);
@@ -62,11 +62,22 @@ const LastShipmentsScreen = () => {
   }, []);
 
   return (
-    <div style={{display: 'flex', flexDirection: 'row', overflow: 'auto'}}>
+    <div
+      style={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'row',
+        overflow: 'auto',
+        height: '100%',
+        width: '100%',
+        alignItems: 'stretch',
+      }}>
       <Screen scrollable style={{position: 'relative'}}>
         <Title padding={20}>Mis ultimos pedidos</Title>
         {lastShipmentList?.length === 0 && isLoading ? (
-          <Loader loading />
+          <LoaderContainer>
+            <Loader loading message="Cargando últimos envíos" size={40} />
+          </LoaderContainer>
         ) : (
           <>
             <List>{lastShipmentList.map(renderItem)}</List>
@@ -101,7 +112,7 @@ const LastShipmentsScreen = () => {
           </>
         )}
       </Screen>
-      {width > 1000 && (
+      {width > 1000 && lastShipmentList?.length !== 0 && !isLoading && (
         <DetailContainer>
           {!!selectedShipment && (
             <LastShipmentDetailScreen
@@ -155,4 +166,11 @@ const ModalHeader = styled.View`
   background-color: ${theme.primaryColor};
   border-color: ${theme.primaryColor};
   z-index: 2;
+`;
+
+const LoaderContainer = styled.View`
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;

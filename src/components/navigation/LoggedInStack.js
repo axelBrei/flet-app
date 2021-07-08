@@ -129,12 +129,12 @@ export default () => {
       {isMobile && userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.newShipmentModalStack}
-          getComponent={() =>
-            require(Platform.select({
-              web: 'components/navigation/ProfileStack',
-              native: 'components/navigation/CourrierNewShipmentModalStack',
-            })).default
-          }
+          getComponent={Platform.select({
+            web: () => require('components/navigation/ProfileStack').default,
+            native: () =>
+              require('components/navigation/CourrierNewShipmentModalStack')
+                .default,
+          })}
           initialParams={{title: 'Conducir'}}
         />
       )}

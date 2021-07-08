@@ -45,6 +45,5 @@ const Container = styled(View)`
   position: absolute;
   top: 100%;
   width: auto;
-  background-color: green;
   left: 15px;
 `;

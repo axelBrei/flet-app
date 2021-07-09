@@ -5,6 +5,7 @@ import {name as appName} from '../package.json';
 
 // skipWaiting();
 clientsClaim();
+skipWaiting();
 
 const precacheManifest = [].concat(self.__WB_MANIFEST || []);
 precacheAndRoute(precacheManifest);
@@ -15,8 +16,12 @@ const navigationRoute = new NavigationRoute(handler, {
 });
 registerRoute(navigationRoute);
 
-self.addEventListener('message', function (event) {
-  if (event.data.action === 'skipWaiting') {
-    self.skipWaiting();
-  }
-});
+// self.addEventListener('install', event => {
+//   self.skipWaiting();
+// });
+//
+// self.addEventListener('message', function (event) {
+//   if (event.data.action === 'skipWaiting') {
+//     self.skipWaiting();
+//   }
+// });

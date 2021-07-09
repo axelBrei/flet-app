@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const ServiceWorkerUpdateButton = ({serviceWorker}) => {
-  const onClick = (e) => {
-    serviceWorker.postMessage({action: 'skipWaiting'});
+  const onClick = e => {
     e.preventDefault();
+    serviceWorker.postMessage({action: 'skipWaiting'});
     window.location.reload();
   };
   return (
@@ -20,7 +20,7 @@ const ServiceWorkerUpdateButton = ({serviceWorker}) => {
 
 export default ServiceWorkerUpdateButton;
 
-export const displayUpdateNotification = (serviceWorker) => {
+export const displayUpdateNotification = serviceWorker => {
   const link = document.createElement('div');
   link.setAttribute('id', 'update-notification');
   const body = document.getElementById('react-root'); //document.querySelector('body').appendChild(link);
@@ -41,35 +41,31 @@ const isLocalhost = Boolean(
     ),
 );
 
-export const register = () => {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', async () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-      // if (!isLocalhost) {
-      registerValidSW();
-      // }
-    });
-  }
-};
-
 const registerValidSW = async () => {
   try {
     const registration = await navigator.serviceWorker.register(
       '/service-worker.js',
     );
-    registration.addEventListener('updatefound', () => {
-      const newWorker = registration.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed') {
-          console.log(
-            'New content is available and will be used when all ' +
-              'tabs for this page are closed. See http://bit.ly/CRA-PWA.',
-          );
-          displayUpdateNotification(newWorker);
-        }
-      });
-    });
+    // registration.addEventListener('updatefound', e => {
+    //   const newWorker = registration.installing;
+    //   console.log('target', e.target);
+    //   newWorker.addEventListener('statechange', () => {
+    //     if (newWorker.state === 'installed') {
+    //       console.log(registration, newWorker);
+    //       displayUpdateNotification(newWorker);
+    //     }
+    //   });
+    // });
   } catch (registrationError) {
     console.log('SW registration failed: ', registrationError);
   }
+};
+
+export const register = () => {
+  window.addEventListener('load', async () => {
+    const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+    // if (!isLocalhost) {
+    registerValidSW();
+    // }
+  });
 };

@@ -43,6 +43,10 @@ Sentry.init({
 });
 
 if ('serviceWorker' in navigator) {
+  // PWA
+  if (process.env.NODE_ENV !== 'development') {
+    require('./src/serviceWorkerConfig.web').register();
+  }
   navigator.serviceWorker.register('/firebase-messaging-sw.js');
 }
 
@@ -73,9 +77,4 @@ const checkIsIOS = () =>
 
 if (checkIsIOS()) {
   disableIosTextFieldZoom();
-}
-
-// PWA
-if (process.env.NODE_ENV !== 'development') {
-  require('./src/serviceWorkerConfig.web').register();
 }

@@ -2,6 +2,10 @@ import React, {useCallback} from 'react';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
 import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
+
+crashlytics().setCrashlyticsCollectionEnabled(!__DEV__);
+analytics().setAnalyticsCollectionEnabled(!__DEV__);
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

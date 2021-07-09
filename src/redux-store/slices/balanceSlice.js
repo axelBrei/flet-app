@@ -138,20 +138,19 @@ export const fetchChangeBankNumber = number => async dispatch => {
   }
 };
 
-export const fetchPendingPayments = (
-  page = 1,
-  pageSize = 20,
-) => async dispatch => {
-  dispatch(requestBalancePendingPayments(page));
-  try {
-    const {data} = await balanceService.getPendingPayments(page, pageSize);
-    dispatch(receiveBalancePendingPaymentsSuccess(data));
-  } catch (e) {
-    dispatch(
-      receiveBalancePendingPaymentsFail(e?.response?.data?.message || e),
-    );
-  }
-};
+export const fetchPendingPayments =
+  (page = 1, pageSize = 20) =>
+  async dispatch => {
+    dispatch(requestBalancePendingPayments(page));
+    try {
+      const {data} = await balanceService.getPendingPayments(page, pageSize);
+      dispatch(receiveBalancePendingPaymentsSuccess(data));
+    } catch (e) {
+      dispatch(
+        receiveBalancePendingPaymentsFail(e?.response?.data?.message || e),
+      );
+    }
+  };
 
 // SELECTORS
 export const selectIsLoadingBalance = state =>

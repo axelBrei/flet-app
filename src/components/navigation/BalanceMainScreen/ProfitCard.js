@@ -10,10 +10,9 @@ import {applyShadow} from 'helpers/uiHelper';
 export const ProfitCard = () => {
   const balance = useSelector(selectCourrierBalance);
 
-  const totalEarned =
-    balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
-  const netProfit = balance?.card?.balance + balance?.cash?.balance;
   const totalFee = balance?.card?.fee + balance?.cash?.fee;
+  const netProfit = balance?.card?.balance + balance?.cash?.balance + totalFee;
+  const totalEarned = netProfit - totalFee;
   return (
     <BalanceCard>
       <CenteredColumn>

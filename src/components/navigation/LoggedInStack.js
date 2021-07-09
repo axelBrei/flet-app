@@ -12,7 +12,6 @@ import {useSelector} from 'react-redux';
 import {selectUserData} from 'redux-store/slices/loginSlice';
 import {Platform} from 'react-native';
 import {Icon} from 'components/ui/Icon';
-import {resources} from 'resources';
 import {AppText} from 'components/ui/AppText';
 import styled from 'styled-components';
 import {applyShadow} from 'helpers/uiHelper';
@@ -38,13 +37,6 @@ const getIconForRoute = routeName => {
     default:
       return {Icon: ShipmentIcon}; // 'account-question';
   }
-};
-
-const titlesMappings = {
-  courrier: '',
-  envio: '',
-  balance: '',
-  usuario: '',
 };
 
 export default () => {
@@ -129,12 +121,10 @@ export default () => {
       {isMobile && userData?.isDriver && shouldDisplayDriverScreen && (
         <Screen
           name={routes.newShipmentModalStack}
-          getComponent={Platform.select({
-            web: () => require('components/navigation/ProfileStack').default,
-            native: () =>
-              require('components/navigation/CourrierNewShipmentModalStack')
-                .default,
-          })}
+          getComponent={() =>
+            require('components/navigation/CourrierNewShipmentModalStack')
+              .default
+          }
           initialParams={{title: 'Conducir'}}
         />
       )}

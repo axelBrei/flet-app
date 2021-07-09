@@ -2,7 +2,7 @@ import React from 'react';
 import {theme} from 'constants/theme';
 import {RefreshControl as RefControl} from 'react-native';
 
-export const RefreshControl = ({refreshing, onRefresh}) => (
+export const RefreshControl = ({refreshing, onRefresh, ...props}) => (
   <RefControl
     refreshing={refreshing}
     colors={[theme.primaryColor]}
@@ -10,5 +10,6 @@ export const RefreshControl = ({refreshing, onRefresh}) => (
     titleColor={theme.primaryColor}
     tintColor={theme.primaryColor}
     onRefresh={onRefresh}
+    {...props}
   />
 );

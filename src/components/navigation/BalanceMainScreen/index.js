@@ -53,10 +53,20 @@ export default () => {
     }
   }, [refreshing, isLoading]);
 
-  const profit =
-    balance?.card?.balance - balance?.card?.fee - balance?.cash?.fee;
+  const profit = balance?.card?.balance;
   return (
-    <Screen scrollable={false} notchColor={theme.primaryColor}>
+    <ScreenComponent
+      scrollable
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            setRefreshing(true);
+            dispatch(fetchBalance());
+          }}
+        />
+      }
+      notchColor={theme.primaryColor}>
       <Loader
         size="large"
         loading={!refreshing && isLoading}
@@ -77,12 +87,24 @@ export default () => {
       </Loader>
       <Modal />
       <CbuModal />
-    </Screen>
+    </ScreenComponent>
   );
 };
 
+const ScreenComponent = styled(Screen)`
+  ${({theme}) =>
+    theme.isMobile &&
+    css`
+      height: ${theme.screenHeight}px;
+      width: ${theme.screenWidth}px;
+    `}
+`;
+
 const ScreenContainer = styled.View`
   padding: 20px;
+  height: 100%;
+  width: 100%;
+  flex: 1;
   ${({theme}) =>
     theme.isMobile
       ? css`

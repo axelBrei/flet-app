@@ -45,7 +45,7 @@ export const CashoutModalContent = ({closeModal}) => {
     },
   });
 
-  const totalEarned = card?.balance - card?.fee - cash?.fee || '';
+  const totalEarned = card?.balance - cash?.fee || '';
   return (
     <Container>
       <Title>Retiro de fondos</Title>
@@ -53,7 +53,7 @@ export const CashoutModalContent = ({closeModal}) => {
       <DataContainer>
         <Row>
           <AppText>Ganancia tarjeta</AppText>
-          <AppText>${card.balance}</AppText>
+          <AppText>${card.balance + card.fee}</AppText>
         </Row>
         <Row>
           <AppText>Comisiones Tarjeta</AppText>

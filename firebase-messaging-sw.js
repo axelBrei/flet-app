@@ -3,6 +3,7 @@ importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js');
 
 // Initialize the Firebase app in the service worker by passing the generated config
+console.log('register service worker');
 firebase.initializeApp({
   apiKey: 'AIzaSyDOlMRpgt9lnpIyPrOVr23HHwfoEuPv1Co',
   authDomain: 'fletapp-dev.firebaseapp.com',
@@ -31,6 +32,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
       const notificationOptions = {
         body: payload.data.body,
       };
+      console.log('sw notif', payload);
       return self.registration.showNotification(
         notificationTitle,
         notificationOptions,

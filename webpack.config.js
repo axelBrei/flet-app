@@ -147,14 +147,14 @@ module.exports = env => ({
           }),
         ]
       : []),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: './firebase-messaging-sw.js',
-          to: './firebase-messaging-sw.js',
-        },
-      ],
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     {
+    //       from: './firebase-messaging-sw.js',
+    //       to: './firebase-messaging-sw.js',
+    //     },
+    //   ],
+    // }),
   ],
   module: {
     rules: [

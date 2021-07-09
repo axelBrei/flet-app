@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import firebase from 'services/FirebaseWebService';
 import Config from 'react-native-config';
 import {
   handleNewToken,
@@ -9,7 +8,7 @@ import {useUserData} from 'components/Hooks/useUserData';
 
 export default ({children}) => {
   const userData = useUserData();
-  const [hasPermission, setHaspermission] = useState(false);
+  const [currentToken, setCurrentToken] = useState(null);
   const handleNotification = useNotificationHandler();
 
   const getToken = useCallback(async () => {
@@ -17,7 +16,7 @@ export default ({children}) => {
       const token = await firebase.messaging()?.getToken({
         vapidKey: Config.REACT_APP_VAPID_KEY,
       });
-      setHaspermission(true);
+      setCurrentToken(token);
       handleNewToken(token);
     } catch (e) {}
   }, []);
@@ -27,13 +26,25 @@ export default ({children}) => {
   }, []);
 
   useEffect(() => {
-    if (hasPermission && userData?.id) {
-      navigator.serviceWorker.addEventListener('message', message => {
-        const notification = {data: message.data?.data};
-        handleNotification(false)(notification);
-      });
+    if (!!currentToken && userData?.id) {
+      if (typeof messaging === 'function') {
+        messaging().navigator.serviceWorker.addEventListener(
+          'message',
+          message => {
+            console.log('new message');
+            const notification = {data: message.data?.data};
+            handleNotification(false)(notification);
+          },
+        );
+      } else {
+        firebase.messaging().onMessage(message => {
+          const notification = {data: message?.data};
+          console.log('new message', notification);
+          handleNotification(false)(notification);
+        });
+      }
     }
-  }, [hasPermission, userData]);
+  }, [currentToken, userData]);
 
   return <>{children}</>;
 };

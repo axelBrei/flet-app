@@ -10,11 +10,15 @@ const ErrorBoundary = ({children}) => {
   }, []);
 
   const renderFallback = useCallback(<Fallback>Error</Fallback>, []);
+  const Container =
+    process.env.NODE_ENV === 'development'
+      ? props => <React.Fragment>{props.children}</React.Fragment>
+      : Sentry.ErrorBoundary;
 
   return (
-    <Sentry.ErrorBoundary fallback={renderFallback} showDialog>
+    <Container fallback={renderFallback} showDialog>
       {children}
-    </Sentry.ErrorBoundary>
+    </Container>
   );
 };
 export default ErrorBoundary;

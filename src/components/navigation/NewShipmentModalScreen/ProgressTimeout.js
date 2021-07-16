@@ -2,7 +2,7 @@ import {Row} from 'components/ui/Row';
 import {CircularProgress} from 'components/ui/CircularProgress';
 import {AppText} from 'components/ui/AppText';
 import {Title} from 'components/ui/Title';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import useStopableInterval from 'components/Hooks/useStopableInterval';
 import styled from 'styled-components';
 import {MainButton} from 'components/ui/MainButton';
@@ -14,7 +14,11 @@ import {
   selectDriverShipmentData,
   selectLoadingPendingShipmentAnswer,
 } from 'redux-store/slices/driverShipmentSlice';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import Animated from 'react-native-reanimated';
 
@@ -22,6 +26,7 @@ const ACCEPTANCE_TIME = 30; //seconds
 export const ProgressTimeout = ({onPressAccept}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const shipments = useSelector(selectDriverShipmentData);
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
   const {id, updatedAt} = shipments[0] || {};
@@ -32,15 +37,14 @@ export const ProgressTimeout = ({onPressAccept}) => {
     timeDif <= 0 ? 1 : ACCEPTANCE_TIME - timeDif,
   );
 
-  useStopableInterval(() => {
+  const clean = useStopableInterval(() => {
     const remaining = timeLeft - 1;
     setTimeLeft(remaining);
-    if (remaining <= 0) {
-      setTimeout(() => {
-        dispatch(removeShipmentFromList(id || 0)); // remove shipment of list
-        dispatch(rejectShipment(id));
-        navigation.goBack();
-      }, 1000);
+    if (isFocused && remaining === 0) {
+      dispatch(removeShipmentFromList(id || 0)); // remove shipment of list
+      dispatch(rejectShipment(id));
+      navigation.goBack();
+      return true;
     }
     return remaining <= 0;
   }, 1000);

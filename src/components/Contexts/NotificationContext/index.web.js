@@ -36,13 +36,12 @@ export default ({children}) => {
             handleNotification(false)(notification);
           },
         );
-      } else {
-        firebase.messaging().onMessage(message => {
-          const notification = {data: message?.data};
-          console.log('new message', notification);
-          handleNotification(false)(notification);
-        });
       }
+      firebase.messaging().onMessage(message => {
+        const notification = {data: message?.data};
+        console.log('new message', notification);
+        handleNotification(false)(notification);
+      });
     }
   }, [currentToken, userData]);
 

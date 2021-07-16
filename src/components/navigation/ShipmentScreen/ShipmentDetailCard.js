@@ -115,6 +115,7 @@ export const ShipmentDetailCard = () => {
     navigation.navigate(routes.chatScreen);
   }, [navigation]);
 
+  console.log(shipmentStatus);
   return (
     <Card>
       <StepsWithLoader steps={steps} currentStep={getCurrentStepFromState()} />
@@ -125,7 +126,8 @@ export const ShipmentDetailCard = () => {
           label={'Tengo un\nproblema'}
           onPress={onPressHaveAProblem}
         />
-        {CANCELABLE_STATUS.includes(shipmentStatus?.status) ? (
+        {!shipmentStatus?.status ||
+        CANCELABLE_STATUS.includes(shipmentStatus?.status) ? (
           <LabelIconButton
             loading={isLoadingCancel}
             onPress={onPressCancel}

@@ -80,7 +80,7 @@ Screen.defaultProps = {
 export default Screen;
 
 const Container = styled.View`
-  background-color: ${props => props.theme.colors.white};
   height: 100%;
   width: 100%;
+  background-color: ${theme.backgroundColor};
 `;

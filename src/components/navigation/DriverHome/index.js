@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo, useRef} from 'react';
+import React, {useEffect, useCallback, useMemo, useRef} from 'react';
 import Screen from 'components/ui/Screen';
 import Map from 'components/ui/Map/index';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,7 +15,6 @@ import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {
   changeOnlineStatus,
-  selectCurrentPosition,
   selectPreviosPosition,
 } from 'redux-store/slices/driverSlice';
 import {useFetcingPendingShipment} from 'components/navigation/DriverHome/useFetchPendignShipment';

@@ -27,6 +27,7 @@ import CAR_MARKER from 'resources/assets/driver_car.png';
 import CarMarker from 'resources/assets/driver_car';
 import {ProgressTimeout} from 'components/navigation/NewShipmentModalScreen/ProgressTimeout';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {useFocusEffect} from '@react-navigation/native';
 
 const getDistanceIfKm = distance => {
   if (distance > 999) {
@@ -63,19 +64,23 @@ const NewShipmentModalScreen = ({navigation, route}) => {
     setHasInteraction(true);
   }, [dispatch, shipment]);
 
-  useEffect(() => {
-    if (hasInteracion && !loading) {
-      navigation.goBack();
-    }
-  }, [navigation, hasInteracion, loading]);
+  useFocusEffect(
+    useCallback(() => {
+      if (hasInteracion && !loading) {
+        navigation.goBack();
+      }
+    }, [navigation, hasInteracion, loading]),
+  );
 
-  useEffect(() => {
-    if (!loading && error?.toLowerCase().includes('cancelo')) {
-      Alert.alert('El cliente cancelo el pedido');
-      dispatch(removeShipmentFromList(shipment?.id || 0)); // remove shipment of list
-      navigation.goBack();
-    }
-  }, [loading, error, navigation, dispatch]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!loading && error?.toLowerCase().includes('cancelo')) {
+        Alert.alert('El cliente cancelo el pedido');
+        dispatch(removeShipmentFromList(shipment?.id || 0)); // remove shipment of list
+        navigation.goBack();
+      }
+    }, [loading, error, navigation, dispatch]),
+  );
 
   return (
     <ModalContainer removeTWF>

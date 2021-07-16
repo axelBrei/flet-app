@@ -44,7 +44,7 @@ export const CashoutModalContent = ({closeModal}) => {
       closeModal();
     },
   });
-
+  //TODO: cambiar forma de mostrar la info del balance
   const totalEarned = card?.balance - cash?.fee || '';
   return (
     <Container>
@@ -52,7 +52,7 @@ export const CashoutModalContent = ({closeModal}) => {
       <Subtitle>Desglose</Subtitle>
       <DataContainer>
         <Row>
-          <AppText>Ganancia tarjeta</AppText>
+          <AppText>Total tarjeta</AppText>
           <AppText>${card.balance + card.fee}</AppText>
         </Row>
         <Row>

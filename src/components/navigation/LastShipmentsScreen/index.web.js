@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import styled, {css} from 'styled-components';
-import {Platform} from 'react-native';
+import styled from 'styled-components';
 import Screen from 'components/ui/Screen';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -11,14 +10,10 @@ import {
   selectLastShipmentsPagination,
 } from 'redux-store/slices/shipmentSlice';
 import {Loader} from 'components/ui/Loader';
-import {PaginatedList} from 'components/ui/PaginatedList';
-import {Title} from 'components/ui/Title';
 import {theme} from 'constants/theme';
 import {LastShipmentItem} from 'components/navigation/LastShipmentsScreen/LastShipmentItem';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {Row, StartRow} from 'components/ui/Row';
 import LastShipmentDetailScreen from 'components/navigation/LastShipmentDetailScreen';
-import {CommonList} from 'components/ui/CommonList';
 import {Modal} from 'components/ui/Modal';
 import {AppText} from 'components/ui/AppText';
 import {IconButton} from 'components/ui/IconButton';
@@ -26,10 +21,10 @@ import dayjs from 'dayjs';
 import {capitallize} from 'helpers/stringHelper';
 
 const LastShipmentsScreen = () => {
-  const {isMobile, width} = useWindowDimension();
+  const {width} = useWindowDimension();
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
-  const isLoading = true; // useSelector(selectIsLoadingLastShipments);
+  const isLoading = useSelector(selectIsLoadingLastShipments);
   const error = useSelector(selectLastShipmentsError);
   const lastShipmentList = useSelector(selectLastShipments);
   const pagination = useSelector(selectLastShipmentsPagination);
@@ -73,7 +68,6 @@ const LastShipmentsScreen = () => {
         alignItems: 'stretch',
       }}>
       <Screen scrollable style={{position: 'relative'}}>
-        <Title padding={20}>Mis ultimos pedidos</Title>
         {lastShipmentList?.length === 0 && isLoading ? (
           <LoaderContainer>
             <Loader loading message="Cargando últimos envíos" size={40} />
@@ -131,7 +125,7 @@ const List = styled.ScrollView`
   flex-direction: column;
   width: 100%;
   min-height: ${props => props.theme.screenHeight - 100}px;
-  max-width: ${props => (props.theme.screenWidth > 1000 ? '54%' : '960px')};
+  max-width: ${props => (props.theme.screenWidth > 1000 ? '50%' : '960px')};
   overflow-y: auto;
 `;
 
@@ -147,7 +141,6 @@ const DetailContainer = styled.View`
   align-items: center;
   justify-content: flex-start;
   padding-right: 20px;
-  padding-top: 60px;
 `;
 
 const ModalContainer = styled.View`

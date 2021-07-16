@@ -19,7 +19,6 @@ import {MapPreferencesModalContent} from 'components/navigation/ProfileScreen/Mo
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchPhonesToRegisterCourrier} from 'redux-store/slices/loginSlice';
 import {selectIsLoadingPersonalDataTelephones} from 'redux-store/slices/personalData/telephonesSlice';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const data = [
   {

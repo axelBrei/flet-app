@@ -2,6 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import * as Sentry from '@sentry/react';
 import styled from 'styled-components';
 import {AppText} from 'components/ui/AppText';
+import {theme} from 'constants/theme';
 
 const ErrorBoundary = ({children}) => {
   useEffect(() => {
@@ -26,4 +27,5 @@ export default ErrorBoundary;
 const Fallback = styled(AppText)`
   font-size: 40px;
   color: red;
+  background-color: ${theme.backgroundColor};
 `;

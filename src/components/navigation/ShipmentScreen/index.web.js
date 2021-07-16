@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchShipmentDriverPosition,
   fetchShipmentStatus,
-  selectCurrentShipment,
   selectCurrentShipmentStatus,
   selectDriverPosition,
 } from 'redux-store/slices/shipmentSlice';

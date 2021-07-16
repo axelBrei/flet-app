@@ -19,6 +19,7 @@ import {ChangeBankNumberModalContent} from 'components/navigation/BalanceMainScr
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
 import {theme} from 'constants/theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Title} from 'components/ui/Title';
 
 export default () => {
   const {isMobile, widthWithPadding, height, width} = useWindowDimension();
@@ -53,7 +54,6 @@ export default () => {
     }
   }, [refreshing, isLoading]);
 
-  const profit = balance?.card?.balance;
   return (
     <ScreenComponent
       scrollable
@@ -73,15 +73,7 @@ export default () => {
         message="Cargando balance"
         style={{height, width}}>
         <ScreenContainer>
-          <ProfitCard />
-          {profit > 0 && (
-            <MainButton
-              style={{alignSelf: 'center', width: '100%'}}
-              fontSize={16}
-              onPress={toggle}>
-              Cobrar ${profit}
-            </MainButton>
-          )}
+          <ProfitCard toggle={toggle} />
           <BalanceOptionsList openCbuModal={openCbuModal} />
         </ScreenContainer>
       </Loader>

@@ -35,11 +35,13 @@ export const NewShipmentForm = () => {
   const onSubmit = useCallback(
     values => {
       dispatch(
-        updateNewShipmentLocations([
-          values[FIELDS.START_POINT],
-          values[FIELDS.MID_POINT],
-          values[FIELDS.END_POINT],
-        ]),
+        updateNewShipmentLocations(
+          [
+            values[FIELDS.START_POINT],
+            values[FIELDS.MID_POINT],
+            values[FIELDS.END_POINT],
+          ].filter(v => v),
+        ),
       );
       navigation.navigate(routes.newShipmentPackageDetailScreen);
     },

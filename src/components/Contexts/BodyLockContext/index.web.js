@@ -14,6 +14,7 @@ import {
 import {getPathFromState} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {selectSavedNavigationState} from 'redux-store/slices/navigationSlice';
+import {theme} from 'constants/theme';
 
 const Context = createContext({});
 
@@ -26,7 +27,7 @@ export default ({children}) => {
     ref.current?.scrollTo(0, 0);
   }, [navigationState, ref]);
 
-  const lockBody = (elem) => {
+  const lockBody = elem => {
     const screenElement = document.getElementById(elem);
     const element = document.getElementById('lock-view');
     if (!locked) {
@@ -37,7 +38,7 @@ export default ({children}) => {
     }
   };
 
-  const unlockBody = (elem) => {
+  const unlockBody = elem => {
     const element = document.getElementById('lock-view');
     const screenElement = document.getElementById(elem);
     if (locked) {
@@ -67,4 +68,5 @@ export const useBodyLock = () => useContext(Context);
 const BodyLockView = styled.ScrollView`
   height: 100%;
   width: 100%;
+  background-color: ${theme.backgroundColor};
 `;

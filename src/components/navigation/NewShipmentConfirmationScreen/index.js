@@ -30,6 +30,7 @@ import {MainButton} from 'components/ui/MainButton';
 import {ShipmentPrice} from 'components/navigation/NewShipmentConfirmationScreen/ShipmentPrice';
 import {routes} from 'constants/config/routes';
 import {ShipmentDestinationsSteps} from 'components/ui/ShipmentDestinationSteps';
+import {applyShadow} from 'helpers/uiHelper';
 
 export default ({navigation}) => {
   const {isMobile} = useWindowDimension();
@@ -63,7 +64,6 @@ export default ({navigation}) => {
     touched,
     _setFieldTouched,
     _setFieldValue,
-    isSubmitting,
   } = useFormikCustom(formikConfig(onSubmit));
 
   const onChangeInsurance = useCallback(
@@ -95,7 +95,7 @@ export default ({navigation}) => {
             }}
             markers={shipmentDescription.addresses}
           />
-          <ColorizedCard style={{elevation: 4}}>
+          <ColorizedCard>
             <ShipmentDestinationsSteps
               destinations={shipmentDescription.addresses
                 ?.filter(a => a?.latitude)
@@ -165,8 +165,9 @@ const StyledMap = styled(Map)`
     !theme.isMobile &&
     css`
       top: 0;
-      width: 414px;
-      border-radius: 12px;
+      max-width: 414px;
+      border-radius: 20px;
+      overflow: hidden;
     `};
 `;
 
@@ -180,7 +181,6 @@ const ColorizedCard = styled.View`
   ${({theme}) =>
     !theme.isMobile &&
     css`
-      flex: 1;
       max-width: 414px;
       left: 15px;
       border-radius: 12px;

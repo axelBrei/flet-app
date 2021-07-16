@@ -50,10 +50,6 @@ export default () => {
               headerTransparent: true,
               headerBackTitle: 'Volver',
               headerBackTitleVisible: true,
-              headerTitleStyle: {
-                fontSize: 20,
-                fontWeight: 'bold',
-              },
             },
       )}>
       {currentShipment.shipmentId ||
@@ -78,16 +74,10 @@ export default () => {
             />
             <Screen
               name={routes.chatScreen}
-              options={navigationConfig({
+              options={{
                 tabBarVisible: false,
-                headerTitle: 'Chat',
                 title: 'Chat',
-                headerTitleStyle: {
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color: theme.primaryColor,
-                },
-              })}
+              }}
               getComponent={() =>
                 require('components/navigation/ChatScreen').default
               }

@@ -36,7 +36,7 @@ export const navigationConfig = ({title, ...props} = {}) => ({
       }
     : {
         headerTitleStyle: {},
-        title: '',
+        title: title || '',
       }),
   cardStyle: {
     backgroundColor: 'white',

@@ -7,6 +7,8 @@ import {Row} from 'components/ui/Row';
 import {Title} from 'components/ui/Title';
 import {routes} from 'constants/config/routes';
 import {useNavigation} from '@react-navigation/native';
+import {applyShadow} from 'helpers/uiHelper';
+import {theme} from 'constants/theme';
 
 const OPTIONS = [
   {title: 'Últimos movimientos', navigateTo: routes.balanceLastMovements},
@@ -19,26 +21,26 @@ export const BalanceOptionsList = props => {
   return (
     <Container>
       <Title>Opciones</Title>
-      {OPTIONS.map((item, index) => (
-        <ButtonContainer
-          key={index.toString()}
-          onPress={() => {
-            props[item?.actionName]?.();
-            item.navigateTo && navigation.navigate(item.navigateTo);
-          }}>
-          <Row>
-            <AppText>{item.title}</AppText>
-            <Icon size={20} name="chevron-right" />
-          </Row>
-        </ButtonContainer>
-      ))}
+      <ListContainer>
+        {OPTIONS.map((item, index) => (
+          <ButtonContainer
+            key={index.toString()}
+            onPress={() => {
+              props[item?.actionName]?.();
+              item.navigateTo && navigation.navigate(item.navigateTo);
+            }}>
+            <Row>
+              <AppText>{item.title}</AppText>
+              <Icon size={20} name="chevron-right" />
+            </Row>
+          </ButtonContainer>
+        ))}
+      </ListContainer>
     </Container>
   );
 };
 
 const Container = styled.View`
-  padding: 20px 0;
-
   ${({theme}) =>
     !theme.isMobile &&
     css`
@@ -47,7 +49,15 @@ const Container = styled.View`
     `};
 `;
 
+const ListContainer = styled.View`
+  margin-top: 10px;
+  background-color: ${theme.white};
+  border-radius: 20px;
+  padding: 10px 0;
+`;
+ListContainer.defaultProps = applyShadow();
+
 const ButtonContainer = styled.TouchableOpacity`
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 20px 5px;
 `;

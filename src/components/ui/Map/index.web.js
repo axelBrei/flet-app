@@ -17,7 +17,6 @@ import {INITIAL_POSITION, ZOOM} from 'components/ui/Map/constants';
 import Config from 'react-native-config';
 import {theme} from 'constants/theme';
 import {scaleDp, scaleDpTheme} from 'helpers/responsiveHelper';
-import {Container} from 'components/ui/Container';
 import {AppText} from 'components/ui/AppText';
 import {getCurrentPosition} from 'helpers/locationHelper';
 import {IconButton} from 'components/ui/IconButton';
@@ -212,6 +211,9 @@ export default React.memo(
 );
 
 // STYLES
+const Container = styled.View`
+  flex: 1;
+`;
 
 const CurrentLoactionButton = styled(IconButton)`
   position: absolute;

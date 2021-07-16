@@ -1,23 +1,22 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import styled, {css} from 'styled-components';
 import Screen from 'components/ui/Screen';
 import {AppText} from 'components/ui/AppText';
 import {MainButton} from 'components/ui/MainButton';
-import {useDispatch} from 'react-redux';
-import {cleanShipments} from 'redux-store/slices/shipmentSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  cleanShipments,
+  selectCurrentShipment,
+} from 'redux-store/slices/shipmentSlice';
 import {scaleDpTheme} from 'helpers/responsiveHelper';
-import {Container} from 'components/ui/Container';
-import PackageDelivered from 'resources/images/box_delivered.svg';
-import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
-import {routes} from 'constants/config/routes';
 import {Icon} from 'components/ui/Icon';
 import {theme} from 'constants/theme';
 import {Row} from 'components/ui/Row';
 
 export default ({navigation, route}) => {
-  const {shipment} = route.params || {};
+  const shipment =
+    route.params?.shipment || useSelector(selectCurrentShipment) || {};
   const dispatch = useDispatch();
-  const {width, isMobile} = useWindowDimension();
 
   const onPressButton = useCallback(() => {
     dispatch(cleanShipments());

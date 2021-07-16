@@ -65,7 +65,10 @@ export const LoginScreen = ({navigation}) => {
 
   return (
     <ScreenComponent>
-      <LoginImage width={widthWithPadding} height={height * 0.3} />
+      <LoginImage
+        width={!isMobile ? 400 : widthWithPadding}
+        height={height * 0.3}
+      />
       <InputsContainer>
         <InputField
           editable={!loading}
@@ -117,6 +120,7 @@ export default LoginScreen;
 
 const ScreenComponent = styled(Screen)`
   height: ${props => props.theme.screenHeight}px;
+  background-color: ${theme.backgroundColor};
   align-items: center;
   padding: 60px 20px 0;
 

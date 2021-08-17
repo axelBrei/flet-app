@@ -10,6 +10,7 @@ import {
   selectShipmentPriceError,
 } from 'redux-store/slices/newShipmentSlice';
 import {Title} from 'components/ui/Title';
+import {DebtModal} from 'components/navigation/NewShipmentConfirmationScreen/DebtModal';
 
 export const ShipmentPrice = () => {
   const loadingPrice = useSelector(selectLoadingShipmentPrice);
@@ -28,6 +29,7 @@ export const ShipmentPrice = () => {
       ) : (
         <Title>${currentPrice}</Title>
       )}
+      <DebtModal />
     </Container>
   );
 };

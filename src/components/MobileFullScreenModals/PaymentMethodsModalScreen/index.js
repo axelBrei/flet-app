@@ -5,6 +5,7 @@ import {AppText} from 'components/ui/AppText';
 import {FlatList} from 'react-native';
 import {PaymentMethodItem} from 'components/MobileFullScreenModals/PaymentMethodsModalScreen/PaymenMethodItem';
 import {useModalContext} from 'components/Hooks/useModal';
+import {useUserData} from 'components/Hooks/useUserData';
 
 const paymentMethodsList = [
   {
@@ -23,7 +24,9 @@ const paymentMethodsList = [
 
 export default ({selectedMethod, onChangeSelectedMethod}) => {
   const {closeModal} = useModalContext();
+  const {hasDebt} = useUserData();
 
+  console.log(hasDebt);
   const onPressItem = useCallback(
     item => () => {
       onChangeSelectedMethod(item);
@@ -45,7 +48,9 @@ export default ({selectedMethod, onChangeSelectedMethod}) => {
   return (
     <FullScreenModalContainer title="Métodos de pago">
       <FlatList
-        data={paymentMethodsList}
+        data={paymentMethodsList.filter(p =>
+          hasDebt ? p.type !== 'CASH' : true,
+        )}
         renderItem={renderItem}
         keyExtractor={(_, i) => i.toString()}
       />

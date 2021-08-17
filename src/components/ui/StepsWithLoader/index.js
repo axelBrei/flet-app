@@ -17,7 +17,7 @@ interface StepsWithLoaderProps {
 const StepsWithLoader = ({steps, currentStep}: StepsWithLoaderProps) => {
   const [containerWidth, setContainerWidth] = useState(-1);
   const currentStepIndex = steps.findIndex(s => s.id === currentStep);
-  const stepWidth = containerWidth / steps.length - 10;
+  const stepWidth = containerWidth / steps?.length - 10;
 
   const handleLayout = useCallback(({nativeEvent: {layout}}) => {
     setContainerWidth(layout.width);

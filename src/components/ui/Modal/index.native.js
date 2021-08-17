@@ -11,6 +11,8 @@ export const Modal = ({children, swipeToClose = true, ...props}) => {
       useNativeDriver
       deviceHeight={height}
       deviceWidth={width}
+      backdropColor={'black'}
+      backdropOpacity={0.7}
       propagateSwipe={swipeToClose}
       swipeDirection={swipeToClose ? 'down' : null}
       onSwipeComplete={swipeToClose ? props.closeModal : () => {}}

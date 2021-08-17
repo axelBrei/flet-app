@@ -1,8 +1,6 @@
 import {createSlice, createSelector} from '@reduxjs/toolkit';
-import driverShipmentService from 'services/shipmentService';
 import shipmentService from 'services/shipmentService';
 import {SHIPMENT_STATE} from 'constants/shipmentStates';
-import {createStateCheckSelector} from 'redux-store/customSelectors';
 
 const initialState = {
   shipmentData: null,
@@ -12,6 +10,7 @@ const initialState = {
     reject: false,
     stateChange: false,
     code: false,
+    problem: false,
   },
   error: {
     fetch: null,
@@ -19,6 +18,7 @@ const initialState = {
     reject: null,
     stateChange: null,
     code: null,
+    problem: null,
   },
 };
 
@@ -123,6 +123,18 @@ const slice = createSlice({
       state.error.confirm = null;
       state.error.reject = null;
     },
+    //REPORT PROBLEMS
+    requestReportAProblem: (state, action) => {
+      state.loading.problem = true;
+      state.error.problem = null;
+    },
+    receiveReportAProblemSuccess: (state, action) => {
+      state.loading.problem = false;
+    },
+    receiveReportAProblemFail: (state, action) => {
+      state.loading.problem = false;
+      state.error.problem = action.payload;
+    },
   },
   extraReducers: {
     'login/logout': state => {
@@ -151,6 +163,9 @@ export const {
   receiveSubmitConfirmationCodeFail,
   updateDriverLocation,
   removeShipmentFromList,
+  requestReportAProblem,
+  receiveReportAProblemSuccess,
+  receiveReportAProblemFail,
 } = slice.actions;
 
 /**
@@ -263,6 +278,22 @@ export const uploadConfirmationCode =
     }
   };
 
+export const fetchReportAProblem = (shipment_id, code) => async dispatch => {
+  dispatch(requestReportAProblem());
+  try {
+    await shipmentService.reportAProblem({
+      shipment_id,
+      motive: {
+        code,
+        reason: '',
+      },
+    });
+    dispatch(receiveReportAProblemSuccess());
+  } catch (e) {
+    dispatch(receiveReportAProblemFail({...e}));
+  }
+};
+
 /**
  * @SELECTORS
  */
@@ -318,3 +349,9 @@ export const selectIsLoadingSecureCode = state =>
 
 export const selectDriverIsLoadingShipmentStatus = state =>
   state.driverShipment.loading.stateChange;
+
+// REPORT A PROBLEM
+export const selectIsLoadingReportACourrierProblem = state =>
+  state.driverShipment.loading.problem;
+export const selectReportACourrierProblemError = state =>
+  state.driverShipment.error.problem;

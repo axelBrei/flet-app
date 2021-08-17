@@ -29,12 +29,12 @@ export const ProgressTimeout = ({onPressAccept}) => {
   const isFocused = useIsFocused();
   const shipments = useSelector(selectDriverShipmentData);
   const loading = useSelector(selectLoadingPendingShipmentAnswer);
-  const {id, updatedAt} = shipments[0] || {};
+  const {id, updatedAt} = shipments?.[0] || {};
   const timeDif = Math.round(
     Math.abs((dayjs().valueOf() - dayjs(updatedAt).valueOf()) / 1000),
   );
   const [timeLeft, setTimeLeft] = useState(
-    timeDif <= 0 ? 1 : ACCEPTANCE_TIME - timeDif,
+    timeDif <= 0 ? 15 : ACCEPTANCE_TIME - timeDif,
   );
 
   const clean = useStopableInterval(() => {

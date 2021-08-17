@@ -115,7 +115,6 @@ export const ShipmentDetailCard = () => {
     navigation.navigate(routes.chatScreen);
   }, [navigation]);
 
-  console.log(shipmentStatus);
   return (
     <Card>
       <StepsWithLoader steps={steps} currentStep={getCurrentStepFromState()} />

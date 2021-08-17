@@ -43,6 +43,8 @@ const getNewShipmentPrice = async shipmentData =>
 const getLastShipments = async (page, pageSize) =>
   await api.get(`shipment/history?page=${page}&page_size=${pageSize}`);
 
+const reportAProblem = data => api.post('/shipment/problem', data);
+
 export default {
   fetchCourrierShipments,
   createNewShipment,
@@ -56,4 +58,5 @@ export default {
   uploadConfirmationCode,
   getNewShipmentPrice,
   getLastShipments,
+  reportAProblem,
 };

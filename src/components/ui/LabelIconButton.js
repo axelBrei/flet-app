@@ -7,15 +7,27 @@ import {theme} from 'constants/theme';
 export const LabelIconButton = ({
   label,
   icon,
+  iconColor,
   backgroundColor,
   fontColor,
   onPress,
   loading,
+  style,
+  fontSize,
 }) => {
   return (
-    <Container backgroundColor={backgroundColor} onPress={onPress}>
-      <Icon name={icon} size={22} color={fontColor || theme.fontColor} />
-      <Label color={fontColor || theme.fontColor}>{label}</Label>
+    <Container
+      backgroundColor={backgroundColor}
+      onPress={onPress}
+      style={style}>
+      <Icon
+        name={icon}
+        size={22}
+        color={iconColor || fontColor || theme.fontColor}
+      />
+      <Label color={fontColor || theme.fontColor} size={fontSize}>
+        {label}
+      </Label>
       {loading && (
         <Loader
           backgroundColor={backgroundColor}
@@ -42,7 +54,7 @@ const Label = styled(AppText)`
   margin-left: 10px;
   font-weight: bold;
   text-align: center;
-  font-size: 14px;
+  font-size: ${({size}) => size || 14}px;
 `;
 
 const Loader = styled.ActivityIndicator`

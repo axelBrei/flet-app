@@ -8,19 +8,18 @@ import {
   cleanShipments,
   selectCurrentShipment,
 } from 'redux-store/slices/shipmentSlice';
-import {scaleDpTheme} from 'helpers/responsiveHelper';
 import {Icon} from 'components/ui/Icon';
 import {theme} from 'constants/theme';
 import {Row} from 'components/ui/Row';
 
-export default ({navigation, route}) => {
-  const shipment =
-    route.params?.shipment || useSelector(selectCurrentShipment) || {};
+export default ({route}) => {
   const dispatch = useDispatch();
+  const reduxShipment = useSelector(selectCurrentShipment);
+  const shipment = route.params?.shipment || reduxShipment || {};
 
   const onPressButton = useCallback(() => {
     dispatch(cleanShipments());
-  }, [navigation]);
+  }, []);
 
   return (
     <Screen alignItems={'center'}>
@@ -38,7 +37,7 @@ export default ({navigation, route}) => {
           <Row>
             <Label>Desde: </Label>
             <Value>
-              {shipment?.addresses?.[0].address?.name?.split(',')[0]}
+              {shipment?.addresses?.[0].address?.name?.split(',')?.[0]}
             </Value>
           </Row>
 
@@ -46,7 +45,7 @@ export default ({navigation, route}) => {
             <Row>
               <Label>Pasando por: </Label>
               <Value>
-                {shipment?.addresses?.[1].address?.name?.split(',')[0]}
+                {shipment?.addresses?.[1].address?.name?.split(',')?.[0]}
               </Value>
             </Row>
           )}
@@ -55,8 +54,8 @@ export default ({navigation, route}) => {
             <Value>
               {
                 shipment?.addresses?.[
-                  shipment?.addresses.length - 1
-                ]?.address?.name?.split(',')[0]
+                  (shipment?.addresses?.length || 1) - 1
+                ]?.address?.name?.split(',')?.[0]
               }
             </Value>
           </Row>
@@ -68,9 +67,9 @@ export default ({navigation, route}) => {
 };
 
 const ScreenContainer = styled.View`
-  margin-top: ${scaleDpTheme(35)};
+  margin-top: 35px;
   align-items: center;
-  padding-left: ${scaleDpTheme(12)};
+  padding-left: 12px;
   display: flex;
   flex: 1;
   width: 100%;
@@ -86,7 +85,7 @@ const ScreenContainer = styled.View`
 `;
 
 const Title = styled(AppText)`
-  font-size: ${scaleDpTheme(20)};
+  font-size: 20px;
   text-align: center;
   padding-bottom: 20px;
 `;

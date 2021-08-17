@@ -75,7 +75,7 @@ const DriverHome = ({navigation}) => {
   }, [navigation, pendingShipment, error, pendingShipmentError]);
 
   const onChangeOnlineStatus = useCallback(
-    (newOnlineStatus, time) => {
+    newOnlineStatus => {
       if (!courrier.enabled) {
         return Alert.alert(
           'Ya casi!',
@@ -84,7 +84,7 @@ const DriverHome = ({navigation}) => {
       }
       if (status) {
         newOnlineStatus && mapRef.current?.centerOnUserLocation();
-        dispatch(changeOnlineStatus(newOnlineStatus, time.until));
+        dispatch(changeOnlineStatus(newOnlineStatus));
       } else {
         check();
       }
@@ -94,16 +94,14 @@ const DriverHome = ({navigation}) => {
 
   return (
     <Screen notchColor={theme.primaryColor}>
-      <Loader unmount={false}>
-        <Map
-          ref={mapRef}
-          style={{flex: 1, width: '100%'}}
-          markers={positionMarker}
-          minMarkerAnimation={0}
-          showsMyLocationButton
-        />
-        <OnlineStatusCard onPressButton={onChangeOnlineStatus} />
-      </Loader>
+      <Map
+        ref={mapRef}
+        style={{flex: 1, width: '100%'}}
+        markers={positionMarker}
+        minMarkerAnimation={0}
+        showsMyLocationButton
+      />
+      <OnlineStatusCard onPressButton={onChangeOnlineStatus} />
     </Screen>
   );
 };

@@ -17,10 +17,16 @@ import {selectDriverIsLoadingShipmentStatus} from 'redux-store/slices/driverShip
 import {openMap} from 'redux-store/slices/preferencesSlice';
 import {applyShadow} from 'helpers/uiHelper';
 import {useWindowDimension} from 'components/Hooks/useWindowsDimensions';
+import {IconButton} from 'components/ui/IconButton';
+import {LabelIconButton} from 'components/ui/LabelIconButton';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from 'constants/config/routes';
+import {setOpacityToColor} from 'helpers/colorHelper';
 
 export const ShipmentDescription = () => {
   const dispatch = useDispatch();
-  const {height} = useWindowDimension();
+  const navigation = useNavigation();
+  const {isMobile} = useWindowDimension();
   const loading = useSelector(selectDriverIsLoadingShipmentStatus);
   const shipments = useSelector(selectDriverShipmentData);
   const {id, status, startPoint, endPoint, destinations, currentDestination} =
@@ -55,6 +61,10 @@ export const ShipmentDescription = () => {
     dispatch(action?.(id));
   }, [status, dispatch]);
 
+  const onPressHelp = useCallback(() => {
+    navigation.navigate(routes.shipmentHelpScreen, {driver: true});
+  }, [navigation]);
+
   const Component = useCallback(ShipmentStagesDescriptor(destination, status), [
     status,
     destination,
@@ -62,15 +72,29 @@ export const ShipmentDescription = () => {
   return (
     <Container>
       <Component />
-      {[SHIPMENT_STATE.COURRIER_CONFIRMED, SHIPMENT_STATE.ON_PROCESS].includes(
-        status,
-      ) && (
-        <MainButton fontSize={13} inverted onPress={onPressOpenMaps}>
-          Abrir app de mapas
-        </MainButton>
-      )}
+      <ButtonsContainer>
+        <LabelIconButton
+          style={{maxWidth: 250, flex: 1, marginRight: 10}}
+          label="Ayuda"
+          icon="information"
+          onPress={onPressHelp}
+          size={13}
+        />
+        {[
+          SHIPMENT_STATE.COURRIER_CONFIRMED,
+          SHIPMENT_STATE.ON_PROCESS,
+        ].includes(status) && (
+          <LabelIconButton
+            style={{maxWidth: 250, flex: 1, marginLeft: 10}}
+            label="Abrir mapas"
+            icon="map-marker"
+            onPress={onPressOpenMaps}
+            size={13}
+          />
+        )}
+      </ButtonsContainer>
       <MainButton
-        fontSize={13}
+        fontSize={14}
         bold={false}
         onPress={onPressButton}
         loading={loading}>
@@ -89,3 +113,9 @@ const Container = styled.View`
   background-color: ${theme.white};
 `;
 // Container.defaultProps = applyShadow();
+
+const ButtonsContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  padding: 10px 0 20px;
+`;

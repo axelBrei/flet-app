@@ -66,6 +66,15 @@ const CourrierNewShipmentModalStackNative = ({navigation}) => {
           require('components/navigation/NewShipmentModalScreen').default
         }
       />
+      <Screen
+        name={routes.shipmentHelpScreen}
+        options={{
+          title: 'Ayuda',
+        }}
+        getComponent={() =>
+          require('components/navigation/ShipmentHelpScreen').default
+        }
+      />
     </Navigator>
   );
 };

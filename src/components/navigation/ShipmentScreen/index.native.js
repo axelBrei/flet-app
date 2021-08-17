@@ -43,7 +43,7 @@ export default ({}) => {
         markers={markers}
         minMarkerAnimation={0}
         edgePadding={
-          markers.length === 1
+          markers?.length === 1
             ? {top: 100, bottom: 250, left: 60, right: 60}
             : {
                 top: 40,

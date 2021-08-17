@@ -90,7 +90,7 @@ export const useMarkerList = () => {
   }, [directionsMakers, currentPositionMarker]);
 
   const loadingMessage = useMemo(() => {
-    if (!markersList || markersList.length === 0) {
+    if (!markersList || markersList?.length === 0) {
       return 'Cargando mapa.';
     }
     return 'Cargando información del viaje';
@@ -98,7 +98,7 @@ export const useMarkerList = () => {
 
   return {
     markersList: markersList,
-    loadingMakers: markersList.length === 0,
+    loadingMakers: markersList?.length === 0,
     loadingMessage,
   };
 };

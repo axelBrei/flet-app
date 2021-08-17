@@ -59,7 +59,7 @@ const Map = ({
 
   const fitBounds = useCallback(
     (map = null) => {
-      if ('google' in window && filteredMarkers.length > minMarkerAnimation) {
+      if ('google' in window && filteredMarkers?.length > minMarkerAnimation) {
         const bounds = new window.google.maps.LatLngBounds();
         filteredMarkers
           .filter(i => i.latitude && i.longitude)

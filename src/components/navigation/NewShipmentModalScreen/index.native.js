@@ -55,12 +55,12 @@ const NewShipmentModalScreen = ({navigation, route}) => {
   useBackHandler(() => true);
 
   const onPressAccept = useCallback(() => {
-    dispatch(confirmShipment(shipment.id));
+    dispatch(confirmShipment(shipment?.id));
     setHasInteraction(true);
   }, [dispatch, shipment]);
 
   const onPressReject = useCallback(() => {
-    dispatch(rejectShipment(shipment.id));
+    dispatch(rejectShipment(shipment?.id));
     setHasInteraction(true);
   }, [dispatch, shipment]);
 
@@ -108,7 +108,7 @@ const NewShipmentModalScreen = ({navigation, route}) => {
             </StaticInputField>
           )}
 
-          <StaticInputField bold label="Ganás" style={{width: '49%'}}>
+          <StaticInputField bold label="Valor del envío" style={{width: '49%'}}>
             ${shipment?.price}
           </StaticInputField>
         </Row>

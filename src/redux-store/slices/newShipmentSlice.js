@@ -115,90 +115,87 @@ export const {
  * @THUNK
  */
 
-export const fetchShipmentPrice = confirmationInformation => async (
-  dispatch,
-  getState,
-) => {
-  dispatch(requestShipmentPrice());
-  try {
+export const fetchShipmentPrice =
+  confirmationInformation => async (dispatch, getState) => {
+    dispatch(requestShipmentPrice());
+    try {
+      const {
+        confirmationScreen,
+        shipmentDescription,
+        shipmentVehicule: shipmentVehicle,
+      } = selectNewShipmentData(getState());
+      const {data} = await shipmentService.getNewShipmentPrice({
+        shipmentDescription: {
+          addresses: shipmentDescription.addresses.filter(i => i),
+          package: {
+            ...shipmentDescription.package,
+            type: shipmentVehicle?.vehiculeSize?.id,
+          },
+        },
+        shipmentVehicle: {
+          ...shipmentVehicle,
+          comments: '',
+        },
+        confirmationInformation: {
+          insurance:
+            confirmationInformation?.insurance || confirmationScreen.insurance,
+          paymentMethod: {
+            type: confirmationScreen.paymentMethod
+              ? confirmationScreen.paymentMethod.type
+              : confirmationInformation.paymentMethod.type,
+            ...confirmationInformation.paymentMethod,
+          },
+          // ...confirmationInformation,
+          // ...confirmationScreen,
+          // paymentMethod: confirmationInformation?.paymentMethod?.title,
+        },
+      });
+      dispatch(receiveShipmentPriceSuccess(data));
+    } catch (e) {
+      dispatch(receiveShipmentPriceFail(e?.response?.data?.message || e));
+    }
+  };
+
+export const createNewShipment =
+  (confirmationInformation = {}) =>
+  async (dispatch, getState) => {
+    dispatch(requestNewShipment());
     const {
       confirmationScreen,
       shipmentDescription,
       shipmentVehicule: shipmentVehicle,
     } = selectNewShipmentData(getState());
-    const {data} = await shipmentService.getNewShipmentPrice({
-      shipmentDescription: {
-        addresses: shipmentDescription.addresses.filter(i => i),
-        package: {
-          ...shipmentDescription.package,
-          type: shipmentVehicle?.vehiculeSize?.id,
+    try {
+      const body = {
+        shipmentDescription: {
+          addresses: shipmentDescription.addresses.filter(i => i),
+          package: {
+            ...shipmentDescription.package,
+            type: shipmentVehicle?.vehiculeSize?.id,
+          },
         },
-      },
-      shipmentVehicle: {
-        ...shipmentVehicle,
-        comments: '',
-      },
-      confirmationInformation: {
-        insurance:
-          confirmationInformation?.insurance || confirmationScreen.insurance,
-        paymentMethod: {
-          type: confirmationScreen.paymentMethod
-            ? confirmationScreen.paymentMethod.type
-            : confirmationInformation.paymentMethod.type,
-          ...confirmationInformation.paymentMethod,
+        shipmentVehicle: {
+          ...shipmentVehicle,
+          comments: '',
         },
-        // ...confirmationInformation,
-        // ...confirmationScreen,
-        // paymentMethod: confirmationInformation?.paymentMethod?.title,
-      },
-    });
-    dispatch(receiveShipmentPriceSuccess(data));
-  } catch (e) {
-    dispatch(receiveShipmentPriceFail(e?.response?.data?.message || e));
-  }
-};
-
-export const createNewShipment = (confirmationInformation = {}) => async (
-  dispatch,
-  getState,
-) => {
-  dispatch(requestNewShipment());
-  const {
-    confirmationScreen,
-    shipmentDescription,
-    shipmentVehicule: shipmentVehicle,
-  } = selectNewShipmentData(getState());
-  try {
-    const body = {
-      shipmentDescription: {
-        addresses: shipmentDescription.addresses.filter(i => i),
-        package: {
-          ...shipmentDescription.package,
-          type: shipmentVehicle?.vehiculeSize?.id,
+        confirmationInformation: {
+          insurance:
+            confirmationInformation?.insurance || confirmationScreen.insurance,
+          paymentMethod: {
+            ...confirmationInformation.paymentMethod,
+            type: (
+              confirmationInformation.paymentMethod ||
+              confirmationScreen?.paymentMethod
+            )?.type,
+          },
         },
-      },
-      shipmentVehicle: {
-        ...shipmentVehicle,
-        comments: '',
-      },
-      confirmationInformation: {
-        insurance:
-          confirmationInformation?.insurance || confirmationScreen.insurance,
-        paymentMethod: {
-          ...confirmationInformation.paymentMethod,
-          type: (
-            confirmationInformation.paymentMethod ||
-            confirmationScreen?.paymentMethod
-          )?.type,
-        },
-      },
-    };
-    const {data} = await shipmentService.createNewShipment(body);
-    dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
-  } catch (e) {
-    dispatch(receiveNewShipmentFail(e?.response?.data));
-  }
-};
+      };
+      const {data} = await shipmentService.createNewShipment(body);
+      dispatch(receiveNewShipmentSuccess({...data, ...shipmentDescription}));
+    } catch (e) {
+      dispatch(receiveNewShipmentFail(e?.response?.data));
+    }
+  };
 
 /**
  * @SELECTORS
@@ -212,5 +209,7 @@ export const selectNewShipmentData = state => state.newShipment.shipmentRequest;
 export const selectLoadingShipmentPrice = state =>
   state.newShipment.loading.price;
 export const selectShipmentPriceError = state => state.newShipment.error.price;
+export const selectNewShipmentPriceData = state =>
+  state.newShipment.shipmentPrice;
 export const selectNewShipmentPrice = state =>
   state.newShipment.shipmentPrice?.price;

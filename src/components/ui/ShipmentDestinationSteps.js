@@ -7,7 +7,7 @@ import {theme} from 'constants/theme';
 export const ShipmentDestinationsSteps = ({destinations}) => {
   const renderDestination = (item, index, array) => {
     const address = item.address.name.split(',')[0];
-    const isLastDestination = index === array.length - 1;
+    const isLastDestination = index === array?.length - 1;
     return (
       <React.Fragment key={index.toString()}>
         <DestinationContainer isLastDestination={isLastDestination}>

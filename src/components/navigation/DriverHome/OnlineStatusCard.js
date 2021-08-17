@@ -35,14 +35,8 @@ export const OnlineStatusCard = ({onPressButton}) => {
   );
 
   const _onPressButton = () => {
-    if (!isOnline && !selectedTime) {
-      return setError('Tenés que seleccionar un horario.');
-    }
     if (!error) {
-      onPressButton(!isOnline, {
-        ...selectedTime,
-        until: selectedTime?.date.valueOf(),
-      });
+      onPressButton(!isOnline);
     } else {
     }
   };
@@ -57,15 +51,6 @@ export const OnlineStatusCard = ({onPressButton}) => {
           </AppText>
         </OnlineStatusContainer>
       </Row>
-      {!isOnline && (
-        <TimePicker
-          label="¿Hasta que hora estas hoy?"
-          icon="clock"
-          value={selectedTime}
-          onChangeValue={onChangeData}
-          error={error}
-        />
-      )}
       <Button
         bold={false}
         isOnline={isOnline}

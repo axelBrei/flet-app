@@ -26,6 +26,7 @@ const _routes = {
   newShipmentConfirmationScreen: 'confirmar',
   paymentScreen: 'pagar',
   shipmentScreen: 'seguimiento',
+  shipmentHelpScreen: 'ayuda',
   chatScreen: 'chat',
   driverStack: 'courrier',
   driverHomeScreen: 'inicio-conductor',
@@ -79,6 +80,7 @@ export const linkingRoutes = {
           [_routes.chatScreen]: 'chat',
           [_routes.shipmentFinishedScreen]: 'envio-terminado',
           [_routes.paymentScreen]: 'pagar',
+          [_routes.shipmentHelpScreen]: 'ayuda',
         },
       },
       [_routes.balanceStack]: {
